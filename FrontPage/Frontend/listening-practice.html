@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Free IELTS Listening Practice by Question Type | IELTS Mockpoint</title>
+<meta name="description" content="Practise IELTS Listening by question type: note, form and flow-chart completion, map labelling, multiple choice, matching and sentence completion. Free, in the real exam interface.">
+<link rel="icon" type="image/png" href="mpfavicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0b2b52;--blue:#1565c9;--blue-light:#eaf2fd;--red:#e0202d;--red-dark:#b5121d;--bg:#fff;--surface:#f4f7fb;--text:#0f2038;--muted:#5d708c;--line:#e3e9f3;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-padding-top:80px;scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;padding-top:env(safe-area-inset-top,0);padding-bottom:env(safe-area-inset-bottom,0);}
+h1,h2,h3{font-family:'Sora',sans-serif;font-weight:700;line-height:1.12;color:var(--navy);}
+a{color:inherit;}
+.wrap{max-width:1140px;margin:0 auto;padding:0 24px;}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.in{opacity:1;transform:none;}
+
+header{position:sticky;top:env(safe-area-inset-top,0);z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);transition:box-shadow .25s;}
+header.scrolled{box-shadow:0 6px 18px rgba(11,43,82,.08);}
+nav.wrap{display:flex;align-items:center;justify-content:space-between;height:74px;}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:'Sora',sans-serif;font-weight:800;font-size:1.3rem;color:var(--navy);}
+.brand img{height:46px;width:auto;display:block;}
+.brand .txt{display:none;align-items:center;gap:8px;}
+.brand .txt i{width:11px;height:11px;border-radius:3px;background:var(--red);box-shadow:5px 5px 0 var(--blue);margin-right:5px;}
+.nav-links{display:flex;gap:26px;}
+.nav-links a{font-size:.92rem;color:var(--muted);text-decoration:none;font-weight:500;position:relative;padding:4px 0;}
+.nav-links a::after{content:'';position:absolute;left:0;bottom:-2px;width:0;height:2px;background:var(--red);transition:width .2s;}
+.nav-links a:hover,.nav-links a.current{color:var(--navy);}
+.nav-links a:hover::after,.nav-links a.current::after{width:100%;}
+.nav-actions{display:flex;gap:12px;align-items:center;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 22px;border-radius:9px;font-size:.92rem;font-weight:700;text-decoration:none;border:1.5px solid transparent;cursor:pointer;font-family:inherit;transition:transform .15s,box-shadow .2s,background .2s;}
+.btn-red{background:var(--red);color:#fff;}
+.btn-red:hover{background:var(--red-dark);transform:translateY(-2px);box-shadow:0 10px 22px rgba(224,32,45,.28);}
+.btn-outline{color:var(--navy);border-color:var(--line);background:#fff;}
+.btn-outline:hover{border-color:var(--blue);color:var(--blue);}
+.menu-btn{display:none;background:var(--blue-light);border:none;color:var(--navy);width:42px;height:42px;border-radius:10px;font-size:1.3rem;cursor:pointer;}
+@media(max-width:920px){.nav-links,.nav-actions{display:none;}.menu-btn{display:block;}}
+.overlay{position:fixed;inset:0;background:rgba(11,43,82,.55);backdrop-filter:blur(3px);z-index:90;opacity:0;pointer-events:none;transition:opacity .3s;}
+.overlay.open{opacity:1;pointer-events:auto;}
+.sidebar{position:fixed;top:0;right:0;height:100%;width:min(320px,86vw);background:#fff;z-index:100;transform:translateX(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;padding:22px 24px calc(24px + env(safe-area-inset-bottom,0));box-shadow:-12px 0 40px rgba(11,43,82,.18);}
+.sidebar.open{transform:none;}
+.sb-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;padding-top:env(safe-area-inset-top,0);}
+.sb-close{background:var(--surface);border:none;width:40px;height:40px;border-radius:50%;font-size:1.4rem;cursor:pointer;color:var(--navy);}
+.sb-links a{display:block;padding:14px 4px;border-bottom:1px solid var(--line);text-decoration:none;font-weight:600;color:var(--navy);transition:padding .2s,color .2s;}
+.sb-links a:hover{color:var(--red);padding-left:12px;}
+.sb-actions{margin-top:auto;display:grid;gap:10px;}
+
+.kicker{display:inline-flex;align-items:center;gap:8px;color:var(--red);font-size:.88rem;font-weight:700;margin-bottom:14px;}
+.kicker::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--red);}
+.hero{position:relative;overflow:hidden;padding:56px 0 34px;text-align:center;}
+.shape{position:absolute;border-radius:50%;z-index:0;}
+.shape.a{top:-160px;left:-120px;width:440px;height:440px;background:radial-gradient(circle,var(--blue-light),transparent 70%);animation:float 9s ease-in-out infinite;}
+.shape.b{top:-60px;right:-100px;width:380px;height:380px;background:radial-gradient(circle,rgba(224,32,45,.09),transparent 70%);animation:float 11s ease-in-out infinite reverse;}
+@keyframes float{50%{transform:translateY(24px);}}
+.hero .wrap{position:relative;z-index:1;}
+.crumb{font-size:.85rem;color:var(--muted);margin-bottom:18px;}
+.crumb a{color:var(--blue);text-decoration:none;font-weight:600;}
+.hero h1{font-size:clamp(2rem,4.4vw,3.1rem);margin-bottom:14px;}
+.hero h1 span{color:var(--blue);}
+.hero p{color:var(--muted);max-width:56ch;margin:0 auto;}
+.eq{display:inline-flex;gap:4px;align-items:flex-end;height:22px;margin-top:22px;}
+.eq i{width:5px;background:var(--red);border-radius:3px;animation:eq 1s ease-in-out infinite;}
+.eq i:nth-child(2){animation-delay:.2s;background:var(--blue);}.eq i:nth-child(3){animation-delay:.4s;}.eq i:nth-child(4){animation-delay:.6s;background:var(--blue);}.eq i:nth-child(5){animation-delay:.1s;}
+@keyframes eq{0%,100%{height:5px;}50%{height:22px;}}
+
+/* filter bar with hover dropdown */
+.bar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 18px;margin-bottom:26px;position:relative;z-index:30;}
+.bar .lab{font-size:.78rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-right:12px;}
+.left{display:flex;align-items:center;flex-wrap:wrap;}
+.dd{position:relative;}
+.dd-btn{display:inline-flex;align-items:center;gap:10px;background:var(--navy);color:#fff;border:none;border-radius:12px;padding:12px 20px;font-family:'Sora',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;box-shadow:0 10px 22px rgba(11,43,82,.22);transition:background .2s;}
+.dd-btn em{font-style:normal;font-size:.72rem;background:var(--red);padding:2px 9px;border-radius:999px;}
+.dd-btn svg{width:16px;height:16px;transition:transform .3s;}
+.dd:hover .dd-btn,.dd.open .dd-btn{background:var(--blue);}
+.dd:hover .dd-btn svg,.dd.open .dd-btn svg{transform:rotate(180deg);}
+.menu{position:absolute;left:0;top:100%;padding-top:10px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .25s;width:min(440px,86vw);}
+.dd:hover .menu,.dd.open .menu{opacity:1;visibility:visible;transform:none;}
+.menu-in{background:#fff;border:1px solid var(--line);border-radius:18px;padding:10px;box-shadow:0 24px 50px rgba(11,43,82,.18);display:grid;grid-template-columns:1fr 1fr;gap:4px;}
+.opt{display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;background:transparent;border:none;border-radius:11px;padding:11px 14px;font-family:inherit;font-weight:600;font-size:.86rem;color:var(--navy);cursor:pointer;transition:background .2s,padding .2s;}
+.opt em{font-style:normal;font-size:.7rem;color:var(--muted);background:var(--surface);padding:2px 8px;border-radius:999px;}
+.opt:hover{background:var(--blue-light);padding-left:20px;}
+.opt.active{background:var(--navy);color:#fff;}
+.opt.active em{background:var(--red);color:#fff;}
+.opt.all{grid-column:1/-1;border-bottom:1px solid var(--line);border-radius:11px 11px 4px 4px;}
+.count{color:var(--muted);font-size:.9rem;}
+.count b{color:var(--navy);}
+@media(max-width:520px){.menu-in{grid-template-columns:1fr;}}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px;padding-bottom:60px;}
+.card{position:relative;background:#fff;border:1.5px solid var(--line);border-radius:20px;padding:24px;overflow:hidden;display:flex;flex-direction:column;opacity:0;transform:translateY(14px);animation:rise .45s ease forwards;transition:transform .25s,border-color .25s,box-shadow .25s;}
+@keyframes rise{to{opacity:1;transform:none;}}
+.card::before{content:'';position:absolute;left:0;top:0;height:4px;width:100%;background:linear-gradient(90deg,var(--blue),var(--red));transform:scaleX(0);transform-origin:left;transition:transform .35s;}
+.card:hover{transform:translateY(-8px);border-color:var(--blue);box-shadow:0 22px 44px rgba(21,101,201,.14);}
+.card:hover::before{transform:scaleX(1);}
+.card.hidden{display:none;}
+.bignum{position:absolute;right:14px;top:-6px;font-family:'Sora',sans-serif;font-weight:800;font-size:5rem;color:var(--blue-light);line-height:1;transition:color .3s;}
+.card:hover .bignum{color:#fdecee;}
+.pill{position:relative;align-self:flex-start;max-width:78%;font-size:.66rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:5px 12px;border-radius:999px;background:var(--blue-light);color:var(--blue);margin-bottom:40px;}
+.card h3{position:relative;font-size:1.1rem;margin-bottom:8px;}
+.card p{position:relative;color:var(--muted);font-size:.86rem;margin-bottom:16px;flex-grow:1;}
+.tags{position:relative;display:flex;gap:8px;margin-bottom:18px;}
+.tags span{font-size:.74rem;font-weight:600;color:var(--muted);background:var(--surface);border-radius:8px;padding:5px 10px;}
+.card .btn{width:100%;}
+
+.tips{background:var(--navy);border-radius:26px;padding:44px;color:#fff;margin-bottom:70px;position:relative;overflow:hidden;}
+.tips::after{content:'';position:absolute;right:-60px;top:-80px;width:240px;height:240px;border-radius:50%;background:rgba(224,32,45,.2);animation:float 8s ease-in-out infinite;}
+.tips h2{color:#fff;font-size:1.6rem;margin-bottom:22px;position:relative;z-index:1;}
+.tip-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;position:relative;z-index:1;}
+.tip{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:18px;font-size:.9rem;color:rgba(255,255,255,.85);}
+.tip b{display:block;color:#fff;font-family:'Sora',sans-serif;margin-bottom:6px;}
+@media(max-width:760px){.tip-grid{grid-template-columns:1fr;}.tips{padding:28px 22px;}}
+
+footer {
+  border-top: 1px solid var(--line);
+  padding: 56px 0 32px;
+  background: var(--surface);
+  position: relative;
+  z-index: 1;
+}
+
+/* 5 Column Grid Layout */
+.fgrid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr 1.1fr;
+  gap: 32px;
+  margin-bottom: 36px;
+}
+
+.fgrid h4 {
+  font-size: 0.88rem;
+  color: var(--blue);
+  margin-bottom: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.fgrid a {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--muted);
+  text-decoration: none;
+  margin-bottom: 10px;
+  transition: color 0.15s ease;
+}
+
+.fgrid a:hover {
+  color: var(--red);
+}
+
+/* Bottom Disclaimer & Copyright */
+.fbottom {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  border-top: 1px solid var(--line);
+  padding-top: 22px;
+  line-height: 1.6;
+}
+
+.fbottom-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 992px) {
+  .fgrid {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 28px;
+  }
+}
+
+@media (max-width: 640px) {
+  .fgrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .fgrid > div:first-child {
+    grid-column: 1 / -1; /* Mobile view-তে Brand info পুরো উইডথ জুড়ে থাকবে */
+    margin-bottom: 8px;
+  }
+}
+
+/* Back to Top Button */
+#top {
+  position: fixed;
+  right: 20px;
+  bottom: calc(20px + env(safe-area-inset-bottom, 0));
+  width: 46px;
+  height: 46px;
+  border: none;
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(224, 32, 45, 0.35);
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: all 0.3s;
+  z-index: 60;
+}
+
+#top.show {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+#top:hover {
+  background: var(--red-dark);
+  transform: translateY(-3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+  .reveal, .qt {
+    opacity: 1;
+    transform: none;
+  }
+  #glow {
+    display: none;
+  }
+}
+</style>
+</head>
+<body>
+<header id="hd">
+<nav class="wrap" aria-label="Main navigation">
+    <a href="home.html" class="brand"><img src="Brandlogo.png" alt="IELTS Mockpoint" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class="txt"><i></i>IELTS Mockpoint</span></a>
+    <div class="nav-links"><a href="mocks.html">Full Tests</a><a href="cambridge-listening.html">Listening</a><a href="cambridge-reading.html">Reading</a><a href="cambridge-writing.html">Writing</a><a href="speaking.html">Speaking</a><a href="/practice-hub">Question Types</a><a href="/blog.html" class="cur">Blog</a></div>
+    <div class="nav-actions"><a href="login.html" class="btn btn-outline">Sign in</a><a href="register.html" class="btn btn-red">Start free</a></div>
+    <button class="menu-btn" id="openMenu" aria-label="Open menu">☰</button>
+  </nav>
+</header>
+<div class="overlay" id="ov"></div>
+<aside class="sidebar" id="sb" aria-hidden="true">
+  <div class="sb-head"><a href="home.html" class="brand"><img src="Brandlogo.png" alt="IELTS Mockpoint" style="height:38px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class="txt"><i></i>IELTS Mockpoint</span></a><button class="sb-close" id="closeMenu" aria-label="Close menu">×</button></div>
+  <nav class="sb-links"><a href="mocks.html">Full Tests</a><a href="cambridge-listening.html">Listening</a><a href="cambridge-reading.html">Reading</a><a href="cambridge-writing.html">Writing</a><a href="speaking.html">Speaking</a><a href="#qtypes">Practice by Question Type</a><a href="learn.html">Learn</a><a href="institutes.html">For Institutes</a></nav>
+  <div class="sb-actions"><a href="login.html" class="btn btn-outline">Sign in</a><a href="register.html" class="btn btn-red">Start free</a></div>
+</aside>
+
+<main>
+<section class="hero">
+  <div class="shape a"></div><div class="shape b"></div>
+  <div class="wrap">
+    <div class="crumb"><a href="/practice-hub">Practice Hub</a> › Listening</div>
+    <div class="kicker">Listening Practice Lab</div>
+    <h1>Listening <span>by Question Type</span></h1>
+    <p>Pick a question type, listen to the audio and answer. Repeat the sets that cost you marks until they feel easy.</p>
+    <div class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="bar reveal">
+    <div class="left">
+      <span class="lab">Question type</span>
+      <div class="dd" id="dd">
+        <button class="dd-btn" id="ddBtn" type="button" aria-haspopup="true"><span id="ddLabel">All Practice Sets</span><em id="ddNum">35</em>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="menu"><div class="menu-in" id="menu"></div></div>
+      </div>
+    </div>
+    <p class="count" id="count"></p>
+  </div>
+  <div class="grid" id="testGrid"></div>
+
+  <div class="tips reveal">
+    <h2>3 quick tips before you press play</h2>
+    <div class="tip-grid">
+      <div class="tip"><b>Read first</b>Use the pause before each section to read the questions and predict the type of answer.</div>
+      <div class="tip"><b>Watch spelling</b>A misspelt or over-length answer loses the mark, so check words and word limits.</div>
+      <div class="tip"><b>Follow signposts</b>Words like "however" and "actually" often signal the answer is about to change.</div>
+    </div>
+  </div>
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <a href="/" class="brand" style="margin-bottom:12px">
+          <img src="/Brandlogo.png" alt="IELTS Mockpoint" style="height:40px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <span class="txt"><i></i>IELTS Mockpoint</span>
+        </a>
+        <p style="color:var(--muted);font-size:.9rem;max-width:32ch">
+          Free, examiner-graded IELTS practice — authentic mock tests, band score evaluation, and resources.
+        </p>
+      </div>
+      <div>
+        <h4>Practice</h4>
+        <a href="/mocks.html">Full Tests</a>
+        <a href="/cambridge-listening.html">Listening</a>
+        <a href="/cambridge-reading.html">Reading</a>
+        <a href="/cambridge-writing.html">Writing</a>
+        <a href="/speaking.html">Speaking</a>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <a href="/blog.html">Blog & Tips</a>
+        <a href="/learn.html">Free lessons</a>
+        <a href="/band-calculator.html">Band score calculator</a>
+        <a href="/writing-samples.html">Writing samples</a>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <a href="/about.html">About Us</a>
+        <a href="/contact.html">Contact Us</a>
+        <a href="/institutes.html">For institutes</a>
+      </div>
+      <div>
+        <h4>Legal & Policy</h4>
+        <a href="/privacy-policy.html">Privacy Policy</a>
+        <a href="/terms-of-service.html">Terms of Service</a>
+        <a href="/disclaimer.html">Disclaimer</a>
+        <a href="/cookie-policy.html">Cookie Policy</a>
+      </div>
+    </div>
+    <div class="fbottom" style="display:flex; flex-direction:column; gap:8px; margin-top:24px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.08); font-size:0.8rem; color:var(--muted);">
+      <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+        <span>© 2026 IELTS Mockpoint. All rights reserved.</span>
+        <span>Trusted IELTS Preparation & Mock Platform.</span>
+      </div>
+      <span>
+        Disclaimer: IELTS® is a registered trademark of the University of Cambridge, the British Council, and IDP Education Australia. IELTS Mockpoint is an independent preparation platform and is not affiliated, approved, or endorsed by these official bodies.
+      </span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const hd=document.getElementById('hd');
+addEventListener('scroll',()=>hd.classList.toggle('scrolled',scrollY>10));
+const sb=document.getElementById('sb'),ov=document.getElementById('ov');
+function setMenu(o){sb.classList.toggle('open',o);ov.classList.toggle('open',o);sb.setAttribute('aria-hidden',!o);document.body.style.overflow=o?'hidden':'';}
+openMenu.onclick=()=>setMenu(true);closeMenu.onclick=()=>setMenu(false);ov.onclick=()=>setMenu(false);
+sb.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setMenu(false)));
+addEventListener('keydown',e=>{if(e.key==='Escape'){setMenu(false);dd.classList.remove('open');}});
+const rio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');rio.unobserve(e.target);}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>rio.observe(el));
+
+// Same question types and redirect link as before
+const types=["Note-Completion","Form-Completion","Map Labelling","Multiple Choice","Flow-chart Completion","Matching","Sentence Completion"];
+const PER_TYPE=5;
+function redirectToPractice(pracNumber,type){
+  window.location.href=`/listening-practice?pracNumber=Practice-${pracNumber}&type=${type}`;
+}
+const grid=document.getElementById('testGrid'),menu=document.getElementById('menu'),count=document.getElementById('count'),dd=document.getElementById('dd');
+let n=0;
+types.forEach(type=>{
+  for(let i=1;i<=PER_TYPE;i++){
+    const c=document.createElement('div');
+    c.className='card';c.dataset.type=type;
+    const pad=String(i).padStart(2,'0');
+    c.innerHTML=`<span class="bignum">${pad}</span><span class="pill">${type}</span>
+      <h3>${type}: Practice ${pad}</h3>
+      <p>Listen to the audio and answer the questions based on the ${type.toLowerCase()}.</p>
+      <div class="tags"><span>🎧 Audio</span><span>Timed</span></div>
+      <a class="btn btn-red" href="#">Start Practice →</a>`;
+    c.querySelector('a').addEventListener('click',e=>{e.preventDefault();redirectToPractice(i,type);});
+    grid.appendChild(c);
+  }
+});
+function mkOpt(label,val,num,cls){
+  const b=document.createElement('button');
+  b.type='button';b.className='opt'+(cls?' '+cls:'')+(val==='all'?' active':'');b.dataset.val=val;
+  b.innerHTML=`<span>${label}</span><em>${num}</em>`;
+  b.onclick=()=>{
+    menu.querySelectorAll('.opt').forEach(x=>x.classList.remove('active'));b.classList.add('active');
+    document.getElementById('ddLabel').textContent=label;document.getElementById('ddNum').textContent=num;
+    dd.classList.remove('open');filterTests(val);
+    b.blur();dd.classList.add('closing');setTimeout(()=>dd.classList.remove('closing'),300);
+  };
+  menu.appendChild(b);
+}
+mkOpt('All Practice Sets','all',types.length*PER_TYPE,'all');
+types.forEach(t=>mkOpt(t,t,PER_TYPE));
+// tap to open on touch devices (hover handles desktop)
+document.getElementById('ddBtn').addEventListener('click',e=>{e.stopPropagation();dd.classList.toggle('open');});
+document.addEventListener('click',e=>{if(!dd.contains(e.target))dd.classList.remove('open');});
+
+function filterTests(sel){
+  let shown=0,k=0;
+  document.querySelectorAll('.card').forEach(c=>{
+    const ok=sel==='all'||c.dataset.type===sel;
+    c.classList.toggle('hidden',!ok);
+    if(ok){shown++;c.style.animation='none';c.offsetHeight;c.style.animation='';c.style.animationDelay=(k++%12)*45+'ms';}
+  });
+  count.innerHTML=`Showing <b>${shown}</b> practice set${shown===1?'':'s'}`;
+}
+filterTests('all');
+</script>
+</body>
+</html>

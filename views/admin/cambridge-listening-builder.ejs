@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= typeof pageTitle !== 'undefined' ? pageTitle : 'Cambridge Listening Builder - IELTS Point' %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --surface: #f8fafc;
+      --border: #e2e8f0;
+      --border-dark: #cbd5e1;
+      --text: #0f172a;
+      --muted: #64748b;
+      --primary: #d97706;
+      --primary-dark: #b45309;
+      --danger-bg: #fee2e2;
+      --danger: #dc2626;
+      --info-bg: #e0f2fe;
+      --info: #0369a1;
+    }
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: var(--bg); color: var(--text); margin: 0; padding: 30px 15px; }
+    .builder-wrap { width: 100%; max-width: 1100px; margin: 0 auto; background: #ffffff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); padding: 30px; }
+    .header-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 20px; margin-bottom: 25px; gap: 20px; }
+    .header-bar h2 { margin: 0; color: #18181b; }
+    .header-bar p { margin: 5px 0 0; color: #64748b; font-size: 14px; }
+    .meta-grid { display: grid; grid-template-columns: 140px 140px 1fr; gap: 15px; margin-bottom: 25px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 700; color: #475569; margin-bottom: 6px; }
+    .form-control { width: 100%; padding: 10px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 14px; outline: none; background: #ffffff; color: #0f172a; }
+    .form-control:focus { border-color: #d97706; }
+    .tab-bar { display: flex; gap: 8px; border-bottom: 2px solid #e2e8f0; margin-bottom: 20px; }
+    .tab-btn { padding: 10px 20px; border: none; background: #f8fafc; color: #64748b; font-weight: 600; font-size: 14px; cursor: pointer; border-radius: 8px 8px 0 0; }
+    .tab-btn.active { background: #18181b; color: #ffffff; border-bottom: 2px solid #d97706; }
+    .group-card { background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+    .group-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+    .delete-btn { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; }
+    .dynamic-form-box { background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 15px; margin-top: 15px; }
+    .help-text { font-size: 11px; color: #64748b; margin-top: 4px; display: block; }
+    .add-group-btn { background: #e0f2fe; color: #0369a1; border: 1px dashed #0284c7; padding: 10px 20px; border-radius: 6px; font-weight: 700; width: 100%; cursor: pointer; margin-top: 10px; }
+    .add-group-btn:hover { background: #bae6fd; }
+    .save-btn { background: #d97706; color: #ffffff; border: none; padding: 14px 35px; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; }
+    .save-btn:hover { background: var(--primary-dark); }
+    .save-btn:disabled { opacity: .65; cursor: not-allowed; }
+    .part-panel { min-width: 0; }
+    .status-message { margin-top: 12px; font-size: 13px; font-weight: 600; }
+    .status-message.success { color: #15803d; }
+    .status-message.error { color: #dc2626; }
+    @media (max-width: 760px) {
+      body { padding: 15px 10px; }
+      .builder-wrap { padding: 18px; border-radius: 10px; }
+      .header-bar { flex-direction: column; align-items: stretch; }
+      .meta-grid { grid-template-columns: 1fr; }
+      .tab-bar { overflow-x: auto; padding-bottom: 2px; }
+      .tab-btn { white-space: nowrap; }
+      .group-card { padding: 14px; }
+      .group-card > div[style*="grid-template-columns"] {
+        grid-template-columns: 1fr !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="builder-wrap">
+  <div class="header-bar">
+    <div>
+      <h2>🎧 Cambridge Listening Builder</h2>
+      <p>Select question type, enter contents & answers — auto compiles to database.</p>
+    </div>
+    <button type="button" class="save-btn" onclick="saveCambridgeTest()">🚀 Save to Database</button>
+  </div>
+  <div id="statusMessage" class="status-message" role="status" aria-live="polite"></div>
+
+  <!-- META GRID -->
+  <div class="meta-grid">
+    <div class="form-group">
+      <label for="bookNo">Book</label>
+      <select id="bookNo" class="form-control">
+        <% for (let i = 1; i <= 21; i++) { %>
+          <option value="<%= i %>">Cambridge <%= i %></option>
+        <% } %>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="testNo">Test Number</label>
+      <select id="testNo" class="form-control">
+        <option value="1">Test 1</option>
+        <option value="2">Test 2</option>
+        <option value="3">Test 3</option>
+        <option value="4">Test 4</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="audioUrl">Audio URL (MP3 / CDN link)</label>
+      <input type="url" id="audioUrl" class="form-control" placeholder="https://example.com/audio.mp3" required>
+    </div>
+  </div>
+
+  <!-- TAB BAR -->
+  <div class="tab-bar">
+    <button type="button" class="tab-btn active" onclick="showPart(1, this)">Part 1 (Q 1-10)</button>
+    <button type="button" class="tab-btn" onclick="showPart(2, this)">Part 2 (Q 11-20)</button>
+    <button type="button" class="tab-btn" onclick="showPart(3, this)">Part 3 (Q 21-30)</button>
+    <button type="button" class="tab-btn" onclick="showPart(4, this)">Part 4 (Q 31-40)</button>
+  </div>
+
+  <!-- PARTS PANELS -->
+  <% for (let p = 1; p <= 4; p++) { %>
+    <div id="part-panel-<%= p %>" class="part-panel" style="<%= p === 1 ? '' : 'display: none;' %>">
+      <div id="groups-container-<%= p %>"></div>
+      <button type="button" class="add-group-btn" onclick="appendQuestionGroup(<%= p %>)">
+        ➕ Add Question Group to Part <%= p %>
+      </button>
+    </div>
+  <% } %>
+
+  <div style="margin-top: 30px; text-align: right;">
+    <button type="button" class="save-btn" onclick="saveCambridgeTest()">🚀 Save Full Test to Database</button>
+  </div>
+</div>
+
+<script>
+  let groupUid = 100;
+
+  // TAB SWITCHER
+  function showPart(partNo, btnElement) {
+    document.querySelectorAll('.part-panel').forEach(p => p.style.display = 'none');
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('part-panel-' + partNo).style.display = 'block';
+    if (btnElement) {
+      btnElement.classList.add('active');
+    }
+  }
+
+  // ADD NEW GROUP
+  function appendQuestionGroup(partNo) {
+    groupUid++;
+    const container = document.getElementById('groups-container-' + partNo);
+
+    const card = document.createElement('div');
+    card.className = 'group-card';
+    card.id = 'card-' + groupUid;
+    card.setAttribute('data-part', partNo);
+
+    card.innerHTML = `
+      <div class="group-card-header">
+        <strong style="color: #0f172a; font-size: 15px;">Part ` + partNo + ` - Question Group</strong>
+        <button type="button" class="delete-btn" onclick="document.getElementById('card-` + groupUid + `').remove()">✕ Remove Group</button>
+      </div>
+
+      <div style="margin-bottom: 12px;">
+        <label style="font-size: 13px; font-weight: 600;">Instruction (HTML allowed):</label>
+        <input type="text" class="field-instruction form-control" placeholder="Complete the notes below. Write ONE WORD AND/OR A NUMBER for each answer." />
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 12px;">
+        <div>
+          <label style="font-size: 13px; font-weight: 600;">Question Type:</label>
+          <select class="field-type form-control" onchange="renderDynamicFields('` + groupUid + `', this.value)">
+            <option value="">-- Choose Type --</option>
+            <option value="note-completion">Note Completion (Form / Notes)</option>
+            <option value="mcq-updated">Multiple Choice (Single - 3 Choices)</option>
+            <option value="mcq-two-choice-updated">Multiple Choice (Choose Two - 5 Choices)</option>
+            <option value="sentence-completion">Sentence Completion</option>
+            <option value="feature-matching">Feature Matching (Box Matching)</option>
+            <option value="diagram-labelling">Diagram / Map Labelling</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size: 13px; font-weight: 600;">Question Numbers (Comma separated):</label>
+          <input type="text" class="field-ids form-control" placeholder="1, 2, 3, 4, 5, 6, 7, 8, 9, 10" />
+        </div>
+      </div>
+
+      <div id="dynamic-zone-` + groupUid + `" class="dynamic-form-box" style="display: none;"></div>
+
+      <div style="margin-top: 15px;">
+        <label style="font-size: 13px; font-weight: 700; color: #15803d;">Answers (Format: 1: answer1, alt | 2: answer2):</label>
+        <textarea class="field-answers form-control" rows="4" placeholder="1: mountains&#10;2: horse&#10;3: gardens, garden"></textarea>
+      </div>
+    `;
+
+    container.appendChild(card);
+  }
+
+  // DYNAMIC FIELDS RENDERER
+  function renderDynamicFields(uid, type) {
+    const zone = document.getElementById('dynamic-zone-' + uid);
+    if (!type) {
+      zone.style.display = 'none';
+      zone.innerHTML = '';
+      return;
+    }
+    zone.style.display = 'block';
+
+    if (type === 'note-completion') {
+      zone.innerHTML = `
+        <div style="margin-bottom: 10px;">
+          <label style="font-size: 12px; font-weight: 600;">Heading:</label>
+          <input type="text" class="sub-heading form-control" placeholder="FAMILY EXCURSIONS" />
+        </div>
+        <div style="margin-bottom: 10px;">
+          <label style="font-size: 12px; font-weight: 600;">Subheadings (One per line):</label>
+          <textarea class="sub-subheadings form-control" rows="3" placeholder="Cruise on a lake&#10;Farm visit&#10;Cycling trips"></textarea>
+        </div>
+        <div>
+          <label style="font-size: 12px; font-weight: 600;">Paragraphs with [blank] (Separate subheadings with empty blank lines):</label>
+          <textarea class="sub-paragraphs form-control" rows="8" placeholder="Example: Travel on an old steamship&#10;Can take photos of the [blank] that surround the lake&#10;&#10;Children can help feed the sheep&#10;Visit can include a 40-minute ride on a [blank]"></textarea>
+        </div>
+      `;
+    } else if (type === 'mcq-updated') {
+      zone.innerHTML = `
+        <div style="margin-bottom: 10px;">
+          <label style="font-size: 12px; font-weight: 600;">Questions (One per line):</label>
+          <textarea class="sub-mcq-questions form-control" rows="4" placeholder="Question 1...&#10;Question 2..."></textarea>
+        </div>
+        <div>
+          <label style="font-size: 12px; font-weight: 600;">Options (3 options per question, separate questions with blank line):</label>
+          <textarea class="sub-mcq-options form-control" rows="7" placeholder="Option A&#10;Option B&#10;Option C&#10;&#10;Option A&#10;Option B&#10;Option C"></textarea>
+        </div>
+      `;
+    } else if (type === 'mcq-two-choice-updated') {
+      zone.innerHTML = `
+        <div style="margin-bottom: 10px;">
+          <label style="font-size: 12px; font-weight: 600;">Question Prompt (One per line):</label>
+          <textarea class="sub-two-questions form-control" rows="3" placeholder="Which TWO things does David say about...?"></textarea>
+        </div>
+        <div>
+          <label style="font-size: 12px; font-weight: 600;">Options (5 choices per block, separate questions with blank line):</label>
+          <textarea class="sub-two-options form-control" rows="7" placeholder="Option A&#10;Option B&#10;Option C&#10;Option D&#10;Option E"></textarea>
+        </div>
+      `;
+    } else if (type === 'sentence-completion') {
+      zone.innerHTML = `
+        <div>
+          <label style="font-size: 12px; font-weight: 600;">Sentences (One per line with [blank]):</label>
+          <textarea class="sub-sentences form-control" rows="6" placeholder="decide on sample: twelve students from the [blank] department."></textarea>
+        </div>
+      `;
+    } else if (type === 'feature-matching') {
+      zone.innerHTML = `
+        <div style="margin-bottom: 10px;">
+          <label style="font-size: 12px; font-weight: 600;">Features / Categories (One per line):</label>
+          <textarea class="sub-features form-control" rows="4" placeholder="Iceland&#10;Egypt&#10;UK"></textarea>
+        </div>
+        <div>
+          <label style="font-size: 12px; font-weight: 600;">Statements (One per line):</label>
+          <textarea class="sub-match-options form-control" rows="6" placeholder="This country suffered the most severe loss of life."></textarea>
+        </div>
+      `;
+    } else if (type === 'diagram-labelling') {
+      zone.innerHTML = `
+        <div style="margin-bottom: 10px;">
+          <label style="font-size: 12px; font-weight: 600;">Diagram Image URL:</label>
+          <input type="text" class="sub-diagram-img form-control" placeholder="https://example.com/map.jpg" />
+        </div>
+        <div style="margin-bottom: 10px;">
+          <label style="font-size: 12px; font-weight: 600;">Options (One per line):</label>
+          <textarea class="sub-diagram-opts form-control" rows="4" placeholder="A&#10;B&#10;C&#10;D"></textarea>
+        </div>
+        <div>
+          <label style="font-size: 12px; font-weight: 600;">Labels (One per line):</label>
+          <textarea class="sub-diagram-labels form-control" rows="5" placeholder="New traffic lights&#10;Pedestrian crossing"></textarea>
+        </div>
+      `;
+    }
+  }
+
+  // SAVE TO DATABASE
+  async function saveCambridgeTest() {
+    const saveButtons = document.querySelectorAll(".save-btn");
+    const statusEl = document.getElementById("statusMessage");
+
+    const setStatus = (message, type = "") => {
+      statusEl.textContent = message;
+      statusEl.className = "status-message" + (type ? " " + type : "");
+    };
+
+    const book = document.getElementById("bookNo").value;
+    const testNo = document.getElementById("testNo").value;
+    const audioUrl = document.getElementById("audioUrl").value.trim();
+
+    if (!audioUrl) {
+      setStatus("Audio URL is required.", "error");
+      document.getElementById("audioUrl").focus();
+      return;
+    }
+
+    const questions = [];
+    const instructions = [];
+    const answers = {};
+    const usedQuestionIds = new Set();
+    const allCards = document.querySelectorAll(".group-card");
+
+    if (allCards.length === 0) {
+      setStatus("Please add at least one Question Group.", "error");
+      return;
+    }
+
+    let validGroupCount = 0;
+    let hasValidationError = false;
+
+    allCards.forEach((card, index) => {
+      if (hasValidationError) return;
+
+      const part = Number(card.getAttribute("data-part"));
+      const type = card.querySelector(".field-type")?.value || "";
+      const instructionText = card.querySelector(".field-instruction")?.value.trim() || "";
+      const idsRaw = card.querySelector(".field-ids")?.value.trim() || "";
+
+      if (!type) {
+        setStatus(`Please choose a Question Type for Group ${index + 1}.`, "error");
+        hasValidationError = true;
+        return;
+      }
+
+      const ids = idsRaw
+        .split(",")
+        .map(n => Number(n.trim()))
+        .filter(Number.isInteger);
+
+      if (!ids.length) {
+        setStatus(`Please enter Question Numbers for Group ${index + 1}.`, "error");
+        hasValidationError = true;
+        return;
+      }
+
+      const minId = (part - 1) * 10 + 1;
+      const maxId = part * 10;
+      const invalidIds = ids.filter(id => id < minId || id > maxId);
+
+      if (invalidIds.length) {
+        setStatus(
+          `Part ${part} accepts questions ${minId}-${maxId}. Invalid: ${invalidIds.join(", ")}.`,
+          "error"
+        );
+        hasValidationError = true;
+        return;
+      }
+
+      const duplicateIds = ids.filter((id, i) => ids.indexOf(id) !== i);
+      if (duplicateIds.length) {
+        setStatus(`Duplicate question number(s) in Group ${index + 1}: ${[...new Set(duplicateIds)].join(", ")}.`, "error");
+        hasValidationError = true;
+        return;
+      }
+
+      for (const id of ids) {
+        if (usedQuestionIds.has(id)) {
+          setStatus(`Question ${id} is assigned to more than one group.`, "error");
+          hasValidationError = true;
+          return;
+        }
+        usedQuestionIds.add(id);
+      }
+
+      validGroupCount++;
+
+      const groupId = Number(`${part}${index + 1}`);
+
+      if (instructionText) {
+        instructions.push({ group: groupId, instruction: instructionText });
+      }
+
+      const qObj = { part, group: groupId, type, id: ids };
+
+      if (type === "note-completion") {
+        const head = card.querySelector(".sub-heading");
+        const subheads = card.querySelector(".sub-subheadings");
+        const rawParas = card.querySelector(".sub-paragraphs");
+
+        qObj.heading = head?.value.trim() || "";
+        qObj.subheadings = subheads
+          ? subheads.value.split(/\r?\n/).map(s => s.trim()).filter(Boolean)
+          : [];
+        qObj.paragraphs = rawParas
+          ? rawParas.value
+              .split(/\r?\n\s*\r?\n/)
+              .map(block => block.split(/\r?\n/).map(l => l.trim()).filter(Boolean))
+              .filter(block => block.length)
+          : [];
+      } else if (type === "mcq-updated") {
+        const mcqQ = card.querySelector(".sub-mcq-questions");
+        const rawOpts = card.querySelector(".sub-mcq-options");
+
+        qObj.questions = mcqQ
+          ? mcqQ.value.split(/\r?\n/).map(q => q.trim()).filter(Boolean)
+          : [];
+        qObj.options = rawOpts
+          ? rawOpts.value
+              .split(/\r?\n\s*\r?\n/)
+              .map(block => block.split(/\r?\n/).map(o => o.trim()).filter(Boolean))
+              .filter(block => block.length)
+          : [];
+      } else if (type === "mcq-two-choice-updated") {
+        const idPairs = [];
+        for (let i = 0; i < ids.length; i += 2) {
+          idPairs.push(ids[i + 1] !== undefined ? [ids[i], ids[i + 1]] : [ids[i]]);
+        }
+        qObj.id = idPairs;
+
+        const mcq2Q = card.querySelector(".sub-two-questions");
+        const rawOpts2 = card.querySelector(".sub-two-options");
+
+        qObj.questions = mcq2Q
+          ? mcq2Q.value.split(/\r?\n/).map(q => q.trim()).filter(Boolean).map(q => [q])
+          : [];
+        qObj.options = rawOpts2
+          ? rawOpts2.value
+              .split(/\r?\n\s*\r?\n/)
+              .map(block => block.split(/\r?\n/).map(o => o.trim()).filter(Boolean))
+              .filter(block => block.length)
+          : [];
+      } else if (type === "sentence-completion") {
+        const sent = card.querySelector(".sub-sentences");
+        qObj.sentences = sent
+          ? sent.value.split(/\r?\n/).map(s => s.trim()).filter(Boolean)
+          : [];
+      } else if (type === "feature-matching") {
+        const feat = card.querySelector(".sub-features");
+        const opts = card.querySelector(".sub-match-options");
+
+        qObj.features = feat
+          ? feat.value.split(/\r?\n/).map(f => f.trim()).filter(Boolean)
+          : [];
+        qObj.options = opts
+          ? opts.value.split(/\r?\n/).map(o => o.trim()).filter(Boolean)
+          : [];
+      } else if (type === "diagram-labelling") {
+        const img = card.querySelector(".sub-diagram-img");
+        const dOpts = card.querySelector(".sub-diagram-opts");
+        const dLabels = card.querySelector(".sub-diagram-labels");
+
+        qObj.image = img?.value.trim() || "";
+        qObj.options = dOpts
+          ? dOpts.value.split(/\r?\n/).map(o => o.trim()).filter(Boolean)
+          : [];
+        qObj.labels = dLabels
+          ? dLabels.value.split(/\r?\n/).map(l => l.trim()).filter(Boolean)
+          : [];
+      }
+
+      questions.push(qObj);
+
+      const answerField = card.querySelector(".field-answers");
+      const rawAnswers = answerField
+        ? answerField.value.split(/\r?\n/)
+        : [];
+
+      rawAnswers.forEach(line => {
+        const separatorIndex = line.indexOf(":");
+        if (separatorIndex === -1) return;
+
+        const qNum = line.slice(0, separatorIndex).trim();
+        const answerText = line.slice(separatorIndex + 1).trim();
+
+        if (!qNum || !answerText) return;
+
+        const altAnswers = answerText
+          .split(",")
+          .map(a => a.trim().toLowerCase())
+          .filter(Boolean);
+
+        if (altAnswers.length) {
+          answers[qNum] = altAnswers;
+        }
+      });
+    });
+
+    if (hasValidationError) return;
+
+    if (!validGroupCount || !questions.length) {
+      setStatus("No valid question groups were found.", "error");
+      return;
+    }
+
+// Payload keys matched with app.js
+    const payload = {
+      bookNumber: Number(book),
+      testNumber: Number(testNo),
+      book: Number(book),
+      testNo: Number(testNo),
+      audioUrl: audioUrl.trim(),
+      questions,
+      instructions,
+      answers
+    };
+
+    saveButtons.forEach(btn => {
+      btn.disabled = true;
+      btn.dataset.originalText = btn.textContent;
+      btn.textContent = "⏳ Saving...";
+    });
+    setStatus("Saving Cambridge Listening Test...", "");
+
+    try {
+      const res = await fetch("/api/save-cambridge-listening", {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const contentType = res.headers.get("content-type") || "";
+      let data;
+      if (contentType.includes("application/json")) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        data = { success: false, message: text };
+      }
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || data.error || `Request failed with status ${res.status}`);
+      }
+
+      const successMsg = data.message || "Test saved successfully.";
+      setStatus("🎉 " + successMsg, "success");
+      alert("🎉 " + successMsg);
+      window.location.reload();
+    } catch (err) {
+      console.error("Cambridge test save error:", err);
+      const errMsg = err.message || "Server error occurred while saving!";
+      setStatus("❌ " + errMsg, "error");
+      alert("❌ " + errMsg);
+      saveButtons.forEach(btn => {
+        btn.disabled = false;
+        btn.textContent = btn.dataset.originalText || "🚀 Save to Database";
+      });
+    }
+  }
+</script>
+
+</body>
+</html>

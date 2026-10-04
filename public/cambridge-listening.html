@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cambridge IELTS Listening Practice & Full Mocks | IELTS Mockpoint</title>
+<meta name="description" content="Practise official Cambridge IELTS Listening tests online for free. Full test mode or individual part practice for Cambridge IELTS 12 to 19 with real audio, timer and instant scoring.">
+<link rel="icon" type="image/png" href="/mpfavicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0b2b52;--blue:#1565c9;--blue-light:#eaf2fd;--red:#e0202d;--red-dark:#b5121d;--bg:#fff;--surface:#f4f7fb;--text:#0f2038;--muted:#5d708c;--line:#e3e9f3;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-padding-top:80px;scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;padding-top:env(safe-area-inset-top,0);padding-bottom:env(safe-area-inset-bottom,0);}
+h1,h2,h3{font-family:'Sora',sans-serif;font-weight:700;line-height:1.12;color:var(--navy);}
+a{color:inherit;}
+.wrap{max-width:1140px;margin:0 auto;padding:0 24px;}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.in{opacity:1;transform:none;}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px;}
+
+/* scroll progress */
+#progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--blue),var(--red));z-index:200;transition:width .1s linear;}
+
+/* HEADER (from reference) */
+header{position:sticky;top:env(safe-area-inset-top,0);z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);transition:box-shadow .25s;}
+header.scrolled{box-shadow:0 6px 18px rgba(11,43,82,.08);}
+nav.wrap{display:flex;align-items:center;justify-content:space-between;height:74px;}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:'Sora',sans-serif;font-weight:800;font-size:1.3rem;color:var(--navy);}
+.brand img{height:46px;width:auto;display:block;}
+.brand .txt{display:none;align-items:center;gap:8px;}
+.brand .txt i{width:11px;height:11px;border-radius:3px;background:var(--red);box-shadow:5px 5px 0 var(--blue);margin-right:5px;}
+.nav-links{display:flex;gap:26px;}
+.nav-links a{font-size:.92rem;color:var(--muted);text-decoration:none;font-weight:500;position:relative;padding:4px 0;}
+.nav-links a::after{content:'';position:absolute;left:0;bottom:-2px;width:0;height:2px;background:var(--red);transition:width .2s;}
+.nav-links a:hover,.nav-links a.current{color:var(--navy);}
+.nav-links a:hover::after,.nav-links a.current::after{width:100%;}
+.nav-actions{display:flex;gap:12px;align-items:center;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 22px;border-radius:9px;font-size:.92rem;font-weight:700;text-decoration:none;border:1.5px solid transparent;cursor:pointer;font-family:inherit;transition:transform .15s,box-shadow .2s,background .2s,color .2s,border-color .2s;position:relative;overflow:hidden;}
+.btn-red{background:var(--red);color:#fff;}
+.btn-red:hover{background:var(--red-dark);transform:translateY(-2px);box-shadow:0 10px 22px rgba(224,32,45,.28);}
+.btn-outline{color:var(--navy);border-color:var(--line);background:#fff;}
+.btn-outline:hover{border-color:var(--blue);color:var(--blue);}
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.45);transform:scale(0);animation:rip .6s ease-out forwards;pointer-events:none;}
+.btn-outline .ripple{background:rgba(21,101,201,.18);}
+@keyframes rip{to{transform:scale(4);opacity:0;}}
+.menu-btn{display:none;background:var(--blue-light);border:none;color:var(--navy);width:42px;height:42px;border-radius:10px;font-size:1.3rem;cursor:pointer;}
+@media(max-width:920px){.nav-links,.nav-actions{display:none;}.menu-btn{display:block;}}
+.overlay{position:fixed;inset:0;background:rgba(11,43,82,.55);backdrop-filter:blur(3px);z-index:90;opacity:0;pointer-events:none;transition:opacity .3s;}
+.overlay.open{opacity:1;pointer-events:auto;}
+.sidebar{position:fixed;top:0;right:0;height:100%;width:min(320px,86vw);background:#fff;z-index:100;transform:translateX(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;padding:22px 24px calc(24px + env(safe-area-inset-bottom,0));box-shadow:-12px 0 40px rgba(11,43,82,.18);}
+.sidebar.open{transform:none;}
+.sb-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;padding-top:env(safe-area-inset-top,0);}
+.sb-close{background:var(--surface);border:none;width:40px;height:40px;border-radius:50%;font-size:1.4rem;cursor:pointer;color:var(--navy);}
+.sb-links a{display:block;padding:14px 4px;border-bottom:1px solid var(--line);text-decoration:none;font-weight:600;color:var(--navy);transition:padding .2s,color .2s;}
+.sb-links a:hover{color:var(--red);padding-left:12px;}
+.sb-actions{margin-top:auto;display:grid;gap:10px;}
+
+.notice{background:var(--navy);color:#fff;font-size:.88rem;text-align:center;padding:11px 16px;}
+.notice b{color:#ff7b84;}
+
+/* HERO */
+.kicker{display:inline-flex;align-items:center;gap:8px;color:var(--red);font-size:.88rem;font-weight:700;margin-bottom:16px;}
+.kicker::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse 2s infinite;}
+@keyframes pulse{50%{transform:scale(1.6);opacity:.5;}}
+.hero{position:relative;overflow:hidden;padding:72px 0 30px;text-align:center;}
+.shape{position:absolute;border-radius:50%;z-index:0;}
+.shape.a{top:-160px;left:-120px;width:460px;height:460px;background:radial-gradient(circle,var(--blue-light),transparent 70%);animation:float 9s ease-in-out infinite;}
+.shape.b{top:-60px;right:-100px;width:400px;height:400px;background:radial-gradient(circle,rgba(224,32,45,.09),transparent 70%);animation:float 11s ease-in-out infinite reverse;}
+@keyframes float{50%{transform:translateY(24px);}}
+.hero .wrap{position:relative;z-index:1;}
+.hero h1{font-size:clamp(2.2rem,4.6vw,3.4rem);margin-bottom:16px;}
+.hero h1 span{color:var(--blue);}
+.hero p.lead{color:var(--muted);font-size:1.06rem;max-width:58ch;margin:0 auto 32px;}
+.stats{display:inline-flex;border:1px solid var(--line);background:var(--surface);border-radius:14px;overflow:hidden;flex-wrap:wrap;justify-content:center;}
+.stats div{padding:16px 28px;border-right:1px solid var(--line);transition:background .25s;}
+.stats div:hover{background:var(--blue-light);}
+.stats div:last-child{border:none;}
+.stats strong{display:block;font-family:'Sora',sans-serif;font-size:1.5rem;color:var(--blue);}
+.stats span{font-size:.78rem;color:var(--muted);}
+
+/* TOOLBAR */
+.tabs{display:flex;justify-content:center;gap:10px;margin:36px 0 22px;flex-wrap:wrap;}
+.tab{display:inline-flex;align-items:center;gap:10px;padding:11px 20px;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:var(--muted);font-family:inherit;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .25s;}
+.tab em{font-style:normal;font-size:.72rem;background:var(--surface);color:var(--muted);padding:2px 9px;border-radius:999px;transition:all .25s;}
+.tab:hover{border-color:var(--blue);color:var(--blue);transform:translateY(-2px);}
+.tab.active{background:var(--navy);border-color:var(--navy);color:#fff;box-shadow:0 12px 24px rgba(11,43,82,.22);}
+.tab.active em{background:var(--red);color:#fff;}
+.toolbar{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:38px;}
+.search{position:relative;flex:1 1 280px;max-width:380px;}
+.search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted);pointer-events:none;transition:color .2s;}
+.search input{width:100%;padding:12px 16px 12px 42px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font-family:inherit;font-size:.92rem;color:var(--text);transition:border-color .2s,box-shadow .2s;}
+.search input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 4px var(--blue-light);}
+.search:focus-within svg{color:var(--blue);}
+.seg{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px;}
+.seg button{border:none;background:none;font-family:inherit;font-weight:700;font-size:.82rem;color:var(--muted);padding:8px 14px;border-radius:9px;cursor:pointer;transition:all .2s;}
+.seg button.on{background:#fff;color:var(--navy);box-shadow:0 2px 8px rgba(11,43,82,.12);}
+.seg button:hover:not(.on){color:var(--blue);}
+.resultcount{text-align:center;color:var(--muted);font-size:.85rem;margin:-18px 0 26px;min-height:1.2em;}
+
+/* GRID & CARDS */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:24px;padding-bottom:70px;min-height:320px;perspective:1200px;}
+.card{--rx:0deg;--ry:0deg;--ty:0px;--mx:50%;--my:50%;position:relative;background:#fff;border:1.5px solid var(--line);border-radius:20px;padding:26px 22px 24px;display:flex;flex-direction:column;opacity:0;translate:0 16px;animation:rise .5s ease forwards;transform:rotateX(var(--rx)) rotateY(var(--ry)) translateY(var(--ty));transition:transform .2s ease-out,border-color .25s,box-shadow .25s;will-change:transform;}
+@keyframes rise{to{opacity:1;translate:0 0;}}
+.card::before{content:'';position:absolute;left:0;top:0;height:4px;width:100%;background:linear-gradient(90deg,var(--blue),var(--red));transform:scaleX(0);transform-origin:left;transition:transform .35s;border-radius:20px 20px 0 0;}
+.card::after{content:'';position:absolute;inset:0;border-radius:20px;background:radial-gradient(260px circle at var(--mx) var(--my),rgba(21,101,201,.10),transparent 60%);opacity:0;transition:opacity .3s;pointer-events:none;}
+.card:hover,.card.open-card{--ty:-8px;border-color:var(--blue);box-shadow:0 22px 44px rgba(21,101,201,.14);}
+.card:hover::before{transform:scaleX(1);}
+.card:hover::after{opacity:1;}
+.card.open-card{z-index:40;}
+.card .bignum{position:absolute;right:16px;top:-2px;font-family:'Sora',sans-serif;font-weight:800;font-size:4.8rem;color:var(--blue-light);line-height:1;transition:color .3s,transform .4s;user-select:none;pointer-events:none;}
+.card:hover .bignum{color:#fdecee;transform:scale(1.08) translateX(-4px);}
+.card .pill{position:relative;align-self:flex-start;max-width:85%;font-size:.68rem;font-weight:800;letter-spacing:.06em;padding:5px 12px;border-radius:999px;background:var(--blue-light);color:var(--blue);margin-bottom:38px;}
+.card h3{position:relative;font-size:1.24rem;margin-bottom:14px;}
+.chips{position:relative;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;}
+.chips span{font-size:.76rem;font-weight:600;color:var(--muted);background:var(--surface);border-radius:8px;padding:5px 10px;}
+.chips span.done{background:#e6f7ee;color:#137a3f;}
+
+.card-actions{display:grid;grid-template-columns:1.1fr 1fr;gap:10px;position:relative;margin-top:auto;}
+.card-actions .btn{width:100%;font-size:.86rem;padding:10px;}
+.practice-drop-wrap{position:relative;}
+.part-popover{position:absolute;bottom:calc(100% + 10px);left:0;right:0;min-width:180px;background:#fff;border:1.5px solid var(--line);border-radius:14px;box-shadow:0 14px 30px rgba(11,43,82,.18);padding:10px;display:flex;flex-direction:column;gap:6px;z-index:30;opacity:0;transform:translateY(8px) scale(.96);transform-origin:bottom center;pointer-events:none;transition:opacity .2s,transform .2s;}
+.part-popover.open{opacity:1;transform:none;pointer-events:auto;}
+.part-popover a{padding:9px 12px;border-radius:8px;font-size:.82rem;font-weight:600;color:var(--navy);text-decoration:none;display:flex;justify-content:space-between;align-items:center;background:var(--surface);transition:background .2s,color .2s,transform .2s;}
+.part-popover a:hover{background:var(--blue-light);color:var(--blue);transform:translateX(3px);}
+.part-popover a span{font-size:.72rem;color:var(--muted);}
+.btn .caret{display:inline-block;transition:transform .25s;}
+.btn[aria-expanded="true"] .caret{transform:rotate(180deg);}
+
+.empty{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted);}
+.empty strong{display:block;font-family:'Sora',sans-serif;color:var(--navy);font-size:1.2rem;margin-bottom:8px;}
+
+/* SEO & FACTS */
+.seo{padding:70px 0;border-top:1px solid var(--line);}
+.seo-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:56px;align-items:start;}
+.seo h2{font-size:clamp(1.6rem,2.8vw,2.1rem);margin-bottom:18px;}
+.seo h3{font-size:1.2rem;margin:28px 0 10px;}
+.seo p{color:var(--muted);margin-bottom:14px;font-size:.98rem;}
+.seo p strong{color:var(--navy);}
+.facts{position:sticky;top:96px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:26px;}
+.facts h3{margin:0 0 14px;font-size:1.05rem;}
+.facts li{list-style:none;display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:.88rem;color:var(--muted);transition:padding .2s;}
+.facts li:hover{padding-left:8px;}
+.facts li:last-child{border:none;}
+.facts li b{color:var(--navy);font-family:'Sora',sans-serif;font-size:.88rem;text-align:right;}
+@media(max-width:860px){.seo-grid{grid-template-columns:1fr;gap:30px;}.facts{position:static;}}
+
+/* FOOTER (from reference) */
+footer {
+  border-top: 1px solid var(--line);
+  padding: 56px 0 32px;
+  background: var(--surface);
+  position: relative;
+  z-index: 1;
+}
+
+/* 5 Column Grid Layout */
+.fgrid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr 1.1fr;
+  gap: 32px;
+  margin-bottom: 36px;
+}
+
+.fgrid h4 {
+  font-size: 0.88rem;
+  color: var(--blue);
+  margin-bottom: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.fgrid a {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--muted);
+  text-decoration: none;
+  margin-bottom: 10px;
+  transition: color 0.15s ease;
+}
+
+.fgrid a:hover {
+  color: var(--red);
+}
+
+/* Bottom Disclaimer & Copyright */
+.fbottom {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  border-top: 1px solid var(--line);
+  padding-top: 22px;
+  line-height: 1.6;
+}
+
+.fbottom-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 992px) {
+  .fgrid {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 28px;
+  }
+}
+
+@media (max-width: 640px) {
+  .fgrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .fgrid > div:first-child {
+    grid-column: 1 / -1; /* Mobile view-তে Brand info পুরো উইডথ জুড়ে থাকবে */
+    margin-bottom: 8px;
+  }
+}
+
+/* Back to Top Button */
+#top {
+  position: fixed;
+  right: 20px;
+  bottom: calc(20px + env(safe-area-inset-bottom, 0));
+  width: 46px;
+  height: 46px;
+  border: none;
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(224, 32, 45, 0.35);
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: all 0.3s;
+  z-index: 60;
+}
+
+#top.show {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+#top:hover {
+  background: var(--red-dark);
+  transform: translateY(-3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+  .reveal, .qt {
+    opacity: 1;
+    transform: none;
+  }
+  #glow {
+    display: none;
+  }
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<header id="hd">
+<nav class="wrap" aria-label="Main navigation">
+    <a href="home.html" class="brand"><img src="Brandlogo.png" alt="IELTS Mockpoint" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class="txt"><i></i>IELTS Mockpoint</span></a>
+    <div class="nav-links"><a href="mocks.html">Full Tests</a><a href="cambridge-listening.html">Listening</a><a href="cambridge-reading.html">Reading</a><a href="cambridge-writing.html">Writing</a><a href="speaking.html">Speaking</a><a href="/practice-hub">Question Types</a><a href="/blog.html" class="cur">Blog</a></div>
+    <div class="nav-actions"><a href="login.html" class="btn btn-outline">Sign in</a><a href="register.html" class="btn btn-red">Start free</a></div>
+    <button class="menu-btn" id="openMenu" aria-label="Open menu">☰</button>
+  </nav>
+</header>
+<div class="overlay" id="ov"></div>
+<aside class="sidebar" id="sb" aria-hidden="true">
+  <div class="sb-head"><a href="home.html" class="brand"><img src="Brandlogo.png" alt="IELTS Mockpoint" style="height:38px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class="txt"><i></i>IELTS Mockpoint</span></a><button class="sb-close" id="closeMenu" aria-label="Close menu">×</button></div>
+  <nav class="sb-links"><a href="mocks.html">Full Tests</a><a href="cambridge-listening.html">Listening</a><a href="cambridge-reading.html">Reading</a><a href="cambridge-writing.html">Writing</a><a href="speaking.html">Speaking</a><a href="#qtypes">Practice by Question Type</a><a href="learn.html">Learn</a><a href="institutes.html">For Institutes</a></nav>
+  <div class="sb-actions"><a href="login.html" class="btn btn-outline">Sign in</a><a href="register.html" class="btn btn-red">Start free</a></div>
+</aside>
+
+<div class="notice">Official Cambridge IELTS Listening series — take full tests or practise <b>part by part</b> with instant grading</div>
+
+<main>
+<section class="hero">
+  <div class="shape a"></div><div class="shape b"></div>
+  <div class="wrap">
+    <div class="kicker reveal">Authentic Cambridge series</div>
+    <h1 class="reveal">Cambridge <span>Listening Hub</span></h1>
+    <p class="lead reveal">Practise genuine Cambridge IELTS listening tests online with native audio, a live timer and custom part-by-part practice modes.</p>
+    <div class="stats reveal">
+      <div><strong id="stTotal" data-to="0">0</strong><span>Available tests</span></div>
+      <div><strong data-to="40" data-suffix=" Qs">0</strong><span>Per full mock</span></div>
+      <div><strong data-to="4" data-suffix=" Parts">0</strong><span>Section-wise practice</span></div>
+      <div><strong>Instant</strong><span>Band score</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="tabs" role="tablist" id="tabs"></div>
+
+  <div class="toolbar">
+    <label class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="q" type="search" placeholder="Search e.g. 16 test 3" aria-label="Search tests" autocomplete="off">
+    </label>
+    <div class="seg" id="sort" role="group" aria-label="Sort order">
+      <button class="on" data-sort="new">Newest first</button>
+      <button data-sort="old">Oldest first</button>
+    </div>
+  </div>
+  <div class="resultcount" id="rc"></div>
+
+  <div class="grid" id="grid"></div>
+</div>
+
+<section class="seo">
+  <div class="wrap seo-grid">
+    <article class="reveal">
+      <h2>Authentic Cambridge IELTS Listening Practice with Dual Modes</h2>
+      <p>Practising with past Cambridge papers is considered the gold standard for reaching Band 8+ in IELTS Listening. <strong>IELTS Mockpoint</strong> brings the Cambridge listening collection into an interactive, computer-delivered exam platform.</p>
+      <h3>Take full test mode</h3>
+      <p>Sit a complete 30-minute test of all 4 parts (Questions 1 to 40) under realistic exam pressure. It features automated timing, audio controls and an instant detailed report with band score calculation.</p>
+      <h3>Section practice mode</h3>
+      <p>Short on time? Choose individual parts to target your weak spots. Whether you struggle with fast-paced multiple choice in <strong>Part 3</strong> or note completion in <strong>Part 4</strong>, you can sharpen each skill with dedicated section practice.</p>
+    </article>
+    <aside class="facts reveal">
+      <h3>Listening format</h3>
+      <ul>
+        <li>Part 1 <b>Daily social (1–10)</b></li>
+        <li>Part 2 <b>Local context (11–20)</b></li>
+        <li>Part 3 <b>Academic discussion (21–30)</b></li>
+        <li>Part 4 <b>University lecture (31–40)</b></li>
+        <li>Total duration <b>Approx. 30 min</b></li>
+        <li>Band scale <b>0 – 9</b></li>
+      </ul>
+    </aside>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <a href="/" class="brand" style="margin-bottom:12px">
+          <img src="/Brandlogo.png" alt="IELTS Mockpoint" style="height:40px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <span class="txt"><i></i>IELTS Mockpoint</span>
+        </a>
+        <p style="color:var(--muted);font-size:.9rem;max-width:32ch">
+          Free, examiner-graded IELTS practice — authentic mock tests, band score evaluation, and resources.
+        </p>
+      </div>
+      <div>
+        <h4>Practice</h4>
+        <a href="/mocks.html">Full Tests</a>
+        <a href="/cambridge-listening.html">Listening</a>
+        <a href="/cambridge-reading.html">Reading</a>
+        <a href="/cambridge-writing.html">Writing</a>
+        <a href="/speaking.html">Speaking</a>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <a href="/blog.html">Blog & Tips</a>
+        <a href="/learn.html">Free lessons</a>
+        <a href="/band-calculator.html">Band score calculator</a>
+        <a href="/writing-samples.html">Writing samples</a>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <a href="/about.html">About Us</a>
+        <a href="/contact.html">Contact Us</a>
+        <a href="/institutes.html">For institutes</a>
+      </div>
+      <div>
+        <h4>Legal & Policy</h4>
+        <a href="/privacy-policy.html">Privacy Policy</a>
+        <a href="/terms-of-service.html">Terms of Service</a>
+        <a href="/disclaimer.html">Disclaimer</a>
+        <a href="/cookie-policy.html">Cookie Policy</a>
+      </div>
+    </div>
+    <div class="fbottom" style="display:flex; flex-direction:column; gap:8px; margin-top:24px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.08); font-size:0.8rem; color:var(--muted);">
+      <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+        <span>© 2026 IELTS Mockpoint. All rights reserved.</span>
+        <span>Trusted IELTS Preparation & Mock Platform.</span>
+      </div>
+      <span>
+        Disclaimer: IELTS® is a registered trademark of the University of Cambridge, the British Council, and IDP Education Australia. IELTS Mockpoint is an independent preparation platform and is not affiliated, approved, or endorsed by these official bodies.
+      </span>
+    </div>
+  </div>
+</footer>
+
+<button id="toTop" aria-label="Back to top">↑</button>
+
+<script>
+/* ---------- header / menu / progress ---------- */
+const hd=document.getElementById('hd'),bar=document.getElementById('progress'),toTop=document.getElementById('toTop');
+addEventListener('scroll',()=>{
+  hd.classList.toggle('scrolled',scrollY>10);
+  const h=document.documentElement.scrollHeight-innerHeight;
+  bar.style.width=(h>0?scrollY/h*100:0)+'%';
+  toTop.classList.toggle('show',scrollY>600);
+},{passive:true});
+toTop.onclick=()=>scrollTo({top:0,behavior:'smooth'});
+const sb=document.getElementById('sb'),ov=document.getElementById('ov');
+function setMenu(o){sb.classList.toggle('open',o);ov.classList.toggle('open',o);sb.setAttribute('aria-hidden',!o);document.body.style.overflow=o?'hidden':'';}
+document.getElementById('openMenu').onclick=()=>setMenu(true);
+document.getElementById('closeMenu').onclick=()=>setMenu(false);
+ov.onclick=()=>setMenu(false);
+sb.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setMenu(false)));
+
+/* ---------- reveal ---------- */
+const rio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');rio.unobserve(e.target);}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(i%4)*70+'ms';rio.observe(el);});
+
+/* ---------- ripple on buttons ---------- */
+document.addEventListener('click',e=>{
+  const b=e.target.closest('.btn');if(!b)return;
+  const r=b.getBoundingClientRect(),s=Math.max(r.width,r.height)/3,d=document.createElement('span');
+  d.className='ripple';d.style.cssText=`width:${s}px;height:${s}px;left:${e.clientX-r.left-s/2}px;top:${e.clientY-r.top-s/2}px`;
+  b.appendChild(d);setTimeout(()=>d.remove(),600);
+});
+
+/* ---------- data setup ---------- */
+let cambridgeTests=[];
+for(let book=12;book<=19;book++) {
+  for(let t=1;t<=4;t++) {
+    cambridgeTests.push({book, testNo:t, title:`Cambridge ${book} - Test ${t}`, questions:40, status:"Active"});
+  }
+}
+
+let books=[...new Set(cambridgeTests.map(t=>t.book))].sort((a,b)=>b-a);
+
+/* ---------- state ---------- */
+let filter='ALL',query='',order='new';
+const grid=document.getElementById('grid'),tabsEl=document.getElementById('tabs'),rc=document.getElementById('rc');
+const done=(()=>{try{return JSON.parse(localStorage.getItem('cl_done')||'{}');}catch(e){return{};}})();
+const saveDone=()=>{try{localStorage.setItem('cl_done',JSON.stringify(done));}catch(e){}};
+
+function setupTabs() {
+  tabsEl.innerHTML=`<button class="tab active" data-filter="ALL">All Tests <em>${cambridgeTests.length}</em></button>`+
+    books.map(b=>`<button class="tab" data-filter="${b}">Cambridge ${b} <em>${cambridgeTests.filter(t=>t.book===b).length}</em></button>`).join('');
+  
+  const stTotalEl = document.getElementById('stTotal');
+  if(stTotalEl) {
+    stTotalEl.dataset.to = cambridgeTests.length;
+    stTotalEl.textContent = cambridgeTests.length;
+  }
+}
+
+tabsEl.addEventListener('click',e=>{
+  const b=e.target.closest('.tab');if(!b)return;
+  tabsEl.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');filter=b.dataset.filter;render();
+});
+
+document.getElementById('q').addEventListener('input',e=>{query=e.target.value.trim().toLowerCase();render();});
+document.getElementById('sort').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  document.querySelectorAll('#sort button').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');order=b.dataset.sort;render();
+});
+
+/* ---------- render ---------- */
+function matches(t){
+  if(filter!=='ALL'&&String(t.book)!==filter)return false;
+  if(!query)return true;
+  const hay=`cambridge ${t.book} test ${t.testNo} ${t.book} ${t.testNo}`;
+  return query.split(/\s+/).every(w=>hay.includes(w));
+}
+
+function render(){
+  const list=cambridgeTests.filter(matches).sort((a,b)=>order==='new'?(b.book-a.book||a.testNo-b.testNo):(a.book-b.book||a.testNo-b.testNo));
+  grid.innerHTML='';
+  rc.textContent=list.length?`Showing ${list.length} of ${cambridgeTests.length} tests`:'';
+  if(!list.length){grid.innerHTML=`<div class="empty"><strong>No tests found</strong>Try a different search, like "15" or "test 2", or pick All Tests.</div>`;return;}
+  
+  list.forEach((t,i)=>{
+    const key=`${t.book}-${t.testNo}`;
+    // Updated clean URL route mapping for Cambridge module
+    const fullTestUrl = `/cambridge-listening-test?book=${t.book}&test=${t.testNo}`;
+    const id=`pop-${key}`;
+    
+    const card=document.createElement('div');
+    card.className='card';card.style.animationDelay=Math.min(i*40,600)+'ms';
+    card.innerHTML=`
+      <span class="bignum">${String(t.testNo).padStart(2,'0')}</span>
+      <span class="pill">CAMBRIDGE ${t.book}</span>
+      <h3>${t.title}</h3>
+      <div class="chips"><span>⏱ Practice Timer</span><span>${t.questions} Questions</span>${done[key]?'<span class="done">✓ Attempted</span>':''}</div>
+      <div class="card-actions">
+        <a href="${fullTestUrl}" class="btn btn-red" data-key="${key}">Take Test →</a>
+        <div class="practice-drop-wrap">
+          <button type="button" class="btn btn-outline" aria-haspopup="true" aria-expanded="false" aria-controls="${id}">Practice <span class="caret">▾</span></button>
+          <div class="part-popover" id="${id}" role="menu">
+            <a role="menuitem" href="${fullTestUrl}&part=1" data-key="${key}">Part 1 <span>Q 1-10</span></a>
+            <a role="menuitem" href="${fullTestUrl}&part=2" data-key="${key}">Part 2 <span>Q 11-20</span></a>
+            <a role="menuitem" href="${fullTestUrl}&part=3" data-key="${key}">Part 3 <span>Q 21-30</span></a>
+            <a role="menuitem" href="${fullTestUrl}&part=4" data-key="${key}">Part 4 <span>Q 31-40</span></a>
+          </div>
+        </div>
+      </div>`;
+
+    /* 3D tilt + spotlight */
+    card.addEventListener('mousemove',e=>{
+      if(matchMedia('(hover:none)').matches)return;
+      const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+      card.style.setProperty('--mx',x*100+'%');card.style.setProperty('--my',y*100+'%');
+      card.style.setProperty('--ry',((x-.5)*6)+'deg');card.style.setProperty('--rx',((.5-y)*6)+'deg');
+    });
+    card.addEventListener('mouseleave',()=>{card.style.setProperty('--rx','0deg');card.style.setProperty('--ry','0deg');});
+    grid.appendChild(card);
+  });
+}
+
+/* ---------- popover ---------- */
+function closePops(except){
+  document.querySelectorAll('.part-popover.open').forEach(p=>{
+    if(p===except)return;
+    p.classList.remove('open');
+    const btn=p.previousElementSibling;if(btn)btn.setAttribute('aria-expanded','false');
+    p.closest('.card').classList.remove('open-card');
+  });
+}
+grid.addEventListener('click',e=>{
+  const link=e.target.closest('a[data-key]');
+  if(link){done[link.dataset.key]=1;saveDone();return;}
+  const btn=e.target.closest('.practice-drop-wrap > button');
+  if(!btn)return;
+  e.stopPropagation();
+  const pop=btn.nextElementSibling,willOpen=!pop.classList.contains('open');
+  closePops(willOpen?pop:null);
+  pop.classList.toggle('open',willOpen);
+  btn.setAttribute('aria-expanded',willOpen);
+  btn.closest('.card').classList.toggle('open-card',willOpen);
+});
+addEventListener('click',e=>{if(!e.target.closest('.practice-drop-wrap'))closePops();});
+addEventListener('keydown',e=>{if(e.key==='Escape'){closePops();setMenu(false);}});
+
+/* ---------- animated counters ---------- */
+setupTabs();
+render();
+
+const cio=new IntersectionObserver(es=>es.forEach(e=>{
+  if(!e.isIntersecting)return;cio.unobserve(e.target);
+  const el=e.target,to=+el.dataset.to,suf=el.dataset.suffix||'',t0=performance.now(),dur=1100;
+  (function tick(n){const p=Math.min((n-t0)/dur,1),v=Math.round(to*(1-Math.pow(1-p,3)));el.textContent=v+suf;if(p<1)requestAnimationFrame(tick);})(t0);
+}),{threshold:.6});
+document.querySelectorAll('[data-to]').forEach(el=>cio.observe(el));
+</script>
+</body>
+</html>

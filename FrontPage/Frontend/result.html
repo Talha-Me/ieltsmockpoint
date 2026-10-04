@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='15' fill='%231A365D' /><path d='M30 25 V55 C30 65 35 75 50 75 C65 75 70 65 70 55 V25 H60 V55 C60 62 58 65 50 65 C42 65 40 62 40 55 V25 H30Z' fill='white' /><rect x='25' y='25' width='15' height='5' fill='white' /><rect x='60' y='25' width='15' height='5' fill='white' /></svg>">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Your Test Result | UKA Technical Institute</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a2e0f1f6a2.js" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="auth.js" defer></script>
+  <script src="result.js" defer></script>
+
+  <style>
+    :root {
+      --accent: #2eb8b8;
+      --accent-light: #e0f2f2;
+      --accent-dark: #1f8f8f;
+      --bg: #f8fbff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --white: #ffffff;
+      --shadow: 0 20px 40px rgba(0,0,0,0.04);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* --- NAVIGATION --- */
+    header {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      position: sticky; top: 0; z-index: 1000;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.03);
+    }
+    .nav { display: flex; justify-content: space-between; align-items: center; }
+    .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; }
+    .logo img { height: 60px; }
+    .logo-text .brand { font-size: 1.4rem; font-weight: 800; display: block; line-height: 1; }
+    .logo-text small { font-size: 0.65rem; color: var(--accent); font-weight: 700; letter-spacing: 1px; }
+
+    .nav-links a { 
+      text-decoration: none; color: var(--text-main); font-weight: 600; 
+      margin: 0 10px; padding: 8px 16px; font-size: 0.95rem; transition: 0.3s;
+      border-radius: 8px;
+    }
+    .nav-links a:hover { color: var(--accent); background: var(--accent-light); }
+
+    .auth-group { display: flex; align-items: center; gap: 15px; }
+    .btn-primary {
+      background: var(--accent); color: white; padding: 10px 24px;
+      border-radius: 10px; text-decoration: none; font-weight: 700;
+      transition: 0.3s; display: inline-block; font-size: 0.9rem; border: none; cursor: pointer;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(46, 184, 184, 0.3); }
+
+    .mobile-toggle { display: none; background: var(--accent-light); border: none; font-size: 1.3rem; padding: 8px 12px; border-radius: 8px; color: var(--accent-dark); }
+
+    /* --- RESULT CONTENT --- */
+    main { flex: 1; padding: 60px 20px; text-align: center; }
+    .result-container {
+      max-width: 800px; margin: 0 auto; background: white; padding: 50px; border-radius: 35px; box-shadow: var(--shadow);
+    }
+    .result-container h2 { font-size: 2.2rem; font-weight: 800; margin-bottom: 40px; color: var(--text-main); }
+
+    .circle-wrapper {
+      display: flex; justify-content: center; gap: 50px; flex-wrap: wrap; margin-bottom: 40px;
+    }
+    .circle-box { position: relative; text-align: center; }
+    .circle-label { font-weight: 700; color: var(--text-muted); margin-top: 15px; font-size: 1rem; }
+    .circle-value {
+      position: absolute; top: 75px; left: 50%; transform: translate(-50%, -50%);
+      font-size: 1.8rem; font-weight: 800; color: var(--text-main);
+    }
+
+    #resultDetails {
+      font-size: 1.1rem; color: var(--text-muted); line-height: 1.8; margin: 30px auto; max-width: 600px;
+    }
+
+    .pdf-btn {
+      background: var(--text-main); color: white; padding: 16px 36px; border-radius: 15px;
+      border: none; font-weight: 700; font-size: 1rem; cursor: pointer; transition: 0.3s;
+      display: inline-flex; align-items: center; gap: 10px;
+    }
+    .pdf-btn:hover { background: var(--accent-dark); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+
+    /* --- FOOTER --- */
+footer {
+  border-top: 1px solid var(--line);
+  padding: 56px 0 32px;
+  background: var(--surface);
+  position: relative;
+  z-index: 1;
+}
+
+/* 5 Column Grid Layout */
+.fgrid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr 1.1fr;
+  gap: 32px;
+  margin-bottom: 36px;
+}
+
+.fgrid h4 {
+  font-size: 0.88rem;
+  color: var(--blue);
+  margin-bottom: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.fgrid a {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--muted);
+  text-decoration: none;
+  margin-bottom: 10px;
+  transition: color 0.15s ease;
+}
+
+.fgrid a:hover {
+  color: var(--red);
+}
+
+/* Bottom Disclaimer & Copyright */
+.fbottom {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  border-top: 1px solid var(--line);
+  padding-top: 22px;
+  line-height: 1.6;
+}
+
+.fbottom-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 992px) {
+  .fgrid {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 28px;
+  }
+}
+
+@media (max-width: 640px) {
+  .fgrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .fgrid > div:first-child {
+    grid-column: 1 / -1; /* Mobile view-তে Brand info পুরো উইডথ জুড়ে থাকবে */
+    margin-bottom: 8px;
+  }
+}
+
+/* Back to Top Button */
+#top {
+  position: fixed;
+  right: 20px;
+  bottom: calc(20px + env(safe-area-inset-bottom, 0));
+  width: 46px;
+  height: 46px;
+  border: none;
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(224, 32, 45, 0.35);
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: all 0.3s;
+  z-index: 60;
+}
+
+#top.show {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+#top:hover {
+  background: var(--red-dark);
+  transform: translateY(-3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+  .reveal, .qt {
+    opacity: 1;
+    transform: none;
+  }
+  #glow {
+    display: none;
+  }
+}
+  </style>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const profileBtn = document.getElementById("profileBtn");
+      const loginBtn = document.getElementById("loginBtn");
+      const registerBtn = document.getElementById("registerBtn");
+
+      if (loginBtn) loginBtn.style.display = "none";
+      if (registerBtn) registerBtn.style.display = "none";
+
+      if (profileBtn) {
+        profileBtn.style.display = "inline-block";
+        profileBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          window.open("profile.html", "_blank");
+        });
+      }
+    });
+
+    function toggleMenu() {
+      document.getElementById('sidebar').classList.toggle('active');
+      document.getElementById('sidebarOverlay').classList.toggle('active');
+    }
+  </script>
+</head>
+
+<body>
+
+  <header>
+    <div class="container nav">
+      <a href="index.html" class="logo">
+        <img src="2_UKA-&-British-council-Logo.png" alt="UKA Logo">
+        <div class="logo-text">
+          <span class="brand">UKA</span>
+          <small>TECHNICAL INSTITUTE</small>
+        </div>
+      </a>
+
+      <nav class="nav-links desktop-only">
+        <a href="home.html">Home</a>
+        <a href="mocks.html">IELTS MOCK TEST</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+
+      <div class="auth-group desktop-only">
+        <a href="profile.html" class="btn-primary" id="profileBtn" style="display:none;">Profile</a>
+      </div>
+
+      <button class="mobile-toggle" onclick="toggleMenu()">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMenu()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:40px;">
+      <span style="font-weight:800; font-size:1.5rem; color:var(--accent);">UKA</span>
+      <button onclick="toggleMenu()" style="background:none; border:none; font-size:1.5rem;">&times;</button>
+    </div>
+    <nav>
+      <a href="index.html" style="display:block; margin-bottom:20px; text-decoration:none; font-weight:700; color:var(--text-main);">Home</a>
+      <a href="profile.html" style="display:block; margin-bottom:20px; text-decoration:none; font-weight:700; color:var(--accent);">Profile</a>
+    </nav>
+  </aside>
+
+  <main>
+    <div class="result-container">
+      <h2>Your English Test Result</h2>
+
+      <div class="circle-wrapper">
+        <div class="circle-box">
+          <svg width="150" height="150">
+            <circle cx="75" cy="75" r="60" stroke="#eef2f6" stroke-width="12" fill="none" />
+            <circle id="percentArc" cx="75" cy="75" r="60"
+                    stroke="#31d3c6" stroke-width="12" fill="none"
+                    stroke-linecap="round" stroke-dasharray="377" stroke-dashoffset="377"
+                    transform="rotate(-90 75 75)" style="transition: stroke-dashoffset 1s ease-out;"/>
+          </svg>
+          <div class="circle-label">Percentage</div>
+          <div id="percentText" class="circle-value">0%</div>
+        </div>
+
+        <div class="circle-box">
+          <svg width="150" height="150">
+            <circle cx="75" cy="75" r="60" stroke="#eef2f6" stroke-width="12" fill="none" />
+            <circle id="cefrArc" cx="75" cy="75" r="60"
+                    stroke="#1f8f8f" stroke-width="12" fill="none"
+                    stroke-linecap="round" stroke-dasharray="377" stroke-dashoffset="377"
+                    transform="rotate(-90 75 75)" style="transition: stroke-dashoffset 1s ease-out;"/>
+          </svg>
+          <div class="circle-label">CEFR Level</div>
+          <div id="cefrLevelText" class="circle-value">--</div>
+        </div>
+      </div>
+
+      <p id="resultDetails">Calculating your performance...</p>
+
+      <button onclick="downloadPDF()" class="pdf-btn">
+        <i class="fas fa-file-pdf"></i> Download Result PDF
+      </button>
+    </div>
+  </main>
+
+  <footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <a href="/" class="brand" style="margin-bottom:12px">
+          <img src="/Brandlogo.png" alt="IELTS Mockpoint" style="height:40px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <span class="txt"><i></i>IELTS Mockpoint</span>
+        </a>
+        <p style="color:var(--muted);font-size:.9rem;max-width:32ch">
+          Free, examiner-graded IELTS practice — authentic mock tests, band score evaluation, and resources.
+        </p>
+      </div>
+      <div>
+        <h4>Practice</h4>
+        <a href="/mocks.html">Full Tests</a>
+        <a href="/cambridge-listening.html">Listening</a>
+        <a href="/cambridge-reading.html">Reading</a>
+        <a href="/cambridge-writing.html">Writing</a>
+        <a href="/speaking.html">Speaking</a>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <a href="/blog.html">Blog & Tips</a>
+        <a href="/learn.html">Free lessons</a>
+        <a href="/band-calculator.html">Band score calculator</a>
+        <a href="/writing-samples.html">Writing samples</a>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <a href="/about.html">About Us</a>
+        <a href="/contact.html">Contact Us</a>
+        <a href="/institutes.html">For institutes</a>
+      </div>
+      <div>
+        <h4>Legal & Policy</h4>
+        <a href="/privacy-policy.html">Privacy Policy</a>
+        <a href="/terms-of-service.html">Terms of Service</a>
+        <a href="/disclaimer.html">Disclaimer</a>
+        <a href="/cookie-policy.html">Cookie Policy</a>
+      </div>
+    </div>
+    <div class="fbottom" style="display:flex; flex-direction:column; gap:8px; margin-top:24px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.08); font-size:0.8rem; color:var(--muted);">
+      <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+        <span>© 2026 IELTS Mockpoint. All rights reserved.</span>
+        <span>Trusted IELTS Preparation & Mock Platform.</span>
+      </div>
+      <span>
+        Disclaimer: IELTS® is a registered trademark of the University of Cambridge, the British Council, and IDP Education Australia. IELTS Mockpoint is an independent preparation platform and is not affiliated, approved, or endorsed by these official bodies.
+      </span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

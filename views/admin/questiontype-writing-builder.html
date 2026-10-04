@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IELTS Writing Practice Builder (Task 1 & Task 2)</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    body { background-color: #f8fafc; font-family: 'Segoe UI', system-ui, sans-serif; padding-bottom: 60px; }
+    .builder-card { max-width: 920px; margin: 40px auto; background: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 10px 25px rgba(0,0,0,0.03); }
+    .form-label { font-size: 14px; font-weight: 600; color: #1e293b; margin-bottom: 6px; }
+    .form-control, .form-select { border-radius: 8px; border: 1.5px solid #cbd5e1; font-size: 14.5px; padding: 10px 14px; }
+    .form-control:focus, .form-select:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
+    .category-preview-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; background: #eff6ff; color: #1d4ed8; border-radius: 20px; font-size: 13px; font-weight: 700; margin-top: 8px; }
+    .badge-task { font-size: 13px; padding: 6px 14px; border-radius: 20px; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="builder-card p-4 p-md-5">
+    
+    <div class="d-flex align-items-center justify-content-between pb-3 mb-4 border-bottom">
+      <div>
+        <h3 class="fw-bold text-dark mb-1">✍️ IELTS Writing Builder</h3>
+        <p class="text-muted small mb-0">Upload Academic Task 1 & Task 2 Practice Sets seamlessly into MongoDB.</p>
+      </div>
+      <span id="moduleBadge" class="badge bg-primary badge-task">Task 1 · Academic</span>
+    </div>
+
+    <form id="writingForm">
+      <div class="row g-4">
+
+        <!-- ১. ক্যাটাগরি ড্রপডাউন (Task 1 & Task 2) -->
+        <div class="col-md-7">
+          <label class="form-label">Select Task Category <span class="text-danger">*</span></label>
+          <select id="categorySelector" class="form-select" required>
+            <option value="" disabled selected>-- Select a Question Type --</option>
+            
+            <optgroup label="Task 1 · Academic Reports">
+              <option value="1|01|Line-Graph|Line Graph">01 · 📈 Line Graph (Trends & Changes)</option>
+              <option value="1|02|Bar-Chart|Bar Chart">02 · 📊 Bar Chart (Compare Categories)</option>
+              <option value="1|03|Pie-Chart|Pie Chart">03 · 🥧 Pie Chart (Proportions & Percentages)</option>
+              <option value="1|04|Table|Table">04 · 🗂️ Table (Compare Data)</option>
+              <option value="1|05|Process-Diagram|Process Diagram">05 · ⚙️ Process Diagram (Stages in Order)</option>
+              <option value="1|06|Map|Map Comparison">06 · 📍 Map Comparison (Changes Over Time)</option>
+              <option value="1|07|Mixed-Charts|Mixed Charts">07 · 🔀 Mixed Charts (Combined Visuals)</option>
+            </optgroup>
+
+            <optgroup label="Task 2 · Academic & General Essays">
+              <option value="2|08|Opinion-Essay|Opinion Essay">08 · 💭 Opinion Essay (Agree / Disagree)</option>
+              <option value="2|09|Discussion-Essay|Discussion Essay">09 · 🗣️ Discussion Essay (Discuss Both Views)</option>
+              <option value="2|10|Problem-Solution|Problem & Solution">10 · 🛠️ Problem & Solution (Causes & Fixes)</option>
+              <option value="2|11|Advantages-Disadvantages|Advantages & Disadvantages">11 · 🔍 Advantages & Disadvantages</option>
+              <option value="2|12|Two-Part-Question|Two-Part Question">12 · ❓ Two-Part Question</option>
+            </optgroup>
+          </select>
+
+          <div id="categoryBadgePreview" class="category-preview-pill d-none">
+            <span id="previewIndex"></span> · <span id="previewName"></span>
+          </div>
+        </div>
+
+        <!-- ২. প্র্যাকটিস সেট নাম্বার -->
+        <div class="col-md-5">
+          <label class="form-label">Practice Set Identifier <span class="text-danger">*</span></label>
+          <input type="text" id="setNumber" class="form-control" placeholder="e.g. Set-1, Set-2" required>
+        </div>
+
+        <!-- ৩. টাইটেল -->
+        <div class="col-12">
+          <label class="form-label">Task Topic / Title <span class="text-danger">*</span></label>
+          <input type="text" id="title" class="form-control" placeholder="e.g. Fast Food Consumption Trends or Space Exploration Expenses" required>
+        </div>
+
+        <!-- ৪. প্রম্পট / প্রশ্নপত্র -->
+        <div class="col-12">
+          <label class="form-label">Question Statement / Instructions <span class="text-danger">*</span></label>
+          <textarea id="prompt" class="form-control" rows="4" placeholder="Type or paste the complete question statement here..." required></textarea>
+        </div>
+
+        <!-- ৫. ইমেজ ফিল্ড (Task 2 এর সময় নিজে থেকেই লুকাবে) -->
+        <div class="col-12" id="imageContainerGroup">
+          <label class="form-label">Visual Image URL (CDN / Cloudinary / ImgBB) <span class="text-danger" id="imgReqStar">*</span></label>
+          <div class="input-group">
+            <span class="input-group-text bg-light text-muted"><i class="fa-regular fa-image"></i></span>
+            <input type="url" id="image" class="form-control" placeholder="https://example.com/charts/sample.png">
+          </div>
+          <small class="text-muted">Only required for visual Task 1 reports.</small>
+        </div>
+
+        <!-- সাবমিট বাটন -->
+        <div class="col-12 d-flex justify-content-end gap-3 pt-3 border-top">
+          <button type="reset" class="btn btn-outline-secondary px-4 py-2" id="resetBtn">Reset</button>
+          <button type="submit" id="submitBtn" class="btn btn-primary px-5 py-2 fw-bold">
+            <i class="fa-solid fa-cloud-arrow-up me-2"></i>Publish Practice Set
+          </button>
+        </div>
+
+      </div>
+    </form>
+
+  </div>
+</div>
+
+<script>
+  const categorySelector = document.getElementById("categorySelector");
+  const previewDiv = document.getElementById("categoryBadgePreview");
+  const previewIndex = document.getElementById("previewIndex");
+  const previewName = document.getElementById("previewName");
+  const moduleBadge = document.getElementById("moduleBadge");
+  const imageContainerGroup = document.getElementById("imageContainerGroup");
+  const imageInput = document.getElementById("image");
+  const imgReqStar = document.getElementById("imgReqStar");
+
+  categorySelector.addEventListener("change", function() {
+    if (!this.value) return;
+    const [partNumber, index, typeSlug, displayName] = this.value.split("|");
+
+    previewIndex.textContent = index;
+    previewName.textContent = displayName;
+    previewDiv.classList.remove("d-none");
+
+    if (partNumber === "2") {
+      moduleBadge.textContent = "Task 2 · Essays";
+      moduleBadge.className = "badge bg-success badge-task";
+      // Task 2 এ ইমেজ হাইড এবং অপশনাল করা
+      imageContainerGroup.style.display = "none";
+      imageInput.removeAttribute("required");
+      imageInput.value = "";
+    } else {
+      moduleBadge.textContent = "Task 1 · Academic";
+      moduleBadge.className = "badge bg-primary badge-task";
+      // Task 1 এ ইমেজ দেখানো এবং আবশ্যক করা
+      imageContainerGroup.style.display = "block";
+      imageInput.setAttribute("required", "true");
+    }
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", () => {
+    previewDiv.classList.add("d-none");
+    imageContainerGroup.style.display = "block";
+    imageInput.setAttribute("required", "true");
+    moduleBadge.textContent = "Task 1 · Academic";
+    moduleBadge.className = "badge bg-primary badge-task";
+  });
+
+  document.getElementById("writingForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const selectedCategoryVal = categorySelector.value;
+    if (!selectedCategoryVal) {
+      alert("Please select a task category.");
+      return;
+    }
+
+    const [partNumber, categoryIndex, typeSlug, displayName] = selectedCategoryVal.split("|");
+    const isTask1 = (partNumber === "1");
+
+    let rawSet = document.getElementById("setNumber").value.trim();
+    let numOnly = rawSet.replace(/\D/g, "");
+    let pracNumberFormatted = numOnly ? `Set-${numOnly}` : rawSet;
+
+    const promptText = document.getElementById("prompt").value.trim();
+    const titleText = document.getElementById("title").value.trim();
+    const imageUrl = isTask1 ? document.getElementById("image").value.trim() : "";
+
+    // writing.js এবং app.js এর সাথে ১০০% সামঞ্জস্যপূর্ণ পেলোড
+    const payload = {
+      type: typeSlug,
+      pracNumber: pracNumberFormatted,
+      title: titleText,
+      writing: {
+        time: isTask1 ? 20 : 40,
+        minWords: isTask1 ? 150 : 250,
+        questions: [
+          {
+            part: parseInt(partNumber, 10),
+            question: promptText,
+            image: imageUrl ? [imageUrl] : []
+          }
+        ]
+      }
+    };
+
+    const submitBtn = document.getElementById("submitBtn");
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Publishing...`;
+
+    try {
+      const res = await fetch("/api/writing-practice-questions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        alert(`✅ Success: ${displayName} (${payload.pracNumber}) uploaded!\nIt is now live in your Practice Hub.`);
+        document.getElementById("writingForm").reset();
+        previewDiv.classList.add("d-none");
+        imageContainerGroup.style.display = "block";
+        imageInput.setAttribute("required", "true");
+        moduleBadge.textContent = "Task 1 · Academic";
+        moduleBadge.className = "badge bg-primary badge-task";
+      } else {
+        alert("❌ Error: " + (data.message || "Failed to save practice set."));
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Network Error: Could not reach the server.");
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up me-2"></i>Publish Practice Set`;
+    }
+  });
+</script>
+
+</body>
+</html>

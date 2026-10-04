@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof pageTitle !== 'undefined' ? pageTitle : 'Cambridge Reading Builder - IELTS Point' %></title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #0b2b52;
+      --blue: #1565c9;
+      --blue-light: #eaf2fd;
+      --red: #e0202d;
+      --surface: #f4f7fb;
+      --line: #cbd5e1;
+    }
+    body {
+      background: var(--surface);
+      font-family: 'Sora', sans-serif;
+      padding-bottom: 80px;
+    }
+    .top-header {
+      background: var(--navy);
+      color: #fff;
+      padding: 16px 24px;
+      box-shadow: 0 4px 15px rgba(11,43,82,0.2);
+    }
+    .card-builder {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.03);
+      margin-bottom: 24px;
+    }
+    .section-title {
+      font-weight: 700;
+      color: var(--navy);
+      border-left: 4px solid var(--blue);
+      padding-left: 10px;
+      margin-bottom: 18px;
+    }
+    .nav-pills .nav-link {
+      font-weight: 700;
+      color: var(--navy);
+      border-radius: 8px;
+      padding: 10px 24px;
+      background: #fff;
+      border: 1px solid var(--line);
+      margin-right: 8px;
+    }
+    .nav-pills .nav-link.active {
+      background: var(--navy);
+      color: #fff;
+      border-color: var(--navy);
+    }
+    .group-box {
+      background: #f8fafc;
+      border: 1.5px dashed var(--blue);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    .btn-delete-group {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+    }
+    .form-control, .form-select {
+      border: 1.5px solid var(--line);
+      border-radius: 8px;
+      font-size: 0.95rem;
+    }
+    .form-control:focus, .form-select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(21,101,201,0.15);
+    }
+    .badge-info-pill {
+      background: var(--blue-light);
+      color: var(--blue);
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+    .notice-box {
+      background: #eff6ff;
+      border-left: 4px solid var(--blue);
+      padding: 12px 16px;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.9rem;
+      color: #1e3a8a;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header -->
+  <div class="top-header d-flex justify-content-between align-items-center">
+    <div>
+      <h4 class="mb-0 fw-bold"><i class="bi bi-book me-2"></i>Cambridge Reading Test Builder</h4>
+      <small class="text-white-50">Upload & Merge Cambridge Academic Reading Tests Passage by Passage</small>
+    </div>
+    <a href="/cambridge/reading" class="btn btn-outline-light btn-sm fw-bold">View Reading Hub</a>
+  </div>
+
+  <div class="container my-4">
+    <!-- Test Identification -->
+    <div class="card-builder">
+      <div class="row g-3">
+        <div class="col-md-3">
+          <label class="form-label fw-bold">Cambridge Book No.</label>
+          <input type="number" id="bookNo" class="form-control" value="12" placeholder="e.g. 12">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label fw-bold">Test No.</label>
+          <input type="number" id="testNo" class="form-control" value="1" placeholder="e.g. 1">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Generated Title</label>
+          <input type="text" id="testTitle" class="form-control" readonly value="Cambridge 12 - Reading Test 1">
+        </div>
+      </div>
+    </div>
+
+    <!-- Passage Tabs Navigation -->
+    <ul class="nav nav-pills mb-3" id="passageTabs">
+      <li class="nav-item">
+        <button type="button" class="nav-link active" onclick="switchPassageTab(1)">Passage 1 (Q 1–13)</button>
+      </li>
+      <li class="nav-item">
+        <button type="button" class="nav-link" onclick="switchPassageTab(2)">Passage 2 (Q 14–26)</button>
+      </li>
+      <li class="nav-item">
+        <button type="button" class="nav-link" onclick="switchPassageTab(3)">Passage 3 (Q 27–40)</button>
+      </li>
+    </ul>
+
+    <!-- Active Passage Form Container -->
+    <div class="card-builder">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="section-title mb-0" id="currentPassageTitleHeader">Passage 1 Configuration (Q 1–13)</h5>
+        <span class="badge-info-pill" id="passageBadge">Active: Passage 1</span>
+      </div>
+
+      <!-- Notice for A B C D and Standard Passages -->
+      <div class="notice-box">
+        <strong>💡 Passage Tips:</strong>
+        <ul class="mb-0 ps-3 mt-1">
+          <li><strong>যদি প্যাসেজে A, B, C, D লেবেল থাকে:</strong> নিচের "Paragraph Labels" বক্সে <code>A, B, C, D</code> লিখে দেবে এবং কনটেন্ট বক্সে প্রতিটি প্যারাগ্রাফের মাঝে <code>###</code> দিয়ে আলাদা করবে।</li>
+          <li><strong>যদি প্যাসেজে কোনো A, B, C, D লেবেল না থাকে:</strong> নিচের "Paragraph Labels" বক্সটি <strong>পুরোপুরি খালি (Blank)</strong> রাখবে এবং পুরো প্যাসেজটি সরাসরি কনটেন্ট বক্সে পেস্ট করে দেবে।</li>
+        </ul>
+      </div>
+
+      <!-- Passage Content Editor -->
+      <div class="mb-4">
+        <label class="form-label fw-bold">Passage Article Title</label>
+        <input type="text" id="passageTitleInput" class="form-control mb-3" placeholder="e.g. The Cacao: A Sweet History">
+
+        <label class="form-label fw-bold">Paragraph Labels (Optional - comma separated if A, B, C, D exist)</label>
+        <input type="text" id="passageParagraphsList" class="form-control mb-3" placeholder="Leave blank if no A, B, C labels. E.g: A, B, C, D, E">
+
+        <label class="form-label fw-bold">Passage Content (Separate with ### only if labels exist)</label>
+        <textarea id="passageContentTextarea" class="form-control" rows="9" placeholder="Paste passage text here... If you have A, B, C labels, separate each paragraph with ###"></textarea>
+      </div>
+
+      <hr class="my-4">
+
+      <!-- Question Groups for this passage -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="fw-bold mb-0 text-navy"><i class="bi bi-ui-checks-grid me-2"></i>Questions in this Passage</h6>
+        <button type="button" class="btn btn-outline-primary btn-sm fw-bold" onclick="addQuestionGroup()">
+          <i class="bi bi-plus-circle me-1"></i>Add Question Group
+        </button>
+      </div>
+
+      <div id="questionGroupsContainer">
+        <!-- Dynamic Question Groups injected here -->
+      </div>
+
+      <!-- Answers Input for this passage -->
+      <div class="mt-4">
+        <h6 class="fw-bold text-navy"><i class="bi bi-key me-2"></i>Official Answer Keys for this Passage</h6>
+        <small class="text-muted d-block mb-2">Format: <code>Q_NO: answer1, alternate_answer</code> (one per line). For T/F/NG write lowercase <code>true</code>, <code>false</code>, or <code>not given</code>.</small>
+        <textarea id="passageAnswersText" class="form-control font-monospace" rows="6" placeholder="1: false&#10;2: not given&#10;3: true&#10;4: d&#10;5: covering"></textarea>
+      </div>
+
+      <!-- Action Button -->
+      <div class="d-flex justify-content-end gap-3 mt-4">
+        <button type="button" class="btn btn-secondary px-4 fw-bold" onclick="previewJSON()">Preview Payload</button>
+        <button type="button" class="btn btn-danger px-4 fw-bold" id="savePassageBtn" onclick="saveCurrentPassage()">
+          <i class="bi bi-cloud-arrow-up-fill me-2"></i>Save & Merge Passage to Database
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JSON Preview Modal -->
+  <div class="modal fade" id="previewModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold">Payload Preview</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <pre id="jsonPreviewBox" class="bg-dark text-light p-3 rounded" style="max-height: 450px; overflow:auto;"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    let activePassage = 1;
+    let groupCounter = 0;
+
+    const passageRanges = {
+      1: { min: 1, max: 13 },
+      2: { min: 14, max: 26 },
+      3: { min: 27, max: 40 }
+    };
+
+    function updateTitle() {
+      const b = document.getElementById("bookNo").value || 0;
+      const t = document.getElementById("testNo").value || 0;
+      document.getElementById("testTitle").value = `Cambridge ${b} - Reading Test ${t}`;
+    }
+    document.getElementById("bookNo").addEventListener("input", updateTitle);
+    document.getElementById("testNo").addEventListener("input", updateTitle);
+
+    function switchPassageTab(pNum) {
+      activePassage = pNum;
+      document.querySelectorAll("#passageTabs .nav-link").forEach((btn, idx) => {
+        btn.classList.toggle("active", idx + 1 === pNum);
+      });
+      document.getElementById("currentPassageTitleHeader").textContent = `Passage ${pNum} Configuration (Q ${passageRanges[pNum].min}–${passageRanges[pNum].max})`;
+      document.getElementById("passageBadge").textContent = `Active: Passage ${pNum}`;
+      document.getElementById("questionGroupsContainer").innerHTML = '';
+      groupCounter = 0;
+      
+      addQuestionGroup();
+    }
+
+    // Add Question Group Block
+    function addQuestionGroup() {
+      groupCounter++;
+      const gId = String(activePassage) + String(groupCounter);
+      const container = document.getElementById("questionGroupsContainer");
+
+      const groupHtml = document.createElement("div");
+      groupHtml.className = "group-box";
+      groupHtml.id = "groupBox_" + gId;
+
+      groupHtml.innerHTML = `
+        <button type="button" class="btn btn-outline-danger btn-sm btn-delete-group" onclick="removeGroup('groupBox_${gId}')">
+          <i class="bi bi-trash"></i> Remove Group
+        </button>
+
+        <div class="row g-3">
+          <div class="col-md-2">
+            <label class="form-label fw-bold">Group ID</label>
+            <input type="number" class="form-control group-id" value="${gId}">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-bold">Question Type</label>
+            <select class="form-select group-type" onchange="renderTypeSpecificFields('${gId}', this.value)">
+              <option value="T/F/NG">T/F/NG (True / False / Not Given)</option>
+              <option value="matching-table-container">Matching Information (Which paragraph contains...)</option>
+              <option value="summary-completion">Summary Completion ([blank])</option>
+              <option value="summary-with-list-of-words">Summary with List of Words ([blank] + Word List)</option>
+              <option value="note-completion">Note Completion (Heading + Subheadings + [blank])</option>
+              <option value="sentence-completion">Sentence / Flowchart Completion ([blank])</option>
+              <option value="mcq-one-choice">Multiple Choice (Single Choice - 4 options)</option>
+              <option value="feature-matching-drag-drop">Feature Matching (Categories & Descriptions)</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Question Numbers (e.g. 1, 2, 3, 4)</label>
+            <input type="text" class="form-control group-qids" placeholder="e.g. 1, 2, 3, 4, 5">
+          </div>
+          <div class="col-12">
+            <label class="form-label fw-bold">Group Instruction</label>
+            <textarea class="form-control group-instruction" rows="2" placeholder="e.g. Do the following statements agree with the information given in Reading Passage 1?..."></textarea>
+          </div>
+        </div>
+
+        <div class="type-fields-area mt-3" id="typeFields_${gId}"></div>
+      `;
+
+      container.appendChild(groupHtml);
+      renderTypeSpecificFields(gId, "T/F/NG");
+    }
+
+    function removeGroup(elId) {
+      const el = document.getElementById(elId);
+      if (el) el.remove();
+    }
+
+    // Dynamic Form Switcher
+    function renderTypeSpecificFields(gId, type) {
+      const container = document.getElementById("typeFields_" + gId);
+      if (!container) return;
+
+      if (type === "T/F/NG") {
+        container.innerHTML = `
+          <label class="form-label fw-bold">Statements (One statement per line, in order)</label>
+          <textarea class="form-control type-statements" rows="5" placeholder="First statement...&#10;Second statement...&#10;Third statement..."></textarea>
+        `;
+      } 
+      else if (type === "matching-table-container") {
+        container.innerHTML = `
+          <div class="row g-2 mb-2">
+            <div class="col-md-4">
+              <label class="form-label fw-bold">Paragraph Labels</label>
+              <input type="text" class="form-control type-matching-paragraphs" value="A, B, C, D, E, F, G">
+            </div>
+            <div class="col-md-8">
+              <label class="form-label fw-bold">Information List (One item per line)</label>
+              <textarea class="form-control type-matching-info" rows="5" placeholder="the part of cacao trees used to produce chocolate&#10;average chocolate consumption by people..."></textarea>
+            </div>
+          </div>
+        `;
+      }
+      else if (type === "summary-completion") {
+        container.innerHTML = `
+          <label class="form-label fw-bold">Summary Title</label>
+          <input type="text" class="form-control type-summary-title mb-2" placeholder="e.g. Bondi Beach Activities">
+          <label class="form-label fw-bold">Summary Text with [blank] tags</label>
+          <textarea class="form-control type-summary-text" rows="5" placeholder="Bondi beach holds feature sports activities which attracts lots of [blank]. Choosing to live at this place..."></textarea>
+        `;
+      }
+      else if (type === "sentence-completion") {
+        container.innerHTML = `
+          <label class="form-label fw-bold">Section Title (Optional)</label>
+          <input type="text" class="form-control type-summary-title mb-2" placeholder="e.g. Steps in chocolate making">
+          <label class="form-label fw-bold">Sentences with [blank] (One per line)</label>
+          <textarea class="form-control type-sentence-lines" rows="5" placeholder="Cacao seeds - sorting, cleaning and cooking ridding seeds of their [blank]&#10;Nibs - crushing [blank]&#10;Add sugar, milk and [blank]"></textarea>
+        `;
+      }
+      else if (type === "summary-with-list-of-words") {
+        container.innerHTML = `
+          <label class="form-label fw-bold">Summary Title</label>
+          <input type="text" class="form-control type-summary-title mb-2" placeholder="e.g. Antarctica's Impact on Global Climate">
+          <label class="form-label fw-bold">Word List Options (Comma-separated)</label>
+          <input type="text" class="form-control type-word-list mb-2" placeholder="temperature, pressure, glaciers, rainfall, katabatic winds">
+          <label class="form-label fw-bold">Summary Text with [blank] tags</label>
+          <textarea class="form-control type-summary-text" rows="5" placeholder="Globally, mass Antarctica's size and [blank] influence climate change..."></textarea>
+        `;
+      }
+      else if (type === "note-completion") {
+        container.innerHTML = `
+          <label class="form-label fw-bold">Note Heading</label>
+          <input type="text" class="form-control type-note-heading mb-2" placeholder="e.g. Bondi Beach: History and Development">
+          <label class="form-label fw-bold">Subheadings (Comma-separated)</label>
+          <input type="text" class="form-control type-note-subheadings mb-2" placeholder="Origins and Meaning, Ownership and Early Use, Social Impact">
+          <label class="form-label fw-bold">Paragraph Lines with [blank] (Separate subheading sections with ###)</label>
+          <textarea class="form-control type-note-paragraphs" rows="6" placeholder="According to Aboriginal language, Bondi refers to water hitting [blank]&#10;Evidence of early inhabitants is visible through [blank]&#10;###&#10;Francis O’Brien allowed the public to use land as a [blank]&#10;###&#10;Access was improved by the arrival of [blank] in 1884."></textarea>
+        `;
+      }
+      else if (type === "mcq-one-choice") {
+        container.innerHTML = `
+          <label class="form-label fw-bold">Questions (One question per line)</label>
+          <textarea class="form-control type-mcq-questions mb-2" rows="4" placeholder="First question text?&#10;Second question text?"></textarea>
+          <label class="form-label fw-bold">Options (4 options per question, separated by ||, one question per line)</label>
+          <textarea class="form-control type-mcq-options" rows="4" placeholder="Opt A || Opt B || Opt C || Opt D&#10;Opt A || Opt B || Opt C || Opt D"></textarea>
+        `;
+      }
+      else if (type === "feature-matching-drag-drop") {
+        container.innerHTML = `
+          <label class="form-label fw-bold">Category Options (Comma-separated)</label>
+          <input type="text" class="form-control type-feat-options mb-2" placeholder="authority, social proof, linking, scarcity">
+          <label class="form-label fw-bold">Features / Descriptions (One per line)</label>
+          <textarea class="form-control type-feat-descriptions" rows="5" placeholder="some expert may reveal qualification in front of clients.&#10;parents tend to say something that other kids are doing..."></textarea>
+        `;
+      }
+    }
+
+    // Payload builder
+    function collectPassagePayload() {
+      const book = Number(document.getElementById("bookNo").value);
+      const testNo = Number(document.getElementById("testNo").value);
+
+      // Passage structure handling
+      const pTitle = document.getElementById("passageTitleInput").value.trim();
+      const pLabelsRaw = document.getElementById("passageParagraphsList").value.trim();
+      const rawText = document.getElementById("passageContentTextarea").value.trim();
+
+      let pLabels = [];
+      let pContents = [];
+
+      if (pLabelsRaw !== "") {
+        // Case 1: Labeled Passage (A, B, C...)
+        pLabels = pLabelsRaw.split(",").map(p => p.trim()).filter(Boolean);
+        const splitBlocks = rawText.split("###").map(p => p.trim()).filter(Boolean);
+        pContents = splitBlocks.map(block => [block]);
+      } else {
+        // Case 2: Standard Passage without A, B, C labels
+        pLabels = [];
+        pContents = [[rawText]];
+      }
+
+      const passageObj = {
+        part: activePassage,
+        title: pTitle,
+        paragraphs: pLabels,
+        "paragraph-content": pContents
+      };
+
+      // Questions & Instructions
+      const questions = [];
+      const instructions = [];
+      const groupBoxes = document.querySelectorAll(".group-box");
+
+      groupBoxes.forEach(box => {
+        const gId = Number(box.querySelector(".group-id").value);
+        const gType = box.querySelector(".group-type").value;
+        const qIds = box.querySelector(".group-qids").value.split(",").map(n => Number(n.trim())).filter(n => !isNaN(n));
+        const inst = box.querySelector(".group-instruction").value.trim();
+
+        if (inst) {
+          instructions.push({ group: gId, instruction: inst });
+        }
+
+        const qObj = {
+          part: activePassage,
+          group: gId,
+          type: gType,
+          id: qIds
+        };
+
+        if (gType === "T/F/NG") {
+          const stmts = box.querySelector(".type-statements") ? box.querySelector(".type-statements").value.split("\n").map(s => s.trim()).filter(Boolean) : [];
+          qObj.questions = stmts;
+        }
+        else if (gType === "matching-table-container") {
+          const paras = box.querySelector(".type-matching-paragraphs") ? box.querySelector(".type-matching-paragraphs").value.split(",").map(s => s.trim()).filter(Boolean) : [];
+          const infos = box.querySelector(".type-matching-info") ? box.querySelector(".type-matching-info").value.split("\n").map(s => s.trim()).filter(Boolean) : [];
+          qObj.paragraphs = paras;
+          qObj.information = infos;
+        }
+        else if (gType === "summary-completion") {
+          qObj.title = box.querySelector(".type-summary-title") ? box.querySelector(".type-summary-title").value.trim() : "";
+          const textVal = box.querySelector(".type-summary-text") ? box.querySelector(".type-summary-text").value.trim() : "";
+          qObj.summary = [textVal];
+        }
+        else if (gType === "sentence-completion") {
+          qObj.title = box.querySelector(".type-summary-title") ? box.querySelector(".type-summary-title").value.trim() : "";
+          const lines = box.querySelector(".type-sentence-lines") ? box.querySelector(".type-sentence-lines").value.split("\n").map(l => l.trim()).filter(Boolean) : [];
+          qObj.sentences = lines;
+        }
+        else if (gType === "summary-with-list-of-words") {
+          qObj.title = box.querySelector(".type-summary-title") ? box.querySelector(".type-summary-title").value.trim() : "";
+          qObj["word-list"] = box.querySelector(".type-word-list") ? box.querySelector(".type-word-list").value.split(",").map(s => s.trim()).filter(Boolean) : [];
+          const textVal = box.querySelector(".type-summary-text") ? box.querySelector(".type-summary-text").value.trim() : "";
+          qObj.summary = [textVal];
+        }
+        else if (gType === "note-completion") {
+          qObj.heading = box.querySelector(".type-note-heading") ? box.querySelector(".type-note-heading").value.trim() : "";
+          qObj.subheadings = box.querySelector(".type-note-subheadings") ? box.querySelector(".type-note-subheadings").value.split(",").map(s => s.trim()).filter(Boolean) : [];
+          const rawBlocks = box.querySelector(".type-note-paragraphs") ? box.querySelector(".type-note-paragraphs").value.split("###") : [];
+          qObj.paragraphs = rawBlocks.map(block => block.split("\n").map(l => l.trim()).filter(Boolean));
+        }
+        else if (gType === "mcq-one-choice") {
+          const qList = box.querySelector(".type-mcq-questions") ? box.querySelector(".type-mcq-questions").value.split("\n").map(s => s.trim()).filter(Boolean) : [];
+          const optLines = box.querySelector(".type-mcq-options") ? box.querySelector(".type-mcq-options").value.split("\n").map(s => s.trim()).filter(Boolean) : [];
+          qObj.questions = qList;
+          qObj.options = optLines.map(line => line.split("||").map(o => o.trim()).filter(Boolean));
+        }
+        else if (gType === "feature-matching-drag-drop") {
+          qObj.options = box.querySelector(".type-feat-options") ? box.querySelector(".type-feat-options").value.split(",").map(s => s.trim()).filter(Boolean) : [];
+          qObj.features = box.querySelector(".type-feat-descriptions") ? box.querySelector(".type-feat-descriptions").value.split("\n").map(s => s.trim()).filter(Boolean) : [];
+        }
+
+        questions.push(qObj);
+      });
+
+      // Parse Answers
+      const answersObj = {};
+      const ansLines = document.getElementById("passageAnswersText").value.split("\n").map(l => l.trim()).filter(Boolean);
+      ansLines.forEach(line => {
+        const parts = line.split(":");
+        if (parts.length >= 2) {
+          const qNum = parts[0].trim();
+          const ansVals = parts.slice(1).join(":").split(",").map(a => a.trim().toLowerCase());
+          answersObj[qNum] = ansVals;
+        }
+      });
+
+      return {
+        book,
+        testNo,
+        passageNo: activePassage,
+        passageData: passageObj,
+        questions,
+        instructions,
+        answers: answersObj
+      };
+    }
+
+    function previewJSON() {
+      const payload = collectPassagePayload();
+      document.getElementById("jsonPreviewBox").textContent = JSON.stringify(payload, null, 2);
+      new bootstrap.Modal(document.getElementById("previewModal")).show();
+    }
+
+    async function saveCurrentPassage() {
+      const payload = collectPassagePayload();
+      const btn = document.getElementById("savePassageBtn");
+
+      if (!payload.book || !payload.testNo) {
+        alert("Please provide Book and Test numbers!");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Saving Passage ${activePassage}...`;
+
+      try {
+        const response = await fetch("/admin/api/cambridge-reading/save", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          alert(`Success: ${data.message}`);
+        } else {
+          alert(`Error: ${data.error || "Failed to save passage"}`);
+        }
+      } catch (err) {
+        console.error(err);
+        alert(`Server Error: ${err.message}`);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="bi bi-cloud-arrow-up-fill me-2"></i>Save & Merge Passage to Database`;
+      }
+    }
+
+    // Initialize first group on load
+    addQuestionGroup();
+  </script>
+</body>
+</html>

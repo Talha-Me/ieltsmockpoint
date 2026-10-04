@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IELTS Smart Blog Publisher - Admin</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #0f172a;
+      color: #334155;
+      padding-bottom: 60px;
+    }
+    .top-header {
+      background: #1e293b;
+      border-bottom: 1px solid #334155;
+      padding: 18px 0;
+      margin-bottom: 30px;
+    }
+    .glass-card {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    .form-label {
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: #1e293b;
+      margin-bottom: 6px;
+    }
+    .form-control, .form-select {
+      border-radius: 10px;
+      border: 1.5px solid #cbd5e1;
+      padding: 10px 14px;
+      font-size: 0.95rem;
+    }
+    .form-control:focus, .form-select:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+    /* Quick Helper Tags */
+    .quick-chip {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: 20px;
+      padding: 5px 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #334155;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .quick-chip:hover {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #2563eb;
+    }
+    /* Live Preview Screen */
+    .preview-box {
+      background: #f8fafc;
+      border: 1.5px dashed #cbd5e1;
+      border-radius: 14px;
+      min-height: 520px;
+      padding: 24px;
+    }
+    .preview-content h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-top: 24px;
+      margin-bottom: 12px;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 6px;
+    }
+    .preview-content h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-top: 18px;
+      margin-bottom: 8px;
+    }
+    .preview-content p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: #334155;
+      margin-bottom: 14px;
+    }
+    .preview-content ul {
+      padding-left: 20px;
+      margin-bottom: 16px;
+    }
+    .preview-content li {
+      margin-bottom: 6px;
+      line-height: 1.6;
+    }
+    .preview-tip-box {
+      background: #eff6ff;
+      border-left: 4px solid #2563eb;
+      padding: 12px 18px;
+      border-radius: 0 8px 8px 0;
+      margin: 18px 0;
+      color: #1e40af;
+      font-weight: 500;
+    }
+    .preview-quote-box {
+      background: #fdf2f8;
+      border-left: 4px solid #db2777;
+      padding: 12px 18px;
+      border-radius: 0 8px 8px 0;
+      margin: 18px 0;
+      color: #9d174d;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="top-header text-white">
+    <div class="container d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center gap-3">
+        <span class="badge bg-primary px-3 py-2 fs-6 rounded-pill"><i class="fa fa-pen-nib"></i> Blog Admin</span>
+        <h4 class="fw-bold mb-0 text-white">IELTS Smart Blog Publisher</h4>
+      </div>
+      <div class="d-flex gap-2">
+        <a href="/blog" target="_blank" class="btn btn-outline-light rounded-pill px-4 fw-semibold">
+          <i class="fa fa-external-link me-1"></i> Live Blog Hub
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="row g-4">
+      
+      <!-- Left Column: Input Form -->
+      <div class="col-lg-6">
+        <div class="glass-card p-4">
+          <form id="autoBlogForm">
+            
+            <div class="row g-3">
+              <!-- Title -->
+              <div class="col-12">
+                <label class="form-label">Article Title (H1)</label>
+                <input type="text" id="title" class="form-control form-control-lg fw-bold" placeholder="e.g. 10 Essential Tips to Score Band 8.0 in IELTS Reading" required>
+              </div>
+
+              <!-- Category, Read Time -->
+              <div class="col-md-7">
+                <label class="form-label">Category</label>
+                <select id="category" class="form-select fw-bold text-primary">
+                  <option value="Tips & Tricks">Tips & Tricks</option>
+                  <option value="Vocabulary">Vocabulary</option>
+                  <option value="Writing Band 8">Writing Band 8</option>
+                  <option value="Listening Strategy">Listening Strategy</option>
+                  <option value="Speaking Secrets">Speaking Secrets</option>
+                  <option value="Exam Updates">Exam Updates</option>
+                </select>
+              </div>
+
+              <div class="col-md-5">
+                <label class="form-label">Reading Time (Min)</label>
+                <input type="number" id="readTime" class="form-control text-center fw-bold" value="5" min="1">
+              </div>
+
+              <!-- Thumbnail URL -->
+              <div class="col-12">
+                <label class="form-label"><i class="fa fa-image text-success me-1"></i> Thumbnail Image URL (Cloudflare R2)</label>
+                <input type="url" id="thumbnail" class="form-control" placeholder="https://pub-xxxx.r2.dev/images/blog-cover.jpg">
+              </div>
+
+              <!-- Excerpt -->
+              <div class="col-12">
+                <label class="form-label">Short Excerpt (Shows on preview cards)</label>
+                <textarea id="excerpt" class="form-control" rows="2" placeholder="Brief summary of this article..."></textarea>
+              </div>
+
+              <!-- SEO Meta Accordion -->
+              <div class="col-12">
+                <div class="p-3 bg-light rounded-3 border">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="fw-bold text-primary mb-0"><i class="fa fa-search me-1"></i> High-Rank Google SEO</h6>
+                    <small class="text-muted">Auto-generated or custom</small>
+                  </div>
+                  <div class="row g-2">
+                    <div class="col-md-6">
+                      <label class="form-label small fw-semibold">Keywords (comma separated)</label>
+                      <input type="text" id="keywords" class="form-control form-control-sm" placeholder="ielts tips, band 8, cambridge">
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label small fw-semibold">Custom Meta Title</label>
+                      <input type="text" id="metaTitle" class="form-control form-control-sm" placeholder="Leave blank to use article title">
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label small fw-semibold">Meta Description (150 chars)</label>
+                      <input type="text" id="metaDescription" class="form-control form-control-sm" placeholder="Google search summary snippet...">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Smart Plain Text Article Content -->
+              <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <label class="form-label mb-0">Article Content (Plain Text Only)</label>
+                  <span class="small text-muted">HTML কোড লেখার দরকার নেই</span>
+                </div>
+
+                <!-- Instant Templates / Quick Helpers -->
+                <div class="d-flex flex-wrap gap-1 mb-2">
+                  <span class="quick-chip" onclick="insertHelper('## Subheading Title')"><i class="fa fa-heading"></i> Subheading</span>
+                  <span class="quick-chip" onclick="insertHelper('- Bullet point step')"><i class="fa fa-list-ul"></i> Bullet Point</span>
+                  <span class="quick-chip" onclick="insertHelper('> Tip: Pay attention to keywords')"><i class="fa fa-lightbulb"></i> Tip Box</span>
+                  <span class="quick-chip" onclick="insertHelper('\"Quote: Consistent practice creates confidence\"')"><i class="fa fa-quote-left"></i> Quote</span>
+                </div>
+
+                <textarea id="rawContent" class="form-control" rows="12" placeholder="এখানে সরাসরি সাধারণ টেক্সট লিখুন।&#10;&#10;হেডিং দিতে লাইনের শুরুতে ## লিখুন:&#10;## 1. Stop Reading Every Single Word&#10;&#10;প্যারাগ্রাফ স্বাভাবিকভাবে লিখুন।&#10;&#10;বুলেট পয়েন্ট দিতে লাইনের শুরুতে ড্যাশ (-) দিন:&#10;- Read instructions carefully&#10;- Highlight keywords&#10;&#10;টিপস বক্সের জন্য লাইনের শুরুতে > দিন:&#10;> Golden Rule: Never assume answers outside the passage.&#10;&#10;কোটেশনের জন্য ইনভার্টেড কমা ব্যবহার করুন:&#10;&quot;Success in IELTS is about precision, not speed.&quot;" required></textarea>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="col-12 pt-2">
+                <button type="submit" id="submitBtn" class="btn btn-primary btn-lg w-100 fw-bold shadow-sm">
+                  <i class="fa fa-paper-plane me-1"></i> Publish Article to Blog Hub
+                </button>
+              </div>
+
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Right Column: Live Article Reader Preview -->
+      <div class="col-lg-6">
+        <div class="glass-card p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold text-dark mb-0"><i class="fa fa-eye text-primary me-2"></i> Live Article Reader View</h5>
+            <span class="badge bg-success-subtle text-success fw-bold px-3 py-1 rounded-pill">Auto Updates</span>
+          </div>
+
+          <div class="preview-box">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <span class="badge bg-primary px-3 py-2 rounded-pill" id="prevCategory">Tips & Tricks</span>
+              <span class="small text-muted" id="prevReadTime"><i class="fa fa-clock me-1 text-warning"></i> 5 min read</span>
+            </div>
+
+            <h2 class="fw-extrabold text-dark mb-3" id="prevTitle" style="font-size: 1.8rem; line-height: 1.3;">Article Title Preview</h2>
+
+            <!-- Cover Image Preview -->
+            <img id="prevImg" src="" alt="Cover" class="img-fluid rounded-3 border mb-3 w-100" style="max-height: 260px; object-fit: cover; display: none;">
+
+            <!-- Rendered HTML Content -->
+            <div class="preview-content" id="prevContent">
+              <p class="text-muted fst-italic">বাঁ পাশের ঘরে লিখলেই এখানে স্বয়ংক্রিয়ভাবে শিক্ষার্থীদের পড়ার মতো ফরম্যাট তৈরি হবে...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    // Convert plain text with markdown-like prefixes to structured HTML automatically
+    function convertTextToHtml(raw) {
+      if (!raw) return "";
+      const lines = raw.split("\n");
+      let html = "";
+      let inList = false;
+
+      for (let i = 0; i < lines.length; i++) {
+        let line = lines[i].trim();
+
+        if (line.startsWith("## ")) {
+          if (inList) { html += "</ul>"; inList = false; }
+          html += `<h2>${line.replace("## ", "")}</h2>`;
+        } else if (line.startsWith("### ")) {
+          if (inList) { html += "</ul>"; inList = false; }
+          html += `<h3>${line.replace("### ", "")}</h3>`;
+        } else if (line.startsWith("> ")) {
+          if (inList) { html += "</ul>"; inList = false; }
+          html += `<div class="preview-tip-box"><i class="fa fa-lightbulb me-1"></i> ${line.replace("> ", "")}</div>`;
+        } else if (line.startsWith('"') && line.endsWith('"')) {
+          if (inList) { html += "</ul>"; inList = false; }
+          html += `<div class="preview-quote-box">${line.replace(/^"|"$/g, "")}</div>`;
+        } else if (line.startsWith("- ") || line.startsWith("* ")) {
+          if (!inList) { html += "<ul>"; inList = true; }
+          html += `<li>${line.substring(2)}</li>`;
+        } else if (line.length > 0) {
+          if (inList) { html += "</ul>"; inList = false; }
+          html += `<p>${line}</p>`;
+        } else {
+          if (inList) { html += "</ul>"; inList = false; }
+        }
+      }
+      if (inList) html += "</ul>";
+      return html;
+    }
+
+    // Live Preview Synchronization
+    function updatePreview() {
+      const title = document.getElementById("title").value.trim() || "Article Title Preview";
+      const cat = document.getElementById("category").value;
+      const readTime = document.getElementById("readTime").value || "5";
+      const img = document.getElementById("thumbnail").value.trim();
+      const raw = document.getElementById("rawContent").value;
+
+      document.getElementById("prevTitle").textContent = title;
+      document.getElementById("prevCategory").textContent = cat;
+      document.getElementById("prevReadTime").innerHTML = `<i class="fa fa-clock me-1 text-warning"></i> ${readTime} min read`;
+
+      // Image update
+      const imgTag = document.getElementById("prevImg");
+      if (img) {
+        imgTag.src = img;
+        imgTag.style.display = "block";
+      } else {
+        imgTag.style.display = "none";
+      }
+
+      // Content update
+      const parsedHtml = convertTextToHtml(raw);
+      document.getElementById("prevContent").innerHTML = parsedHtml || `<p class="text-muted fst-italic">বাঁ পাশের ঘরে লিখলেই এখানে স্বয়ংক্রিয়ভাবে শিক্ষার্থীদের পড়ার মতো ফরম্যাট তৈরি হবে...</p>`;
+    }
+
+    // Helper text inserter
+    function insertHelper(text) {
+      const ta = document.getElementById("rawContent");
+      const start = ta.selectionStart;
+      ta.value = ta.value.substring(0, start) + "\n" + text + "\n" + ta.value.substring(start);
+      ta.focus();
+      updatePreview();
+    }
+
+    // Event listeners for instant live preview
+    ["title", "category", "readTime", "thumbnail", "rawContent"].forEach(id => {
+      document.getElementById(id).addEventListener("input", updatePreview);
+    });
+
+    // Form submission
+    document.getElementById("autoBlogForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById("submitBtn");
+      btn.disabled = true;
+      btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Publishing...`;
+
+      const title = document.getElementById("title").value.trim();
+      const raw = document.getElementById("rawContent").value.trim();
+      const structuredHtml = convertTextToHtml(raw);
+
+      // Auto-generate clean SEO slug
+      const slug = title
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, "")
+        .replace(/[\s_-]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+
+      const payload = {
+        title: title,
+        slug: slug,
+        category: document.getElementById("category").value,
+        thumbnail: document.getElementById("thumbnail").value.trim(),
+        readTimeMinutes: Number(document.getElementById("readTime").value),
+        excerpt: document.getElementById("excerpt").value.trim(),
+        metaTitle: document.getElementById("metaTitle").value.trim() || title,
+        keywords: document.getElementById("keywords").value.split(",").map(k => k.trim()).filter(Boolean),
+        metaDescription: document.getElementById("metaDescription").value.trim() || document.getElementById("excerpt").value.trim(),
+        content: structuredHtml
+      };
+
+      try {
+        const res = await fetch("/api/blogs", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          alert("🎉 Congratulations! Blog article published successfully!");
+          document.getElementById("title").value = "";
+          document.getElementById("rawContent").value = "";
+          document.getElementById("excerpt").value = "";
+          updatePreview();
+        } else {
+          alert("Error: " + data.message);
+        }
+      } catch (err) {
+        alert("Server request failed: " + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa fa-paper-plane me-1"></i> Publish Article to Blog Hub`;
+      }
+    });
+  </script>
+</body>
+</html>

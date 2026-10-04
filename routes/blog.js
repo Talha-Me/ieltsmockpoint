@@ -1,0 +1,9 @@
+(function(){const $=id=>document.getElementById(id),hd=$("hd"),prog=$("prog"),top=$("top"),sb=$("sb"),ov=$("ov");
+addEventListener("scroll",()=>{hd&&hd.classList.toggle("scrolled",scrollY>10);const h=document.documentElement.scrollHeight-innerHeight;prog&&(prog.style.width=(h>0?scrollY/h*100:0)+"%");top&&top.classList.toggle("show",scrollY>600)},{passive:true});
+top&&(top.onclick=()=>scrollTo({top:0,behavior:"smooth"}));
+function setMenu(o){sb.classList.toggle("open",o);ov.classList.toggle("open",o);sb.setAttribute("aria-hidden",!o);document.body.style.overflow=o?"hidden":""}
+if(sb){$("openMenu").onclick=()=>setMenu(true);$("closeMenu").onclick=()=>setMenu(false);ov.onclick=()=>setMenu(false);sb.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>setMenu(false)));addEventListener("keydown",e=>{if(e.key==="Escape")setMenu(false)});matchMedia("(min-width:921px)").addEventListener("change",e=>{if(e.matches)setMenu(false)})}
+const rio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");rio.unobserve(e.target)}}),{threshold:.1});
+document.querySelectorAll(".reveal").forEach((el,i)=>{el.style.transitionDelay=(i%4)*70+"ms";rio.observe(el)});
+const m=$("marq");if(m){const w=["Free IELTS Mock Test","Cambridge IELTS Practice","Band Score Guide","Listening Tips","Reading Tips","Writing Task 2","Speaking Part 2","True / False / Not Given","Study Plan","Map Labelling","Matching Headings","IELTS Vocabulary"];m.innerHTML=[...w,...w].map(x=>`<span>${x}</span>`).join("")}
+if(!matchMedia("(prefers-reduced-motion:reduce)").matches){const g=$("glow");addEventListener("mousemove",e=>{g&&(g.style.transform=`translate(${e.clientX}px,${e.clientY}px)`)},{passive:true})}})();
