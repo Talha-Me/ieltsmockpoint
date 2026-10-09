@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-620WY8NNVE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-620WY8NNVE');
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>IELTS Mock Test Free 2026: IELTS Blog, Tips &amp; Band 8+ Strategies – IELTS Mockpoint</title>
@@ -439,129 +447,39 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:var(--sur
 <button id="top" aria-label="Back to top">↑</button>
 
 <script>
-const $=id=>document.getElementById(id);
-const hd=$('hd'),prog=$('prog'),topBtn=$('top');
-addEventListener('scroll',()=>{
-  hd.classList.toggle('scrolled',scrollY>10);
-  topBtn.classList.toggle('show',scrollY>500);
-  const h=document.documentElement.scrollHeight-innerHeight;
-  prog.style.width=(h>0?scrollY/h*100:0)+'%';
-},{passive:true});
-topBtn.onclick=()=>scrollTo({top:0,behavior:'smooth'});
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const FALL = 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=800&auto=format&fit=crop&q=80';
 
-// Sidebar
-const sb=$('sb'),ov=$('ov');
-function setMenu(o){sb.classList.toggle('open',o);ov.classList.toggle('open',o);document.body.style.overflow=o?'hidden':'';}
-$('openMenu').onclick=()=>setMenu(true);$('closeMenu').onclick=()=>setMenu(false);ov.onclick=()=>setMenu(false);
+const CATS = [
+  ['All', 'All topics'],
+  ['Tips & Tricks', 'Tips & Tricks'],
+  ['Reading Strategy', 'Reading'],
+  ['Listening Strategy', 'Listening'],
+  ['Writing Band 8', 'Writing'],
+  ['Speaking Secrets', 'Speaking'],
+  ['Vocabulary', 'Vocabulary']
+];
 
-// Hero Word Swap
-const sw=$('swap'),W=['Reading','Listening','Writing','Speaking','Band 8'];
-let wi=0,ci=W[0].length,del=true;
-function typeSwap(){
-  const w=W[wi];
-  if(del){ci--;sw.textContent=w.slice(0,ci);if(ci<=0){del=false;wi=(wi+1)%W.length;}setTimeout(typeSwap,55);}
-  else{const n=W[wi];ci++;sw.textContent=n.slice(0,ci);if(ci>=n.length){del=true;setTimeout(typeSwap,1700);}else setTimeout(typeSwap,95);}
-}
-typeSwap();
-
-// Scroll reveal (content stays visible if JS or observer fails)
-if('IntersectionObserver' in window){
-  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.remove('pre');io.unobserve(e.target);}}),{threshold:.12});
-  document.querySelectorAll('.reveal').forEach(el=>{
-    if(el.getBoundingClientRect().top>innerHeight){el.classList.add('pre');io.observe(el);}
-  });
-}
-
-// Hero floating objects follow the mouse slightly (parallax)
-const heroEl=document.querySelector('.hero'),fl=document.querySelectorAll('.float');
-if(matchMedia('(hover:hover)').matches){
-  heroEl.addEventListener('mousemove',e=>{
-    const x=(e.clientX/innerWidth-.5),y=(e.clientY/innerHeight-.5);
-    fl.forEach((el,i)=>{const d=(i%3+1)*10;el.style.translate=(x*d)+'px '+(y*d)+'px';});
-  });
-}
-
-// Categories
-const CATS=[['All','All topics'],['Tips & Tricks','Tips & Tricks'],['Reading Strategy','Reading'],['Listening Strategy','Listening'],['Writing Band 8','Writing'],['Speaking Secrets','Speaking'],['Vocabulary','Vocabulary']];
-let cat='All',blogs=[];
-const catsEl=$('cats');
-
-CATS.forEach(([val,label],i)=>{
-  const b=document.createElement('button');
-  b.className='cat'+(i===0?' active':'');
-  b.textContent=label;
-  b.onclick=()=>{
-    document.querySelectorAll('.cat').forEach(x=>x.classList.remove('active'));
-    b.classList.add('active');
-    cat=val;
-    fetchBlogs();
-  };
-  catsEl.appendChild(b);
-});
-
-// Search
-$('sf').addEventListener('submit',e=>{e.preventDefault();fetchBlogs();});
+let cat = 'All';
+let blogs = [];
 let dt;
-$('q').addEventListener('input',()=>{clearTimeout(dt);dt=setTimeout(fetchBlogs,400);});
-function setQuery(text){$('q').value=text;fetchBlogs();$('articles').scrollIntoView({behavior:'smooth'});}
 
-const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const FALL='https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=800&auto=format&fit=crop&q=80';
-const grid=$('grid'),fb=$('featBox'),cnt=$('count');
-
-// Fetch blogs
-async function fetchBlogs(){
-  const s=$('q').value.trim();
-  fb.innerHTML='';
-  grid.innerHTML='<div class="skel"></div><div class="skel"></div><div class="skel"></div>';
-  cnt.textContent='';
-
-  let url='/api/blogs?';
-  if(cat!=='All') url+='category='+encodeURIComponent(cat)+'&';
-  if(s) url+='search='+encodeURIComponent(s);
-
-  try{
-    const r=await fetch(url);
-    const d=await r.json();
-    if(d.success && d.data && d.data.length>0){
-      blogs=d.data;
-      render(s);
-      addListSchema(blogs);
-    } else {
-      blogs=[];
-      fb.innerHTML='';
-      grid.innerHTML='<div class="empty"><h3>No articles found</h3><p>Try selecting another category or search term.</p></div>';
-    }
-  }catch(err){
-    fb.innerHTML='';
-    grid.innerHTML='<div class="empty"><h3>Error loading articles</h3><p>Please refresh the page.</p></div>';
-  }
-}
-
-// SEO: expose loaded articles to search engines as an ItemList
-function addListSchema(list){
-  try{
-    let el=document.getElementById('ld-list');
-    if(!el){el=document.createElement('script');el.type='application/ld+json';el.id='ld-list';document.head.appendChild(el);}
-    el.textContent=JSON.stringify({'@context':'https://schema.org','@type':'ItemList','name':'IELTS Blog Articles','itemListElement':list.filter(b=>b.slug).slice(0,20).map((b,i)=>({'@type':'ListItem','position':i+1,'url':location.origin+'/blog/'+encodeURIComponent(b.slug),'name':b.title}))});
-  }catch(e){}
-}
-
-// Generate single card with direct SEO link to /blog/:slug
-function card(b,cls){
+// Safe Card Generation
+function card(b, cls) {
   const targetUrl = b.slug ? `/blog/${encodeURIComponent(b.slug)}` : '#';
   return `<a href="${targetUrl}" class="${cls}">
     <div class="im">
-      <img src="${esc(b.thumbnail||FALL)}" alt="${esc(b.title)}" loading="lazy" decoding="async">
-      ${cls==='feat'?'<span class="flag">Featured</span>':''}
+      <img src="${esc(b.thumbnail || FALL)}" alt="${esc(b.title)}" loading="lazy" decoding="async">
+      ${cls === 'feat' ? '<span class="flag">Featured</span>' : ''}
     </div>
-    <div class="${cls==='feat'?'tx':'pb'}">
+    <div class="${cls === 'feat' ? 'tx' : 'pb'}">
       <div class="prow">
-        <span class="tag">${esc(b.category)}</span>
-        <span class="rt">${esc(b.readTimeMinutes||5)} min read</span>
+        <span class="tag">${esc(b.category || 'General')}</span>
+        <span class="rt">${esc(b.readTimeMinutes || 5)} min read</span>
       </div>
-      <h3>${esc(b.title)}</h3>
-      <p>${esc(b.excerpt||'Read this complete walkthrough to improve your exam confidence.')}</p>
+      <h3>${esc(b.title || 'Untitled')}</h3>
+      <p>${esc(b.excerpt || 'Read this complete walkthrough to improve your exam confidence.')}</p>
       <div class="pf">
         <span>Read full guide →</span>
         <span>${b.createdAt ? new Date(b.createdAt).toLocaleDateString() : ''}</span>
@@ -570,21 +488,203 @@ function card(b,cls){
   </a>`;
 }
 
-function render(s){
-  const showFeat = (cat==='All' && !s && blogs.length > 2);
-  cnt.innerHTML = `<b>${blogs.length}</b> ${blogs.length===1?'article':'articles'}${s?' for “'+esc(s)+'”':''}`;
-  
-  if(showFeat){
-    fb.innerHTML = card(blogs[0],'feat');
-    grid.innerHTML = blogs.slice(1).map(b => card(b,'post')).join('');
+function render(s) {
+  const fb = $('featBox');
+  const grid = $('grid');
+  const cnt = $('count');
+
+  if (!grid) return;
+
+  const showFeat = (cat === 'All' && !s && blogs.length > 2);
+  if (cnt) {
+    cnt.innerHTML = `<b>${blogs.length}</b> ${blogs.length === 1 ? 'article' : 'articles'}${s ? ' for “' + esc(s) + '”' : ''}`;
+  }
+
+  if (showFeat && fb) {
+    fb.innerHTML = card(blogs[0], 'feat');
+    grid.innerHTML = blogs.slice(1).map(b => card(b, 'post')).join('');
   } else {
-    fb.innerHTML = '';
-    grid.innerHTML = blogs.map(b => card(b,'post')).join('');
+    if (fb) fb.innerHTML = '';
+    grid.innerHTML = blogs.map(b => card(b, 'post')).join('');
   }
 }
 
-// Initial fetch
-document.addEventListener('DOMContentLoaded', fetchBlogs);
+// SEO Schema
+function addListSchema(list) {
+  try {
+    let el = $('ld-list');
+    if (!el) {
+      el = document.createElement('script');
+      el.type = 'application/ld+json';
+      el.id = 'ld-list';
+      document.head.appendChild(el);
+    }
+    el.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      'name': 'IELTS Blog Articles',
+      'itemListElement': list.filter(b => b.slug).slice(0, 20).map((b, i) => ({
+        '@type': 'ListItem',
+        'position': i + 1,
+        'url': location.origin + '/blog/' + encodeURIComponent(b.slug),
+        'name': b.title
+      }))
+    });
+  } catch (e) {}
+}
+
+// Fetch blogs API
+async function fetchBlogs() {
+  const qEl = $('q');
+  const s = qEl ? qEl.value.trim() : '';
+  const fb = $('featBox');
+  const grid = $('grid');
+  const cnt = $('count');
+
+  if (fb) fb.innerHTML = '';
+  if (grid) grid.innerHTML = '<div class="skel"></div><div class="skel"></div><div class="skel"></div>';
+  if (cnt) cnt.textContent = '';
+
+  let url = '/api/blogs?';
+  if (cat !== 'All') url += 'category=' + encodeURIComponent(cat) + '&';
+  if (s) url += 'search=' + encodeURIComponent(s);
+
+  try {
+    const r = await fetch(url);
+    const d = await r.json();
+    if (d.success && Array.isArray(d.data) && d.data.length > 0) {
+      blogs = d.data;
+      render(s);
+      addListSchema(blogs);
+    } else {
+      blogs = [];
+      if (fb) fb.innerHTML = '';
+      if (grid) grid.innerHTML = '<div class="empty"><h3>No articles found</h3><p>Try selecting another category or search term.</p></div>';
+    }
+  } catch (err) {
+    console.error("Fetch Blogs Error:", err);
+    if (fb) fb.innerHTML = '';
+    if (grid) grid.innerHTML = '<div class="empty"><h3>Error loading articles</h3><p>Please refresh the page.</p></div>';
+  }
+}
+
+function setQuery(text) {
+  const qEl = $('q');
+  if (qEl) qEl.value = text;
+  fetchBlogs();
+  const art = $('articles');
+  if (art) art.scrollIntoView({ behavior: 'smooth' });
+}
+
+// DOM Ready Handler
+document.addEventListener('DOMContentLoaded', () => {
+  // 1. Navigation & Progress bar
+  const hd = $('hd'), prog = $('prog'), topBtn =$('top');
+  window.addEventListener('scroll', () => {
+    if (hd) hd.classList.toggle('scrolled', window.scrollY > 10);
+    if (topBtn) topBtn.classList.toggle('show', window.scrollY > 500);
+    if (prog) {
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      prog.style.width = (h > 0 ? (window.scrollY / h * 100) : 0) + '%';
+    }
+  }, { passive: true });
+
+  if (topBtn) {
+    topBtn.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // 2. Sidebar Navigation
+  const sb = $('sb'), ov =$('ov');
+  const setMenu = (o) => {
+    if (sb) sb.classList.toggle('open', o);
+    if (ov) ov.classList.toggle('open', o);
+    document.body.style.overflow = o ? 'hidden' : '';
+  };
+  if ($('openMenu'))$('openMenu').onclick = () => setMenu(true);
+  if ($('closeMenu'))$('closeMenu').onclick = () => setMenu(false);
+  if (ov) ov.onclick = () => setMenu(false);
+
+  // 3. Hero Word Swap
+  const sw = $('swap');
+  if (sw) {
+    const W = ['Reading', 'Listening', 'Writing', 'Speaking', 'Band 8'];
+    let wi = 0, ci = W[0].length, del = true;
+    function typeSwap() {
+      const w = W[wi];
+      if (del) {
+        ci--;
+        sw.textContent = w.slice(0, ci);
+        if (ci <= 0) { del = false; wi = (wi + 1) % W.length; }
+        setTimeout(typeSwap, 55);
+      } else {
+        const n = W[wi];
+        ci++;
+        sw.textContent = n.slice(0, ci);
+        if (ci >= n.length) { del = true; setTimeout(typeSwap, 1700); }
+        else setTimeout(typeSwap, 95);
+      }
+    }
+    typeSwap();
+  }
+
+  // 4. Scroll Reveal
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.remove('pre'); io.unobserve(e.target); }
+    }), { threshold: .12 });
+    document.querySelectorAll('.reveal').forEach(el => {
+      if (el.getBoundingClientRect().top > window.innerHeight) {
+        el.classList.add('pre');
+        io.observe(el);
+      }
+    });
+  }
+
+  // 5. Hero Parallax
+  const heroEl = document.querySelector('.hero');
+  const fl = document.querySelectorAll('.float');
+  if (heroEl && fl.length && matchMedia('(hover:hover)').matches) {
+    heroEl.addEventListener('mousemove', e => {
+      const x = (e.clientX / window.innerWidth - .5);
+      const y = (e.clientY / window.innerHeight - .5);
+      fl.forEach((el, i) => {
+        const d = (i % 3 + 1) * 10;
+        el.style.transform = `translate(${x * d}px, ${y * d}px)`;
+      });
+    });
+  }
+
+  // 6. Category Buttons
+  const catsEl = $('cats');
+  if (catsEl) {
+    catsEl.innerHTML = '';
+    CATS.forEach(([val, label], i) => {
+      const b = document.createElement('button');
+      b.className = 'cat' + (i === 0 ? ' active' : '');
+      b.textContent = label;
+      b.onclick = () => {
+        document.querySelectorAll('.cat').forEach(x => x.classList.remove('active'));
+        b.classList.add('active');
+        cat = val;
+        fetchBlogs();
+      };
+      catsEl.appendChild(b);
+    });
+  }
+
+  // 7. Search Form & Input
+  const sf = $('sf'), qEl =$('q');
+  if (sf) sf.addEventListener('submit', e => { e.preventDefault(); fetchBlogs(); });
+  if (qEl) {
+    qEl.addEventListener('input', () => {
+      clearTimeout(dt);
+      dt = setTimeout(fetchBlogs, 400);
+    });
+  }
+
+  // 8. Load Blogs on Start
+  fetchBlogs();
+});
 </script>
 </body>
 </html>
