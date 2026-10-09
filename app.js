@@ -256,8 +256,56 @@ async function start() {
     }
   });
 
-  /// =========================================================================
-// CAMBRIDGE TEST SAVE APIS (LISTENING & READING)
+//   /// =========================================================================
+// // CAMBRIDGE TEST SAVE APIS (LISTENING & READING)
+// // =========================================================================
+// app.post(["/api/save-cambridge-listening", "/admin/api/cambridge-listening/save"], async (req, res) => {
+//   try {
+//     const payload = req.body;
+//     console.log("--> Receiving Save Request:", payload.book, payload.testNo);
+
+//     const book = Number(payload.book || payload.bookNumber);
+//     const testNo = Number(payload.testNo || payload.testNumber);
+
+//     if (!book || !testNo) {
+//       return res.status(400).json({ success: false, message: "Book and Test Number are required" });
+//     }
+
+//     let Model;
+//     if (mongoose.models.CambridgeListening) {
+//       Model = mongoose.models.CambridgeListening;
+//     } else {
+//       Model = mongoose.model("CambridgeListening", new mongoose.Schema({}, { strict: false }));
+//     }
+
+//     const result = await Model.findOneAndUpdate(
+//       { $or: [{ book, testNo }, { bookNumber: book, testNumber: testNo }] },
+//       { 
+//         $set: {
+//           book,
+//           testNo,
+//           bookNumber: book,
+//           testNumber: testNo,
+//           audioUrl: (payload.audioUrl || "").trim(),
+//           questions: payload.questions || [],
+//           instructions: payload.instructions || [],
+//           answers: payload.answers || {}
+//         } 
+//       },
+//       { new: true, upsert: true, strict: false }
+//     );
+
+//     console.log(`--> Save Success: Cambridge ${book} Test ${testNo}`);
+//     return res.status(200).json({ success: true, message: `Cambridge ${book} Test ${testNo} saved successfully!` });
+//   } catch (err) {
+//     console.error("--> Save Error:", err);
+//     return res.status(500).json({ success: false, message: err.message });
+//   }
+// });
+
+
+// =========================================================================
+// CAMBRIDGE TEST SAVE APIS (LISTENING & READING) - MERGE SUPPORTED
 // =========================================================================
 app.post(["/api/save-cambridge-listening", "/admin/api/cambridge-listening/save"], async (req, res) => {
   try {
@@ -278,6 +326,69 @@ app.post(["/api/save-cambridge-listening", "/admin/api/cambridge-listening/save"
       Model = mongoose.model("CambridgeListening", new mongoose.Schema({}, { strict: false }));
     }
 
+    // Existing document khuje ber kora (Merge korar jonno)
+    const existingDoc = await Model.findOne({
+      $or: [{ book, testNo }, { bookNumber: book, testNumber: testNo }]
+    });
+
+    // 1. Merge Questions (Jei part ashbe shei part filter kore replace/append kora)
+    let updatedQuestions = existingDoc && existingDoc.questions ? [...existingDoc.questions] : [];
+    const incomingQuestions = payload.questions || [];
+
+    if (incomingQuestions.length > 0) {
+      // Incoming payload er moddhe thaka parts gulo track kora
+      const incomingParts = [...new Set(incomingQuestions.map(q => q.part))];
+      // Ager array theke ei parts gulor purana questions baad dewa
+      updatedQuestions = updatedQuestions.filter(q => !incomingParts.includes(q.part));
+      // Nutun questions jukto kora
+      updatedQuestions = [...updatedQuestions, ...incomingQuestions];
+    }
+
+    // 2. Merge Instructions
+    let updatedInstructions = existingDoc && existingDoc.instructions ? [...existingDoc.instructions] : [];
+    const incomingInstructions = payload.instructions || [];
+
+    if (incomingInstructions.length > 0) {
+      const incomingGroupIds = incomingInstructions.map(i => i.group);
+      updatedInstructions = updatedInstructions.filter(i => !incomingGroupIds.includes(i.group));
+      updatedInstructions = [...updatedInstructions, ...incomingInstructions];
+    }
+
+    // 3. Merge Answers
+    const updatedAnswers = {
+      ...(existingDoc && existingDoc.answers ? existingDoc.answers : {}),
+      ...(payload.answers || {})
+    };
+
+    // 4. Part Audios Handling (Part wise store kora)
+    // partAudios ekta object hobe { "1": "link1", "2": "link2", "3": "link3", "4": "link4" }
+    let updatedPartAudios = {};
+    if (existingDoc && existingDoc.partAudios) {
+      // Schema te Map type hole Map theke plain object e convert kora
+      if (existingDoc.partAudios instanceof Map) {
+        updatedPartAudios = Object.fromEntries(existingDoc.partAudios);
+      } else if (typeof existingDoc.partAudios === 'object') {
+        updatedPartAudios = { ...existingDoc.partAudios };
+      }
+    }
+    if (
+      Object.keys(updatedPartAudios).length === 0 &&
+      existingDoc && typeof existingDoc.audioUrl === 'string' && existingDoc.audioUrl
+    ) {
+      // Ager global audioUrl jodi theke thake
+      updatedPartAudios["1"] = existingDoc.audioUrl;
+    }
+
+    // Nutun part audios update kora
+    if (payload.partAudios && typeof payload.partAudios === 'object') {
+      updatedPartAudios = { ...updatedPartAudios, ...payload.partAudios };
+    } else if (payload.audioUrl) {
+      // Target part specify na thakle context/payload theke audioUrl map kora
+      const activePart = payload.activePart || (incomingQuestions[0] ? incomingQuestions[0].part : 1);
+      updatedPartAudios[activePart] = payload.audioUrl.trim();
+    }
+
+    // Database Update / Save
     const result = await Model.findOneAndUpdate(
       { $or: [{ book, testNo }, { bookNumber: book, testNumber: testNo }] },
       { 
@@ -286,17 +397,21 @@ app.post(["/api/save-cambridge-listening", "/admin/api/cambridge-listening/save"
           testNo,
           bookNumber: book,
           testNumber: testNo,
-          audioUrl: (payload.audioUrl || "").trim(),
-          questions: payload.questions || [],
-          instructions: payload.instructions || [],
-          answers: payload.answers || {}
+          audioUrl: payload.audioUrl || (existingDoc ? existingDoc.audioUrl : ""), // fallback
+          partAudios: updatedPartAudios,
+          questions: updatedQuestions,
+          instructions: updatedInstructions,
+          answers: updatedAnswers
         } 
       },
       { new: true, upsert: true, strict: false }
     );
 
     console.log(`--> Save Success: Cambridge ${book} Test ${testNo}`);
-    return res.status(200).json({ success: true, message: `Cambridge ${book} Test ${testNo} saved successfully!` });
+    return res.status(200).json({ 
+      success: true, 
+      message: `Cambridge ${book} Test ${testNo} saved and merged successfully!` 
+    });
   } catch (err) {
     console.error("--> Save Error:", err);
     return res.status(500).json({ success: false, message: err.message });

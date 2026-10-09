@@ -26,7 +26,7 @@
     .header-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 20px; margin-bottom: 25px; gap: 20px; }
     .header-bar h2 { margin: 0; color: #18181b; }
     .header-bar p { margin: 5px 0 0; color: #64748b; font-size: 14px; }
-    .meta-grid { display: grid; grid-template-columns: 140px 140px 1fr; gap: 15px; margin-bottom: 25px; }
+    .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
     .form-group label { display: block; font-size: 13px; font-weight: 700; color: #475569; margin-bottom: 6px; }
     .form-control { width: 100%; padding: 10px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 14px; outline: none; background: #ffffff; color: #0f172a; }
     .form-control:focus { border-color: #d97706; }
@@ -47,6 +47,7 @@
     .status-message { margin-top: 12px; font-size: 13px; font-weight: 600; }
     .status-message.success { color: #15803d; }
     .status-message.error { color: #dc2626; }
+    .part-audio-box { background: #f0f9ff; border: 1.5px solid #bae6fd; border-radius: 8px; padding: 15px; margin-bottom: 20px; }
     @media (max-width: 760px) {
       body { padding: 15px 10px; }
       .builder-wrap { padding: 18px; border-radius: 10px; }
@@ -69,7 +70,7 @@
       <h2>🎧 Cambridge Listening Builder</h2>
       <p>Select question type, enter contents & answers — auto compiles to database.</p>
     </div>
-    <button type="button" class="save-btn" onclick="saveCambridgeTest()">🚀 Save to Database</button>
+    <button type="button" class="save-btn" onclick="saveCambridgeTest()">🚀 Save Active / Full Test</button>
   </div>
   <div id="statusMessage" class="status-message" role="status" aria-live="polite"></div>
 
@@ -93,11 +94,6 @@
         <option value="4">Test 4</option>
       </select>
     </div>
-
-    <div class="form-group">
-      <label for="audioUrl">Audio URL (MP3 / CDN link)</label>
-      <input type="url" id="audioUrl" class="form-control" placeholder="https://example.com/audio.mp3" required>
-    </div>
   </div>
 
   <!-- TAB BAR -->
@@ -111,6 +107,15 @@
   <!-- PARTS PANELS -->
   <% for (let p = 1; p <= 4; p++) { %>
     <div id="part-panel-<%= p %>" class="part-panel" style="<%= p === 1 ? '' : 'display: none;' %>">
+      
+      <!-- PART-SPECIFIC AUDIO INPUT -->
+      <div class="part-audio-box">
+        <div class="form-group" style="margin: 0;">
+          <label for="audioUrl-<%= p %>" style="color: #0369a1;">🔊 Audio URL for Part <%= p %> (MP3 / CDN link)</label>
+          <input type="url" id="audioUrl-<%= p %>" class="form-control part-audio-input" placeholder="https://example.com/part-<%= p %>-audio.mp3">
+        </div>
+      </div>
+
       <div id="groups-container-<%= p %>"></div>
       <button type="button" class="add-group-btn" onclick="appendQuestionGroup(<%= p %>)">
         ➕ Add Question Group to Part <%= p %>
@@ -119,15 +124,54 @@
   <% } %>
 
   <div style="margin-top: 30px; text-align: right;">
-    <button type="button" class="save-btn" onclick="saveCambridgeTest()">🚀 Save Full Test to Database</button>
+    <button type="button" class="save-btn" onclick="saveCambridgeTest()">🚀 Save Active / Full Test to Database</button>
   </div>
 </div>
 
 <script>
   let groupUid = 100;
+  let activePartNumber = 1;
+
+  // ---------------------------------------------------------
+  // Book & Test number remember kora (save/refresh korle reset hobe na)
+  // ---------------------------------------------------------
+  const BOOK_TEST_STORAGE_KEY = "cambridgeListeningBuilder:bookTest";
+
+  function restoreBookTest() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(BOOK_TEST_STORAGE_KEY) || "null");
+      if (!saved) return;
+      const bookEl = document.getElementById("bookNo");
+      const testEl = document.getElementById("testNo");
+      if (bookEl && saved.book) bookEl.value = saved.book;
+      if (testEl && saved.test) testEl.value = saved.test;
+    } catch (e) {
+      /* storage unavailable - ignore */
+    }
+  }
+
+  function persistBookTest() {
+    try {
+      localStorage.setItem(BOOK_TEST_STORAGE_KEY, JSON.stringify({
+        book: document.getElementById("bookNo").value,
+        test: document.getElementById("testNo").value
+      }));
+    } catch (e) {
+      /* storage unavailable - ignore */
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    restoreBookTest();
+    const bookEl = document.getElementById("bookNo");
+    const testEl = document.getElementById("testNo");
+    if (bookEl) bookEl.addEventListener("change", persistBookTest);
+    if (testEl) testEl.addEventListener("change", persistBookTest);
+  });
 
   // TAB SWITCHER
   function showPart(partNo, btnElement) {
+    activePartNumber = partNo;
     document.querySelectorAll('.part-panel').forEach(p => p.style.display = 'none');
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('part-panel-' + partNo).style.display = 'block';
@@ -271,270 +315,222 @@
   }
 
   // SAVE TO DATABASE
-  async function saveCambridgeTest() {
-    const saveButtons = document.querySelectorAll(".save-btn");
-    const statusEl = document.getElementById("statusMessage");
+async function saveCambridgeTest() {
+  const saveButtons = document.querySelectorAll(".save-btn");
+  const statusEl = document.getElementById("statusMessage");
 
-    const setStatus = (message, type = "") => {
-      statusEl.textContent = message;
-      statusEl.className = "status-message" + (type ? " " + type : "");
-    };
+  const setStatus = (message, type = "") => {
+    statusEl.textContent = message;
+    statusEl.className = "status-message" + (type ? " " + type : "");
+  };
 
-    const book = document.getElementById("bookNo").value;
-    const testNo = document.getElementById("testNo").value;
-    const audioUrl = document.getElementById("audioUrl").value.trim();
+  const book = document.getElementById("bookNo").value;
+  const testNo = document.getElementById("testNo").value;
 
-    if (!audioUrl) {
-      setStatus("Audio URL is required.", "error");
-      document.getElementById("audioUrl").focus();
-      return;
-    }
+  // Save korar age current Book/Test remember kore rakha
+  persistBookTest();
 
-    const questions = [];
-    const instructions = [];
-    const answers = {};
-    const usedQuestionIds = new Set();
-    const allCards = document.querySelectorAll(".group-card");
-
-    if (allCards.length === 0) {
-      setStatus("Please add at least one Question Group.", "error");
-      return;
-    }
-
-    let validGroupCount = 0;
-    let hasValidationError = false;
-
-    allCards.forEach((card, index) => {
-      if (hasValidationError) return;
-
-      const part = Number(card.getAttribute("data-part"));
-      const type = card.querySelector(".field-type")?.value || "";
-      const instructionText = card.querySelector(".field-instruction")?.value.trim() || "";
-      const idsRaw = card.querySelector(".field-ids")?.value.trim() || "";
-
-      if (!type) {
-        setStatus(`Please choose a Question Type for Group ${index + 1}.`, "error");
-        hasValidationError = true;
-        return;
-      }
-
-      const ids = idsRaw
-        .split(",")
-        .map(n => Number(n.trim()))
-        .filter(Number.isInteger);
-
-      if (!ids.length) {
-        setStatus(`Please enter Question Numbers for Group ${index + 1}.`, "error");
-        hasValidationError = true;
-        return;
-      }
-
-      const minId = (part - 1) * 10 + 1;
-      const maxId = part * 10;
-      const invalidIds = ids.filter(id => id < minId || id > maxId);
-
-      if (invalidIds.length) {
-        setStatus(
-          `Part ${part} accepts questions ${minId}-${maxId}. Invalid: ${invalidIds.join(", ")}.`,
-          "error"
-        );
-        hasValidationError = true;
-        return;
-      }
-
-      const duplicateIds = ids.filter((id, i) => ids.indexOf(id) !== i);
-      if (duplicateIds.length) {
-        setStatus(`Duplicate question number(s) in Group ${index + 1}: ${[...new Set(duplicateIds)].join(", ")}.`, "error");
-        hasValidationError = true;
-        return;
-      }
-
-      for (const id of ids) {
-        if (usedQuestionIds.has(id)) {
-          setStatus(`Question ${id} is assigned to more than one group.`, "error");
-          hasValidationError = true;
-          return;
-        }
-        usedQuestionIds.add(id);
-      }
-
-      validGroupCount++;
-
-      const groupId = Number(`${part}${index + 1}`);
-
-      if (instructionText) {
-        instructions.push({ group: groupId, instruction: instructionText });
-      }
-
-      const qObj = { part, group: groupId, type, id: ids };
-
-      if (type === "note-completion") {
-        const head = card.querySelector(".sub-heading");
-        const subheads = card.querySelector(".sub-subheadings");
-        const rawParas = card.querySelector(".sub-paragraphs");
-
-        qObj.heading = head?.value.trim() || "";
-        qObj.subheadings = subheads
-          ? subheads.value.split(/\r?\n/).map(s => s.trim()).filter(Boolean)
-          : [];
-        qObj.paragraphs = rawParas
-          ? rawParas.value
-              .split(/\r?\n\s*\r?\n/)
-              .map(block => block.split(/\r?\n/).map(l => l.trim()).filter(Boolean))
-              .filter(block => block.length)
-          : [];
-      } else if (type === "mcq-updated") {
-        const mcqQ = card.querySelector(".sub-mcq-questions");
-        const rawOpts = card.querySelector(".sub-mcq-options");
-
-        qObj.questions = mcqQ
-          ? mcqQ.value.split(/\r?\n/).map(q => q.trim()).filter(Boolean)
-          : [];
-        qObj.options = rawOpts
-          ? rawOpts.value
-              .split(/\r?\n\s*\r?\n/)
-              .map(block => block.split(/\r?\n/).map(o => o.trim()).filter(Boolean))
-              .filter(block => block.length)
-          : [];
-      } else if (type === "mcq-two-choice-updated") {
-        const idPairs = [];
-        for (let i = 0; i < ids.length; i += 2) {
-          idPairs.push(ids[i + 1] !== undefined ? [ids[i], ids[i + 1]] : [ids[i]]);
-        }
-        qObj.id = idPairs;
-
-        const mcq2Q = card.querySelector(".sub-two-questions");
-        const rawOpts2 = card.querySelector(".sub-two-options");
-
-        qObj.questions = mcq2Q
-          ? mcq2Q.value.split(/\r?\n/).map(q => q.trim()).filter(Boolean).map(q => [q])
-          : [];
-        qObj.options = rawOpts2
-          ? rawOpts2.value
-              .split(/\r?\n\s*\r?\n/)
-              .map(block => block.split(/\r?\n/).map(o => o.trim()).filter(Boolean))
-              .filter(block => block.length)
-          : [];
-      } else if (type === "sentence-completion") {
-        const sent = card.querySelector(".sub-sentences");
-        qObj.sentences = sent
-          ? sent.value.split(/\r?\n/).map(s => s.trim()).filter(Boolean)
-          : [];
-      } else if (type === "feature-matching") {
-        const feat = card.querySelector(".sub-features");
-        const opts = card.querySelector(".sub-match-options");
-
-        qObj.features = feat
-          ? feat.value.split(/\r?\n/).map(f => f.trim()).filter(Boolean)
-          : [];
-        qObj.options = opts
-          ? opts.value.split(/\r?\n/).map(o => o.trim()).filter(Boolean)
-          : [];
-      } else if (type === "diagram-labelling") {
-        const img = card.querySelector(".sub-diagram-img");
-        const dOpts = card.querySelector(".sub-diagram-opts");
-        const dLabels = card.querySelector(".sub-diagram-labels");
-
-        qObj.image = img?.value.trim() || "";
-        qObj.options = dOpts
-          ? dOpts.value.split(/\r?\n/).map(o => o.trim()).filter(Boolean)
-          : [];
-        qObj.labels = dLabels
-          ? dLabels.value.split(/\r?\n/).map(l => l.trim()).filter(Boolean)
-          : [];
-      }
-
-      questions.push(qObj);
-
-      const answerField = card.querySelector(".field-answers");
-      const rawAnswers = answerField
-        ? answerField.value.split(/\r?\n/)
-        : [];
-
-      rawAnswers.forEach(line => {
-        const separatorIndex = line.indexOf(":");
-        if (separatorIndex === -1) return;
-
-        const qNum = line.slice(0, separatorIndex).trim();
-        const answerText = line.slice(separatorIndex + 1).trim();
-
-        if (!qNum || !answerText) return;
-
-        const altAnswers = answerText
-          .split(",")
-          .map(a => a.trim().toLowerCase())
-          .filter(Boolean);
-
-        if (altAnswers.length) {
-          answers[qNum] = altAnswers;
-        }
-      });
-    });
-
-    if (hasValidationError) return;
-
-    if (!validGroupCount || !questions.length) {
-      setStatus("No valid question groups were found.", "error");
-      return;
-    }
-
-// Payload keys matched with app.js
-    const payload = {
-      bookNumber: Number(book),
-      testNumber: Number(testNo),
-      book: Number(book),
-      testNo: Number(testNo),
-      audioUrl: audioUrl.trim(),
-      questions,
-      instructions,
-      answers
-    };
-
-    saveButtons.forEach(btn => {
-      btn.disabled = true;
-      btn.dataset.originalText = btn.textContent;
-      btn.textContent = "⏳ Saving...";
-    });
-    setStatus("Saving Cambridge Listening Test...", "");
-
-    try {
-      const res = await fetch("/api/save-cambridge-listening", {
-        method: "POST",
-        headers: { 
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        },
-        body: JSON.stringify(payload)
-      });
-
-      const contentType = res.headers.get("content-type") || "";
-      let data;
-      if (contentType.includes("application/json")) {
-        data = await res.json();
-      } else {
-        const text = await res.text();
-        data = { success: false, message: text };
-      }
-
-      if (!res.ok || !data.success) {
-        throw new Error(data.message || data.error || `Request failed with status ${res.status}`);
-      }
-
-      const successMsg = data.message || "Test saved successfully.";
-      setStatus("🎉 " + successMsg, "success");
-      alert("🎉 " + successMsg);
-      window.location.reload();
-    } catch (err) {
-      console.error("Cambridge test save error:", err);
-      const errMsg = err.message || "Server error occurred while saving!";
-      setStatus("❌ " + errMsg, "error");
-      alert("❌ " + errMsg);
-      saveButtons.forEach(btn => {
-        btn.disabled = false;
-        btn.textContent = btn.dataset.originalText || "🚀 Save to Database";
-      });
+  // 1. ALL PART AUDIOS COLLECT KORA
+  const partAudios = {};
+  for (let p = 1; p <= 4; p++) {
+    const audioInput = document.getElementById(`audioUrl-${p}`);
+    if (audioInput && audioInput.value.trim() !== "") {
+      partAudios[String(p)] = audioInput.value.trim();
     }
   }
+
+  const questions = [];
+  const instructions = [];
+  const answers = {};
+  const usedQuestionIds = new Set();
+  const allCards = document.querySelectorAll(".group-card");
+
+  if (allCards.length === 0) {
+    setStatus("Please add at least one Question Group.", "error");
+    return;
+  }
+
+  let validGroupCount = 0;
+  let hasValidationError = false;
+
+  allCards.forEach((card, index) => {
+    if (hasValidationError) return;
+
+    const part = Number(card.getAttribute("data-part"));
+    const type = card.querySelector(".field-type")?.value || "";
+    const instructionText = card.querySelector(".field-instruction")?.value.trim() || "";
+    const idsRaw = card.querySelector(".field-ids")?.value.trim() || "";
+
+    if (!type) {
+      setStatus(`Please choose a Question Type for Group ${index + 1} in Part ${part}.`, "error");
+      hasValidationError = true;
+      return;
+    }
+
+    const ids = idsRaw
+      .split(",")
+      .map(n => Number(n.trim()))
+      .filter(Number.isInteger);
+
+    if (!ids.length) {
+      setStatus(`Please enter Question Numbers for Group ${index + 1} in Part ${part}.`, "error");
+      hasValidationError = true;
+      return;
+    }
+
+    validGroupCount++;
+    const groupId = Number(`${part}${index + 1}`);
+
+    if (instructionText) {
+      instructions.push({ group: groupId, instruction: instructionText });
+    }
+
+    const qObj = { part, group: groupId, type, id: ids };
+
+    if (type === "note-completion") {
+      const head = card.querySelector(".sub-heading");
+      const subheads = card.querySelector(".sub-subheadings");
+      const rawParas = card.querySelector(".sub-paragraphs");
+
+      qObj.heading = head?.value.trim() || "";
+      qObj.subheadings = subheads
+        ? subheads.value.split(/\r?\n/).map(s => s.trim()).filter(Boolean)
+        : [];
+      qObj.paragraphs = rawParas
+        ? rawParas.value
+            .split(/\r?\n\s*\r?\n/)
+            .map(block => block.split(/\r?\n/).map(l => l.trim()).filter(Boolean))
+            .filter(block => block.length)
+        : [];
+    } else if (type === "mcq-updated") {
+      const mcqQ = card.querySelector(".sub-mcq-questions");
+      const rawOpts = card.querySelector(".sub-mcq-options");
+
+      qObj.questions = mcqQ
+        ? mcqQ.value.split(/\r?\n/).map(q => q.trim()).filter(Boolean)
+        : [];
+      qObj.options = rawOpts
+        ? rawOpts.value
+            .split(/\r?\n\s*\r?\n/)
+            .map(block => block.split(/\r?\n/).map(o => o.trim()).filter(Boolean))
+            .filter(block => block.length)
+        : [];
+    } else if (type === "mcq-two-choice-updated") {
+      const idPairs = [];
+      for (let i = 0; i < ids.length; i += 2) {
+        idPairs.push(ids[i + 1] !== undefined ? [ids[i], ids[i + 1]] : [ids[i]]);
+      }
+      qObj.id = idPairs;
+
+      const mcq2Q = card.querySelector(".sub-two-questions");
+      const rawOpts2 = card.querySelector(".sub-two-options");
+
+      qObj.questions = mcq2Q
+        ? mcq2Q.value.split(/\r?\n/).map(q => q.trim()).filter(Boolean).map(q => [q])
+        : [];
+      qObj.options = rawOpts2
+        ? rawOpts2.value
+            .split(/\r?\n\s*\r?\n/)
+            .map(block => block.split(/\r?\n/).map(o => o.trim()).filter(Boolean))
+            .filter(block => block.length)
+        : [];
+    } else if (type === "sentence-completion") {
+      const sent = card.querySelector(".sub-sentences");
+      qObj.sentences = sent
+        ? sent.value.split(/\r?\n/).map(s => s.trim()).filter(Boolean)
+        : [];
+    } else if (type === "feature-matching") {
+      const feat = card.querySelector(".sub-features");
+      const opts = card.querySelector(".sub-match-options");
+
+      qObj.features = feat
+        ? feat.value.split(/\r?\n/).map(f => f.trim()).filter(Boolean)
+        : [];
+      qObj.options = opts
+        ? opts.value.split(/\r?\n/).map(o => o.trim()).filter(Boolean)
+        : [];
+    } else if (type === "diagram-labelling") {
+      const img = card.querySelector(".sub-diagram-img");
+      const dOpts = card.querySelector(".sub-diagram-opts");
+      const dLabels = card.querySelector(".sub-diagram-labels");
+
+      qObj.image = img?.value.trim() || "";
+      qObj.options = dOpts
+        ? dOpts.value.split(/\r?\n/).map(o => o.trim()).filter(Boolean)
+        : [];
+      qObj.labels = dLabels
+        ? dLabels.value.split(/\r?\n/).map(l => l.trim()).filter(Boolean)
+        : [];
+    }
+
+    questions.push(qObj);
+
+    const answerField = card.querySelector(".field-answers");
+    const rawAnswers = answerField ? answerField.value.split(/\r?\n/) : [];
+
+    rawAnswers.forEach(line => {
+      const separatorIndex = line.indexOf(":");
+      if (separatorIndex === -1) return;
+
+      const qNum = line.slice(0, separatorIndex).trim();
+      const answerText = line.slice(separatorIndex + 1).trim();
+
+      if (!qNum || !answerText) return;
+
+      const altAnswers = answerText
+        .split(",")
+        .map(a => a.trim().toLowerCase())
+        .filter(Boolean);
+
+      if (altAnswers.length) {
+        answers[qNum] = altAnswers;
+      }
+    });
+  });
+
+  if (hasValidationError) return;
+
+  // 2. MAIN PAYLOAD CONFIGURATION
+  const payload = {
+    bookNumber: Number(book),
+    testNumber: Number(testNo),
+    book: Number(book),
+    testNo: Number(testNo),
+    audioUrl: partAudios["1"] || "",
+    partAudios: partAudios, // Exact mapping for MongoDB
+    questions,
+    instructions,
+    answers
+  };
+
+  saveButtons.forEach(btn => {
+    btn.disabled = true;
+    btn.textContent = "⏳ Saving...";
+  });
+
+  try {
+    const res = await fetch("/api/save-cambridge-listening", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+    if (res.ok && data.success) {
+      // Page reload kora hocche na, tai Book/Test ebong baki form ager moto thakbe
+      setStatus(`🎉 Saved successfully: Cambridge ${book} - Test ${testNo}`, "success");
+    } else {
+      setStatus("❌ Error: " + (data.message || "Failed to save"), "error");
+    }
+  } catch (err) {
+    setStatus("❌ Server Connection Error!", "error");
+  } finally {
+    saveButtons.forEach(btn => {
+      btn.disabled = false;
+      btn.textContent = "🚀 Save Active / Full Test";
+    });
+  }
+}
 </script>
 
 </body>
