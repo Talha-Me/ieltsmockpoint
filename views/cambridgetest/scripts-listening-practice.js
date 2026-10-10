@@ -3141,4 +3141,205 @@ function openNotes() {
 
 document.addEventListener("DOMContentLoaded", async () => {
   await loadPracticeData();
+  // ----------------------------------------------------
+// 11. Highlight / Unhighlight Feature (IELTS style)
+//     Text select korle ekta chhoto popup ashbe: Highlight / Clear
+//     Highlighted text-er upor click korle highlight remove hobe
+// ----------------------------------------------------
+(function initHighlighter() {
+  const HL_CLASS = "user-highlight";
+
+  // CSS inject
+  function injectHighlightStyles() {
+    if (document.getElementById("user-highlight-style")) return;
+    const style = document.createElement("style");
+    style.id = "user-highlight-style";
+    style.textContent = `
+      .${HL_CLASS} {
+        background: #ffeb3b;
+        color: inherit;
+        border-radius: 2px;
+        cursor: pointer;
+        padding: 0 1px;
+      }
+      #hl-toolbar {
+        position: absolute;
+        z-index: 99999;
+        display: none;
+        background: #1f2a44;
+        border-radius: 8px;
+        padding: 5px;
+        gap: 6px;
+        box-shadow: 0 6px 18px rgba(0,0,0,.3);
+      }
+      #hl-toolbar button {
+        border: none;
+        background: #fff;
+        color: #1f2a44;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 6px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      #hl-toolbar button:hover { background: #ffeb3b; }
+      #hl-toolbar button.hl-clear:hover { background: #ffd6d6; }
+    `;
+    document.head.appendChild(style);
+  }
+
+  // Toolbar banano
+  function createToolbar() {
+    let tb = document.getElementById("hl-toolbar");
+    if (tb) return tb;
+    tb = document.createElement("div");
+    tb.id = "hl-toolbar";
+    tb.innerHTML = `
+      <button type="button" class="hl-add">Highlight</button>
+      <button type="button" class="hl-clear">Clear</button>
+    `;
+    document.body.appendChild(tb);
+    return tb;
+  }
+
+  // Shudhu question/passage area-te highlight allow korbo (input, button e na)
+  function isAllowedArea(node) {
+    if (!node) return false;
+    const el = node.nodeType === 3 ? node.parentElement : node;
+    if (!el) return false;
+    if (el.closest("input, textarea, select, button, #hl-toolbar, #instant-result-modal")) return false;
+    return !!el.closest("#test-content, .part, [id^='part-']");
+  }
+
+  // Highlight remove (span unwrap)
+  function unwrapHighlight(span) {
+    const parent = span.parentNode;
+    if (!parent) return;
+    while (span.firstChild) parent.insertBefore(span.firstChild, span);
+    parent.removeChild(span);
+    parent.normalize();
+  }
+
+  // Selection-er moddhe thaka text node gulo highlight kora
+  function highlightSelection(range) {
+    if (range.collapsed) return;
+
+    const root = range.commonAncestorContainer.nodeType === 3
+      ? range.commonAncestorContainer.parentNode
+      : range.commonAncestorContainer;
+
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        if (!node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        if (!range.intersectsNode(node)) return NodeFilter.FILTER_REJECT;
+        if (!isAllowedArea(node)) return NodeFilter.FILTER_REJECT;
+        if (node.parentElement.closest("." + HL_CLASS)) return NodeFilter.FILTER_REJECT; // already highlighted
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+
+    // Single text node holeo handle kora
+    if (!nodes.length && range.startContainer.nodeType === 3 && isAllowedArea(range.startContainer)) {
+      nodes.push(range.startContainer);
+    }
+
+    nodes.forEach((textNode) => {
+      let start = 0;
+      let end = textNode.nodeValue.length;
+      if (textNode === range.startContainer) start = range.startOffset;
+      if (textNode === range.endContainer) end = range.endOffset;
+      if (start >= end) return;
+
+      const target = textNode.splitText(start);
+      target.splitText(end - start);
+
+      const span = document.createElement("span");
+      span.className = HL_CLASS;
+      target.parentNode.insertBefore(span, target);
+      span.appendChild(target);
+    });
+  }
+
+  // Selection-er moddhe ja highlight ache segulo clear kora
+  function clearSelectionHighlights(range) {
+    document.querySelectorAll("." + HL_CLASS).forEach((span) => {
+      if (range.intersectsNode(span)) unwrapHighlight(span);
+    });
+  }
+
+  function hideToolbar() {
+    const tb = document.getElementById("hl-toolbar");
+    if (tb) tb.style.display = "none";
+  }
+
+  function setup() {
+    injectHighlightStyles();
+    const toolbar = createToolbar();
+    let savedRange = null;
+
+    // Text select korle toolbar dekhano
+    document.addEventListener("mouseup", (e) => {
+      if (e.target.closest("#hl-toolbar")) return;
+
+      setTimeout(() => {
+        const sel = window.getSelection();
+        if (!sel || sel.isCollapsed || sel.rangeCount === 0) {
+          hideToolbar();
+          return;
+        }
+        const range = sel.getRangeAt(0);
+        if (!isAllowedArea(range.commonAncestorContainer)) {
+          hideToolbar();
+          return;
+        }
+        savedRange = range.cloneRange();
+
+        const rect = range.getBoundingClientRect();
+        toolbar.style.display = "flex";
+        toolbar.style.top = `${window.scrollY + rect.top - 46}px`;
+        toolbar.style.left = `${window.scrollX + rect.left + rect.width / 2 - 70}px`;
+      }, 10);
+    });
+
+    // Toolbar button click (selection hariye jete na dewar jonno mousedown prevent)
+    toolbar.addEventListener("mousedown", (e) => e.preventDefault());
+
+    toolbar.querySelector(".hl-add").addEventListener("click", () => {
+      if (savedRange) highlightSelection(savedRange);
+      window.getSelection().removeAllRanges();
+      savedRange = null;
+      hideToolbar();
+    });
+
+    toolbar.querySelector(".hl-clear").addEventListener("click", () => {
+      if (savedRange) clearSelectionHighlights(savedRange);
+      window.getSelection().removeAllRanges();
+      savedRange = null;
+      hideToolbar();
+    });
+
+    // Highlighted text-er upor click korle sheta remove hobe
+    document.addEventListener("click", (e) => {
+      const span = e.target.closest("." + HL_CLASS);
+      if (span && window.getSelection().isCollapsed) {
+        unwrapHighlight(span);
+        hideToolbar();
+      }
+    });
+
+    // Onno jaygay click korle toolbar hide
+    document.addEventListener("mousedown", (e) => {
+      if (!e.target.closest("#hl-toolbar")) hideToolbar();
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setup);
+  } else {
+    setup();
+  }
+})();
 });

@@ -1,119 +1,350 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='15' fill='%231A365D' /><path d='M30 25 V55 C30 65 35 75 50 75 C65 75 70 65 70 55 V25 H60 V55 C60 62 58 65 50 65 C42 65 40 62 40 55 V25 H30Z' fill='white' /><rect x='25' y='25' width='15' height='5' fill='white' /><rect x='60' y='25' width='15' height='5' fill='white' /></svg>">
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Reset Password | UKA Technical Institute</title>
-  
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-  <script src="https://kit.fontawesome.com/a2e0f1f6a2.js" crossorigin="anonymous"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-620WY8NNVE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-  <style>
-    :root {
-      --accent: #2eb8b8;
-      --accent-light: #e0f2f2;
-      --accent-dark: #1f8f8f;
-      --bg: #f8fbff;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --white: #ffffff;
-      --shadow: 0 20px 40px rgba(0,0,0,0.04);
-    }
+  gtag('config', 'G-620WY8NNVE');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reset Password | IELTS Mockpoint</title>
+<meta name="description" content="Reset your IELTS Mockpoint password.">
+<link rel="icon" type="image/png" href="mpfavicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0b2b52;--blue:#1565c9;--blue-light:#eaf2fd;--red:#e0202d;--red-dark:#b5121d;--bg:#fff;--surface:#f4f7fb;--text:#0f2038;--muted:#5d708c;--line:#e3e9f3;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;padding-top:env(safe-area-inset-top,0);padding-bottom:env(safe-area-inset-bottom,0);display:flex;flex-direction:column;min-height:100vh;overflow-x:hidden;}
+h1,h2,h3{font-family:'Sora',sans-serif;font-weight:700;line-height:1.12;color:var(--navy);}
+a{color:inherit;}
+.wrap{max-width:1140px;margin:0 auto;padding:0 24px;}
+header{position:sticky;top:env(safe-area-inset-top,0);z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);transition:box-shadow .25s;}
+header.scrolled{box-shadow:0 6px 18px rgba(11,43,82,.08);}
+nav.wrap{display:flex;align-items:center;justify-content:space-between;height:74px;}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:'Sora',sans-serif;font-weight:800;font-size:1.3rem;color:var(--navy);}
+.brand img{height:46px;width:auto;display:block;}
+.brand .txt{display:none;align-items:center;gap:8px;}
+.brand .txt i{width:11px;height:11px;border-radius:3px;background:var(--red);box-shadow:5px 5px 0 var(--blue);margin-right:5px;}
+.nav-links{display:flex;gap:26px;}
+.nav-links a{font-size:.92rem;color:var(--muted);text-decoration:none;font-weight:500;position:relative;padding:4px 0;}
+.nav-links a::after{content:'';position:absolute;left:0;bottom:-2px;width:0;height:2px;background:var(--red);transition:width .2s;}
+.nav-links a:hover{color:var(--navy);}.nav-links a:hover::after{width:100%;}
+.nav-actions{display:flex;gap:12px;align-items:center;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 22px;border-radius:9px;font-size:.92rem;font-weight:700;text-decoration:none;border:1.5px solid transparent;cursor:pointer;font-family:inherit;transition:transform .15s,box-shadow .2s,background .2s;}
+.btn-red{background:var(--red);color:#fff;}
+.btn-red:hover{background:var(--red-dark);transform:translateY(-2px);box-shadow:0 10px 22px rgba(224,32,45,.28);}
+.btn-outline{color:var(--navy);border-color:var(--line);background:#fff;}
+.btn-outline:hover{border-color:var(--blue);color:var(--blue);}
+.menu-btn{display:none;background:var(--blue-light);border:none;color:var(--navy);width:42px;height:42px;border-radius:10px;font-size:1.3rem;cursor:pointer;}
+@media(max-width:920px){.nav-links,.nav-actions{display:none;}.menu-btn{display:block;}}
+.overlay{position:fixed;inset:0;background:rgba(11,43,82,.55);backdrop-filter:blur(3px);z-index:90;opacity:0;pointer-events:none;transition:opacity .3s;}
+.overlay.open{opacity:1;pointer-events:auto;}
+.sidebar{position:fixed;top:0;right:0;height:100%;width:min(320px,86vw);background:#fff;z-index:100;transform:translateX(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;padding:22px 24px calc(24px + env(safe-area-inset-bottom,0));box-shadow:-12px 0 40px rgba(11,43,82,.18);}
+.sidebar.open{transform:none;}
+.sb-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;}
+.sb-close{background:var(--surface);border:none;width:40px;height:40px;border-radius:50%;font-size:1.4rem;cursor:pointer;color:var(--navy);}
+.sb-links a{display:block;padding:14px 4px;border-bottom:1px solid var(--line);text-decoration:none;font-weight:600;color:var(--navy);transition:padding .2s,color .2s;}
+.sb-links a:hover{color:var(--red);padding-left:12px;}
+.sb-actions{margin-top:auto;display:grid;gap:10px;}
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); display: flex; flex-direction: column; min-height: 100vh; }
+/* stage */
+main{flex:1;position:relative;overflow:hidden;display:flex;align-items:center;padding:48px 0;background:linear-gradient(180deg,#fff,var(--surface));}
+.blob{position:absolute;border-radius:50%;pointer-events:none;}
+.blob.a{top:-160px;left:-140px;width:520px;height:520px;background:radial-gradient(circle,var(--blue-light),transparent 70%);animation:float 9s ease-in-out infinite;}
+.blob.b{bottom:-180px;right:-120px;width:480px;height:480px;background:radial-gradient(circle,rgba(224,32,45,.1),transparent 70%);animation:float 11s ease-in-out infinite reverse;}
+@keyframes float{50%{transform:translateY(24px);}}
+.stage{position:relative;z-index:1;width:100%;display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;}
 
-    /* --- UNIFIED HEADER --- */
-    header {
-      background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      position: sticky; top: 0; z-index: 1000; padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.03);
-    }
-    .container { max-width: 1240px; margin: 0 auto; padding: 0 24px; }
-    .nav { display: flex; justify-content: space-between; align-items: center; }
-    .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; }
-    .logo img { height: 60px; }
-    .logo-text .brand { font-size: 1.4rem; font-weight: 800; display: block; line-height: 1; }
-    .logo-text small { font-size: 0.65rem; color: var(--accent); font-weight: 700; letter-spacing: 1px; }
+/* showcase side */
+.show{position:relative;min-height:520px;}
+.show .kicker{display:inline-flex;align-items:center;gap:8px;color:var(--red);font-size:.88rem;font-weight:700;margin-bottom:16px;}
+.show .kicker::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--red);}
+.show h1{font-size:clamp(2rem,3.8vw,3rem);margin-bottom:16px;}
+.show h1 span{color:var(--blue);}
+.show p.lead{color:var(--muted);max-width:44ch;}
+.floaters{position:relative;height:330px;margin-top:18px;}
+.ring{position:absolute;left:50%;top:50%;border:1.5px dashed #cfe1fa;border-radius:50%;translate:-50% -50%;}
+.ring.r1{width:190px;height:190px;animation:spin 24s linear infinite;}
+.ring.r2{width:320px;height:320px;animation:spin 40s linear infinite reverse;}
+@keyframes spin{to{rotate:360deg;}}
+.core{position:absolute;left:50%;top:50%;translate:-50% -50%;width:104px;height:104px;border-radius:28px;background:var(--navy);display:flex;align-items:center;justify-content:center;box-shadow:0 20px 44px rgba(11,43,82,.3),6px 6px 0 var(--red);animation:pop 3s ease-in-out infinite;}
+.core img{width:64px;height:auto;filter:brightness(0) invert(1);}
+.core b{font-family:'Sora',sans-serif;color:#fff;font-size:1.5rem;display:none;}
+@keyframes pop{50%{transform:scale(1.06) rotate(-3deg);}}
+.obj{position:absolute;will-change:transform;transition:transform .25s ease-out;}
+.obj>div{width:68px;height:68px;border-radius:20px;background:#fff;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--blue);box-shadow:0 14px 30px rgba(21,101,201,.16);animation:bob 5s ease-in-out infinite;}
+.obj.red>div{color:var(--red);box-shadow:0 14px 30px rgba(224,32,45,.16);}
+.obj svg{width:30px;height:30px;}
+.o1{left:8%;top:6%;}.o1>div{animation-delay:-.5s;}
+.o2{right:10%;top:2%;}.o2>div{animation-delay:-2s;animation-duration:6s;}
+.o3{left:2%;bottom:6%;}.o3>div{animation-delay:-3s;animation-duration:5.5s;}
+.o4{right:4%;bottom:10%;}.o4>div{animation-delay:-1.2s;animation-duration:6.5s;}
+@keyframes bob{0%,100%{translate:0 0;rotate:-4deg;}50%{translate:0 -14px;rotate:4deg;}}
+.chip{position:absolute;background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:8px 16px;font-family:'Sora',sans-serif;font-weight:700;font-size:.82rem;color:var(--navy);box-shadow:0 10px 24px rgba(11,43,82,.12);animation:bob 6s ease-in-out infinite;white-space:nowrap;}
+.chip i{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);margin-right:8px;}
+.c1{left:30%;top:0;animation-delay:-1s;}.c2{right:26%;bottom:0;animation-delay:-3.5s;}.c3{left:0;top:46%;animation-delay:-2.2s;}
+.c3 i,.c2 i{background:var(--blue);}
+.spark{position:absolute;width:10px;height:10px;border-radius:3px;background:var(--red);animation:tw 3s ease-in-out infinite;}
+.s1{left:40%;top:16%;}.s2{right:36%;top:60%;background:var(--blue);animation-delay:-1s;}.s3{left:22%;bottom:14%;animation-delay:-2s;}
+@keyframes tw{0%,100%{transform:scale(.4) rotate(0);opacity:.4;}50%{transform:scale(1) rotate(90deg);opacity:1;}}
 
-    .nav-links a { text-decoration: none; color: var(--text-main); font-weight: 600; margin: 0 10px; padding: 8px 16px; border-radius: 8px; transition: 0.3s; }
-    .nav-links a:hover { color: var(--accent); background: var(--accent-light); }
+/* login card */
+.card{position:relative;background:#fff;border:1.5px solid var(--line);border-radius:26px;padding:40px 38px 34px;box-shadow:0 30px 70px rgba(11,43,82,.12);overflow:hidden;animation:cardIn .8s cubic-bezier(.2,.8,.2,1) both;max-width:460px;width:100%;justify-self:center;}
+@keyframes cardIn{from{opacity:0;transform:translateY(40px) scale(.96);}}
+.card::before{content:'';position:absolute;left:0;top:0;height:5px;width:100%;background:linear-gradient(90deg,var(--blue),var(--red),var(--blue));background-size:200% 100%;animation:bar 4s linear infinite;}
+@keyframes bar{to{background-position:-200% 0;}}
+.card-logo{display:flex;justify-content:center;margin-bottom:18px;}
+.card-logo img{height:58px;width:auto;animation:logoIn .9s .2s both;}
+.card-logo .txt{display:none;font-family:'Sora',sans-serif;font-weight:800;font-size:1.4rem;color:var(--navy);align-items:center;gap:8px;}
+.card-logo .txt i{width:12px;height:12px;border-radius:3px;background:var(--red);box-shadow:5px 5px 0 var(--blue);margin-right:5px;}
+@keyframes logoIn{from{opacity:0;transform:scale(.6) rotate(-10deg);}}
+.card h2{font-size:1.8rem;text-align:center;margin-bottom:8px;}
+.card .sub{text-align:center;color:var(--muted);font-size:.94rem;margin-bottom:26px;}
+.field{margin-bottom:18px;opacity:0;transform:translateY(14px);animation:rise .55s ease forwards;}
+.field:nth-child(1){animation-delay:.35s;}.field:nth-child(2){animation-delay:.45s;}.field:nth-child(3){animation-delay:.55s;}.submit-wrap{animation:rise .55s .65s ease both;}
+@keyframes rise{to{opacity:1;transform:none;}}
+.field label{display:block;font-weight:700;font-size:.82rem;margin-bottom:8px;color:var(--navy);}
+select,input{width:100%;padding:14px 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);font-family:inherit;font-size:.95rem;color:var(--text);transition:border-color .2s,box-shadow .2s,background .2s;}
+select{appearance:none;-webkit-appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%230b2b52' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;}
+select:focus,input:focus{outline:none;border-color:var(--blue);background:#fff;box-shadow:0 0 0 4px rgba(21,101,201,.14);}
+.pass-wrapper{position:relative;}
+.pass-wrapper input{padding-right:52px;}
+.toggle-pass{position:absolute;right:8px;top:50%;translate:0 -50%;width:38px;height:38px;border:none;background:transparent;border-radius:10px;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s,color .2s;}
+.toggle-pass:hover{background:var(--blue-light);color:var(--blue);}
+.toggle-pass svg{width:20px;height:20px;}
+.forgot{display:inline-block;margin-top:10px;font-size:.82rem;font-weight:600;color:var(--blue);text-decoration:none;}
+.forgot:hover{color:var(--red);}
+.login-btn{position:relative;overflow:hidden;width:100%;padding:15px;border:none;border-radius:12px;background:var(--red);color:#fff;font-family:'Sora',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;transition:transform .15s,box-shadow .25s,background .2s;}
+.login-btn::after{content:'';position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);animation:shine 3.5s infinite;}
+@keyframes shine{0%,60%{left:-60%;}100%{left:130%;}}
+.login-btn:hover{background:var(--red-dark);transform:translateY(-2px);box-shadow:0 14px 28px rgba(224,32,45,.3);}
+.login-btn:active{transform:translateY(0) scale(.98);}
+.login-btn:disabled{opacity:.75;cursor:progress;transform:none;}
+.spin{display:inline-block;width:14px;height:14px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:rot .7s linear infinite;vertical-align:-2px;margin-right:8px;}
+@keyframes rot{to{transform:rotate(360deg);}}
+.card-foot{text-align:center;margin-top:22px;font-size:.9rem;color:var(--muted);}
+.card-foot a{color:var(--blue);font-weight:700;text-decoration:none;}
+.card-foot a:hover{color:var(--red);}
+.secure{display:flex;justify-content:center;gap:8px;align-items:center;margin-top:18px;font-size:.76rem;color:var(--muted);}
+.secure svg{width:14px;height:14px;color:var(--blue);}
 
-    .btn-primary { background: var(--accent); color: white; padding: 10px 24px; border-radius: 10px; text-decoration: none; font-weight: 700; transition: 0.3s; border: none; cursor: pointer; }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(46, 184, 184, 0.3); }
+/* form message + Google sign-in (uses existing theme tokens) */
+.form-msg{display:none;margin-bottom:16px;padding:11px 14px;border-radius:10px;font-size:.86rem;font-weight:600;background:#fdecee;color:var(--red-dark);border:1px solid #f6c5c9;}
+.form-msg.show{display:block;}
+.form-msg.ok{background:#eaf7ee;color:#1b6b34;border-color:#bfe3c9;}
+.or{display:flex;align-items:center;gap:12px;margin:20px 0 16px;color:var(--muted);font-size:.8rem;font-weight:600;}
+.or::before,.or::after{content:'';flex:1;height:1px;background:var(--line);}
+.g-wrap{display:flex;justify-content:center;min-height:44px;}
+.g-note{font-size:.78rem;color:var(--muted);text-align:center;}
 
-    /* --- FORGOT CARD --- */
-    main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 60px 20px; }
-    .forgot-card { background: white; padding: 40px; border-radius: 28px; box-shadow: var(--shadow); width: 100%; max-width: 450px; text-align: center; }
-    .icon-box { width: 70px; height: 70px; background: var(--accent-light); color: var(--accent); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin: 0 auto 20px; }
-    .forgot-card h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 10px; }
-    .forgot-card p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 25px; line-height: 1.6; }
+@media(max-width:900px){.stage{grid-template-columns:1fr;gap:30px;}.show{min-height:0;order:2;text-align:center;}.show p.lead{margin:0 auto;}.floaters{height:280px;}main{padding:32px 0;}}
+@media(max-width:480px){.card{padding:32px 22px 26px;}.floaters{display:none;}}
 
-    .form-group { text-align: left; margin-bottom: 20px; }
-    .form-group label { display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 8px; }
-    input { width: 100%; padding: 14px; border-radius: 12px; border: 1.5px solid #eef2f6; background: #f8fafc; font-family: inherit; transition: 0.3s; }
-    input:focus { outline: none; border-color: var(--accent); background: white; box-shadow: 0 0 0 4px var(--accent-light); }
+footer {
+  border-top: 1px solid var(--line);
+  padding: 56px 0 32px;
+  background: var(--surface);
+  position: relative;
+  z-index: 1;
+}
 
-    /* --- UNIFIED FOOTER --- */
-    footer { background: linear-gradient(135deg, #2eb8b8 0%, #33cccc 100%); color: white; padding: 60px 20px 30px; text-align: center; margin-top: auto; }
-    .footer-left h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 10px; }
-    .footer-links { margin: 25px 0; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; font-weight: 600; font-size: 0.9rem; }
-    .footer-links a { color: white; text-decoration: none; opacity: 0.9; }
-    .footer-links a:hover { opacity: 1; text-decoration: underline; }
-    .footer-social { display: flex; justify-content: center; gap: 20px; margin: 25px 0; }
-    .social-icon { width: 28px; height: 28px; transition: 0.3s; }
-    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); margin-top: 25px; padding-top: 20px; font-size: 0.85rem; opacity: 0.8; }
-  </style>
+/* 5 Column Grid Layout */
+.fgrid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr 1.1fr;
+  gap: 32px;
+  margin-bottom: 36px;
+}
+
+.fgrid h4 {
+  font-size: 0.88rem;
+  color: var(--blue);
+  margin-bottom: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.fgrid a {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--muted);
+  text-decoration: none;
+  margin-bottom: 10px;
+  transition: color 0.15s ease;
+}
+
+.fgrid a:hover {
+  color: var(--red);
+}
+
+/* Bottom Disclaimer & Copyright */
+.fbottom {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  border-top: 1px solid var(--line);
+  padding-top: 22px;
+  line-height: 1.6;
+}
+
+.fbottom-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 992px) {
+  .fgrid {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 28px;
+  }
+}
+
+@media (max-width: 640px) {
+  .fgrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .fgrid > div:first-child {
+    grid-column: 1 / -1; /* Mobile view-তে Brand info পুরো উইডথ জুড়ে থাকবে */
+    margin-bottom: 8px;
+  }
+}
+
+/* Back to Top Button */
+#top {
+  position: fixed;
+  right: 20px;
+  bottom: calc(20px + env(safe-area-inset-bottom, 0));
+  width: 46px;
+  height: 46px;
+  border: none;
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(224, 32, 45, 0.35);
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: all 0.3s;
+  z-index: 60;
+}
+
+#top.show {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+#top:hover {
+  background: var(--red-dark);
+  transform: translateY(-3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+  .reveal, .qt {
+    opacity: 1;
+    transform: none;
+  }
+  #glow {
+    display: none;
+  }
+}
+</style>
 </head>
-
 <body>
+<header id="hd">
+  <nav class="wrap">
+    <a href="home.html" class="brand"><img src="Brandlogo.png" alt="IELTS Mockpoint" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class="txt"><i></i>IELTS Mockpoint</span></a>
+    <div class="nav-links"><a href="mocks.html">Full Tests</a><a href="cambridge-listening.html">Listening</a><a href="cambridge-reading.html">Reading</a><a href="cambridge-writing.html">Writing</a><a href="speaking.html">Speaking</a><a href="/practice-hub.html">Practice</a><a href="/blog.html" class="cur">Blog</a></div>
+    <div class="nav-actions"><a href="login.html" class="btn btn-outline">Sign in</a><a href="register.html" class="btn btn-red">Start free</a></div>
+    <button class="menu-btn" id="openMenu" aria-label="Open menu">☰</button>
+  </nav>
+</header>
+<div class="overlay" id="ov"></div>
+<aside class="sidebar" id="sb" aria-hidden="true">
+  <div class="sb-head"><a href="home.html" class="brand"><img src="Brandlogo.png" alt="IELTS Mockpoint" style="height:38px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class="txt"><i></i>IELTS Mockpoint</span></a><button class="sb-close" id="closeMenu" aria-label="Close menu">×</button></div>
+  <nav class="sb-links"><a href="mocks.html">Full Tests</a><a href="cambridge-listening.html">Listening</a><a href="cambridge-reading.html">Reading</a><a href="cambridge-writing.html">Writing</a><a href="speaking.html">Speaking</a><a href="/practice-hub">Practice</a><a href="institutes.html">For Institutes</a></nav>
+  <div class="sb-actions"><a href="login.html" class="btn btn-outline">Sign in</a><a href="register.html" class="btn btn-red">Start free</a></div>
+</aside>
 
-  <header>
-    <div class="container nav">
-      <a href="home.html" class="logo">
-        <img src="2_UKA-&-British-council-Logo.png" alt="UKA Logo">
-        <div class="logo-text">
-          <span class="brand">UKA</span>
-          <small>TECHNICAL INSTITUTE</small>
-        </div>
-      </a>
-
-      <nav class="nav-links">
-        <a href="home.html">COURSES</a>
-        <a href="mocks.html" >IELTS MOCK TEST</a>
-        <a href="index.html">LEVEL TEST</a>
-        <a href="contact.html">CONTACT</a>
-      </nav>
-
-      <div class="auth-links">
-        <a href="login.html" class="btn-primary" id="loginBtn">Log in</a>
-        <a href="register.html" class="btn-primary" id="registerBtn">Register</a>
-        <a href="profile.html" class="btn-primary" id="profileBtn" style="display:none;">Profile</a>
+<main id="stage-root">
+  <div class="blob a"></div><div class="blob b"></div>
+  <div class="wrap stage">
+    <section class="show">
+      <div class="kicker">Account help</div>
+      <h1>Forgot your <span>password?</span> No problem.</h1>
+      <p class="lead">Enter your email and we will send you a secure link to choose a new password and get back to your practice.</p>
+      <div class="floaters" aria-hidden="true">
+        <div class="ring r1"></div><div class="ring r2"></div>
+        <div class="core"><img src="Brandlogo.png" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><b>IM</b></div>
+        <div class="obj o1" data-d="18"><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg></div></div>
+        <div class="obj o2 red" data-d="26"><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div></div>
+        <div class="obj o3 red" data-d="22"><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div></div>
+        <div class="obj o4" data-d="30"><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg></div></div>
+        <span class="chip c1"><i></i>Listening 8.0</span><span class="chip c2"><i></i>Writing 7.0</span><span class="chip c3"><i></i>Reading 7.5</span>
+        <span class="spark s1"></span><span class="spark s2"></span><span class="spark s3"></span>
       </div>
-    </div>
-  </header>
+    </section>
 
-  <main>
-    <div class="forgot-card">
-      <div class="icon-box"><i class="fas fa-key"></i></div>
-      <h2>Forgot Password?</h2>
-      <p>Enter your email and we'll send you a link to reset your password.</p>
+    <div class="card">
+      <div class="card-logo"><img src="Brandlogo.png" alt="IELTS Mockpoint" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class="txt"><i></i>IELTS Mockpoint</span></div>
+      <h2 id="ttl">Forgot Password?</h2>
+      <p class="sub" id="sub">Enter your email and we'll send you a link to reset your password.</p>
 
-      <form id="forgotForm">
-        <div class="form-group">
-          <label>Email Address</label>
-          <input type="email" id="email" placeholder="example@mail.com" required>
+      <div class="form-msg" id="formMsg" role="alert"></div>
+
+      <form id="forgotForm" novalidate>
+        <div class="field">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" required placeholder="example@mail.com" autocomplete="email">
         </div>
-        <button type="submit" class="btn-primary" style="width:100%; padding:15px;">Send Reset Link</button>
+        <div class="submit-wrap"><button type="submit" class="login-btn" id="forgotBtn">Send Reset Link →</button></div>
       </form>
 
-      <a href="login.html" style="display:block; margin-top:20px; color:var(--text-muted); text-decoration:none; font-weight:700; font-size:0.9rem;">
-        <i class="fas fa-arrow-left"></i> Back to Login
-      </a>
-    </div>
-  </main>
+      <form id="resetForm" novalidate style="display:none">
+        <div class="field">
+          <label for="password">New Password</label>
+          <div class="pass-wrapper">
+            <input type="password" id="password" required minlength="4" placeholder="Min. 4 characters" autocomplete="new-password">
+            <button type="button" class="toggle-pass" id="togglePassword" aria-label="Show or hide password">
+              <svg id="eyeOn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg id="eyeOff" style="display:none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="field">
+          <label for="password2">Confirm Password</label>
+          <input type="password" id="password2" required placeholder="Re-enter new password" autocomplete="new-password">
+        </div>
+        <div class="submit-wrap"><button type="submit" class="login-btn" id="resetBtn">Reset Password →</button></div>
+      </form>
 
-  <footer>
+      <div class="card-foot">Remembered it? <a href="login.html">Back to Login</a></div>
+      <div class="secure"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Reset links expire in 30 minutes</div>
+    </div>
+  </div>
+</main>
+
+<footer>
   <div class="wrap">
     <div class="fgrid">
       <div>
@@ -144,7 +375,7 @@
         <h4>Company</h4>
         <a href="/about.html">About Us</a>
         <a href="/contact.html">Contact Us</a>
-        <a href="/blog.html" class="cur">Blog</a>
+        <a href="/institutes.html">For institutes</a>
       </div>
       <div>
         <h4>Legal & Policy</h4>
@@ -166,38 +397,91 @@
   </div>
 </footer>
 
-  <script>
-    // Profile Button Logic
-    document.addEventListener("DOMContentLoaded", () => {
-      const user = JSON.parse(localStorage.getItem("loggedInUser"));
-      const loginBtn = document.getElementById("loginBtn");
-      const registerBtn = document.getElementById("registerBtn");
-      const profileBtn = document.getElementById("profileBtn");
+<script>
+/* ============ UI (header / sidebar) ============ */
+const hd=document.getElementById('hd');
+addEventListener('scroll',()=>hd.classList.toggle('scrolled',scrollY>10));
+const sb=document.getElementById('sb'),ov=document.getElementById('ov');
+function setMenu(o){sb.classList.toggle('open',o);ov.classList.toggle('open',o);sb.setAttribute('aria-hidden',!o);document.body.style.overflow=o?'hidden':'';}
+openMenu.onclick=()=>setMenu(true);closeMenu.onclick=()=>setMenu(false);ov.onclick=()=>setMenu(false);
+sb.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setMenu(false)));
+addEventListener('keydown',e=>{if(e.key==='Escape')setMenu(false);});
 
-      if (user) {
-        if (loginBtn) loginBtn.style.display = "none";
-        if (registerBtn) registerBtn.style.display = "none";
-        if (profileBtn) profileBtn.style.display = "inline-block";
-      }
-    });
+// Password toggle
+document.getElementById('togglePassword').addEventListener('click',()=>{
+  const p=document.getElementById('password'),p2=document.getElementById('password2'),show=p.type==='password';
+  p.type=show?'text':'password';p2.type=show?'text':'password';
+  document.getElementById('eyeOn').style.display=show?'none':'';
+  document.getElementById('eyeOff').style.display=show?'':'none';
+});
 
-    // Form Submit Logic
-    document.getElementById("forgotForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const email = document.getElementById("email").value.trim();
-      
-      try {
-        const res = await fetch(`${API_URL}/forgot-password`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email })
-        });
-        if (res.ok) alert("Reset link sent to your email!");
-        else alert("Email not found.");
-      } catch (err) {
-        alert("Server error. Try again later.");
-      }
-    });
-  </script>
+/* ============ Helpers ============ */
+const $=id=>document.getElementById(id);
+const msgBox=$('formMsg');
+function showMsg(t,ok){msgBox.textContent=t;msgBox.classList.toggle('ok',!!ok);msgBox.classList.add('show');}
+function hideMsg(){msgBox.classList.remove('show');}
+
+async function postJSON(url,body){
+  const res=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",body:JSON.stringify(body)});
+  let data={};
+  try{data=await res.json();}catch(e){}
+  return {ok:res.ok,data};
+}
+
+/* ============ Mode: email link e ?token= thakle "reset", na thakle "forgot" ============ */
+const token=new URLSearchParams(location.search).get('token');
+if(token){
+  $('forgotForm').style.display='none';
+  $('resetForm').style.display='';
+  $('ttl').textContent='Set New Password';
+  $('sub').textContent='Choose a new password for your account.';
+}
+
+/* ============ Step 1: reset link pathano ============ */
+$('forgotForm').addEventListener('submit',async(e)=>{
+  e.preventDefault();hideMsg();
+  const email=$('email').value.trim();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showMsg("Please enter a valid email address.");return;}
+  const btn=$('forgotBtn'),label=btn.innerHTML;
+  btn.disabled=true;btn.innerHTML='<span class="spin"></span>Sending...';
+  try{
+    const {ok,data}=await postJSON('/auth/forgot',{email});
+    if(ok){showMsg(data.message||"Reset link sent. Please check your email.",true);}
+    else{showMsg(data.message||"Something went wrong. Please try again.");}
+  }catch(err){showMsg("Server connection failed. Please try again.");}
+  btn.disabled=false;btn.innerHTML=label;
+});
+
+/* ============ Step 2: notun password set kora ============ */
+$('resetForm').addEventListener('submit',async(e)=>{
+  e.preventDefault();hideMsg();
+  const p1=$('password').value,p2=$('password2').value;
+  if(p1.length<4){showMsg("Password must be at least 4 characters.");return;}
+  if(p1!==p2){showMsg("Passwords do not match.");return;}
+  const btn=$('resetBtn'),label=btn.innerHTML;
+  btn.disabled=true;btn.innerHTML='<span class="spin"></span>Updating...';
+  try{
+    const {ok,data}=await postJSON('/auth/reset',{token,password:p1});
+    if(ok){
+      showMsg(data.message||"Password updated. Redirecting to login...",true);
+      setTimeout(()=>{window.location.href='login.html';},1600);
+      return;
+    }
+    showMsg(data.message||"This reset link is invalid or has expired.");
+  }catch(err){showMsg("Server connection failed. Please try again.");}
+  btn.disabled=false;btn.innerHTML=label;
+});
+
+/* ============ Objects follow the mouse (parallax) ============ */
+(function(){
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  const root=document.getElementById('stage-root'),objs=document.querySelectorAll('.obj');
+  root.addEventListener('mousemove',e=>{
+    const r=root.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+    objs.forEach(o=>{const d=+o.dataset.d;o.style.transform=`translate(${-x*d*2}px,${-y*d*2}px)`;});
+  });
+  root.addEventListener('mouseleave',()=>objs.forEach(o=>o.style.transform=''));
+})();
+</script>
 </body>
 </html>

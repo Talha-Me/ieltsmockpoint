@@ -43,7 +43,7 @@
 <!-- Rich Schema.org Structured Data -->
 <script type="application/ld+json" id="lessonSchema"></script>
 <script type="application/ld+json" id="breadcrumbSchema"></script>
-
+<script src="/auth-nav.js"></script>
 <style>
 :root{--navy:#0b2b52;--blue:#1565c9;--blue-light:#eaf2fd;--red:#e0202d;--red-dark:#b5121d;--bg:#fff;--surface:#f4f7fb;--text:#0f2038;--muted:#5d708c;--line:#e3e9f3;}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -308,38 +308,17 @@ footer {
 <!-- Top Sticky Navbar -->
 <header id="hd">
 <nav class="wrap" aria-label="Main navigation">
-<a href="/" class="brand"><img src="/Brandlogo.png" alt="IELTS Mockpoint" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class="txt"><i></i>IELTS Mockpoint</span></a>
-<div class="nav-links">
-<a href="/mocks.html">Full Tests</a>
-<a href="/cambridge-listening.html">Listening</a>
-<a href="/cambridge-reading.html">Reading</a>
-<a href="/cambridge-writing.html">Writing</a>
-<a href="/speaking.html">Speaking</a>
-<a href="/practice-hub">Practice Hub</a>
-<a href="/learn.html" class="cur" aria-current="page">Learn</a>
-
-<a href="/blog.html" class="cur">Blog</a>
-</div>
-<div class="nav-actions"><a href="/login.html" class="btn btn-outline">Sign in</a><a href="/register.html" class="btn btn-red">Start free</a></div>
-<button class="menu-btn" id="openMenu" aria-label="Open menu">Menu</button>
-</nav>
+    <a href="home.html" class="brand"><img src="/Brandlogo.png" alt="IELTS Mockpoint" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class="txt"><i></i>IELTS Mockpoint</span></a>
+    <div class="nav-links"><a href="/mocks.html">Full Tests</a><a href="/cambridge-listening.html">Listening</a><a href="/cambridge-reading.html">Reading</a><a href="/cambridge-writing.html">Writing</a><a href="/speaking.html">Speaking</a><a href="/practice-hub">Question Types</a><a href="/blog.html" class="cur">Blog</a></div>
+    <div class="nav-actions"><a href="/login.html" class="btn btn-outline">Sign in</a><a href="/register.html" class="btn btn-red">Start free</a></div>
+    <button class="menu-btn" id="openMenu" aria-label="Open menu">☰</button>
+  </nav>
 </header>
-
 <div class="overlay" id="ov"></div>
 <aside class="sidebar" id="sb" aria-hidden="true">
-<div class="sb-head"><a href="/" class="brand"><img src="/Brandlogo.png" alt="IELTS Mockpoint" style="height:38px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class="txt"><i></i>IELTS Mockpoint</span></a><button class="sb-close" id="closeMenu" aria-label="Close menu">&times;</button></div>
-<nav class="sb-links">
-<a href="/mocks.html">Full Tests</a>
-<a href="/cambridge-listening.html">Listening</a>
-<a href="/cambridge-reading.html">Reading</a>
-<a href="/cambridge-writing.html">Writing</a>
-<a href="/speaking.html">Speaking</a>
-<a href="/practice-hub">Practice Hub</a>
-<a href="/learn.html">Learn</a>
-<a href="/blog.html">Blog</a>
-<a href="/institutes.html">For Institutes</a>
-</nav>
-<div class="sb-actions"><a href="/login.html" class="btn btn-outline">Sign in</a><a href="/register.html" class="btn btn-red">Start free</a></div>
+  <div class="sb-head"><a href="/home.html" class="brand"><img src="/Brandlogo.png" alt="IELTS Mockpoint" style="height:38px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class="txt"><i></i>IELTS Mockpoint</span></a><button class="sb-close" id="closeMenu" aria-label="Close menu">×</button></div>
+  <nav class="sb-links"><a href="/mocks.html">Full Tests</a><a href="/cambridge-listening.html">Listening</a><a href="/cambridge-reading.html">Reading</a><a href="/cambridge-writing.html">Writing</a><a href="/speaking.html">Speaking</a><a href="#qtypes">Practice by Question Type</a><a href="/learn.html">Learn</a><a href="/institutes.html">For Institutes</a></nav>
+  <div class="sb-actions"><a href="/login.html" class="btn btn-outline">Sign in</a><a href="/register.html" class="btn btn-red">Start free</a></div>
 </aside>
 
 <main>

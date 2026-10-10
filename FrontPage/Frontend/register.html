@@ -1,6 +1,14 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-620WY8NNVE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-620WY8NNVE');
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Create Account | IELTS Mockpoint</title>
@@ -494,6 +502,562 @@ document.getElementById("registerForm").addEventListener("submit",async function
 });
 
 // Objects follow the mouse
+(function(){
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  const root=document.getElementById('stage-root'),objs=document.querySelectorAll('.obj');
+  root.addEventListener('mousemove',e=>{
+    const r=root.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+    objs.forEach(o=>{const d=+o.dataset.d;o.style.transform=`translate(${-x*d*2}px,${-y*d*2}px)`;});
+  });
+  root.addEventListener('mouseleave',()=>objs.forEach(o=>o.style.transform=''));
+})();
+</script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-620WY8NNVE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-620WY8NNVE');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Create Account | IELTS Mockpoint</title>
+<meta name="description" content="Create your free IELTS Mockpoint account to take full mock tests, practise each skill and track your band score.">
+<link rel="icon" type="image/png" href="mpfavicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- Google Identity Services -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="/auth-nav.js"></script>
+<style>
+:root{--navy:#0b2b52;--blue:#1565c9;--blue-light:#eaf2fd;--red:#e0202d;--red-dark:#b5121d;--bg:#fff;--surface:#f4f7fb;--text:#0f2038;--muted:#5d708c;--line:#e3e9f3;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;padding-top:env(safe-area-inset-top,0);padding-bottom:env(safe-area-inset-bottom,0);display:flex;flex-direction:column;min-height:100vh;overflow-x:hidden;}
+h1,h2,h3{font-family:'Sora',sans-serif;font-weight:700;line-height:1.12;color:var(--navy);}
+a{color:inherit;}
+.wrap{max-width:1140px;margin:0 auto;padding:0 24px;}
+header{position:sticky;top:env(safe-area-inset-top,0);z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);transition:box-shadow .25s;}
+header.scrolled{box-shadow:0 6px 18px rgba(11,43,82,.08);}
+nav.wrap{display:flex;align-items:center;justify-content:space-between;height:74px;}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:'Sora',sans-serif;font-weight:800;font-size:1.3rem;color:var(--navy);}
+.brand img{height:46px;width:auto;display:block;}
+.brand .txt{display:none;align-items:center;gap:8px;}
+.brand .txt i{width:11px;height:11px;border-radius:3px;background:var(--red);box-shadow:5px 5px 0 var(--blue);margin-right:5px;}
+.nav-links{display:flex;gap:26px;}
+.nav-links a{font-size:.92rem;color:var(--muted);text-decoration:none;font-weight:500;position:relative;padding:4px 0;}
+.nav-links a::after{content:'';position:absolute;left:0;bottom:-2px;width:0;height:2px;background:var(--red);transition:width .2s;}
+.nav-links a:hover{color:var(--navy);}.nav-links a:hover::after{width:100%;}
+.nav-actions{display:flex;gap:12px;align-items:center;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 22px;border-radius:9px;font-size:.92rem;font-weight:700;text-decoration:none;border:1.5px solid transparent;cursor:pointer;font-family:inherit;transition:transform .15s,box-shadow .2s,background .2s;}
+.btn-red{background:var(--red);color:#fff;}
+.btn-red:hover{background:var(--red-dark);transform:translateY(-2px);box-shadow:0 10px 22px rgba(224,32,45,.28);}
+.btn-outline{color:var(--navy);border-color:var(--line);background:#fff;}
+.btn-outline:hover{border-color:var(--blue);color:var(--blue);}
+.menu-btn{display:none;background:var(--blue-light);border:none;color:var(--navy);width:42px;height:42px;border-radius:10px;font-size:1.3rem;cursor:pointer;}
+@media(max-width:920px){.nav-links,.nav-actions{display:none;}.menu-btn{display:block;}}
+.overlay{position:fixed;inset:0;background:rgba(11,43,82,.55);backdrop-filter:blur(3px);z-index:90;opacity:0;pointer-events:none;transition:opacity .3s;}
+.overlay.open{opacity:1;pointer-events:auto;}
+.sidebar{position:fixed;top:0;right:0;height:100%;width:min(320px,86vw);background:#fff;z-index:100;transform:translateX(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;padding:22px 24px calc(24px + env(safe-area-inset-bottom,0));box-shadow:-12px 0 40px rgba(11,43,82,.18);}
+.sidebar.open{transform:none;}
+.sb-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;}
+.sb-close{background:var(--surface);border:none;width:40px;height:40px;border-radius:50%;font-size:1.4rem;cursor:pointer;color:var(--navy);}
+.sb-links a{display:block;padding:14px 4px;border-bottom:1px solid var(--line);text-decoration:none;font-weight:600;color:var(--navy);transition:padding .2s,color .2s;}
+.sb-links a:hover{color:var(--red);padding-left:12px;}
+.sb-actions{margin-top:auto;display:grid;gap:10px;}
+
+main{flex:1;position:relative;overflow:hidden;display:flex;align-items:center;padding:48px 0;background:linear-gradient(180deg,#fff,var(--surface));}
+.blob{position:absolute;border-radius:50%;pointer-events:none;}
+.blob.a{top:-160px;right:-140px;width:520px;height:520px;background:radial-gradient(circle,var(--blue-light),transparent 70%);animation:float 9s ease-in-out infinite;}
+.blob.b{bottom:-180px;left:-120px;width:480px;height:480px;background:radial-gradient(circle,rgba(224,32,45,.1),transparent 70%);animation:float 11s ease-in-out infinite reverse;}
+@keyframes float{50%{transform:translateY(24px);}}
+.stage{position:relative;z-index:1;width:100%;display:grid;grid-template-columns:.95fr 1.05fr;gap:56px;align-items:center;}
+
+.show .kicker{display:inline-flex;align-items:center;gap:8px;color:var(--red);font-size:.88rem;font-weight:700;margin-bottom:16px;}
+.show .kicker::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--red);}
+.show h1{font-size:clamp(2rem,3.8vw,3rem);margin-bottom:16px;}
+.show h1 span{color:var(--blue);}
+.show p.lead{color:var(--muted);max-width:44ch;margin-bottom:24px;}
+.perks{display:grid;gap:12px;margin-bottom:8px;}
+.perk{display:flex;align-items:center;gap:14px;background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:14px 16px;font-weight:600;font-size:.92rem;color:var(--navy);opacity:0;transform:translateX(-24px);animation:slideIn .6s ease forwards;transition:transform .25s,border-color .25s,box-shadow .25s;}
+.perk:nth-child(1){animation-delay:.2s;}.perk:nth-child(2){animation-delay:.35s;}.perk:nth-child(3){animation-delay:.5s;}.perk:nth-child(4){animation-delay:.65s;}
+@keyframes slideIn{to{opacity:1;transform:none;}}
+.perk:hover{transform:translateX(8px);border-color:var(--blue);box-shadow:0 12px 28px rgba(21,101,201,.12);}
+.perk b{flex:none;width:34px;height:34px;border-radius:10px;background:var(--blue-light);color:var(--blue);display:flex;align-items:center;justify-content:center;transition:background .25s,color .25s;}
+.perk:hover b{background:var(--red);color:#fff;}
+.perk svg{width:18px;height:18px;}
+.floaters{position:relative;height:190px;margin-top:20px;}
+.obj{position:absolute;transition:transform .25s ease-out;}
+.obj>div{width:60px;height:60px;border-radius:18px;background:#fff;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--blue);box-shadow:0 14px 30px rgba(21,101,201,.16);animation:bob 5s ease-in-out infinite;}
+.obj.red>div{color:var(--red);box-shadow:0 14px 30px rgba(224,32,45,.16);}
+.obj svg{width:27px;height:27px;}
+.o1{left:2%;top:10%;}.o2{left:30%;top:52%;}.o2>div{animation-delay:-2s;}.o3{left:58%;top:6%;}.o3>div{animation-delay:-3s;}.o4{right:2%;top:50%;}.o4>div{animation-delay:-1.2s;}
+@keyframes bob{0%,100%{translate:0 0;rotate:-4deg;}50%{translate:0 -14px;rotate:4deg;}}
+.chip{position:absolute;background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:7px 14px;font-family:'Sora',sans-serif;font-weight:700;font-size:.78rem;color:var(--navy);box-shadow:0 10px 24px rgba(11,43,82,.12);animation:bob 6s ease-in-out infinite;white-space:nowrap;}
+.chip i{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);margin-right:7px;}
+.c1{left:16%;bottom:0;animation-delay:-1s;}.c2{right:20%;top:0;animation-delay:-3s;}.c2 i{background:var(--blue);}
+
+.card{position:relative;background:#fff;border:1.5px solid var(--line);border-radius:26px;padding:36px 36px 30px;box-shadow:0 30px 70px rgba(11,43,82,.12);overflow:hidden;animation:cardIn .8s cubic-bezier(.2,.8,.2,1) both;max-width:520px;width:100%;justify-self:center;}
+@keyframes cardIn{from{opacity:0;transform:translateY(40px) scale(.96);}}
+.card::before{content:'';position:absolute;left:0;top:0;height:5px;width:100%;background:linear-gradient(90deg,var(--blue),var(--red),var(--blue));background-size:200% 100%;animation:bar 4s linear infinite;}
+@keyframes bar{to{background-position:-200% 0;}}
+.card-logo{display:flex;justify-content:center;margin-bottom:14px;}
+.card-logo img{height:52px;width:auto;animation:logoIn .9s .2s both;}
+.card-logo .txt{display:none;font-family:'Sora',sans-serif;font-weight:800;font-size:1.3rem;color:var(--navy);align-items:center;gap:8px;}
+.card-logo .txt i{width:12px;height:12px;border-radius:3px;background:var(--red);box-shadow:5px 5px 0 var(--blue);margin-right:5px;}
+@keyframes logoIn{from{opacity:0;transform:scale(.6) rotate(-10deg);}}
+.card h2{font-size:1.7rem;text-align:center;margin-bottom:6px;}
+.card .sub{text-align:center;color:var(--muted);font-size:.92rem;margin-bottom:18px;}
+.prog{margin-bottom:22px;}
+.prog-top{display:flex;justify-content:space-between;font-size:.76rem;font-weight:700;color:var(--muted);margin-bottom:7px;}
+.prog-top b{color:var(--navy);font-family:'Sora',sans-serif;}
+.track{height:8px;background:var(--surface);border:1px solid var(--line);border-radius:999px;overflow:hidden;}
+.fill{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,var(--blue),var(--red));transition:width .5s cubic-bezier(.4,0,.2,1);}
+.field{position:relative;margin-bottom:16px;opacity:0;transform:translateY(14px);animation:rise .55s ease forwards;}
+.field:nth-of-type(1){animation-delay:.35s;}.field:nth-of-type(2){animation-delay:.42s;}.field:nth-of-type(3){animation-delay:.49s;}.field:nth-of-type(4){animation-delay:.56s;}.field:nth-of-type(5){animation-delay:.63s;}
+.submit-wrap{animation:rise .55s .72s ease both;}
+@keyframes rise{to{opacity:1;transform:none;}}
+.field label{display:flex;justify-content:space-between;font-weight:700;font-size:.82rem;margin-bottom:7px;color:var(--navy);}
+.field label small{font-weight:600;color:var(--muted);font-size:.74rem;}
+select,input{width:100%;padding:13px 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);font-family:inherit;font-size:.95rem;color:var(--text);transition:border-color .2s,box-shadow .2s,background .2s;}
+select{appearance:none;-webkit-appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%230b2b52' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;}
+select:focus,input:focus{outline:none;border-color:var(--blue);background:#fff;box-shadow:0 0 0 4px rgba(21,101,201,.14);}
+.iw{position:relative;}
+.iw input{padding-right:46px;}
+.tick{position:absolute;right:14px;top:50%;width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;transform:translateY(-50%) scale(0);transition:transform .3s cubic-bezier(.3,1.6,.5,1);pointer-events:none;}
+.tick svg{width:12px;height:12px;}
+.field.valid .tick{transform:translateY(-50%) scale(1);}
+.field.valid input{border-color:#9bbdea;}
+.field.shake input{animation:shake .4s;border-color:var(--red);}
+@keyframes shake{25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
+.pass-wrapper{position:relative;}
+.pass-wrapper input{padding-right:92px;}
+.pass-wrapper .tick{right:52px;}
+.toggle-pass{position:absolute;right:8px;top:50%;translate:0 -50%;width:38px;height:38px;border:none;background:transparent;border-radius:10px;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s,color .2s;}
+.toggle-pass:hover{background:var(--blue-light);color:var(--blue);}
+.toggle-pass svg{width:20px;height:20px;}
+.meter{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:9px;}
+.meter i{height:5px;border-radius:3px;background:var(--line);transition:background .3s;}
+.meter-lbl{font-size:.74rem;font-weight:700;color:var(--muted);margin-top:6px;min-height:1em;}
+.register-btn{position:relative;overflow:hidden;width:100%;padding:15px;border:none;border-radius:12px;background:var(--red);color:#fff;font-family:'Sora',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;margin-top:6px;transition:transform .15s,box-shadow .25s,background .2s;}
+.register-btn::after{content:'';position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);animation:shine 3.5s infinite;}
+@keyframes shine{0%,60%{left:-60%;}100%{left:130%;}}
+.register-btn:hover{background:var(--red-dark);transform:translateY(-2px);box-shadow:0 14px 28px rgba(224,32,45,.3);}
+.register-btn:active{transform:scale(.98);}
+.register-btn:disabled{opacity:.75;cursor:progress;transform:none;}
+.spin{display:inline-block;width:14px;height:14px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:rot .7s linear infinite;vertical-align:-2px;margin-right:8px;}
+@keyframes rot{to{transform:rotate(360deg);}}
+.card-foot{text-align:center;margin-top:20px;font-size:.9rem;color:var(--muted);}
+.card-foot a{color:var(--blue);font-weight:700;text-decoration:none;}
+.card-foot a:hover{color:var(--red);}
+
+/* form message + Google sign-up (uses existing theme tokens) */
+.form-msg{display:none;margin-bottom:16px;padding:11px 14px;border-radius:10px;font-size:.86rem;font-weight:600;background:#fdecee;color:var(--red-dark);border:1px solid #f6c5c9;}
+.form-msg.show{display:block;}
+.or{display:flex;align-items:center;gap:12px;margin:18px 0 14px;color:var(--muted);font-size:.8rem;font-weight:600;}
+.or::before,.or::after{content:'';flex:1;height:1px;background:var(--line);}
+.g-wrap{display:flex;justify-content:center;min-height:44px;}
+.g-note{font-size:.78rem;color:var(--muted);text-align:center;}
+
+@media(max-width:900px){.stage{grid-template-columns:1fr;gap:30px;}.card{order:-1;}.show{text-align:center;}.show p.lead{margin:0 auto 22px;}.perk{text-align:left;}.floaters{display:none;}main{padding:32px 0;}}
+@media(max-width:480px){.card{padding:30px 20px 24px;}}
+
+footer {
+  border-top: 1px solid var(--line);
+  padding: 56px 0 32px;
+  background: var(--surface);
+  position: relative;
+  z-index: 1;
+}
+
+/* 5 Column Grid Layout */
+.fgrid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr 1.1fr;
+  gap: 32px;
+  margin-bottom: 36px;
+}
+
+.fgrid h4 {
+  font-size: 0.88rem;
+  color: var(--blue);
+  margin-bottom: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.fgrid a {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--muted);
+  text-decoration: none;
+  margin-bottom: 10px;
+  transition: color 0.15s ease;
+}
+
+.fgrid a:hover {
+  color: var(--red);
+}
+
+/* Bottom Disclaimer & Copyright */
+.fbottom {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  border-top: 1px solid var(--line);
+  padding-top: 22px;
+  line-height: 1.6;
+}
+
+.fbottom-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 992px) {
+  .fgrid {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 28px;
+  }
+}
+
+@media (max-width: 640px) {
+  .fgrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .fgrid > div:first-child {
+    grid-column: 1 / -1; /* Mobile view-তে Brand info পুরো উইডথ জুড়ে থাকবে */
+    margin-bottom: 8px;
+  }
+}
+
+/* Back to Top Button */
+#top {
+  position: fixed;
+  right: 20px;
+  bottom: calc(20px + env(safe-area-inset-bottom, 0));
+  width: 46px;
+  height: 46px;
+  border: none;
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(224, 32, 45, 0.35);
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: all 0.3s;
+  z-index: 60;
+}
+
+#top.show {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+#top:hover {
+  background: var(--red-dark);
+  transform: translateY(-3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+  .reveal, .qt {
+    opacity: 1;
+    transform: none;
+  }
+  #glow {
+    display: none;
+  }
+}
+</style>
+</head>
+<body>
+<header id="hd">
+  <nav class="wrap">
+    <a href="home.html" class="brand"><img src="Brandlogo.png" alt="IELTS Mockpoint" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class="txt"><i></i>IELTS Mockpoint</span></a>
+    <div class="nav-links"><a href="mocks.html">Full Tests</a><a href="cambridge-listening.html">Listening</a><a href="cambridge-reading.html">Reading</a><a href="cambridge-writing.html">Writing</a><a href="speaking.html">Speaking</a><a href="/practice-hub.html">Practice</a><a href="/blog.html" class="cur">Blog</a></div>
+    <div class="nav-actions"><a href="login.html" class="btn btn-outline">Sign in</a><a href="register.html" class="btn btn-red">Start free</a></div>
+    <button class="menu-btn" id="openMenu" aria-label="Open menu">☰</button>
+  </nav>
+</header>
+<div class="overlay" id="ov"></div>
+<aside class="sidebar" id="sb" aria-hidden="true">
+  <div class="sb-head"><a href="home.html" class="brand"><img src="Brandlogo.png" alt="IELTS Mockpoint" style="height:38px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class="txt"><i></i>IELTS Mockpoint</span></a><button class="sb-close" id="closeMenu" aria-label="Close menu">×</button></div>
+  <nav class="sb-links"><a href="mocks.html">Full Tests</a><a href="cambridge-listening.html">Listening</a><a href="cambridge-reading.html">Reading</a><a href="cambridge-writing.html">Writing</a><a href="speaking.html">Speaking</a><a href="/practice-hub">Practice</a><a href="institutes.html">For Institutes</a></nav>
+  <div class="sb-actions"><a href="login.html" class="btn btn-outline">Sign in</a><a href="register.html" class="btn btn-red">Start free</a></div>
+</aside>
+
+<main id="stage-root">
+  <div class="blob a"></div><div class="blob b"></div>
+  <div class="wrap stage">
+    <section class="show">
+      <div class="kicker">Free account</div>
+      <h1>Start your <span>IELTS journey</span> today.</h1>
+      <p class="lead">Create your account in under a minute and unlock everything you need to reach your target band.</p>
+      <div class="perks">
+        <div class="perk"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></b>Full-length mock tests in the real exam interface</div>
+        <div class="perk"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></b>Practice by question type for every skill</div>
+        <div class="perk"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></b>Track your results and see your progress</div>
+        <div class="perk"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></b>No card needed, free to get started</div>
+      </div>
+      <div class="floaters" aria-hidden="true">
+        <div class="obj o1" data-d="16"><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg></div></div>
+        <div class="obj o2 red" data-d="24"><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div></div>
+        <div class="obj o3" data-d="20"><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div></div>
+        <div class="obj o4 red" data-d="28"><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg></div></div>
+        <span class="chip c1"><i></i>Band 7.5 target</span><span class="chip c2"><i></i>Free mocks</span>
+      </div>
+    </section>
+
+    <div class="card">
+      <div class="card-logo"><img src="Brandlogo.png" alt="IELTS Mockpoint" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class="txt"><i></i>IELTS Mockpoint</span></div>
+      <h2>Create Account</h2>
+      <p class="sub">Join us to start your IELTS journey today.</p>
+      <div class="prog"><div class="prog-top"><span>Profile complete</span><b id="pct">0%</b></div><div class="track"><div class="fill" id="fill"></div></div></div>
+
+      <div class="form-msg" id="formMsg" role="alert"></div>
+
+      <form id="registerForm" novalidate>
+        <div class="field" id="f-name">
+          <label for="name">Full Name*</label>
+          <div class="iw"><input type="text" id="name" required placeholder="Enter your full name" autocomplete="name"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span></div>
+        </div>
+        <div class="field" id="f-email">
+          <label for="email">Email Address*</label>
+          <div class="iw"><input type="email" id="email" required placeholder="example@mail.com" autocomplete="email"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span></div>
+        </div>
+        <div class="field" id="f-pass">
+          <label for="password">Password*</label>
+          <div class="pass-wrapper">
+            <input type="password" id="password" required minlength="4" placeholder="Min. 4 characters" autocomplete="new-password">
+            <span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <button type="button" class="toggle-pass" id="togglePassword" aria-label="Show or hide password">
+              <svg id="eyeOn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg id="eyeOff" style="display:none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </button>
+          </div>
+          <div class="meter" id="meter"><i></i><i></i><i></i><i></i></div><div class="meter-lbl" id="meterLbl"></div>
+        </div>
+        <div class="submit-wrap"><button type="submit" class="register-btn" id="regBtn">Register Now →</button></div>
+      </form>
+
+      <div class="or">or</div>
+      <div class="g-wrap" id="googleBtn"></div>
+
+      <div class="card-foot">Already have an account? <a href="login.html">Login here</a></div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <a href="/" class="brand" style="margin-bottom:12px">
+          <img src="/Brandlogo.png" alt="IELTS Mockpoint" style="height:40px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <span class="txt"><i></i>IELTS Mockpoint</span>
+        </a>
+        <p style="color:var(--muted);font-size:.9rem;max-width:32ch">
+          Free, examiner-graded IELTS practice — authentic mock tests, band score evaluation, and resources.
+        </p>
+      </div>
+      <div>
+        <h4>Practice</h4>
+        <a href="/mocks.html">Full Tests</a>
+        <a href="/cambridge-listening.html">Listening</a>
+        <a href="/cambridge-reading.html">Reading</a>
+        <a href="/cambridge-writing.html">Writing</a>
+        <a href="/speaking.html">Speaking</a>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <a href="/blog.html">Blog & Tips</a>
+        <a href="/learn.html">Free lessons</a>
+        <a href="/band-calculator.html">Band score calculator</a>
+        <a href="/writing-samples.html">Writing samples</a>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <a href="/about.html">About Us</a>
+        <a href="/contact.html">Contact Us</a>
+        <a href="/institutes.html">For institutes</a>
+      </div>
+      <div>
+        <h4>Legal & Policy</h4>
+        <a href="/privacy-policy.html">Privacy Policy</a>
+        <a href="/terms-of-service.html">Terms of Service</a>
+        <a href="/disclaimer.html">Disclaimer</a>
+        <a href="/cookie-policy.html">Cookie Policy</a>
+      </div>
+    </div>
+    <div class="fbottom" style="display:flex; flex-direction:column; gap:8px; margin-top:24px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.08); font-size:0.8rem; color:var(--muted);">
+      <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+        <span>© 2026 IELTS Mockpoint. All rights reserved.</span>
+        <span>Trusted IELTS Preparation & Mock Platform.</span>
+      </div>
+      <span>
+        Disclaimer: IELTS® is a registered trademark of the University of Cambridge, the British Council, and IDP Education Australia. IELTS Mockpoint is an independent preparation platform and is not affiliated, approved, or endorsed by these official bodies.
+      </span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ============ CONFIG ============ */
+// Google Cloud Console > APIs & Services > Credentials > OAuth client ID (Web application)
+const GOOGLE_CLIENT_ID = "762568604421-t7ne2h2vg8tfld95iehv97r1irip36at.apps.googleusercontent.com";
+const REGISTER_API = "/register";     // POST { name, email, password }
+const GOOGLE_API   = "/auth/google";  // POST { credential }
+const AFTER_REGISTER = "login.html";  // normal register er por
+const AFTER_GOOGLE   = "/mocks";      // Google diye hole direct login hoye jabe
+
+/* ============ UI (header / sidebar) ============ */
+const hd=document.getElementById('hd');
+addEventListener('scroll',()=>hd.classList.toggle('scrolled',scrollY>10));
+const sb=document.getElementById('sb'),ov=document.getElementById('ov');
+function setMenu(o){sb.classList.toggle('open',o);ov.classList.toggle('open',o);sb.setAttribute('aria-hidden',!o);document.body.style.overflow=o?'hidden':'';}
+openMenu.onclick=()=>setMenu(true);closeMenu.onclick=()=>setMenu(false);ov.onclick=()=>setMenu(false);
+sb.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setMenu(false)));
+addEventListener('keydown',e=>{if(e.key==='Escape')setMenu(false);});
+
+// Password toggle
+document.getElementById('togglePassword').addEventListener('click',()=>{
+  const p=document.getElementById('password'),show=p.type==='password';
+  p.type=show?'text':'password';
+  document.getElementById('eyeOn').style.display=show?'none':'';
+  document.getElementById('eyeOff').style.display=show?'':'none';
+});
+
+/* ============ Helpers ============ */
+const $=id=>document.getElementById(id);
+const msgBox=$('formMsg');
+function showMsg(t){msgBox.textContent=t;msgBox.classList.add('show');}
+function hideMsg(){msgBox.classList.remove('show');}
+
+async function postJSON(url,body){
+  const res=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",body:JSON.stringify(body)});
+  let data={};
+  try{data=await res.json();}catch(e){}
+  return {ok:res.ok,data};
+}
+
+function saveSession(data){
+  try{
+    if(data.token)localStorage.setItem("token",data.token);
+    if(data.user)localStorage.setItem("user",JSON.stringify(data.user));
+  }catch(e){}
+}
+
+/* ============ Live validation, progress bar, password strength ============ */
+const checks={
+  'f-name':()=>$('name').value.trim().length>=2,
+  'f-email':()=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test($('email').value.trim()),
+  'f-pass':()=>$('password').value.length>=4
+};
+function strength(v){
+  let s=0;if(v.length>=4)s++;if(v.length>=8)s++;if(/[A-Z]/.test(v)&&/[a-z]/.test(v))s++;if(/\d/.test(v)&&/[^A-Za-z0-9]/.test(v))s++;
+  return v?Math.max(1,s):0;
+}
+function refresh(){
+  let ok=0;const total=Object.keys(checks).length;
+  for(const id in checks){const v=checks[id]();$(id).classList.toggle('valid',v);if(v)ok++;}
+  const pct=Math.round(ok/total*100);
+  $('fill').style.width=pct+'%';$('pct').textContent=pct+'%';
+  const s=strength($('password').value),cols=['#e0202d','#f08a24','#1565c9','#0b2b52'],names=['','Weak','Fair','Good','Strong'];
+  document.querySelectorAll('#meter i').forEach((b,i)=>b.style.background=i<s?cols[s-1]:'');
+  $('meterLbl').textContent=names[s];$('meterLbl').style.color=s?cols[s-1]:'';
+}
+['name','email','password'].forEach(id=>$(id).addEventListener('input',refresh));
+refresh();
+
+/* ============ Register (name + email + password) ============ */
+$('registerForm').addEventListener('submit',async function(e){
+  e.preventDefault();
+  hideMsg();
+  for(const id in checks){
+    if(!checks[id]()){
+      const f=$(id);f.classList.remove('shake');void f.offsetWidth;f.classList.add('shake');f.querySelector('input').focus();
+      return;
+    }
+  }
+  const user={
+    name:$('name').value.trim(),
+    email:$('email').value.trim().toLowerCase(),
+    password:$('password').value.trim()
+  };
+  const btn=$('regBtn'),label=btn.innerHTML;
+  btn.disabled=true;btn.innerHTML='<span class="spin"></span>Creating account...';
+  try{
+    const {ok,data}=await postJSON(REGISTER_API,user);
+    if(ok){
+      alert("Registration successful!");
+      window.location.href=AFTER_REGISTER;
+      return;
+    }
+    showMsg(data.message||"Error occurred. Please try again.");
+  }catch(err){
+    showMsg("Server connection failed. Please try again.");
+  }
+  btn.disabled=false;btn.innerHTML=label;
+});
+
+/* ============ Google sign-up / login ============ */
+async function handleGoogle(response){
+  hideMsg();
+  try{
+    const {ok,data}=await postJSON(GOOGLE_API,{credential:response.credential});
+    if(ok){
+      saveSession(data);
+      window.location.href=(data&&data.redirect)||AFTER_GOOGLE;
+      return;
+    }
+    showMsg(data.message||"Google sign-up failed.");
+  }catch(err){
+    showMsg("Server connection failed. Please try again.");
+  }
+}
+
+function initGoogle(){
+  const box=$('googleBtn');
+  if(GOOGLE_CLIENT_ID.startsWith("YOUR_GOOGLE_CLIENT_ID")){
+    box.innerHTML='<span class="g-note">Google sign-up: set GOOGLE_CLIENT_ID in this file.</span>';
+    return;
+  }
+  if(!window.google||!google.accounts){
+    box.innerHTML='<span class="g-note">Google sign-up is unavailable right now.</span>';
+    return;
+  }
+  google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:handleGoogle});
+  google.accounts.id.renderButton(box,{
+    theme:"outline",size:"large",text:"signup_with",shape:"rectangular",
+    width:Math.min(400,Math.max(200,box.offsetWidth||300))
+  });
+}
+window.addEventListener('load',initGoogle);
+
+/* ============ Objects follow the mouse ============ */
 (function(){
   if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
   const root=document.getElementById('stage-root'),objs=document.querySelectorAll('.obj');

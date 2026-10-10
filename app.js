@@ -845,6 +845,7 @@ const CambridgeListening = require("./models/CambridgeListening");
 const CambridgeReading = require("./models/CambridgeReading");
 const Blog = require("./models/Blog");
 const Lesson = require("./models/Lesson");
+const userAuthRoutes = require("./routes/userAuth");
 
 require("dotenv").config();
 const cors = require("cors");
@@ -960,9 +961,15 @@ async function start() {
   // Middleware Setup (Limit 10mb for large texts & audio payloads)
   app.use(express.json({ limit: "10mb" }));
   app.use(express.urlencoded({ extended: true, limit: "10mb" }));
-  app.use(
-    session({ secret: "secret", resave: false, saveUninitialized: true })
-  );
+app.use(
+  session({
+    secret: "secret",
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 } // 30 din
+  })
+);
+  app.use(userAuthRoutes);
 
   // ==========================================
   // REDIRECT: /page.html  ->  /page  (URL e .html dekhabe na)
