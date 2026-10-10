@@ -865,7 +865,6 @@ app.use((req, res, next) => {
   );
   next();
 });
-
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
@@ -986,7 +985,7 @@ app.use((req, res, next) => {
   app.use(express.static(path.join(__dirname, "FrontPage", "Frontend", "Practice-hub")));
   app.use(express.static(path.join(__dirname, "FrontPage", "Frontend")));
   app.use(express.static(path.join(__dirname, "FrontPage")));
-  // app.use(express.static(path.join(__dirname, "views")));
+  app.use(express.static(path.join(__dirname, "views")));
   app.use(express.static(path.join(__dirname, "public")));
   app.use(express.static(path.join(__dirname, "audio")));
 
