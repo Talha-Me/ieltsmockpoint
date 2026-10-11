@@ -1819,6 +1819,15 @@ app.get('/sitemap.xml', async (req, res) => {
 
   app.listen(port, "0.0.0.0", () => {
     console.log(`Server on http://localhost:${port}`);
+    // Self-ping to prevent Render from sleeping (every 8 minutes)
+    const PING_INTERVAL = 8 * 60 * 1000; // 8 minutes in milliseconds
+    const SERVER_URL = "https://ieltsmockpoint.com";
+
+    setInterval(() => {
+      fetch(SERVER_URL)
+        .then((res) => console.log(`[Ping] Server active: Status ${res.status}`))
+        .catch((err) => console.error("[Ping Error]:", err.message));
+    }, PING_INTERVAL);
   });
 }
 
