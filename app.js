@@ -1694,7 +1694,21 @@ app.get("/", (req, res) => {
 // ==========================================
 app.get('/sitemap.xml', async (req, res) => {
   try {
-    // ১. ডাটাবেজ থেকে ব্লগ এবং লেসন লোড (শুধু পাবলিশ হওয়া পোস্ট)
+    // Helper function to escape special XML characters
+    const escapeXml = (unsafe) => {
+      if (!unsafe) return '';
+      return String(unsafe).replace(/[<>&'"]/g, (c) => {
+        switch (c) {
+          case '<': return '&lt;';
+          case '>': return '&gt;';
+          case '&': return '&amp;';
+          case '\'': return '&apos;';
+          case '"': return '&quot;';
+        }
+      });
+    };
+
+    // ১. ডাটাবেজ থেকে ব্লগ এবং লেসন লোড
     const blogs = await Blog.find({ isPublished: true }, 'slug updatedAt createdAt').lean();
     const lessons = await Lesson.find({ isPublished: true }, 'module slug updatedAt createdAt').lean();
 
@@ -1716,8 +1730,8 @@ app.get('/sitemap.xml', async (req, res) => {
       { url: '/faq', priority: '0.6', changefreq: 'monthly' }
     ];
 
-    let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
-    xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
 
     // (A) স্ট্যাটিক পেজসমূহ যুক্ত করা
     staticPages.forEach(page => {
@@ -1762,7 +1776,7 @@ app.get('/sitemap.xml', async (req, res) => {
       const t = item.testNo || item.testNumber;
       if (b && t) {
         xml += `  <url>\n`;
-        xml += `    <loc>https://ieltsmockpoint.com/cambridge-listening-test?book=${b}&amp;test=${t}</loc>\n`;
+        xml += `    <loc>https://ieltsmockpoint.com/cambridge-listening-test?book=${escapeXml(b)}&amp;test=${escapeXml(t)}</loc>\n`;
         xml += `    <changefreq>monthly</changefreq>\n`;
         xml += `    <priority>0.8</priority>\n`;
         xml += `  </url>\n`;
@@ -1775,20 +1789,20 @@ app.get('/sitemap.xml', async (req, res) => {
       const t = item.testNo || item.testNumber;
       if (b && t) {
         xml += `  <url>\n`;
-        xml += `    <loc>https://ieltsmockpoint.com/cambridge-reading-test?book=${b}&amp;test=${t}</loc>\n`;
+        xml += `    <loc>https://ieltsmockpoint.com/cambridge-reading-test?book=${escapeXml(b)}&amp;test=${escapeXml(t)}</loc>\n`;
         xml += `    <changefreq>monthly</changefreq>\n`;
         xml += `    <priority>0.8</priority>\n`;
         xml += `  </url>\n`;
       }
     });
 
-    xml += `</urlset>`;
+    xml += '</urlset>';
 
-    res.header('Content-Type', 'application/xml');
-    res.send(xml);
+    res.set('Content-Type', 'application/xml; charset=utf-8');
+    res.status(200).send(xml);
   } catch (error) {
     console.error("Sitemap generation error:", error);
-    res.status(500).end();
+    res.status(500).send("Error generating sitemap");
   }
 });
 
@@ -1799,7 +1813,15 @@ app.get('/sitemap.xml', async (req, res) => {
   app.use("/audio", audioRoutes);
   app.use("/practice-audio", pracAudioRoutes);
   app.use("/video", videoRoutes);
+// robots.txt direct route
+app.get("/robots.txt", (req, res) => {
+  res.type("text/plain");
+  res.send(`User-agent: *
+Allow: /
 
+Sitemap: https://ieltsmockpoint.com/sitemap.xml
+`);
+});
   // ==========================================
   // CLEAN URL FALLBACK: /mocks  ->  mocks.html serve korbe
   // (Shob route er por, tai kono existing route/auth bypass hobe na)
