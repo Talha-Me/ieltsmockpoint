@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -510,6 +510,1267 @@ function render(){
             <a role="menuitem" href="${fullTestUrl}&part=2" data-key="${key}">Part 2 <span>Q 11-20</span></a>
             <a role="menuitem" href="${fullTestUrl}&part=3" data-key="${key}">Part 3 <span>Q 21-30</span></a>
             <a role="menuitem" href="${fullTestUrl}&part=4" data-key="${key}">Part 4 <span>Q 31-40</span></a>
+          </div>
+        </div>
+      </div>`;
+
+    /* 3D tilt + spotlight */
+    card.addEventListener('mousemove',e=>{
+      if(matchMedia('(hover:none)').matches)return;
+      const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+      card.style.setProperty('--mx',x*100+'%');card.style.setProperty('--my',y*100+'%');
+      card.style.setProperty('--ry',((x-.5)*6)+'deg');card.style.setProperty('--rx',((.5-y)*6)+'deg');
+    });
+    card.addEventListener('mouseleave',()=>{card.style.setProperty('--rx','0deg');card.style.setProperty('--ry','0deg');});
+    grid.appendChild(card);
+  });
+}
+
+/* ---------- popover ---------- */
+function closePops(except){
+  document.querySelectorAll('.part-popover.open').forEach(p=>{
+    if(p===except)return;
+    p.classList.remove('open');
+    const btn=p.previousElementSibling;if(btn)btn.setAttribute('aria-expanded','false');
+    p.closest('.card').classList.remove('open-card');
+  });
+}
+grid.addEventListener('click',e=>{
+  const link=e.target.closest('a[data-key]');
+  if(link){done[link.dataset.key]=1;saveDone();return;}
+  const btn=e.target.closest('.practice-drop-wrap > button');
+  if(!btn)return;
+  e.stopPropagation();
+  const pop=btn.nextElementSibling,willOpen=!pop.classList.contains('open');
+  closePops(willOpen?pop:null);
+  pop.classList.toggle('open',willOpen);
+  btn.setAttribute('aria-expanded',willOpen);
+  btn.closest('.card').classList.toggle('open-card',willOpen);
+});
+addEventListener('click',e=>{if(!e.target.closest('.practice-drop-wrap'))closePops();});
+addEventListener('keydown',e=>{if(e.key==='Escape'){closePops();setMenu(false);}});
+
+/* ---------- animated counters ---------- */
+setupTabs();
+render();
+
+const cio=new IntersectionObserver(es=>es.forEach(e=>{
+  if(!e.isIntersecting)return;cio.unobserve(e.target);
+  const el=e.target,to=+el.dataset.to,suf=el.dataset.suffix||'',t0=performance.now(),dur=1100;
+  (function tick(n){const p=Math.min((n-t0)/dur,1),v=Math.round(to*(1-Math.pow(1-p,3)));el.textContent=v+suf;if(p<1)requestAnimationFrame(tick);})(t0);
+}),{threshold:.6});
+document.querySelectorAll('[data-to]').forEach(el=>cio.observe(el));
+</script>
+<script src="/auth-nav.js"></script>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Free IELTS Listening Mock Test Online 2026 – Cambridge 12–21 | IELTS Mockpoint</title>
+<meta name="description" content="Free IELTS listening mock test online: Cambridge IELTS 12–21 listening tests with real audio, timer, part-by-part practice and instant band score.">
+<meta name="keywords" content="ielts listening mock test, free ielts mock test, ielts listening test, free ielts listening test, ielts listening practice test, ielts listening practice test with answers, ielts listening test with audio, ielts listening mock test online, free ielts listening mock test, listening mock test free, ielts listening test online free, ielts listening practice free, ielts listening tips, ielts listening band score, ielts listening format, ielts listening question types, ielts listening section 1, ielts listening part 3, ielts listening part 4, cambridge ielts listening, cambridge ielts listening test online, cambridge ielts 20 listening, cambridge ielts 21 listening, cambridge ielts 12 to 21 listening, ielts mock test free online, ielts mock test online free, free ielts practice test, computer delivered ielts listening">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="author" content="IELTS Mockpoint">
+<meta name="theme-color" content="#0b2b52">
+<link rel="canonical" href="https://ieltsmockpoint.com/cambridge-listening">
+<link rel="alternate" hreflang="en" href="https://ieltsmockpoint.com/cambridge-listening">
+<link rel="alternate" hreflang="x-default" href="https://ieltsmockpoint.com/cambridge-listening">
+<link rel="icon" type="image/png" href="/mpfavicon.png">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="IELTS Mockpoint">
+<meta property="og:title" content="Free IELTS Listening Mock Test Online – Cambridge 12–21 Practice">
+<meta property="og:description" content="Free IELTS listening mock tests from Cambridge IELTS 12–21. Full 30-minute test or part-by-part practice with real audio, timer and instant band score.">
+<meta property="og:url" content="https://ieltsmockpoint.com/cambridge-listening">
+<meta property="og:image" content="https://ieltsmockpoint.com/Brandlogo.png">
+<meta property="og:image:alt" content="IELTS Mockpoint – free IELTS listening mock test">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free IELTS Listening Mock Test Online – Cambridge 12–21">
+<meta name="twitter:description" content="Free IELTS listening test practice: Cambridge 12–21, real audio, part-by-part mode and instant band score.">
+<meta name="twitter:image" content="https://ieltsmockpoint.com/Brandlogo.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://ieltsmockpoint.com/#organization",
+      "name": "IELTS Mockpoint",
+      "url": "https://ieltsmockpoint.com/",
+      "logo": "https://ieltsmockpoint.com/Brandlogo.png",
+      "description": "Free IELTS mock tests, Cambridge IELTS practice and band score evaluation."
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://ieltsmockpoint.com/#website",
+      "url": "https://ieltsmockpoint.com/",
+      "name": "IELTS Mockpoint",
+      "publisher": {
+        "@id": "https://ieltsmockpoint.com/#organization"
+      },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://ieltsmockpoint.com/cambridge-listening#webpage",
+      "url": "https://ieltsmockpoint.com/cambridge-listening",
+      "name": "Free IELTS Listening Mock Test Online – Cambridge 12–21",
+      "description": "Free IELTS Listening mock tests from Cambridge IELTS 12–21 with real audio, a timer, part-by-part practice and instant band score.",
+      "isPartOf": {
+        "@id": "https://ieltsmockpoint.com/#website"
+      },
+      "about": {
+        "@type": "Thing",
+        "name": "IELTS Listening mock test"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://ieltsmockpoint.com/Brandlogo.png"
+      },
+      "dateModified": "2026-10-13",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://ieltsmockpoint.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "IELTS Listening Mock Test",
+          "item": "https://ieltsmockpoint.com/cambridge-listening"
+        }
+      ]
+    },
+    {
+      "@type": "ItemList",
+      "name": "Free Cambridge IELTS Listening Mock Tests (Cambridge 12–21)",
+      "numberOfItems": 40,
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Cambridge 21 Listening Test 1",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=21&test=1"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Cambridge 21 Listening Test 2",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=21&test=2"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Cambridge 21 Listening Test 3",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=21&test=3"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "Cambridge 21 Listening Test 4",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=21&test=4"
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "name": "Cambridge 20 Listening Test 1",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=20&test=1"
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "name": "Cambridge 20 Listening Test 2",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=20&test=2"
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
+          "name": "Cambridge 20 Listening Test 3",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=20&test=3"
+        },
+        {
+          "@type": "ListItem",
+          "position": 8,
+          "name": "Cambridge 20 Listening Test 4",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=20&test=4"
+        },
+        {
+          "@type": "ListItem",
+          "position": 9,
+          "name": "Cambridge 19 Listening Test 1",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=19&test=1"
+        },
+        {
+          "@type": "ListItem",
+          "position": 10,
+          "name": "Cambridge 19 Listening Test 2",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=19&test=2"
+        },
+        {
+          "@type": "ListItem",
+          "position": 11,
+          "name": "Cambridge 19 Listening Test 3",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=19&test=3"
+        },
+        {
+          "@type": "ListItem",
+          "position": 12,
+          "name": "Cambridge 19 Listening Test 4",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=19&test=4"
+        },
+        {
+          "@type": "ListItem",
+          "position": 13,
+          "name": "Cambridge 18 Listening Test 1",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=18&test=1"
+        },
+        {
+          "@type": "ListItem",
+          "position": 14,
+          "name": "Cambridge 18 Listening Test 2",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=18&test=2"
+        },
+        {
+          "@type": "ListItem",
+          "position": 15,
+          "name": "Cambridge 18 Listening Test 3",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=18&test=3"
+        },
+        {
+          "@type": "ListItem",
+          "position": 16,
+          "name": "Cambridge 18 Listening Test 4",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=18&test=4"
+        },
+        {
+          "@type": "ListItem",
+          "position": 17,
+          "name": "Cambridge 17 Listening Test 1",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=17&test=1"
+        },
+        {
+          "@type": "ListItem",
+          "position": 18,
+          "name": "Cambridge 17 Listening Test 2",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=17&test=2"
+        },
+        {
+          "@type": "ListItem",
+          "position": 19,
+          "name": "Cambridge 17 Listening Test 3",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=17&test=3"
+        },
+        {
+          "@type": "ListItem",
+          "position": 20,
+          "name": "Cambridge 17 Listening Test 4",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=17&test=4"
+        },
+        {
+          "@type": "ListItem",
+          "position": 21,
+          "name": "Cambridge 16 Listening Test 1",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=16&test=1"
+        },
+        {
+          "@type": "ListItem",
+          "position": 22,
+          "name": "Cambridge 16 Listening Test 2",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=16&test=2"
+        },
+        {
+          "@type": "ListItem",
+          "position": 23,
+          "name": "Cambridge 16 Listening Test 3",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=16&test=3"
+        },
+        {
+          "@type": "ListItem",
+          "position": 24,
+          "name": "Cambridge 16 Listening Test 4",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=16&test=4"
+        },
+        {
+          "@type": "ListItem",
+          "position": 25,
+          "name": "Cambridge 15 Listening Test 1",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=15&test=1"
+        },
+        {
+          "@type": "ListItem",
+          "position": 26,
+          "name": "Cambridge 15 Listening Test 2",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=15&test=2"
+        },
+        {
+          "@type": "ListItem",
+          "position": 27,
+          "name": "Cambridge 15 Listening Test 3",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=15&test=3"
+        },
+        {
+          "@type": "ListItem",
+          "position": 28,
+          "name": "Cambridge 15 Listening Test 4",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=15&test=4"
+        },
+        {
+          "@type": "ListItem",
+          "position": 29,
+          "name": "Cambridge 14 Listening Test 1",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=14&test=1"
+        },
+        {
+          "@type": "ListItem",
+          "position": 30,
+          "name": "Cambridge 14 Listening Test 2",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=14&test=2"
+        },
+        {
+          "@type": "ListItem",
+          "position": 31,
+          "name": "Cambridge 14 Listening Test 3",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=14&test=3"
+        },
+        {
+          "@type": "ListItem",
+          "position": 32,
+          "name": "Cambridge 14 Listening Test 4",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=14&test=4"
+        },
+        {
+          "@type": "ListItem",
+          "position": 33,
+          "name": "Cambridge 13 Listening Test 1",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=13&test=1"
+        },
+        {
+          "@type": "ListItem",
+          "position": 34,
+          "name": "Cambridge 13 Listening Test 2",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=13&test=2"
+        },
+        {
+          "@type": "ListItem",
+          "position": 35,
+          "name": "Cambridge 13 Listening Test 3",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=13&test=3"
+        },
+        {
+          "@type": "ListItem",
+          "position": 36,
+          "name": "Cambridge 13 Listening Test 4",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=13&test=4"
+        },
+        {
+          "@type": "ListItem",
+          "position": 37,
+          "name": "Cambridge 12 Listening Test 1",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=12&test=1"
+        },
+        {
+          "@type": "ListItem",
+          "position": 38,
+          "name": "Cambridge 12 Listening Test 2",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=12&test=2"
+        },
+        {
+          "@type": "ListItem",
+          "position": 39,
+          "name": "Cambridge 12 Listening Test 3",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=12&test=3"
+        },
+        {
+          "@type": "ListItem",
+          "position": 40,
+          "name": "Cambridge 12 Listening Test 4",
+          "url": "https://ieltsmockpoint.com/cambridge-listening-test?book=12&test=4"
+        }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "name": "How to take a free IELTS Listening mock test online",
+      "description": "Step-by-step way to use the Cambridge IELTS Listening mock tests for the fastest score improvement.",
+      "totalTime": "PT30M",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "name": "Choose a Cambridge test",
+          "text": "Pick any book from Cambridge IELTS 12 to 21 and select one of its 4 listening tests."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "name": "Start the audio and timer",
+          "text": "Click Take Test to sit all 4 parts and 40 questions, or use Practice to do one part at a time."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "name": "Answer as you listen",
+          "text": "Write your answers while you listen, because each recording is played only once."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 4,
+          "name": "Check your band score",
+          "text": "Submit the test to get an instant score, then review every wrong answer and note the question type you missed."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 5,
+          "name": "Repeat weak parts",
+          "text": "Use part-by-part practice to repeat weak parts, then retake a full timed test the next week."
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is this IELTS Listening mock test really free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. You can practise Cambridge IELTS Listening tests online on IELTS Mockpoint for free and get your score straight after you finish."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How long is the IELTS Listening test?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The IELTS Listening test takes about 30 minutes and has 40 questions across 4 parts. Each recording is played only once, so you need to answer as you listen."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How many parts and questions are in IELTS Listening?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "There are 4 parts with 10 questions each, so 40 questions in total. Part 1 is questions 1 to 10, Part 2 is 11 to 20, Part 3 is 21 to 30 and Part 4 is 31 to 40."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I practise one part at a time?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Every test has a Practice mode where you choose Part 1, Part 2, Part 3 or Part 4 and work on your weak areas without sitting the full test."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which Cambridge IELTS books are available?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Cambridge IELTS 12 to 21 are available, each with 4 full listening tests, which gives you 40 free IELTS listening mock tests in total."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How is my IELTS Listening band score calculated?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Each correct answer earns one mark out of 40. Your raw score is then converted to a band from 0 to 9. The same Listening test and conversion are used for Academic and General Training."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What question types appear in IELTS Listening?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Common types include form, note, table and flow-chart completion, multiple choice, matching, map and plan labelling, sentence completion and short-answer questions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I listen to the IELTS Listening audio twice?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. In the real exam each recording is played only once. For the best results, practise with a single listening so your skills match test-day conditions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How many correct answers do I need for Band 6, 7 or 8 in IELTS Listening?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "As a rough guide, about 23 out of 40 gives Band 6, about 30 out of 40 gives Band 7 and about 35 out of 40 gives Band 8. Conversion tables can vary slightly between test versions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which accents are used in the IELTS Listening test?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The test uses a range of native-speaker accents, including British, Australian, New Zealand, Canadian and North American. Practising with Cambridge recordings helps you get used to all of them."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do spelling and grammar matter in IELTS Listening answers?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Spelling must be correct to earn a mark, and singular and plural forms matter. Both UK and US spellings are accepted, and you can write answers in capital or lower-case letters."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there negative marking in IELTS Listening?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Wrong answers do not lose marks, so you should never leave a question blank. Make an educated guess if you are unsure."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How often should I take an IELTS listening mock test?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Most learners improve fastest by taking one full timed mock test per week and doing part-by-part practice on other days. Always review every wrong answer before you move to the next test."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How can I improve my IELTS Listening score quickly?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Use the preview time to predict answers, follow the order of the questions, check the word limit, watch your spelling and listen for corrections. Repeating weak question types in part-by-part practice usually gives the quickest gains."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are Cambridge IELTS 20 and 21 listening tests available?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Cambridge IELTS 12 to 21 are available, each with 4 full listening tests, so you can practise the newest Cambridge IELTS listening tests together with older books."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is this the same as the real computer-delivered IELTS Listening test?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The mock tests are built to feel like the on-screen exam, with audio controls, a timer and an instant detailed report, so test day feels familiar."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+:root{--navy:#0b2b52;--blue:#1565c9;--blue-light:#eaf2fd;--red:#e0202d;--red-dark:#b5121d;--bg:#fff;--surface:#f4f7fb;--text:#0f2038;--muted:#5d708c;--line:#e3e9f3;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-padding-top:80px;scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;padding-top:env(safe-area-inset-top,0);padding-bottom:env(safe-area-inset-bottom,0);}
+h1,h2,h3{font-family:'Sora',sans-serif;font-weight:700;line-height:1.12;color:var(--navy);}
+a{color:inherit;}
+.wrap{max-width:1140px;margin:0 auto;padding:0 24px;}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.in{opacity:1;transform:none;}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px;}
+
+/* scroll progress */
+#progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--blue),var(--red));z-index:200;transition:width .1s linear;}
+
+/* HEADER (from reference) */
+header{position:sticky;top:env(safe-area-inset-top,0);z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);transition:box-shadow .25s;}
+header.scrolled{box-shadow:0 6px 18px rgba(11,43,82,.08);}
+nav.wrap{display:flex;align-items:center;justify-content:space-between;height:74px;}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:'Sora',sans-serif;font-weight:800;font-size:1.3rem;color:var(--navy);}
+.brand img{height:46px;width:auto;display:block;}
+.brand .txt{display:none;align-items:center;gap:8px;}
+.brand .txt i{width:11px;height:11px;border-radius:3px;background:var(--red);box-shadow:5px 5px 0 var(--blue);margin-right:5px;}
+.nav-links{display:flex;gap:26px;}
+.nav-links a{font-size:.92rem;color:var(--muted);text-decoration:none;font-weight:500;position:relative;padding:4px 0;}
+.nav-links a::after{content:'';position:absolute;left:0;bottom:-2px;width:0;height:2px;background:var(--red);transition:width .2s;}
+.nav-links a:hover,.nav-links a.current{color:var(--navy);}
+.nav-links a:hover::after,.nav-links a.current::after{width:100%;}
+.nav-actions{display:flex;gap:12px;align-items:center;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 22px;border-radius:9px;font-size:.92rem;font-weight:700;text-decoration:none;border:1.5px solid transparent;cursor:pointer;font-family:inherit;transition:transform .15s,box-shadow .2s,background .2s,color .2s,border-color .2s;position:relative;overflow:hidden;}
+.btn-red{background:var(--red);color:#fff;}
+.btn-red:hover{background:var(--red-dark);transform:translateY(-2px);box-shadow:0 10px 22px rgba(224,32,45,.28);}
+.btn-outline{color:var(--navy);border-color:var(--line);background:#fff;}
+.btn-outline:hover{border-color:var(--blue);color:var(--blue);}
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.45);transform:scale(0);animation:rip .6s ease-out forwards;pointer-events:none;}
+.btn-outline .ripple{background:rgba(21,101,201,.18);}
+@keyframes rip{to{transform:scale(4);opacity:0;}}
+.menu-btn{display:none;background:var(--blue-light);border:none;color:var(--navy);width:42px;height:42px;border-radius:10px;font-size:1.3rem;cursor:pointer;}
+@media(max-width:920px){.nav-links,.nav-actions{display:none;}.menu-btn{display:block;}}
+.overlay{position:fixed;inset:0;background:rgba(11,43,82,.55);backdrop-filter:blur(3px);z-index:90;opacity:0;pointer-events:none;transition:opacity .3s;}
+.overlay.open{opacity:1;pointer-events:auto;}
+.sidebar{position:fixed;top:0;right:0;height:100%;width:min(320px,86vw);background:#fff;z-index:100;transform:translateX(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;padding:22px 24px calc(24px + env(safe-area-inset-bottom,0));box-shadow:-12px 0 40px rgba(11,43,82,.18);}
+.sidebar.open{transform:none;}
+.sb-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;padding-top:env(safe-area-inset-top,0);}
+.sb-close{background:var(--surface);border:none;width:40px;height:40px;border-radius:50%;font-size:1.4rem;cursor:pointer;color:var(--navy);}
+.sb-links a{display:block;padding:14px 4px;border-bottom:1px solid var(--line);text-decoration:none;font-weight:600;color:var(--navy);transition:padding .2s,color .2s;}
+.sb-links a:hover{color:var(--red);padding-left:12px;}
+.sb-actions{margin-top:auto;display:grid;gap:10px;}
+
+.notice{background:var(--navy);color:#fff;font-size:.88rem;text-align:center;padding:11px 16px;}
+.notice b{color:#ff7b84;}
+
+/* HERO */
+.kicker{display:inline-flex;align-items:center;gap:8px;color:var(--red);font-size:.88rem;font-weight:700;margin-bottom:16px;}
+.kicker::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse 2s infinite;}
+@keyframes pulse{50%{transform:scale(1.6);opacity:.5;}}
+.hero{position:relative;overflow:hidden;padding:72px 0 30px;text-align:center;}
+.shape{position:absolute;border-radius:50%;z-index:0;}
+.shape.a{top:-160px;left:-120px;width:460px;height:460px;background:radial-gradient(circle,var(--blue-light),transparent 70%);animation:float 9s ease-in-out infinite;}
+.shape.b{top:-60px;right:-100px;width:400px;height:400px;background:radial-gradient(circle,rgba(224,32,45,.09),transparent 70%);animation:float 11s ease-in-out infinite reverse;}
+@keyframes float{50%{transform:translateY(24px);}}
+.hero .wrap{position:relative;z-index:1;}
+.hero h1{font-size:clamp(2.2rem,4.6vw,3.4rem);margin-bottom:16px;}
+.hero h1 span{color:var(--blue);}
+.hero p.lead{color:var(--muted);font-size:1.06rem;max-width:58ch;margin:0 auto 32px;}
+.stats{display:inline-flex;border:1px solid var(--line);background:var(--surface);border-radius:14px;overflow:hidden;flex-wrap:wrap;justify-content:center;}
+.stats div{padding:16px 28px;border-right:1px solid var(--line);transition:background .25s;}
+.stats div:hover{background:var(--blue-light);}
+.stats div:last-child{border:none;}
+.stats strong{display:block;font-family:'Sora',sans-serif;font-size:1.5rem;color:var(--blue);}
+.stats span{font-size:.78rem;color:var(--muted);}
+
+/* TOOLBAR */
+.tabs{display:flex;justify-content:center;gap:10px;margin:36px 0 22px;flex-wrap:wrap;}
+.tab{display:inline-flex;align-items:center;gap:10px;padding:11px 20px;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:var(--muted);font-family:inherit;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .25s;}
+.tab em{font-style:normal;font-size:.72rem;background:var(--surface);color:var(--muted);padding:2px 9px;border-radius:999px;transition:all .25s;}
+.tab:hover{border-color:var(--blue);color:var(--blue);transform:translateY(-2px);}
+.tab.active{background:var(--navy);border-color:var(--navy);color:#fff;box-shadow:0 12px 24px rgba(11,43,82,.22);}
+.tab.active em{background:var(--red);color:#fff;}
+.toolbar{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:38px;}
+.search{position:relative;flex:1 1 280px;max-width:380px;}
+.search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted);pointer-events:none;transition:color .2s;}
+.search input{width:100%;padding:12px 16px 12px 42px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font-family:inherit;font-size:.92rem;color:var(--text);transition:border-color .2s,box-shadow .2s;}
+.search input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 4px var(--blue-light);}
+.search:focus-within svg{color:var(--blue);}
+.seg{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px;}
+.seg button{border:none;background:none;font-family:inherit;font-weight:700;font-size:.82rem;color:var(--muted);padding:8px 14px;border-radius:9px;cursor:pointer;transition:all .2s;}
+.seg button.on{background:#fff;color:var(--navy);box-shadow:0 2px 8px rgba(11,43,82,.12);}
+.seg button:hover:not(.on){color:var(--blue);}
+.resultcount{text-align:center;color:var(--muted);font-size:.85rem;margin:-18px 0 26px;min-height:1.2em;}
+
+/* GRID & CARDS */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:24px;padding-bottom:70px;min-height:320px;perspective:1200px;}
+.card{--rx:0deg;--ry:0deg;--ty:0px;--mx:50%;--my:50%;position:relative;background:#fff;border:1.5px solid var(--line);border-radius:20px;padding:26px 22px 24px;display:flex;flex-direction:column;opacity:0;translate:0 16px;animation:rise .5s ease forwards;transform:rotateX(var(--rx)) rotateY(var(--ry)) translateY(var(--ty));transition:transform .2s ease-out,border-color .25s,box-shadow .25s;will-change:transform;}
+@keyframes rise{to{opacity:1;translate:0 0;}}
+.card::before{content:'';position:absolute;left:0;top:0;height:4px;width:100%;background:linear-gradient(90deg,var(--blue),var(--red));transform:scaleX(0);transform-origin:left;transition:transform .35s;border-radius:20px 20px 0 0;}
+.card::after{content:'';position:absolute;inset:0;border-radius:20px;background:radial-gradient(260px circle at var(--mx) var(--my),rgba(21,101,201,.10),transparent 60%);opacity:0;transition:opacity .3s;pointer-events:none;}
+.card:hover,.card.open-card{--ty:-8px;border-color:var(--blue);box-shadow:0 22px 44px rgba(21,101,201,.14);}
+.card:hover::before{transform:scaleX(1);}
+.card:hover::after{opacity:1;}
+.card.open-card{z-index:40;}
+.card .bignum{position:absolute;right:16px;top:-2px;font-family:'Sora',sans-serif;font-weight:800;font-size:4.8rem;color:var(--blue-light);line-height:1;transition:color .3s,transform .4s;user-select:none;pointer-events:none;}
+.card:hover .bignum{color:#fdecee;transform:scale(1.08) translateX(-4px);}
+.card .pill{position:relative;align-self:flex-start;max-width:85%;font-size:.68rem;font-weight:800;letter-spacing:.06em;padding:5px 12px;border-radius:999px;background:var(--blue-light);color:var(--blue);margin-bottom:38px;}
+.card h3{position:relative;font-size:1.24rem;margin-bottom:14px;}
+.chips{position:relative;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;}
+.chips span{font-size:.76rem;font-weight:600;color:var(--muted);background:var(--surface);border-radius:8px;padding:5px 10px;}
+.chips span.done{background:#e6f7ee;color:#137a3f;}
+
+.card-actions{display:grid;grid-template-columns:1.1fr 1fr;gap:10px;position:relative;margin-top:auto;}
+.card-actions .btn{width:100%;font-size:.86rem;padding:10px;}
+.practice-drop-wrap{position:relative;}
+.part-popover{position:absolute;bottom:calc(100% + 10px);left:0;right:0;min-width:180px;background:#fff;border:1.5px solid var(--line);border-radius:14px;box-shadow:0 14px 30px rgba(11,43,82,.18);padding:10px;display:flex;flex-direction:column;gap:6px;z-index:30;opacity:0;transform:translateY(8px) scale(.96);transform-origin:bottom center;pointer-events:none;transition:opacity .2s,transform .2s;}
+.part-popover.open{opacity:1;transform:none;pointer-events:auto;}
+.part-popover a{padding:9px 12px;border-radius:8px;font-size:.82rem;font-weight:600;color:var(--navy);text-decoration:none;display:flex;justify-content:space-between;align-items:center;background:var(--surface);transition:background .2s,color .2s,transform .2s;}
+.part-popover a:hover{background:var(--blue-light);color:var(--blue);transform:translateX(3px);}
+.part-popover a span{font-size:.72rem;color:var(--muted);}
+.btn .caret{display:inline-block;transition:transform .25s;}
+.btn[aria-expanded="true"] .caret{transform:rotate(180deg);}
+
+.empty{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted);}
+.empty strong{display:block;font-family:'Sora',sans-serif;color:var(--navy);font-size:1.2rem;margin-bottom:8px;}
+
+/* SEO & FACTS */
+.seo{padding:70px 0;border-top:1px solid var(--line);}
+.seo-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:56px;align-items:start;}
+.seo h2{font-size:clamp(1.6rem,2.8vw,2.1rem);margin-bottom:18px;}
+.seo h3{font-size:1.2rem;margin:28px 0 10px;}
+.seo p{color:var(--muted);margin-bottom:14px;font-size:.98rem;}
+.seo p strong{color:var(--navy);}
+.seo ul.qt{margin:0 0 14px 18px;color:var(--muted);font-size:.96rem;}
+.seo ul.qt li{margin-bottom:6px;}
+.seo ul.qt li strong{color:var(--navy);}
+.seo p a,.seo ul.qt a{color:var(--blue);font-weight:600;}
+.facts{position:sticky;top:96px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:26px;}
+.facts h3{margin:0 0 14px;font-size:1.05rem;}
+.facts li{list-style:none;display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:.88rem;color:var(--muted);transition:padding .2s;}
+.facts li:hover{padding-left:8px;}
+.facts li:last-child{border:none;}
+.facts li b{color:var(--navy);font-family:'Sora',sans-serif;font-size:.88rem;text-align:right;}
+.facts p{font-size:.8rem;margin:14px 0 0;}
+@media(max-width:860px){.seo-grid{grid-template-columns:1fr;gap:30px;}.facts{position:static;}}
+
+/* FAQ */
+.faq{padding:70px 0;border-top:1px solid var(--line);background:var(--surface);}
+.faq h2{text-align:center;font-size:clamp(1.6rem,2.8vw,2.1rem);margin-bottom:10px;}
+.faq .sub{text-align:center;color:var(--muted);margin-bottom:34px;}
+.faq-list{max-width:800px;margin:0 auto;display:grid;gap:12px;}
+.faq details{background:#fff;border:1.5px solid var(--line);border-radius:14px;transition:border-color .25s,box-shadow .25s;}
+.faq details[open]{border-color:var(--blue);box-shadow:0 12px 26px rgba(21,101,201,.10);}
+.faq summary{cursor:pointer;list-style:none;padding:18px 22px;font-family:'Sora',sans-serif;font-weight:700;font-size:.98rem;color:var(--navy);display:flex;justify-content:space-between;align-items:center;gap:14px;}
+.faq summary::-webkit-details-marker{display:none;}
+.faq summary::after{content:'+';flex:none;width:28px;height:28px;border-radius:50%;background:var(--blue-light);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:1.2rem;transition:transform .3s,background .25s,color .25s;}
+.faq details[open] summary::after{transform:rotate(45deg);background:var(--red);color:#fff;}
+.faq details p{padding:0 22px 20px;color:var(--muted);font-size:.94rem;animation:fadeDown .35s ease;}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:none;}}
+
+/* FOOTER (from reference) */
+footer {
+  border-top: 1px solid var(--line);
+  padding: 56px 0 32px;
+  background: var(--surface);
+  position: relative;
+  z-index: 1;
+}
+
+/* 5 Column Grid Layout */
+.fgrid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr 1.1fr;
+  gap: 32px;
+  margin-bottom: 36px;
+}
+
+.fgrid h4 {
+  font-size: 0.88rem;
+  color: var(--blue);
+  margin-bottom: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.fgrid a {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--muted);
+  text-decoration: none;
+  margin-bottom: 10px;
+  transition: color 0.15s ease;
+}
+
+.fgrid a:hover {
+  color: var(--red);
+}
+
+/* Bottom Disclaimer & Copyright */
+.fbottom {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  border-top: 1px solid var(--line);
+  padding-top: 22px;
+  line-height: 1.6;
+}
+
+.fbottom-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 992px) {
+  .fgrid {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 28px;
+  }
+}
+
+@media (max-width: 640px) {
+  .fgrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .fgrid > div:first-child {
+    grid-column: 1 / -1; /* Mobile view-তে Brand info পুরো উইডথ জুড়ে থাকবে */
+    margin-bottom: 8px;
+  }
+}
+
+/* Back to Top Button */
+#top {
+  position: fixed;
+  right: 20px;
+  bottom: calc(20px + env(safe-area-inset-bottom, 0));
+  width: 46px;
+  height: 46px;
+  border: none;
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(224, 32, 45, 0.35);
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: all 0.3s;
+  z-index: 60;
+}
+
+#top.show {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+#top:hover {
+  background: var(--red-dark);
+  transform: translateY(-3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+  .reveal, .qt {
+    opacity: 1;
+    transform: none;
+  }
+  #glow {
+    display: none;
+  }
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<header id="hd">
+<nav class="wrap" aria-label="Main navigation">
+    <a href="home.html" class="brand" title="IELTS Mockpoint – Free IELTS Mock Test"><img src="Brandlogo.png" alt="IELTS Mockpoint – free IELTS mock test and listening practice" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class="txt"><i></i>IELTS Mockpoint</span></a>
+    <div class="nav-links"><a href="mocks.html">Full Tests</a><a href="cambridge-listening.html">Listening</a><a href="cambridge-reading.html">Reading</a><a href="cambridge-writing.html">Writing</a><a href="speaking.html">Speaking</a><a href="/practice-hub">Question Types</a><a href="/blog.html" class="cur">Blog</a></div>
+    <div class="nav-actions"><a href="login.html" class="btn btn-outline">Sign in</a><a href="register.html" class="btn btn-red">Start free</a></div>
+    <button class="menu-btn" id="openMenu" aria-label="Open menu">☰</button>
+  </nav>
+</header>
+<div class="overlay" id="ov"></div>
+<aside class="sidebar" id="sb" aria-hidden="true">
+  <div class="sb-head"><a href="home.html" class="brand"><img src="Brandlogo.png" alt="IELTS Mockpoint" style="height:38px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class="txt"><i></i>IELTS Mockpoint</span></a><button class="sb-close" id="closeMenu" aria-label="Close menu">×</button></div>
+  <nav class="sb-links"><a href="mocks.html">Full Tests</a><a href="cambridge-listening.html">Listening</a><a href="cambridge-reading.html">Reading</a><a href="cambridge-writing.html">Writing</a><a href="speaking.html">Speaking</a><a href="#qtypes">Practice by Question Type</a><a href="learn.html">Learn</a><a href="institutes.html">For Institutes</a></nav>
+  <div class="sb-actions"><a href="login.html" class="btn btn-outline">Sign in</a><a href="register.html" class="btn btn-red">Start free</a></div>
+</aside>
+
+<div class="notice">Free IELTS Listening mock test online — Cambridge IELTS 12–21 listening tests, full 30-minute mock or <b>part by part</b> practice with instant band score</div>
+
+<main id="main">
+<section class="hero">
+  <div class="shape a"></div><div class="shape b"></div>
+  <div class="wrap">
+    <div class="kicker reveal">Authentic Cambridge series</div>
+    <h1 class="reveal">Free IELTS <span>Listening Mock Test</span> – Cambridge 12–21</h1>
+    <p class="lead reveal">Take a free IELTS listening mock test online with genuine Cambridge papers. Practise the IELTS listening test with real audio, a live timer, part-by-part practice modes and an instant band score.</p>
+    <div class="stats reveal">
+      <div><strong id="stTotal" data-to="0">0</strong><span>Free listening mock tests</span></div>
+      <div><strong data-to="40" data-suffix=" Qs">0</strong><span>Per full mock</span></div>
+      <div><strong data-to="4" data-suffix=" Parts">0</strong><span>Section-wise practice</span></div>
+      <div><strong>Instant</strong><span>Band score</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <h2 class="reveal" style="text-align:center;font-size:clamp(1.6rem,2.8vw,2.1rem);margin-top:44px;">Cambridge IELTS Listening Tests – Free Online Mock Practice</h2>
+  <p class="reveal" style="text-align:center;color:var(--muted);max-width:64ch;margin:10px auto 0;font-size:.98rem;">Choose any book from Cambridge IELTS 12 to 21 and start your free IELTS listening mock test. Hit <strong style="color:var(--navy)">Take Test</strong> for the full exam or open <strong style="color:var(--navy)">Practice</strong> to work on one part at a time.</p>
+
+  <div class="tabs" role="tablist" id="tabs"></div>
+
+  <div class="toolbar">
+    <label class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="q" type="search" placeholder="Search e.g. 16 test 3" aria-label="Search IELTS listening mock tests" autocomplete="off">
+    </label>
+    <div class="seg" id="sort" role="group" aria-label="Sort order">
+      <button class="on" data-sort="new">Newest first</button>
+      <button data-sort="old">Oldest first</button>
+    </div>
+  </div>
+  <div class="resultcount" id="rc"></div>
+
+  <div class="grid" id="grid"></div>
+</div>
+
+<section class="seo">
+  <div class="wrap seo-grid">
+    <article class="reveal">
+      <h2>Authentic Cambridge IELTS Listening Practice with Dual Modes</h2>
+      <p>Practising with past Cambridge papers is considered the gold standard for reaching Band 8+ in IELTS Listening. <strong>IELTS Mockpoint</strong> brings the Cambridge listening collection into an interactive, computer-delivered exam platform. Whether you are looking for a <strong>free IELTS listening test</strong>, an <strong>IELTS listening practice test with audio</strong> or a full <strong>IELTS listening mock test online</strong>, every test on this page is free to attempt and scored the moment you finish.</p>
+      <p>With 10 Cambridge books and 4 tests in each, you get <strong>40 free IELTS listening mock tests</strong>. That is 160 recordings and 1,600 questions of genuine exam-style practice, enough to train your ear, your spelling and your concentration before test day.</p>
+
+      <h3>What is the IELTS Listening test?</h3>
+      <p>The IELTS Listening test checks how well you understand spoken English in everyday, educational and academic situations. It has <strong>4 parts</strong> and <strong>40 questions</strong>, and the recording is played <strong>only once</strong>. Each correct answer earns one mark, and your raw score out of 40 is converted into a band from 0 to 9. The same Listening test is used for both IELTS Academic and IELTS General Training.</p>
+
+      <h3>Take full test mode</h3>
+      <p>Sit a complete 30-minute test of all 4 parts (Questions 1 to 40) under realistic exam pressure. It features automated timing, audio controls and an instant detailed report with band score calculation. A full mock is the best way to build stamina, because Parts 3 and 4 demand the most concentration after you have already listened for 20 minutes.</p>
+
+      <h3>Section practice mode</h3>
+      <p>Short on time? Choose individual parts to target your weak spots. Whether you struggle with fast-paced multiple choice in <strong>Part 3</strong> or note completion in <strong>Part 4</strong>, you can sharpen each skill with dedicated section practice. Part-by-part practice is perfect for a 10-minute daily routine.</p>
+
+      <h3>Why practise with Cambridge IELTS listening tests?</h3>
+      <p>Cambridge IELTS books contain past-style papers that match the format, difficulty and question types of the real exam. That makes them the most trusted source of <strong>IELTS listening practice tests</strong>. Regular practice with this material helps you get used to different English accents, the speed of natural speech and the way speakers correct themselves, which is where many candidates lose marks.</p>
+
+      <h3>Question types you will practise</h3>
+      <ul class="qt">
+        <li>Form, note, table, flow-chart and summary completion</li>
+        <li>Multiple choice (single answer and multiple answers)</li>
+        <li>Matching information to people, places or options</li>
+        <li>Map, plan and diagram labelling</li>
+        <li>Sentence completion and short-answer questions</li>
+      </ul>
+      <p>Start with the newest book and work backwards, or search for a specific test such as "Cambridge 16 test 3". Track the tests you have attempted and repeat weak ones until your accuracy is steady.</p>
+
+      <h3>Who is this free IELTS mock test for?</h3>
+      <p>These free IELTS listening mock tests suit anyone preparing for IELTS Academic or General Training, from beginners aiming for Band 5.5 to advanced candidates chasing Band 8 or above. If you also need to work on other skills, try our <a href="/cambridge-reading.html">IELTS reading mock tests</a>, <a href="/cambridge-writing.html">writing practice</a> and <a href="/speaking.html">speaking practice</a>, or take a complete <a href="/mocks.html">full IELTS mock test</a>.</p>
+    </article>
+    <aside class="facts reveal">
+      <h3>Listening format</h3>
+      <ul>
+        <li>Part 1 <b>Daily social (1–10)</b></li>
+        <li>Part 2 <b>Local context (11–20)</b></li>
+        <li>Part 3 <b>Academic discussion (21–30)</b></li>
+        <li>Part 4 <b>University lecture (31–40)</b></li>
+        <li>Total duration <b>Approx. 30 min</b></li>
+        <li>Band scale <b>0 – 9</b></li>
+        <li>Audio played <b>Once only</b></li>
+        <li>Mock tests available <b>40</b></li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<section class="seo" id="qtypes">
+  <div class="wrap seo-grid">
+    <article class="reveal">
+      <h2>IELTS Listening Question Types and Tips for a Higher Band Score</h2>
+      <p>Knowing each question type and how the four parts work is the fastest way to improve your IELTS listening score. Use the free mock tests above to apply these strategies under real exam conditions.</p>
+
+      <h3>IELTS Listening Part 1: everyday conversation</h3>
+      <p>Part 1 is a conversation between two people in a daily social situation, such as booking a service or making an enquiry. Answers are usually names, numbers, dates, prices and addresses, so practise spelling names and writing numbers quickly and accurately. Listen for corrections, because speakers often change a detail after giving it.</p>
+
+      <h3>IELTS Listening Part 2: a monologue in a social context</h3>
+      <p>Part 2 is a talk by one speaker about a local event, facility or tour. Map and plan labelling is common here, so learn directions and location words such as "opposite", "next to", "behind" and "along the corridor".</p>
+
+      <h3>IELTS Listening Part 3: academic discussion</h3>
+      <p>Part 3 is a conversation between up to four people, often students and a tutor, discussing an assignment or research. Questions test opinions and attitudes, so the speakers often mention several options before choosing one. Pay attention to words that signal agreement, disagreement or a change of mind.</p>
+
+      <h3>IELTS Listening Part 4: university lecture</h3>
+      <p>Part 4 is a monologue on an academic topic with no break between questions. Because the lecture is fast and dense, follow the structure and the signposting words such as "firstly", "however" and "as a result", and use the questions to predict what the speaker will say next.</p>
+
+      <h3>Listening tips that work in every part</h3>
+      <ul class="qt">
+        <li><strong>Use the preview time.</strong> Read the questions, underline keywords and predict the type of answer (a number, a name, an adjective).</li>
+        <li><strong>Follow the order.</strong> Answers appear in the same order as the questions, except in matching tasks.</li>
+        <li><strong>Check the word limit.</strong> An answer with too many words loses the mark, so follow the instruction exactly.</li>
+        <li><strong>Watch your spelling and grammar.</strong> Spelling must be correct, and singular and plural forms matter. UK and US spellings are both accepted.</li>
+        <li><strong>Beware of distractors.</strong> Speakers often mention a wrong answer first, then correct it.</li>
+        <li><strong>Never get stuck.</strong> If you miss an answer, move on at once so you do not miss the next one, and make a guess later. There is no negative marking.</li>
+        <li><strong>Leave nothing blank.</strong> Always write an answer, even if you are unsure.</li>
+      </ul>
+    </article>
+    <aside class="facts reveal">
+      <h3>IELTS Listening band score guide</h3>
+      <ul>
+        <li>Band 9 <b>39–40</b></li>
+        <li>Band 8.5 <b>37–38</b></li>
+        <li>Band 8 <b>35–36</b></li>
+        <li>Band 7.5 <b>32–34</b></li>
+        <li>Band 7 <b>30–31</b></li>
+        <li>Band 6.5 <b>26–29</b></li>
+        <li>Band 6 <b>23–25</b></li>
+        <li>Band 5.5 <b>18–22</b></li>
+        <li>Band 5 <b>16–17</b></li>
+      </ul>
+      <p>Approximate raw score out of 40. Conversion tables can vary slightly between test versions.</p>
+    </aside>
+  </div>
+</section>
+
+<section class="seo">
+  <div class="wrap seo-grid">
+    <article class="reveal">
+      <h2>IELTS Listening Practice Test Guide: Scoring, Accents and Study Plan</h2>
+      <p>If you are searching for an <strong>IELTS listening test</strong>, a <strong>listening mock test free</strong> or the best way to practise <strong>IELTS listening online</strong>, this guide explains how the test works and how to use each free mock on this page to raise your band score.</p>
+
+      <h3>How IELTS Listening is scored</h3>
+      <p>Each correct answer is worth one mark, and there is no negative marking, so always answer every question. Your raw score out of 40 is converted into a band from 0 to 9. After each mock test you see which answers were right or wrong, so you can study your mistakes and find patterns in the question types you miss.</p>
+
+      <h3>Time to check your answers</h3>
+      <p>In the paper-based test you get extra time at the end to transfer your answers to the answer sheet, and in the computer-delivered test you get a short review period. Either way, you listen to each recording only once, so practise writing correct answers as you listen rather than relying on the review time.</p>
+
+      <h3>Get used to different English accents</h3>
+      <p>The IELTS Listening test uses a range of native-speaker accents, including British, Australian, New Zealand, Canadian and North American. Regular practice with Cambridge recordings is the best way to become comfortable with each of them. Listening to podcasts, news and lectures in different accents will strengthen the same skills.</p>
+
+      <h3>Common mistakes in the IELTS listening test</h3>
+      <ul class="qt">
+        <li>Missing the next answer while thinking about the previous one.</li>
+        <li>Writing the first answer you hear and ignoring the speaker's correction.</li>
+        <li>Spelling mistakes in names, places and common words.</li>
+        <li>Exceeding the word limit or forgetting the plural form.</li>
+        <li>Not using the preview time to read and predict the answers.</li>
+        <li>Losing focus in Part 4 after a long period of listening.</li>
+      </ul>
+
+      <h3>A simple 4-week IELTS Listening practice plan</h3>
+      <ul class="qt">
+        <li><strong>Week 1:</strong> take one full test to find your baseline, then study every mistake and list your weak parts and question types.</li>
+        <li><strong>Week 2:</strong> use part-by-part practice daily, focusing on the two question types that cost you the most marks.</li>
+        <li><strong>Week 3:</strong> sit two full mock tests and practise listening only once, with no pausing and no replaying.</li>
+        <li><strong>Week 4:</strong> repeat weak tests, work on spelling and note-taking, and take a final full mock in exam conditions.</li>
+      </ul>
+
+      <h3>Practise the newest Cambridge IELTS listening tests</h3>
+      <p>The collection runs from Cambridge IELTS 12 to Cambridge IELTS 21, so you can practise <strong>Cambridge IELTS 20 listening</strong> and <strong>Cambridge IELTS 21 listening</strong> alongside older books. Newer books are a great choice for final-stage practice, while older books are ideal for building your foundation. Pair your listening practice with <a href="/cambridge-reading.html">Cambridge IELTS reading practice</a> and a <a href="/mocks.html">full IELTS mock test</a> to prepare for every section, then estimate your overall score with the <a href="/band-calculator.html">band score calculator</a>. For more strategies, visit our <a href="/learn.html">free IELTS lessons</a> and <a href="/blog.html">blog</a>.</p>
+    </article>
+    <aside class="facts reveal">
+      <h3>IELTS Listening quick facts</h3>
+      <ul>
+        <li>Negative marking <b>None</b></li>
+        <li>Recording played <b>Once</b></li>
+        <li>Spelling accepted <b>UK or US</b></li>
+        <li>Total parts <b>4</b></li>
+        <li>Marks per question <b>1</b></li>
+        <li>Cambridge books <b>12 – 21</b></li>
+        <li>Full listening mocks <b>40</b></li>
+        <li>Practice mode <b>Per part</b></li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<section class="seo">
+  <div class="wrap">
+    <article class="reveal">
+      <h2>All Free Cambridge IELTS Listening Mock Tests (12–21)</h2>
+      <p>Jump straight to any free IELTS listening test below. Each link opens the full mock with audio, a timer and an instant band score, and you can use the Practice button on the cards above for part-by-part practice.</p>
+      <ul class="qt">
+        <li><strong>Cambridge IELTS 21 Listening:</strong> <a href="/cambridge-listening-test?book=21&amp;test=1">Test 1</a> · <a href="/cambridge-listening-test?book=21&amp;test=2">Test 2</a> · <a href="/cambridge-listening-test?book=21&amp;test=3">Test 3</a> · <a href="/cambridge-listening-test?book=21&amp;test=4">Test 4</a></li>
+        <li><strong>Cambridge IELTS 20 Listening:</strong> <a href="/cambridge-listening-test?book=20&amp;test=1">Test 1</a> · <a href="/cambridge-listening-test?book=20&amp;test=2">Test 2</a> · <a href="/cambridge-listening-test?book=20&amp;test=3">Test 3</a> · <a href="/cambridge-listening-test?book=20&amp;test=4">Test 4</a></li>
+        <li><strong>Cambridge IELTS 19 Listening:</strong> <a href="/cambridge-listening-test?book=19&amp;test=1">Test 1</a> · <a href="/cambridge-listening-test?book=19&amp;test=2">Test 2</a> · <a href="/cambridge-listening-test?book=19&amp;test=3">Test 3</a> · <a href="/cambridge-listening-test?book=19&amp;test=4">Test 4</a></li>
+        <li><strong>Cambridge IELTS 18 Listening:</strong> <a href="/cambridge-listening-test?book=18&amp;test=1">Test 1</a> · <a href="/cambridge-listening-test?book=18&amp;test=2">Test 2</a> · <a href="/cambridge-listening-test?book=18&amp;test=3">Test 3</a> · <a href="/cambridge-listening-test?book=18&amp;test=4">Test 4</a></li>
+        <li><strong>Cambridge IELTS 17 Listening:</strong> <a href="/cambridge-listening-test?book=17&amp;test=1">Test 1</a> · <a href="/cambridge-listening-test?book=17&amp;test=2">Test 2</a> · <a href="/cambridge-listening-test?book=17&amp;test=3">Test 3</a> · <a href="/cambridge-listening-test?book=17&amp;test=4">Test 4</a></li>
+        <li><strong>Cambridge IELTS 16 Listening:</strong> <a href="/cambridge-listening-test?book=16&amp;test=1">Test 1</a> · <a href="/cambridge-listening-test?book=16&amp;test=2">Test 2</a> · <a href="/cambridge-listening-test?book=16&amp;test=3">Test 3</a> · <a href="/cambridge-listening-test?book=16&amp;test=4">Test 4</a></li>
+        <li><strong>Cambridge IELTS 15 Listening:</strong> <a href="/cambridge-listening-test?book=15&amp;test=1">Test 1</a> · <a href="/cambridge-listening-test?book=15&amp;test=2">Test 2</a> · <a href="/cambridge-listening-test?book=15&amp;test=3">Test 3</a> · <a href="/cambridge-listening-test?book=15&amp;test=4">Test 4</a></li>
+        <li><strong>Cambridge IELTS 14 Listening:</strong> <a href="/cambridge-listening-test?book=14&amp;test=1">Test 1</a> · <a href="/cambridge-listening-test?book=14&amp;test=2">Test 2</a> · <a href="/cambridge-listening-test?book=14&amp;test=3">Test 3</a> · <a href="/cambridge-listening-test?book=14&amp;test=4">Test 4</a></li>
+        <li><strong>Cambridge IELTS 13 Listening:</strong> <a href="/cambridge-listening-test?book=13&amp;test=1">Test 1</a> · <a href="/cambridge-listening-test?book=13&amp;test=2">Test 2</a> · <a href="/cambridge-listening-test?book=13&amp;test=3">Test 3</a> · <a href="/cambridge-listening-test?book=13&amp;test=4">Test 4</a></li>
+        <li><strong>Cambridge IELTS 12 Listening:</strong> <a href="/cambridge-listening-test?book=12&amp;test=1">Test 1</a> · <a href="/cambridge-listening-test?book=12&amp;test=2">Test 2</a> · <a href="/cambridge-listening-test?book=12&amp;test=3">Test 3</a> · <a href="/cambridge-listening-test?book=12&amp;test=4">Test 4</a></li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section class="faq">
+  <div class="wrap">
+    <h2 class="reveal">Frequently asked questions about the free IELTS Listening mock test</h2>
+    <p class="sub reveal">Quick answers about our free IELTS listening mock tests and Cambridge IELTS listening practice.</p>
+    <div class="faq-list">
+      <details class="reveal"><summary>Is this IELTS Listening mock test really free?</summary><p>Yes. You can practise Cambridge IELTS Listening tests online on IELTS Mockpoint for free and get your score straight after you finish.</p></details>
+      <details class="reveal"><summary>How long is the IELTS Listening test?</summary><p>The IELTS Listening test takes about 30 minutes and has 40 questions across 4 parts. Each recording is played only once, so you need to answer as you listen.</p></details>
+      <details class="reveal"><summary>How many parts and questions are in IELTS Listening?</summary><p>There are 4 parts with 10 questions each, so 40 questions in total. Part 1 is questions 1 to 10, Part 2 is 11 to 20, Part 3 is 21 to 30 and Part 4 is 31 to 40.</p></details>
+      <details class="reveal"><summary>Can I practise one part at a time?</summary><p>Yes. Every test has a Practice mode where you choose Part 1, Part 2, Part 3 or Part 4 and work on your weak areas without sitting the full test.</p></details>
+      <details class="reveal"><summary>Which Cambridge IELTS books are available?</summary><p>Cambridge IELTS 12 to 21 are available, each with 4 full listening tests, which gives you 40 free IELTS listening mock tests in total.</p></details>
+      <details class="reveal"><summary>How is my IELTS Listening band score calculated?</summary><p>Each correct answer earns one mark out of 40. Your raw score is then converted to a band from 0 to 9. The same Listening test and conversion are used for Academic and General Training.</p></details>
+      <details class="reveal"><summary>What question types appear in IELTS Listening?</summary><p>Common types include form, note, table and flow-chart completion, multiple choice, matching, map and plan labelling, sentence completion and short-answer questions.</p></details>
+      <details class="reveal"><summary>Can I listen to the IELTS Listening audio twice?</summary><p>No. In the real exam each recording is played only once. For the best results, practise with a single listening so your skills match test-day conditions.</p></details>
+      <details class="reveal"><summary>How many correct answers do I need for Band 6, 7 or 8 in IELTS Listening?</summary><p>As a rough guide, about 23 out of 40 gives Band 6, about 30 out of 40 gives Band 7 and about 35 out of 40 gives Band 8. Conversion tables can vary slightly between test versions.</p></details>
+      <details class="reveal"><summary>Which accents are used in the IELTS Listening test?</summary><p>The test uses a range of native-speaker accents, including British, Australian, New Zealand, Canadian and North American. Practising with Cambridge recordings helps you get used to all of them.</p></details>
+      <details class="reveal"><summary>Do spelling and grammar matter in IELTS Listening answers?</summary><p>Yes. Spelling must be correct to earn a mark, and singular and plural forms matter. Both UK and US spellings are accepted, and you can write answers in capital or lower-case letters.</p></details>
+      <details class="reveal"><summary>Is there negative marking in IELTS Listening?</summary><p>No. Wrong answers do not lose marks, so you should never leave a question blank. Make an educated guess if you are unsure.</p></details>
+      <details class="reveal"><summary>How often should I take an IELTS listening mock test?</summary><p>Most learners improve fastest by taking one full timed mock test per week and doing part-by-part practice on other days. Always review every wrong answer before you move to the next test.</p></details>
+      <details class="reveal"><summary>How can I improve my IELTS Listening score quickly?</summary><p>Use the preview time to predict answers, follow the order of the questions, check the word limit, watch your spelling and listen for corrections. Repeating weak question types in part-by-part practice usually gives the quickest gains.</p></details>
+      <details class="reveal"><summary>Are Cambridge IELTS 20 and 21 listening tests available?</summary><p>Yes. Cambridge IELTS 12 to 21 are available, each with 4 full listening tests, so you can practise the newest Cambridge IELTS listening tests together with older books.</p></details>
+      <details class="reveal"><summary>Is this the same as the real computer-delivered IELTS Listening test?</summary><p>The mock tests are built to feel like the on-screen exam, with audio controls, a timer and an instant detailed report, so test day feels familiar.</p></details>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <a href="/" class="brand" style="margin-bottom:12px">
+          <img src="/Brandlogo.png" alt="IELTS Mockpoint" style="height:40px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <span class="txt"><i></i>IELTS Mockpoint</span>
+        </a>
+        <p style="color:var(--muted);font-size:.9rem;max-width:32ch">
+          Free, examiner-graded IELTS practice — authentic mock tests, band score evaluation, and resources.
+        </p>
+      </div>
+      <div>
+        <h4>Practice</h4>
+        <a href="/mocks.html">Full Tests</a>
+        <a href="/cambridge-listening.html">Listening</a>
+        <a href="/cambridge-reading.html">Reading</a>
+        <a href="/cambridge-writing.html">Writing</a>
+        <a href="/speaking.html">Speaking</a>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <a href="/blog.html">Blog & Tips</a>
+        <a href="/learn.html">Free lessons</a>
+        <a href="/band-calculator.html">Band score calculator</a>
+        <a href="/writing-samples.html">Writing samples</a>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <a href="/about.html">About Us</a>
+        <a href="/contact.html">Contact Us</a>
+        <a href="/institutes.html">For institutes</a>
+      </div>
+      <div>
+        <h4>Legal & Policy</h4>
+        <a href="/privacy-policy.html">Privacy Policy</a>
+        <a href="/terms-of-service.html">Terms of Service</a>
+        <a href="/disclaimer.html">Disclaimer</a>
+        <a href="/cookie-policy.html">Cookie Policy</a>
+      </div>
+    </div>
+    <div class="fbottom" style="display:flex; flex-direction:column; gap:8px; margin-top:24px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.08); font-size:0.8rem; color:var(--muted);">
+      <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+        <span>© 2026 IELTS Mockpoint. All rights reserved.</span>
+        <span>Trusted IELTS Preparation & Mock Platform.</span>
+      </div>
+      <span>
+        Disclaimer: IELTS® is a registered trademark of the University of Cambridge, the British Council, and IDP Education Australia. IELTS Mockpoint is an independent preparation platform and is not affiliated, approved, or endorsed by these official bodies.
+      </span>
+    </div>
+  </div>
+</footer>
+
+<button id="toTop" aria-label="Back to top">↑</button>
+
+<script>
+/* ---------- header / menu / progress ---------- */
+const hd=document.getElementById('hd'),bar=document.getElementById('progress'),toTop=document.getElementById('toTop');
+addEventListener('scroll',()=>{
+  hd.classList.toggle('scrolled',scrollY>10);
+  const h=document.documentElement.scrollHeight-innerHeight;
+  bar.style.width=(h>0?scrollY/h*100:0)+'%';
+  toTop.classList.toggle('show',scrollY>600);
+},{passive:true});
+toTop.onclick=()=>scrollTo({top:0,behavior:'smooth'});
+const sb=document.getElementById('sb'),ov=document.getElementById('ov');
+function setMenu(o){sb.classList.toggle('open',o);ov.classList.toggle('open',o);sb.setAttribute('aria-hidden',!o);document.body.style.overflow=o?'hidden':'';}
+document.getElementById('openMenu').onclick=()=>setMenu(true);
+document.getElementById('closeMenu').onclick=()=>setMenu(false);
+ov.onclick=()=>setMenu(false);
+sb.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setMenu(false)));
+
+/* ---------- reveal ---------- */
+const rio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');rio.unobserve(e.target);}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(i%4)*70+'ms';rio.observe(el);});
+
+/* ---------- ripple on buttons ---------- */
+document.addEventListener('click',e=>{
+  const b=e.target.closest('.btn');if(!b)return;
+  const r=b.getBoundingClientRect(),s=Math.max(r.width,r.height)/3,d=document.createElement('span');
+  d.className='ripple';d.style.cssText=`width:${s}px;height:${s}px;left:${e.clientX-r.left-s/2}px;top:${e.clientY-r.top-s/2}px`;
+  b.appendChild(d);setTimeout(()=>d.remove(),600);
+});
+
+/* ---------- data setup ---------- */
+let cambridgeTests=[];
+for(let book=12;book<=21;book++) {
+  for(let t=1;t<=4;t++) {
+    cambridgeTests.push({book, testNo:t, title:`Cambridge ${book} Listening Test ${t}`, questions:40, status:"Active"});
+  }
+}
+
+let books=[...new Set(cambridgeTests.map(t=>t.book))].sort((a,b)=>b-a);
+
+/* ---------- state ---------- */
+let filter='ALL',query='',order='new';
+const grid=document.getElementById('grid'),tabsEl=document.getElementById('tabs'),rc=document.getElementById('rc');
+const done=(()=>{try{return JSON.parse(localStorage.getItem('cl_done')||'{}');}catch(e){return{};}})();
+const saveDone=()=>{try{localStorage.setItem('cl_done',JSON.stringify(done));}catch(e){}};
+
+function setupTabs() {
+  tabsEl.innerHTML=`<button class="tab active" data-filter="ALL">All Tests <em>${cambridgeTests.length}</em></button>`+
+    books.map(b=>`<button class="tab" data-filter="${b}">Cambridge ${b} <em>${cambridgeTests.filter(t=>t.book===b).length}</em></button>`).join('');
+  
+  const stTotalEl = document.getElementById('stTotal');
+  if(stTotalEl) {
+    stTotalEl.dataset.to = cambridgeTests.length;
+    stTotalEl.textContent = cambridgeTests.length;
+  }
+}
+
+tabsEl.addEventListener('click',e=>{
+  const b=e.target.closest('.tab');if(!b)return;
+  tabsEl.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');filter=b.dataset.filter;render();
+});
+
+document.getElementById('q').addEventListener('input',e=>{query=e.target.value.trim().toLowerCase();render();});
+document.getElementById('sort').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  document.querySelectorAll('#sort button').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');order=b.dataset.sort;render();
+});
+
+/* ---------- render ---------- */
+function matches(t){
+  if(filter!=='ALL'&&String(t.book)!==filter)return false;
+  if(!query)return true;
+  const hay=`cambridge ${t.book} test ${t.testNo} ${t.book} ${t.testNo} listening ielts`;
+  return query.split(/\s+/).every(w=>hay.includes(w));
+}
+
+function render(){
+  const list=cambridgeTests.filter(matches).sort((a,b)=>order==='new'?(b.book-a.book||a.testNo-b.testNo):(a.book-b.book||a.testNo-b.testNo));
+  grid.innerHTML='';
+  rc.textContent=list.length?`Showing ${list.length} of ${cambridgeTests.length} free IELTS listening mock tests`:'';
+  if(!list.length){grid.innerHTML=`<div class="empty"><strong>No tests found</strong>Try a different search, like "15" or "test 2", or pick All Tests.</div>`;return;}
+  
+  list.forEach((t,i)=>{
+    const key=`${t.book}-${t.testNo}`;
+    // Updated clean URL route mapping for Cambridge module
+    const fullTestUrl = `/cambridge-listening-test?book=${t.book}&test=${t.testNo}`;
+    const id=`pop-${key}`;
+    
+    const card=document.createElement('div');
+    card.className='card';card.style.animationDelay=Math.min(i*40,600)+'ms';
+    card.innerHTML=`
+      <span class="bignum">${String(t.testNo).padStart(2,'0')}</span>
+      <span class="pill">CAMBRIDGE ${t.book}</span>
+      <h3>${t.title}</h3>
+      <div class="chips"><span>⏱ Practice Timer</span><span>${t.questions} Questions</span>${done[key]?'<span class="done">✓ Attempted</span>':''}</div>
+      <div class="card-actions">
+        <a href="${fullTestUrl}" class="btn btn-red" data-key="${key}" title="Free IELTS Listening mock test – Cambridge ${t.book} Test ${t.testNo}" aria-label="Take free IELTS Listening mock test Cambridge ${t.book} Test ${t.testNo}">Take Test →</a>
+        <div class="practice-drop-wrap">
+          <button type="button" class="btn btn-outline" aria-haspopup="true" aria-expanded="false" aria-controls="${id}" aria-label="Practice Cambridge ${t.book} Listening Test ${t.testNo} part by part">Practice <span class="caret">▾</span></button>
+          <div class="part-popover" id="${id}" role="menu">
+            <a role="menuitem" href="${fullTestUrl}&part=1" data-key="${key}" title="IELTS Listening Part 1 practice – Cambridge ${t.book} Test ${t.testNo}">Part 1 <span>Q 1-10</span></a>
+            <a role="menuitem" href="${fullTestUrl}&part=2" data-key="${key}" title="IELTS Listening Part 2 practice – Cambridge ${t.book} Test ${t.testNo}">Part 2 <span>Q 11-20</span></a>
+            <a role="menuitem" href="${fullTestUrl}&part=3" data-key="${key}" title="IELTS Listening Part 3 practice – Cambridge ${t.book} Test ${t.testNo}">Part 3 <span>Q 21-30</span></a>
+            <a role="menuitem" href="${fullTestUrl}&part=4" data-key="${key}" title="IELTS Listening Part 4 practice – Cambridge ${t.book} Test ${t.testNo}">Part 4 <span>Q 31-40</span></a>
           </div>
         </div>
       </div>`;

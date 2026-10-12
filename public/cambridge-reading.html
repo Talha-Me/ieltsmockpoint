@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -692,6 +692,1081 @@ function render(){
             <a role="menuitem" href="${fullTestUrl}&part=1" data-key="${key}">Passage 1 <span>Q 1-13</span></a>
             <a role="menuitem" href="${fullTestUrl}&part=2" data-key="${key}">Passage 2 <span>Q 14-26</span></a>
             <a role="menuitem" href="${fullTestUrl}&part=3" data-key="${key}">Passage 3 <span>Q 27-40</span></a>
+          </div>
+        </div>
+      </div>`;
+
+    /* 3D tilt + spotlight */
+    card.addEventListener('mousemove',e=>{
+      if(matchMedia('(hover:none)').matches)return;
+      const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+      card.style.setProperty('--mx',x*100+'%');card.style.setProperty('--my',y*100+'%');
+      card.style.setProperty('--ry',((x-.5)*6)+'deg');card.style.setProperty('--rx',((.5-y)*6)+'deg');
+    });
+    card.addEventListener('mouseleave',()=>{card.style.setProperty('--rx','0deg');card.style.setProperty('--ry','0deg');});
+    grid.appendChild(card);
+  });
+}
+
+/* ---------- popover ---------- */
+function closePops(except){
+  document.querySelectorAll('.part-popover.open').forEach(p=>{
+    if(p===except)return;
+    p.classList.remove('open');
+    const btn=p.previousElementSibling;if(btn)btn.setAttribute('aria-expanded','false');
+    p.closest('.card').classList.remove('open-card');
+  });
+}
+grid.addEventListener('click',e=>{
+  const link=e.target.closest('a[data-key]');
+  if(link){done[link.dataset.key]=1;saveDone();return;}
+  const btn=e.target.closest('.practice-drop-wrap > button');
+  if(!btn)return;
+  e.stopPropagation();
+  const pop=btn.nextElementSibling,willOpen=!pop.classList.contains('open');
+  closePops(willOpen?pop:null);
+  pop.classList.toggle('open',willOpen);
+  btn.setAttribute('aria-expanded',willOpen);
+  btn.closest('.card').classList.toggle('open-card',willOpen);
+});
+addEventListener('click',e=>{if(!e.target.closest('.practice-drop-wrap'))closePops();});
+addEventListener('keydown',e=>{if(e.key==='Escape'){closePops();setMenu(false);}});
+
+/* ---------- animated counters ---------- */
+setupTabs();
+render();
+
+const cio=new IntersectionObserver(es=>es.forEach(e=>{
+  if(!e.isIntersecting)return;cio.unobserve(e.target);
+  const el=e.target,to=+el.dataset.to,suf=el.dataset.suffix||'',t0=performance.now(),dur=1100;
+  (function tick(n){const p=Math.min((n-t0)/dur,1),v=Math.round(to*(1-Math.pow(1-p,3)));el.textContent=v+suf;if(p<1)requestAnimationFrame(tick);})(t0);
+}),{threshold:.6});
+document.querySelectorAll('[data-to]').forEach(el=>cio.observe(el));
+</script>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Free IELTS Reading Mock Test Online 2026 – Cambridge 12–21 | IELTS Mockpoint</title>
+<meta name="description" content="Free IELTS reading mock test online: Cambridge IELTS 12–21 reading tests with a 60-minute timer, passage-wise practice and instant band score.">
+<meta name="keywords" content="ielts reading mock test, free ielts mock test, ielts reading test, ielts free mock, reading mock test free, free ielts reading test, ielts reading practice, ielts reading practice test, ielts reading practice test with answers, ielts reading mock test online, free ielts reading mock test, ielts reading test online free, ielts reading test free, ielts reading tips, ielts reading strategies, ielts reading band score, ielts reading format, ielts academic reading, ielts academic reading practice, ielts general training reading, true false not given practice, matching headings practice, cambridge ielts reading, cambridge ielts reading test online, cambridge ielts 20 reading, cambridge ielts 21 reading, cambridge ielts 12 to 21 reading, ielts mock test free online, ielts mock test online free, free ielts practice test, computer delivered ielts reading">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="author" content="IELTS Mockpoint">
+<meta name="theme-color" content="#0b2b52">
+<link rel="canonical" href="https://ieltsmockpoint.com/cambridge-reading">
+<link rel="alternate" hreflang="en" href="https://ieltsmockpoint.com/cambridge-reading">
+<link rel="alternate" hreflang="x-default" href="https://ieltsmockpoint.com/cambridge-reading">
+<link rel="icon" type="image/png" href="/mpfavicon.png">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="IELTS Mockpoint">
+<meta property="og:title" content="Free IELTS Reading Mock Test Online – Cambridge 12–21 Practice">
+<meta property="og:description" content="Free IELTS Reading mock tests from Cambridge IELTS 12–21. Full 60-minute test or passage-wise practice with timer and instant band score.">
+<meta property="og:url" content="https://ieltsmockpoint.com/cambridge-reading">
+<meta property="og:image" content="https://ieltsmockpoint.com/Brandlogo.png">
+<meta property="og:image:alt" content="IELTS Mockpoint – free IELTS reading mock test">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free IELTS Reading Mock Test Online – Cambridge 12–21">
+<meta name="twitter:description" content="Free IELTS reading test practice: Cambridge 12–21, live timer, passage-wise mode and instant band score.">
+<meta name="twitter:image" content="https://ieltsmockpoint.com/Brandlogo.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="/auth-nav.js"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://ieltsmockpoint.com/#organization",
+      "name": "IELTS Mockpoint",
+      "url": "https://ieltsmockpoint.com/",
+      "logo": "https://ieltsmockpoint.com/Brandlogo.png",
+      "description": "Free IELTS mock tests, Cambridge IELTS practice and band score evaluation."
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://ieltsmockpoint.com/#website",
+      "url": "https://ieltsmockpoint.com/",
+      "name": "IELTS Mockpoint",
+      "publisher": { "@id": "https://ieltsmockpoint.com/#organization" },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://ieltsmockpoint.com/cambridge-reading#webpage",
+      "url": "https://ieltsmockpoint.com/cambridge-reading",
+      "name": "Free IELTS Reading Mock Test Online – Cambridge 12–21",
+      "description": "Free IELTS Reading mock tests from Cambridge IELTS 12–21 with a live 60-minute timer, passage-wise practice and instant band score.",
+      "isPartOf": { "@id": "https://ieltsmockpoint.com/#website" },
+      "about": { "@type": "Thing", "name": "IELTS Reading mock test" },
+      "primaryImageOfPage": { "@type": "ImageObject", "url": "https://ieltsmockpoint.com/Brandlogo.png" },
+      "dateModified": "2026-10-13",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://ieltsmockpoint.com/" },
+        { "@type": "ListItem", "position": 2, "name": "IELTS Reading Mock Test", "item": "https://ieltsmockpoint.com/cambridge-reading" }
+      ]
+    },
+    {
+      "@type": "ItemList",
+      "name": "Free Cambridge IELTS Reading Mock Tests (Cambridge 12–21)",
+      "numberOfItems": 40,
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Cambridge 21 Reading Test 1", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=21&test=1" },
+        { "@type": "ListItem", "position": 2, "name": "Cambridge 21 Reading Test 2", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=21&test=2" },
+        { "@type": "ListItem", "position": 3, "name": "Cambridge 21 Reading Test 3", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=21&test=3" },
+        { "@type": "ListItem", "position": 4, "name": "Cambridge 21 Reading Test 4", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=21&test=4" },
+        { "@type": "ListItem", "position": 5, "name": "Cambridge 20 Reading Test 1", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=20&test=1" },
+        { "@type": "ListItem", "position": 6, "name": "Cambridge 20 Reading Test 2", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=20&test=2" },
+        { "@type": "ListItem", "position": 7, "name": "Cambridge 20 Reading Test 3", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=20&test=3" },
+        { "@type": "ListItem", "position": 8, "name": "Cambridge 20 Reading Test 4", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=20&test=4" },
+        { "@type": "ListItem", "position": 9, "name": "Cambridge 19 Reading Test 1", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=19&test=1" },
+        { "@type": "ListItem", "position": 10, "name": "Cambridge 19 Reading Test 2", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=19&test=2" },
+        { "@type": "ListItem", "position": 11, "name": "Cambridge 19 Reading Test 3", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=19&test=3" },
+        { "@type": "ListItem", "position": 12, "name": "Cambridge 19 Reading Test 4", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=19&test=4" },
+        { "@type": "ListItem", "position": 13, "name": "Cambridge 18 Reading Test 1", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=18&test=1" },
+        { "@type": "ListItem", "position": 14, "name": "Cambridge 18 Reading Test 2", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=18&test=2" },
+        { "@type": "ListItem", "position": 15, "name": "Cambridge 18 Reading Test 3", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=18&test=3" },
+        { "@type": "ListItem", "position": 16, "name": "Cambridge 18 Reading Test 4", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=18&test=4" },
+        { "@type": "ListItem", "position": 17, "name": "Cambridge 17 Reading Test 1", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=17&test=1" },
+        { "@type": "ListItem", "position": 18, "name": "Cambridge 17 Reading Test 2", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=17&test=2" },
+        { "@type": "ListItem", "position": 19, "name": "Cambridge 17 Reading Test 3", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=17&test=3" },
+        { "@type": "ListItem", "position": 20, "name": "Cambridge 17 Reading Test 4", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=17&test=4" },
+        { "@type": "ListItem", "position": 21, "name": "Cambridge 16 Reading Test 1", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=16&test=1" },
+        { "@type": "ListItem", "position": 22, "name": "Cambridge 16 Reading Test 2", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=16&test=2" },
+        { "@type": "ListItem", "position": 23, "name": "Cambridge 16 Reading Test 3", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=16&test=3" },
+        { "@type": "ListItem", "position": 24, "name": "Cambridge 16 Reading Test 4", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=16&test=4" },
+        { "@type": "ListItem", "position": 25, "name": "Cambridge 15 Reading Test 1", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=15&test=1" },
+        { "@type": "ListItem", "position": 26, "name": "Cambridge 15 Reading Test 2", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=15&test=2" },
+        { "@type": "ListItem", "position": 27, "name": "Cambridge 15 Reading Test 3", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=15&test=3" },
+        { "@type": "ListItem", "position": 28, "name": "Cambridge 15 Reading Test 4", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=15&test=4" },
+        { "@type": "ListItem", "position": 29, "name": "Cambridge 14 Reading Test 1", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=14&test=1" },
+        { "@type": "ListItem", "position": 30, "name": "Cambridge 14 Reading Test 2", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=14&test=2" },
+        { "@type": "ListItem", "position": 31, "name": "Cambridge 14 Reading Test 3", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=14&test=3" },
+        { "@type": "ListItem", "position": 32, "name": "Cambridge 14 Reading Test 4", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=14&test=4" },
+        { "@type": "ListItem", "position": 33, "name": "Cambridge 13 Reading Test 1", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=13&test=1" },
+        { "@type": "ListItem", "position": 34, "name": "Cambridge 13 Reading Test 2", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=13&test=2" },
+        { "@type": "ListItem", "position": 35, "name": "Cambridge 13 Reading Test 3", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=13&test=3" },
+        { "@type": "ListItem", "position": 36, "name": "Cambridge 13 Reading Test 4", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=13&test=4" },
+        { "@type": "ListItem", "position": 37, "name": "Cambridge 12 Reading Test 1", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=12&test=1" },
+        { "@type": "ListItem", "position": 38, "name": "Cambridge 12 Reading Test 2", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=12&test=2" },
+        { "@type": "ListItem", "position": 39, "name": "Cambridge 12 Reading Test 3", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=12&test=3" },
+        { "@type": "ListItem", "position": 40, "name": "Cambridge 12 Reading Test 4", "url": "https://ieltsmockpoint.com/cambridge-reading-test?book=12&test=4" }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "name": "How to take a free IELTS Reading mock test online",
+      "description": "Step-by-step way to use the Cambridge IELTS Reading mock tests for the fastest score improvement.",
+      "totalTime": "PT60M",
+      "step": [
+        { "@type": "HowToStep", "position": 1, "name": "Choose a Cambridge test", "text": "Pick any book from Cambridge IELTS 12 to 21 and select one of its 4 reading tests." },
+        { "@type": "HowToStep", "position": 2, "name": "Start the 60-minute timer", "text": "Click Take Test to sit all 3 passages and 40 questions, or use Practice to do one passage at a time." },
+        { "@type": "HowToStep", "position": 3, "name": "Answer as you read", "text": "Write your answers as you go, because there is no extra time to transfer answers in the Reading test." },
+        { "@type": "HowToStep", "position": 4, "name": "Check your band score", "text": "Submit the test to get an instant score, then review every wrong answer and note the question type you missed." },
+        { "@type": "HowToStep", "position": 5, "name": "Repeat weak question types", "text": "Use passage-wise practice to repeat weak question types, then retake a full timed test the next week." }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is this IELTS Reading mock test really free?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. You can practise Cambridge IELTS Reading tests online on IELTS Mockpoint for free and get your score straight after you finish." }
+        },
+        {
+          "@type": "Question",
+          "name": "How long is the IELTS Reading test?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The IELTS Reading test lasts 60 minutes and has 40 questions across 3 passages. There is no extra time to transfer answers, so managing your time is important." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I practise one passage at a time?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Every test has a Practice mode where you choose Passage 1, Passage 2 or Passage 3 and work on your weak areas without sitting the full test." }
+        },
+        {
+          "@type": "Question",
+          "name": "Which Cambridge IELTS books are available?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Cambridge IELTS 12 to 21 are available, each with 4 full reading tests, which gives you 40 free IELTS reading mock tests in total." }
+        },
+        {
+          "@type": "Question",
+          "name": "How is my IELTS Reading band score calculated?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Each correct answer earns one mark out of 40. Your raw score is then converted to a band from 0 to 9. The conversion differs slightly between Academic and General Training." }
+        },
+        {
+          "@type": "Question",
+          "name": "What question types appear in IELTS Reading?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Common types include multiple choice, True/False/Not Given, Yes/No/Not Given, matching headings, matching information, sentence completion, summary completion and short answer questions." }
+        },
+        {
+          "@type": "Question",
+          "name": "How many correct answers do I need for Band 6, 7 or 8 in IELTS Academic Reading?",
+          "acceptedAnswer": { "@type": "Answer", "text": "As a rough guide for IELTS Academic Reading, about 23 out of 40 gives Band 6, about 30 out of 40 gives Band 7 and about 35 out of 40 gives Band 8. Conversion tables can vary slightly between test versions." }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between IELTS Academic and General Training Reading?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Both versions have 40 questions in 60 minutes. Academic Reading uses three long texts from books, journals and magazines. General Training Reading uses shorter everyday texts in the early sections and a longer text in the final section, and its band score conversion is stricter." }
+        },
+        {
+          "@type": "Question",
+          "name": "How often should I take an IELTS reading mock test?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Most learners improve fastest by taking one full timed mock test per week and doing passage-wise practice on other days. Always review every wrong answer before you move to the next test." }
+        },
+        {
+          "@type": "Question",
+          "name": "How can I improve my IELTS Reading score quickly?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Practise under real timing, learn the rules of each question type, skim for keywords and paraphrases instead of reading every word, and keep an error log. Repeating weak question types in passage-wise practice usually gives the quickest gains." }
+        },
+        {
+          "@type": "Question",
+          "name": "Is this the same as the real computer-delivered IELTS Reading test?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The mock tests are built to feel like the on-screen exam, with a countdown timer, highlighting and note-taking tools, and a split screen for passage and questions, so test day feels familiar." }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a good IELTS Reading score?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A good score depends on your target. Many universities ask for an overall Band 6.5 or 7 with no section below 6.0 or 6.5, while some migration pathways ask for higher. Always check the exact requirement of your institution or authority." }
+        },
+        {
+          "@type": "Question",
+          "name": "Are Cambridge IELTS 20 and 21 reading tests available?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Cambridge IELTS 12 to 21 are available, each with 4 full reading tests, so you can practise the newest Cambridge IELTS reading tests together with older books." }
+        },
+        {
+          "@type": "Question",
+          "name": "How many questions are in each IELTS Reading passage?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A full test has 40 questions. Passages usually carry about 13 or 14 questions each. On this platform the layout is Passage 1 with questions 1 to 13, Passage 2 with questions 14 to 26 and Passage 3 with questions 27 to 40." }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there negative marking in IELTS Reading?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. Wrong answers do not lose marks, so you should never leave a question blank. Make an educated guess if you are unsure." }
+        },
+        {
+          "@type": "Question",
+          "name": "Should I read the passage or the questions first?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Many candidates skim the passage for structure, then read the questions and scan for keywords. Others read the questions first. Try both methods in mock tests and keep the one that gives you the best accuracy within 20 minutes per passage." }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens if I run out of time in IELTS Reading?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The test stops after 60 minutes and unanswered questions score zero. Practise the 20-minute-per-passage rhythm, skip time-consuming questions and return to them later, and guess the remaining answers in the last minute." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can a mock test predict my real IELTS Reading band score?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A mock test gives a useful estimate, but results vary with passage difficulty and your condition on the day. Take several full tests and look at your average score rather than a single result." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does spelling matter in IELTS Reading answers?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Spelling must be correct to earn a mark. Both UK and US spellings are accepted, and you can write answers in capital or lower-case letters." }
+        },
+        {
+          "@type": "Question",
+          "name": "How long should I prepare for IELTS Reading?",
+          "acceptedAnswer": { "@type": "Answer", "text": "It depends on your starting level and target band. Many learners see steady progress with 4 to 8 weeks of regular practice, combining full timed tests, passage-wise practice and careful review of every mistake." }
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<style>
+:root{--navy:#0b2b52;--blue:#1565c9;--blue-light:#eaf2fd;--red:#e0202d;--red-dark:#b5121d;--bg:#fff;--surface:#f4f7fb;--text:#0f2038;--muted:#5d708c;--line:#e3e9f3;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-padding-top:80px;scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;padding-top:env(safe-area-inset-top,0);padding-bottom:env(safe-area-inset-bottom,0);}
+h1,h2,h3{font-family:'Sora',sans-serif;font-weight:700;line-height:1.12;color:var(--navy);}
+a{color:inherit;}
+.wrap{max-width:1140px;margin:0 auto;padding:0 24px;}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.in{opacity:1;transform:none;}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px;}
+
+/* scroll progress */
+#progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--blue),var(--red));z-index:200;transition:width .1s linear;}
+
+/* HEADER */
+header{position:sticky;top:env(safe-area-inset-top,0);z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);transition:box-shadow .25s;}
+header.scrolled{box-shadow:0 6px 18px rgba(11,43,82,.08);}
+nav.wrap{display:flex;align-items:center;justify-content:space-between;height:74px;}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:'Sora',sans-serif;font-weight:800;font-size:1.3rem;color:var(--navy);}
+.brand img{height:46px;width:auto;display:block;}
+.brand .txt{display:none;align-items:center;gap:8px;}
+.brand .txt i{width:11px;height:11px;border-radius:3px;background:var(--red);box-shadow:5px 5px 0 var(--blue);margin-right:5px;}
+.nav-links{display:flex;gap:26px;}
+.nav-links a{font-size:.92rem;color:var(--muted);text-decoration:none;font-weight:500;position:relative;padding:4px 0;}
+.nav-links a::after{content:'';position:absolute;left:0;bottom:-2px;width:0;height:2px;background:var(--red);transition:width .2s;}
+.nav-links a:hover,.nav-links a.current{color:var(--navy);}
+.nav-links a:hover::after,.nav-links a.current::after{width:100%;}
+.nav-actions{display:flex;gap:12px;align-items:center;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 22px;border-radius:9px;font-size:.92rem;font-weight:700;text-decoration:none;border:1.5px solid transparent;cursor:pointer;font-family:inherit;transition:transform .15s,box-shadow .2s,background .2s,color .2s,border-color .2s;position:relative;overflow:hidden;}
+.btn-red{background:var(--red);color:#fff;}
+.btn-red:hover{background:var(--red-dark);transform:translateY(-2px);box-shadow:0 10px 22px rgba(224,32,45,.28);}
+.btn-outline{color:var(--navy);border-color:var(--line);background:#fff;}
+.btn-outline:hover{border-color:var(--blue);color:var(--blue);}
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.45);transform:scale(0);animation:rip .6s ease-out forwards;pointer-events:none;}
+.btn-outline .ripple{background:rgba(21,101,201,.18);}
+@keyframes rip{to{transform:scale(4);opacity:0;}}
+.menu-btn{display:none;background:var(--blue-light);border:none;color:var(--navy);width:42px;height:42px;border-radius:10px;font-size:1.3rem;cursor:pointer;}
+@media(max-width:920px){.nav-links,.nav-actions{display:none;}.menu-btn{display:block;}}
+.overlay{position:fixed;inset:0;background:rgba(11,43,82,.55);backdrop-filter:blur(3px);z-index:90;opacity:0;pointer-events:none;transition:opacity .3s;}
+.overlay.open{opacity:1;pointer-events:auto;}
+.sidebar{position:fixed;top:0;right:0;height:100%;width:min(320px,86vw);background:#fff;z-index:100;transform:translateX(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;padding:22px 24px calc(24px + env(safe-area-inset-bottom,0));box-shadow:-12px 0 40px rgba(11,43,82,.18);}
+.sidebar.open{transform:none;}
+.sb-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;padding-top:env(safe-area-inset-top,0);}
+.sb-close{background:var(--surface);border:none;width:40px;height:40px;border-radius:50%;font-size:1.4rem;cursor:pointer;color:var(--navy);}
+.sb-links a{display:block;padding:14px 4px;border-bottom:1px solid var(--line);text-decoration:none;font-weight:600;color:var(--navy);transition:padding .2s,color .2s;}
+.sb-links a:hover{color:var(--red);padding-left:12px;}
+.sb-actions{margin-top:auto;display:grid;gap:10px;}
+
+.notice{background:var(--navy);color:#fff;font-size:.88rem;text-align:center;padding:11px 16px;}
+.notice b{color:#ff7b84;}
+
+/* HERO */
+.kicker{display:inline-flex;align-items:center;gap:8px;color:var(--red);font-size:.88rem;font-weight:700;margin-bottom:16px;}
+.kicker::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse 2s infinite;}
+@keyframes pulse{50%{transform:scale(1.6);opacity:.5;}}
+.hero{position:relative;overflow:hidden;padding:72px 0 30px;text-align:center;}
+.shape{position:absolute;border-radius:50%;z-index:0;}
+.shape.a{top:-160px;left:-120px;width:460px;height:460px;background:radial-gradient(circle,var(--blue-light),transparent 70%);animation:float 9s ease-in-out infinite;}
+.shape.b{top:-60px;right:-100px;width:400px;height:400px;background:radial-gradient(circle,rgba(224,32,45,.09),transparent 70%);animation:float 11s ease-in-out infinite reverse;}
+@keyframes float{50%{transform:translateY(24px);}}
+.hero .wrap{position:relative;z-index:1;}
+.hero h1{font-size:clamp(2.2rem,4.6vw,3.4rem);margin-bottom:16px;}
+.hero h1 span{color:var(--blue);}
+.hero p.lead{color:var(--muted);font-size:1.06rem;max-width:60ch;margin:0 auto 30px;}
+
+/* Animated passage illustration */
+.doc-scene{position:relative;width:min(440px,92%);margin:0 auto 38px;}
+.doc{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:22px 24px 20px;text-align:left;box-shadow:0 24px 50px rgba(11,43,82,.12);animation:bob 6s ease-in-out infinite;}
+@keyframes bob{50%{transform:translateY(-10px);}}
+.doc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.doc-title{font-family:'Sora',sans-serif;font-weight:700;font-size:.82rem;color:var(--navy);}
+.doc-dots{display:flex;gap:5px;}
+.doc-dots i{width:8px;height:8px;border-radius:50%;background:var(--line);}
+.doc-dots i:first-child{background:var(--red);}
+.doc-dots i:nth-child(2){background:var(--blue);}
+.ln{position:relative;height:9px;border-radius:6px;background:var(--surface);margin:10px 0;overflow:hidden;}
+.ln.w90{width:90%;}.ln.w75{width:75%;}.ln.w60{width:60%;}.ln.w95{width:95%;}.ln.w80{width:80%;}
+.ln.hl::after{content:'';position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,#ffe58a,#ffd54f);border-radius:6px;animation:sweep 4s ease-in-out infinite;}
+.ln.hl.d2::after{animation-delay:1.3s;}
+.ln.hl.d3::after{animation-delay:2.6s;}
+@keyframes sweep{0%{width:0;}35%,70%{width:100%;}100%{width:0;}}
+.doc-foot{display:flex;align-items:center;gap:10px;margin-top:16px;font-size:.74rem;color:var(--muted);font-weight:600;}
+.doc-foot .track{flex:1;height:6px;border-radius:6px;background:var(--surface);overflow:hidden;}
+.doc-foot .track i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--red));border-radius:6px;animation:fill 8s linear infinite;}
+@keyframes fill{to{width:100%;}}
+.tag{position:absolute;font-size:.72rem;font-weight:800;letter-spacing:.05em;padding:7px 13px;border-radius:999px;background:#fff;box-shadow:0 10px 24px rgba(11,43,82,.16);border:1.5px solid var(--line);}
+.tag.t{top:-14px;right:-26px;color:#137a3f;border-color:#bfe8d0;animation:bob 5s ease-in-out infinite;}
+.tag.f{top:46%;left:-40px;color:var(--red);border-color:#f5c2c6;animation:bob 6.5s ease-in-out infinite .6s;}
+.tag.n{bottom:-14px;right:22px;color:var(--blue);border-color:#c5dbf6;animation:bob 5.5s ease-in-out infinite 1.2s;}
+@media(max-width:560px){.tag.t{right:-8px;}.tag.f{left:-8px;}}
+
+.stats{display:inline-flex;border:1px solid var(--line);background:var(--surface);border-radius:14px;overflow:hidden;flex-wrap:wrap;justify-content:center;}
+.stats div{padding:16px 28px;border-right:1px solid var(--line);transition:background .25s;}
+.stats div:hover{background:var(--blue-light);}
+.stats div:last-child{border:none;}
+.stats strong{display:block;font-family:'Sora',sans-serif;font-size:1.5rem;color:var(--blue);}
+.stats span{font-size:.78rem;color:var(--muted);}
+
+/* TOOLBAR */
+.tabs{display:flex;justify-content:center;gap:10px;margin:36px 0 22px;flex-wrap:wrap;}
+.tab{display:inline-flex;align-items:center;gap:10px;padding:11px 20px;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:var(--muted);font-family:inherit;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .25s;}
+.tab em{font-style:normal;font-size:.72rem;background:var(--surface);color:var(--muted);padding:2px 9px;border-radius:999px;transition:all .25s;}
+.tab:hover{border-color:var(--blue);color:var(--blue);transform:translateY(-2px);}
+.tab.active{background:var(--navy);border-color:var(--navy);color:#fff;box-shadow:0 12px 24px rgba(11,43,82,.22);}
+.tab.active em{background:var(--red);color:#fff;}
+.toolbar{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:38px;}
+.search{position:relative;flex:1 1 280px;max-width:380px;}
+.search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted);pointer-events:none;transition:color .2s;}
+.search input{width:100%;padding:12px 16px 12px 42px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font-family:inherit;font-size:.92rem;color:var(--text);transition:border-color .2s,box-shadow .2s;}
+.search input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 4px var(--blue-light);}
+.search:focus-within svg{color:var(--blue);}
+.seg{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px;}
+.seg button{border:none;background:none;font-family:inherit;font-weight:700;font-size:.82rem;color:var(--muted);padding:8px 14px;border-radius:9px;cursor:pointer;transition:all .2s;}
+.seg button.on{background:#fff;color:var(--navy);box-shadow:0 2px 8px rgba(11,43,82,.12);}
+.seg button:hover:not(.on){color:var(--blue);}
+.resultcount{text-align:center;color:var(--muted);font-size:.85rem;margin:-18px 0 26px;min-height:1.2em;}
+
+/* GRID & CARDS */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:24px;padding-bottom:70px;min-height:320px;perspective:1200px;}
+.card{--rx:0deg;--ry:0deg;--ty:0px;--mx:50%;--my:50%;position:relative;background:#fff;border:1.5px solid var(--line);border-radius:20px;padding:26px 22px 24px;display:flex;flex-direction:column;opacity:0;translate:0 16px;animation:rise .5s ease forwards;transform:rotateX(var(--rx)) rotateY(var(--ry)) translateY(var(--ty));transition:transform .2s ease-out,border-color .25s,box-shadow .25s;will-change:transform;}
+@keyframes rise{to{opacity:1;translate:0 0;}}
+.card::before{content:'';position:absolute;left:0;top:0;height:4px;width:100%;background:linear-gradient(90deg,var(--blue),var(--red));transform:scaleX(0);transform-origin:left;transition:transform .35s;border-radius:20px 20px 0 0;}
+.card::after{content:'';position:absolute;inset:0;border-radius:20px;background:radial-gradient(260px circle at var(--mx) var(--my),rgba(21,101,201,.10),transparent 60%);opacity:0;transition:opacity .3s;pointer-events:none;}
+.card:hover,.card.open-card{--ty:-8px;border-color:var(--blue);box-shadow:0 22px 44px rgba(21,101,201,.14);}
+.card:hover::before{transform:scaleX(1);}
+.card:hover::after{opacity:1;}
+.card.open-card{z-index:40;}
+.card .bignum{position:absolute;right:16px;top:-2px;font-family:'Sora',sans-serif;font-weight:800;font-size:4.8rem;color:var(--blue-light);line-height:1;transition:color .3s,transform .4s;user-select:none;pointer-events:none;}
+.card:hover .bignum{color:#fdecee;transform:scale(1.08) translateX(-4px);}
+.card .pill{position:relative;align-self:flex-start;max-width:85%;font-size:.68rem;font-weight:800;letter-spacing:.06em;padding:5px 12px;border-radius:999px;background:var(--blue-light);color:var(--blue);margin-bottom:38px;}
+.card h3{position:relative;font-size:1.24rem;margin-bottom:14px;}
+.chips{position:relative;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;}
+.chips span{font-size:.76rem;font-weight:600;color:var(--muted);background:var(--surface);border-radius:8px;padding:5px 10px;}
+.chips span.done{background:#e6f7ee;color:#137a3f;}
+
+.card-actions{display:grid;grid-template-columns:1.1fr 1fr;gap:10px;position:relative;margin-top:auto;}
+.card-actions .btn{width:100%;font-size:.86rem;padding:10px;}
+.practice-drop-wrap{position:relative;}
+.part-popover{position:absolute;bottom:calc(100% + 10px);left:0;right:0;min-width:190px;background:#fff;border:1.5px solid var(--line);border-radius:14px;box-shadow:0 14px 30px rgba(11,43,82,.18);padding:10px;display:flex;flex-direction:column;gap:6px;z-index:30;opacity:0;transform:translateY(8px) scale(.96);transform-origin:bottom center;pointer-events:none;transition:opacity .2s,transform .2s;}
+.part-popover.open{opacity:1;transform:none;pointer-events:auto;}
+.part-popover a{padding:9px 12px;border-radius:8px;font-size:.82rem;font-weight:600;color:var(--navy);text-decoration:none;display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--surface);transition:background .2s,color .2s,transform .2s;}
+.part-popover a:hover{background:var(--blue-light);color:var(--blue);transform:translateX(3px);}
+.part-popover a span{font-size:.72rem;color:var(--muted);white-space:nowrap;}
+.btn .caret{display:inline-block;transition:transform .25s;}
+.btn[aria-expanded="true"] .caret{transform:rotate(180deg);}
+
+.empty{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted);}
+.empty strong{display:block;font-family:'Sora',sans-serif;color:var(--navy);font-size:1.2rem;margin-bottom:8px;}
+
+/* FEATURES */
+.features{padding:10px 0 74px;}
+.features h2{text-align:center;font-size:clamp(1.6rem,2.8vw,2.1rem);margin-bottom:10px;}
+.features .sub{text-align:center;color:var(--muted);max-width:56ch;margin:0 auto 34px;font-size:.98rem;}
+.fcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px;}
+.fcard{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:26px 22px;transition:transform .25s,box-shadow .25s,border-color .25s,background .25s;}
+.fcard:hover{transform:translateY(-6px);background:#fff;border-color:var(--blue);box-shadow:0 18px 36px rgba(21,101,201,.12);}
+.fcard .ico{width:48px;height:48px;border-radius:14px;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:16px;transition:transform .35s,background .25s;}
+.fcard:hover .ico{transform:rotate(-8deg) scale(1.1);background:#fdecee;}
+.fcard h3{font-size:1.05rem;margin-bottom:8px;}
+.fcard p{color:var(--muted);font-size:.9rem;}
+
+/* SEO & FACTS */
+.seo{padding:70px 0;border-top:1px solid var(--line);}
+.seo-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:56px;align-items:start;}
+.seo h2{font-size:clamp(1.6rem,2.8vw,2.1rem);margin-bottom:18px;}
+.seo h3{font-size:1.2rem;margin:28px 0 10px;}
+.seo p{color:var(--muted);margin-bottom:14px;font-size:.98rem;}
+.seo p strong{color:var(--navy);}
+.seo ul.qt{margin:0 0 14px 18px;color:var(--muted);font-size:.96rem;}
+.seo ul.qt li{margin-bottom:6px;}
+.seo ul.qt li strong{color:var(--navy);}
+.seo p a,.seo ul.qt a{color:var(--blue);font-weight:600;}
+.facts{position:sticky;top:96px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:26px;}
+.facts h3{margin:0 0 14px;font-size:1.05rem;}
+.facts li{list-style:none;display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:.88rem;color:var(--muted);transition:padding .2s;}
+.facts li:hover{padding-left:8px;}
+.facts li:last-child{border:none;}
+.facts li b{color:var(--navy);font-family:'Sora',sans-serif;font-size:.88rem;text-align:right;}
+.facts p{font-size:.8rem;margin:14px 0 0;}
+@media(max-width:860px){.seo-grid{grid-template-columns:1fr;gap:30px;}.facts{position:static;}}
+
+/* FAQ */
+.faq{padding:70px 0;border-top:1px solid var(--line);background:var(--surface);}
+.faq h2{text-align:center;font-size:clamp(1.6rem,2.8vw,2.1rem);margin-bottom:10px;}
+.faq .sub{text-align:center;color:var(--muted);margin-bottom:34px;}
+.faq-list{max-width:800px;margin:0 auto;display:grid;gap:12px;}
+.faq details{background:#fff;border:1.5px solid var(--line);border-radius:14px;transition:border-color .25s,box-shadow .25s;}
+.faq details[open]{border-color:var(--blue);box-shadow:0 12px 26px rgba(21,101,201,.10);}
+.faq summary{cursor:pointer;list-style:none;padding:18px 22px;font-family:'Sora',sans-serif;font-weight:700;font-size:.98rem;color:var(--navy);display:flex;justify-content:space-between;align-items:center;gap:14px;}
+.faq summary::-webkit-details-marker{display:none;}
+.faq summary::after{content:'+';flex:none;width:28px;height:28px;border-radius:50%;background:var(--blue-light);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:1.2rem;transition:transform .3s,background .25s,color .25s;}
+.faq details[open] summary::after{transform:rotate(45deg);background:var(--red);color:#fff;}
+.faq details p{padding:0 22px 20px;color:var(--muted);font-size:.94rem;animation:fadeDown .35s ease;}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:none;}}
+
+/* FOOTER */
+footer {
+  border-top: 1px solid var(--line);
+  padding: 56px 0 32px;
+  background: var(--surface);
+  position: relative;
+  z-index: 1;
+}
+
+/* 5 Column Grid Layout */
+.fgrid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr 1.1fr;
+  gap: 32px;
+  margin-bottom: 36px;
+}
+
+.fgrid h4 {
+  font-size: 0.88rem;
+  color: var(--blue);
+  margin-bottom: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.fgrid a {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--muted);
+  text-decoration: none;
+  margin-bottom: 10px;
+  transition: color 0.15s ease;
+}
+
+.fgrid a:hover {
+  color: var(--red);
+}
+
+/* Bottom Disclaimer & Copyright */
+.fbottom {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  border-top: 1px solid var(--line);
+  padding-top: 22px;
+  line-height: 1.6;
+}
+
+.fbottom-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 992px) {
+  .fgrid {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 28px;
+  }
+}
+
+@media (max-width: 640px) {
+  .fgrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .fgrid > div:first-child {
+    grid-column: 1 / -1; /* Mobile view-তে Brand info পুরো উইডথ জুড়ে থাকবে */
+    margin-bottom: 8px;
+  }
+}
+
+/* Back to Top Button */
+#top {
+  position: fixed;
+  right: 20px;
+  bottom: calc(20px + env(safe-area-inset-bottom, 0));
+  width: 46px;
+  height: 46px;
+  border: none;
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(224, 32, 45, 0.35);
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: all 0.3s;
+  z-index: 60;
+}
+
+#top.show {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+#top:hover {
+  background: var(--red-dark);
+  transform: translateY(-3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+  .reveal, .qt {
+    opacity: 1;
+    transform: none;
+  }
+  #glow {
+    display: none;
+  }
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<header id="hd">
+<nav class="wrap" aria-label="Main navigation">
+    <a href="home.html" class="brand" title="IELTS Mockpoint – Free IELTS Mock Test"><img src="Brandlogo.png" alt="IELTS Mockpoint – free IELTS mock test and reading practice" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class="txt"><i></i>IELTS Mockpoint</span></a>
+    <div class="nav-links"><a href="mocks.html">Full Tests</a><a href="cambridge-listening.html">Listening</a><a href="cambridge-reading.html">Reading</a><a href="cambridge-writing.html">Writing</a><a href="speaking.html">Speaking</a><a href="#qtypes">Question Types</a><a href="/blog.html" class="cur">Blog</a></div>
+    <div class="nav-actions"><a href="login.html" class="btn btn-outline">Sign in</a><a href="register.html" class="btn btn-red">Start free</a></div>
+    <button class="menu-btn" id="openMenu" aria-label="Open menu">☰</button>
+  </nav>
+</header>
+<div class="overlay" id="ov"></div>
+<aside class="sidebar" id="sb" aria-hidden="true">
+  <div class="sb-head"><a href="home.html" class="brand"><img src="Brandlogo.png" alt="IELTS Mockpoint" style="height:38px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class="txt"><i></i>IELTS Mockpoint</span></a><button class="sb-close" id="closeMenu" aria-label="Close menu">×</button></div>
+  <nav class="sb-links"><a href="mocks.html">Full Tests</a><a href="cambridge-listening.html">Listening</a><a href="cambridge-reading.html">Reading</a><a href="cambridge-writing.html">Writing</a><a href="speaking.html">Speaking</a><a href="/practice-hub">Practice by Question Type</a><a href="learn.html">Learn</a><a href="institutes.html">For Institutes</a></nav>
+  <div class="sb-actions"><a href="login.html" class="btn btn-outline">Sign in</a><a href="register.html" class="btn btn-red">Start free</a></div>
+</aside>
+
+<div class="notice">Free IELTS Reading mock test online — Cambridge IELTS 12–21 reading tests, full 60-minute mock or <b>passage by passage</b> practice with instant band score</div>
+
+<main id="main">
+<section class="hero">
+  <div class="shape a"></div><div class="shape b"></div>
+  <div class="wrap">
+    <div class="kicker reveal">Free IELTS mock test series</div>
+    <h1 class="reveal">Free IELTS <span>Reading Mock Test</span> – Cambridge 12–21</h1>
+    <p class="lead reveal">Take a free IELTS reading mock test online with genuine Cambridge papers. Practise the IELTS reading test with a live 60-minute timer, passage-wise modes and an instant band score. No guesswork, just real exam practice.</p>
+
+    <div class="doc-scene reveal" aria-hidden="true">
+      <div class="doc">
+        <div class="doc-top"><span class="doc-title">READING PASSAGE 1</span><span class="doc-dots"><i></i><i></i><i></i></span></div>
+        <div class="ln w95"></div>
+        <div class="ln hl w90"></div>
+        <div class="ln w75"></div>
+        <div class="ln hl d2 w95"></div>
+        <div class="ln w60"></div>
+        <div class="ln hl d3 w80"></div>
+        <div class="ln w90"></div>
+        <div class="doc-foot"><span>60:00</span><div class="track"><i></i></div><span>Q 1–13</span></div>
+      </div>
+      <span class="tag t">TRUE</span>
+      <span class="tag f">FALSE</span>
+      <span class="tag n">NOT GIVEN</span>
+    </div>
+
+    <div class="stats reveal">
+      <div><strong id="stTotal" data-to="0">0</strong><span>Free reading mock tests</span></div>
+      <div><strong data-to="40" data-suffix=" Qs">0</strong><span>Per full mock</span></div>
+      <div><strong data-to="3" data-suffix=" Passages">0</strong><span>Passage-wise practice</span></div>
+      <div><strong data-to="60" data-suffix=" Min">0</strong><span>Live exam timer</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <h2 class="reveal" style="text-align:center;font-size:clamp(1.6rem,2.8vw,2.1rem);margin-top:44px;">Cambridge IELTS Reading Tests – Free Online Mock Practice</h2>
+  <p class="reveal" style="text-align:center;color:var(--muted);max-width:64ch;margin:10px auto 0;font-size:.98rem;">Choose any book from Cambridge IELTS 12 to 21 and start your free IELTS reading mock test. Hit <strong style="color:var(--navy)">Take Test</strong> for the full exam or open <strong style="color:var(--navy)">Practice</strong> to work on one passage at a time.</p>
+
+  <div class="tabs" role="tablist" id="tabs"></div>
+
+  <div class="toolbar">
+    <label class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="q" type="search" placeholder="Search e.g. 16 test 3" aria-label="Search IELTS reading mock tests" autocomplete="off">
+    </label>
+    <div class="seg" id="sort" role="group" aria-label="Sort order">
+      <button class="on" data-sort="new">Newest first</button>
+      <button data-sort="old">Oldest first</button>
+    </div>
+  </div>
+  <div class="resultcount" id="rc"></div>
+
+  <div class="grid" id="grid"></div>
+</div>
+
+<section class="features">
+  <div class="wrap">
+    <h2 class="reveal">Everything you need for a free IELTS reading mock test</h2>
+    <p class="sub reveal">Built to feel like the real computer-delivered IELTS exam, so test day feels familiar.</p>
+    <div class="fcards">
+      <div class="fcard reveal"><div class="ico">⏱</div><h3>Real 60-minute timer</h3><p>Train your pacing across all three IELTS reading passages with an exam-style countdown.</p></div>
+      <div class="fcard reveal"><div class="ico">🖍</div><h3>Highlight &amp; notes</h3><p>Mark keywords in the passage and jot notes, just like the official on-screen IELTS reading test.</p></div>
+      <div class="fcard reveal"><div class="ico">🎯</div><h3>Passage-wise practice</h3><p>Focus on one reading passage at a time to fix weak question types faster.</p></div>
+      <div class="fcard reveal"><div class="ico">📊</div><h3>Instant band score</h3><p>Get your IELTS reading answers checked immediately and see exactly what you got right or wrong.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="seo">
+  <div class="wrap seo-grid">
+    <article class="reveal">
+      <h2>Free IELTS Reading Mock Test with Authentic Cambridge Papers</h2>
+      <p>Working through past Cambridge papers is one of the most reliable ways to raise your IELTS Reading band. <strong>IELTS Mockpoint</strong> gives you a <strong>free IELTS mock test</strong> experience for Reading, using Cambridge IELTS 12 to 21 in an interactive, computer-delivered format. Whether you are searching for an <strong>IELTS reading practice test with answers</strong>, an <strong>IELTS reading practice test</strong>, a <strong>free IELTS reading test online</strong> or a full <strong>IELTS reading mock test</strong>, every test on this page is free to attempt and scored the moment you finish.</p>
+      <p>With 10 Cambridge books and 4 tests in each, you get <strong>40 free IELTS reading mock tests</strong>. That is more than 120 passages and 1,600 questions of genuine exam-style practice, enough to build real speed and accuracy before your test date.</p>
+
+      <h3>What is the IELTS Reading test?</h3>
+      <p>The IELTS Reading test checks how well you can read for gist, detail, opinion and argument. It lasts <strong>60 minutes</strong> and contains <strong>40 questions</strong> across <strong>3 passages</strong>. In IELTS Academic, the passages come from books, journals, magazines and newspapers written for a general audience. Each correct answer earns one mark, and your raw score out of 40 is converted into a band from 0 to 9.</p>
+
+      <h3>Take the full IELTS Reading mock test</h3>
+      <p>Sit all 3 passages and 40 questions in one 60-minute session. You get a live timer, highlighting tools and an instant score, so you can see where you stand before the real exam. IELTS gives no extra time to transfer answers, so every minute counts. A full mock test is the best way to practise time management, because it shows you exactly which passage or question type is costing you time.</p>
+
+      <h3>Practise IELTS Reading passage by passage</h3>
+      <p>Short on time? Pick <strong>Passage 1</strong>, <strong>Passage 2</strong> or <strong>Passage 3</strong> and target your weak spots. Passage 1 is usually the most accessible, Passage 2 raises the difficulty and Passage 3 has the most complex argument and the hardest questions. Passage-wise practice is ideal for a 20-minute daily routine when you cannot sit a full reading test.</p>
+
+      <h3>Why practise with Cambridge IELTS reading tests?</h3>
+      <p>Cambridge IELTS books contain past-style papers that follow the same format, difficulty and question types as the real exam. That makes them the most trusted source of <strong>IELTS reading practice tests</strong>. Practising on Cambridge material helps you get used to the way questions paraphrase the text, the way answers are hidden in synonyms, and the pace the exam demands.</p>
+
+      <h3>Question types you will practise</h3>
+      <ul class="qt">
+        <li>Multiple choice and True / False / Not Given</li>
+        <li>Yes / No / Not Given and matching headings</li>
+        <li>Matching information and matching features</li>
+        <li>Sentence, summary, note and table completion</li>
+        <li>Short-answer questions</li>
+      </ul>
+      <p>Start with the newest book and work backwards, or search for a specific test such as "Cambridge 16 test 3". Track the tests you have attempted and repeat weak ones until your accuracy is steady.</p>
+
+      <h3>Who is this free IELTS mock test for?</h3>
+      <p>These free IELTS reading mock tests suit anyone preparing for IELTS Academic, from beginners aiming for Band 5.5 to advanced candidates chasing Band 8 or above. Students applying to universities, professionals preparing for migration and anyone retaking the exam will all benefit from regular timed practice. If you also need to work on other skills, try our <a href="/cambridge-listening.html">IELTS listening mock tests</a>, <a href="/cambridge-writing.html">writing practice</a> and <a href="/speaking.html">speaking practice</a>, or take a complete <a href="/mocks.html">full IELTS mock test</a>.</p>
+    </article>
+    <aside class="facts reveal">
+      <h3>IELTS Reading format</h3>
+      <ul>
+        <li>Passage 1 <b>Questions 1–13</b></li>
+        <li>Passage 2 <b>Questions 14–26</b></li>
+        <li>Passage 3 <b>Questions 27–40</b></li>
+        <li>Total questions <b>40</b></li>
+        <li>Total duration <b>60 min</b></li>
+        <li>Band scale <b>0 – 9</b></li>
+        <li>Suggested time per passage <b>20 min</b></li>
+        <li>Mock tests available <b>40</b></li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<section class="seo" id="qtypes">
+  <div class="wrap seo-grid">
+    <article class="reveal">
+      <h2>IELTS Reading Question Types and Tips for a Higher Band Score</h2>
+      <p>Knowing each question type is the fastest way to improve your IELTS reading score. Use the free mock tests above to apply these strategies under real exam conditions.</p>
+
+      <h3>True / False / Not Given and Yes / No / Not Given</h3>
+      <p>These questions test whether a statement matches the passage. <strong>True</strong> or <strong>Yes</strong> means the text agrees, <strong>False</strong> or <strong>No</strong> means it contradicts the statement, and <strong>Not Given</strong> means the text does not say. Never use your own knowledge. Underline the keyword, find the matching sentence and compare the exact meaning, including words such as "all", "only", "often" and "never".</p>
+
+      <h3>Matching headings</h3>
+      <p>Read the first and last sentence of each paragraph to find its main idea, then match it to the heading. Remember that one heading is usually extra, and a heading should cover the whole paragraph, not just one detail. Do these questions after you have skimmed the passage once.</p>
+
+      <h3>Multiple choice</h3>
+      <p>Read the question first, locate the relevant section, then eliminate options that are clearly wrong. Distractors often repeat words from the text but change the meaning, so check the full idea instead of matching single words.</p>
+
+      <h3>Sentence, summary, note and table completion</h3>
+      <p>Check the word limit carefully, for example "NO MORE THAN TWO WORDS", and write words exactly as they appear in the passage. Decide the grammar needed in the gap (noun, verb, adjective) before you search for the answer.</p>
+
+      <h3>Matching information and matching features</h3>
+      <p>For matching information, you must find which paragraph contains a given detail. Answers can appear in any order and a paragraph may be used more than once. For matching features, scan the passage for names and then read around them for the opinion or fact required.</p>
+
+      <h3>Short-answer questions</h3>
+      <p>Answer with words taken directly from the text, and follow the word limit. These questions follow the order of the passage, which makes them quick if you stay organised.</p>
+
+      <h3>Time management tips for the 60-minute test</h3>
+      <ul class="qt">
+        <li><strong>Aim for about 20 minutes per passage</strong>, and move on if one question is taking too long.</li>
+        <li><strong>Skim first, then scan.</strong> Get the structure of the passage, then hunt for keywords and paraphrases.</li>
+        <li><strong>Write answers as you go.</strong> There is no extra time to transfer answers at the end of the Reading test.</li>
+        <li><strong>Leave nothing blank.</strong> There is no negative marking, so always make an educated guess.</li>
+        <li><strong>Save Passage 3 for last</strong> in your practice routine, then build up to doing all three in one sitting.</li>
+        <li><strong>Keep an error log</strong> of the question types you miss, and repeat them in passage-wise practice.</li>
+      </ul>
+
+      <h3>How to use these free IELTS reading mock tests</h3>
+      <p>For the best results, take one full timed test each week and use passage-wise practice on other days. After each mock, review every wrong answer, find the exact sentence that proves the correct answer and note why you missed it. Over a few weeks, your accuracy and speed will rise together. When you feel ready, check your level with a <a href="/mocks.html">full-length IELTS mock test</a> and estimate your overall score with the <a href="/band-calculator.html">band score calculator</a>. For more strategies, visit our <a href="/learn.html">free IELTS lessons</a> and <a href="/blog.html">blog</a>.</p>
+    </article>
+    <aside class="facts reveal">
+      <h3>IELTS Academic Reading band score guide</h3>
+      <ul>
+        <li>Band 9 <b>39–40</b></li>
+        <li>Band 8.5 <b>37–38</b></li>
+        <li>Band 8 <b>35–36</b></li>
+        <li>Band 7.5 <b>33–34</b></li>
+        <li>Band 7 <b>30–32</b></li>
+        <li>Band 6.5 <b>27–29</b></li>
+        <li>Band 6 <b>23–26</b></li>
+        <li>Band 5.5 <b>19–22</b></li>
+        <li>Band 5 <b>15–18</b></li>
+      </ul>
+      <p>Approximate raw score out of 40. Conversion tables can vary slightly between test versions, and General Training uses a different scale.</p>
+    </aside>
+  </div>
+</section>
+
+<section class="seo">
+  <div class="wrap seo-grid">
+    <article class="reveal">
+      <h2>IELTS Reading Practice Test Guide: Format, Scoring and Study Plan</h2>
+      <p>If you are searching for an <strong>IELTS reading test</strong>, a <strong>reading mock test free</strong> or the best way to practise <strong>IELTS reading online</strong>, this guide explains how the test works and how to use each free mock on this page to raise your band score.</p>
+
+      <h3>IELTS Academic Reading vs General Training Reading</h3>
+      <p>Both versions have 40 questions in 60 minutes and use the same band scale. <strong>IELTS Academic Reading</strong> has three long, analytical texts taken from books, journals, magazines and newspapers. <strong>IELTS General Training Reading</strong> uses shorter everyday texts such as notices, advertisements and work-related documents in the first sections, followed by a longer text. The Cambridge IELTS Academic reading tests on this page are ideal for Academic candidates, and the skimming, scanning and paraphrase skills you build also help General Training candidates.</p>
+
+      <h3>How IELTS Reading is scored</h3>
+      <p>Each correct answer is worth one mark, with no negative marking, so always answer every question. Spelling must be correct, and both UK and US spellings are accepted. Your raw score out of 40 is converted into a band from 0 to 9, and your instant result after each mock test shows exactly which answers were right or wrong so you can study your mistakes.</p>
+
+      <h3>Reading skills tested in the IELTS Reading test</h3>
+      <ul class="qt">
+        <li><strong>Skimming:</strong> getting the main idea and structure of a passage quickly.</li>
+        <li><strong>Scanning:</strong> finding names, dates, numbers and keywords without reading every word.</li>
+        <li><strong>Paraphrase recognition:</strong> matching a question to a sentence that uses different words with the same meaning.</li>
+        <li><strong>Inference:</strong> understanding the writer's opinion, purpose and attitude.</li>
+        <li><strong>Detailed reading:</strong> checking exact meaning for True / False / Not Given and multiple choice questions.</li>
+      </ul>
+
+      <h3>Common mistakes in the IELTS reading test</h3>
+      <ul class="qt">
+        <li>Spending too long on one hard question and running out of time on Passage 3.</li>
+        <li>Using outside knowledge instead of the information in the passage.</li>
+        <li>Confusing False with Not Given in True / False / Not Given questions.</li>
+        <li>Ignoring the word limit in completion questions.</li>
+        <li>Copying the wrong form of a word, or misspelling an answer taken from the text.</li>
+        <li>Matching a heading to one detail instead of the main idea of the paragraph.</li>
+      </ul>
+
+      <h3>A simple 4-week IELTS Reading practice plan</h3>
+      <ul class="qt">
+        <li><strong>Week 1:</strong> take one full timed test to find your baseline, then study every mistake and list your weak question types.</li>
+        <li><strong>Week 2:</strong> use passage-wise practice daily, focusing on the two question types that cost you the most marks.</li>
+        <li><strong>Week 3:</strong> sit two full mock tests, aiming for 20 minutes per passage and finishing with time to check answers.</li>
+        <li><strong>Week 4:</strong> repeat weak tests, work on vocabulary and synonyms, and take a final full mock in exam conditions.</li>
+      </ul>
+
+      <h3>Practise the newest Cambridge IELTS reading tests</h3>
+      <p>The collection now runs from Cambridge IELTS 12 to Cambridge IELTS 21, so you can practise <strong>Cambridge IELTS 20 reading</strong> and <strong>Cambridge IELTS 21 reading</strong> alongside older books. Newer books are a great choice for final-stage practice, while older books are perfect for building your foundation. Pair your reading mock tests with <a href="/cambridge-listening.html">Cambridge IELTS listening practice</a> and a <a href="/mocks.html">full IELTS mock test</a> to prepare for every section.</p>
+    </article>
+    <aside class="facts reveal">
+      <h3>IELTS Reading quick facts</h3>
+      <ul>
+        <li>Negative marking <b>None</b></li>
+        <li>Answer transfer time <b>None</b></li>
+        <li>Spelling accepted <b>UK or US</b></li>
+        <li>Academic texts <b>3 long passages</b></li>
+        <li>Marks per question <b>1</b></li>
+        <li>Cambridge books <b>12 – 21</b></li>
+        <li>Full reading mocks <b>40</b></li>
+        <li>Practice mode <b>Per passage</b></li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<section class="seo">
+  <div class="wrap">
+    <article class="reveal">
+      <h2>All Free Cambridge IELTS Reading Mock Tests (12–21)</h2>
+      <p>Jump straight to any free IELTS reading test below. Each link opens the full 60-minute mock with a timer and instant band score, and you can add <code>&amp;part=1</code>, <code>2</code> or <code>3</code> through the Practice button on the cards above for passage-wise practice.</p>
+      <ul class="qt">
+        <li><strong>Cambridge IELTS 21 Reading:</strong> <a href="/cambridge-reading-test?book=21&amp;test=1">Test 1</a> · <a href="/cambridge-reading-test?book=21&amp;test=2">Test 2</a> · <a href="/cambridge-reading-test?book=21&amp;test=3">Test 3</a> · <a href="/cambridge-reading-test?book=21&amp;test=4">Test 4</a></li>
+        <li><strong>Cambridge IELTS 20 Reading:</strong> <a href="/cambridge-reading-test?book=20&amp;test=1">Test 1</a> · <a href="/cambridge-reading-test?book=20&amp;test=2">Test 2</a> · <a href="/cambridge-reading-test?book=20&amp;test=3">Test 3</a> · <a href="/cambridge-reading-test?book=20&amp;test=4">Test 4</a></li>
+        <li><strong>Cambridge IELTS 19 Reading:</strong> <a href="/cambridge-reading-test?book=19&amp;test=1">Test 1</a> · <a href="/cambridge-reading-test?book=19&amp;test=2">Test 2</a> · <a href="/cambridge-reading-test?book=19&amp;test=3">Test 3</a> · <a href="/cambridge-reading-test?book=19&amp;test=4">Test 4</a></li>
+        <li><strong>Cambridge IELTS 18 Reading:</strong> <a href="/cambridge-reading-test?book=18&amp;test=1">Test 1</a> · <a href="/cambridge-reading-test?book=18&amp;test=2">Test 2</a> · <a href="/cambridge-reading-test?book=18&amp;test=3">Test 3</a> · <a href="/cambridge-reading-test?book=18&amp;test=4">Test 4</a></li>
+        <li><strong>Cambridge IELTS 17 Reading:</strong> <a href="/cambridge-reading-test?book=17&amp;test=1">Test 1</a> · <a href="/cambridge-reading-test?book=17&amp;test=2">Test 2</a> · <a href="/cambridge-reading-test?book=17&amp;test=3">Test 3</a> · <a href="/cambridge-reading-test?book=17&amp;test=4">Test 4</a></li>
+        <li><strong>Cambridge IELTS 16 Reading:</strong> <a href="/cambridge-reading-test?book=16&amp;test=1">Test 1</a> · <a href="/cambridge-reading-test?book=16&amp;test=2">Test 2</a> · <a href="/cambridge-reading-test?book=16&amp;test=3">Test 3</a> · <a href="/cambridge-reading-test?book=16&amp;test=4">Test 4</a></li>
+        <li><strong>Cambridge IELTS 15 Reading:</strong> <a href="/cambridge-reading-test?book=15&amp;test=1">Test 1</a> · <a href="/cambridge-reading-test?book=15&amp;test=2">Test 2</a> · <a href="/cambridge-reading-test?book=15&amp;test=3">Test 3</a> · <a href="/cambridge-reading-test?book=15&amp;test=4">Test 4</a></li>
+        <li><strong>Cambridge IELTS 14 Reading:</strong> <a href="/cambridge-reading-test?book=14&amp;test=1">Test 1</a> · <a href="/cambridge-reading-test?book=14&amp;test=2">Test 2</a> · <a href="/cambridge-reading-test?book=14&amp;test=3">Test 3</a> · <a href="/cambridge-reading-test?book=14&amp;test=4">Test 4</a></li>
+        <li><strong>Cambridge IELTS 13 Reading:</strong> <a href="/cambridge-reading-test?book=13&amp;test=1">Test 1</a> · <a href="/cambridge-reading-test?book=13&amp;test=2">Test 2</a> · <a href="/cambridge-reading-test?book=13&amp;test=3">Test 3</a> · <a href="/cambridge-reading-test?book=13&amp;test=4">Test 4</a></li>
+        <li><strong>Cambridge IELTS 12 Reading:</strong> <a href="/cambridge-reading-test?book=12&amp;test=1">Test 1</a> · <a href="/cambridge-reading-test?book=12&amp;test=2">Test 2</a> · <a href="/cambridge-reading-test?book=12&amp;test=3">Test 3</a> · <a href="/cambridge-reading-test?book=12&amp;test=4">Test 4</a></li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section class="faq">
+  <div class="wrap">
+    <h2 class="reveal">Frequently asked questions about the free IELTS Reading mock test</h2>
+    <p class="sub reveal">Quick answers about our free IELTS reading mock tests and Cambridge IELTS reading practice.</p>
+    <div class="faq-list">
+      <details class="reveal"><summary>Is this IELTS Reading mock test really free?</summary><p>Yes. You can practise Cambridge IELTS Reading tests online on IELTS Mockpoint for free and get your score straight after you finish.</p></details>
+      <details class="reveal"><summary>How long is the IELTS Reading test?</summary><p>The IELTS Reading test lasts 60 minutes and has 40 questions across 3 passages. There is no extra time to transfer answers, so managing your time is important.</p></details>
+      <details class="reveal"><summary>Can I practise one passage at a time?</summary><p>Yes. Every test has a Practice mode where you choose Passage 1, Passage 2 or Passage 3 and work on your weak areas without sitting the full test.</p></details>
+      <details class="reveal"><summary>Which Cambridge IELTS books are available?</summary><p>Cambridge IELTS 12 to 21 are available, each with 4 full reading tests, which gives you 40 free IELTS reading mock tests in total.</p></details>
+      <details class="reveal"><summary>How is my IELTS Reading band score calculated?</summary><p>Each correct answer earns one mark out of 40. Your raw score is then converted to a band from 0 to 9. The conversion differs slightly between Academic and General Training.</p></details>
+      <details class="reveal"><summary>What question types appear in IELTS Reading?</summary><p>Common types include multiple choice, True/False/Not Given, Yes/No/Not Given, matching headings, matching information, sentence completion, summary completion and short answer questions.</p></details>
+      <details class="reveal"><summary>How many correct answers do I need for Band 6, 7 or 8 in IELTS Academic Reading?</summary><p>As a rough guide for IELTS Academic Reading, about 23 out of 40 gives Band 6, about 30 out of 40 gives Band 7 and about 35 out of 40 gives Band 8. Conversion tables can vary slightly between test versions.</p></details>
+      <details class="reveal"><summary>What is the difference between IELTS Academic and General Training Reading?</summary><p>Both versions have 40 questions in 60 minutes. Academic Reading uses three long texts from books, journals and magazines. General Training Reading uses shorter everyday texts in the early sections and a longer text in the final section, and its band score conversion is stricter.</p></details>
+      <details class="reveal"><summary>How often should I take an IELTS reading mock test?</summary><p>Most learners improve fastest by taking one full timed mock test per week and doing passage-wise practice on other days. Always review every wrong answer before you move to the next test.</p></details>
+      <details class="reveal"><summary>How can I improve my IELTS Reading score quickly?</summary><p>Practise under real timing, learn the rules of each question type, skim for keywords and paraphrases instead of reading every word, and keep an error log. Repeating weak question types in passage-wise practice usually gives the quickest gains.</p></details>
+      <details class="reveal"><summary>Is this the same as the real computer-delivered IELTS Reading test?</summary><p>The mock tests are built to feel like the on-screen exam, with a countdown timer, highlighting and note-taking tools, and a split screen for passage and questions, so test day feels familiar.</p></details>
+      <details class="reveal"><summary>What is a good IELTS Reading score?</summary><p>A good score depends on your target. Many universities ask for an overall Band 6.5 or 7 with no section below 6.0 or 6.5, while some migration pathways ask for higher. Always check the exact requirement of your institution or authority.</p></details>
+      <details class="reveal"><summary>Are Cambridge IELTS 20 and 21 reading tests available?</summary><p>Yes. Cambridge IELTS 12 to 21 are available, each with 4 full reading tests, so you can practise the newest Cambridge IELTS reading tests together with older books.</p></details>
+      <details class="reveal"><summary>How many questions are in each IELTS Reading passage?</summary><p>A full test has 40 questions. Passages usually carry about 13 or 14 questions each. On this platform the layout is Passage 1 with questions 1 to 13, Passage 2 with questions 14 to 26 and Passage 3 with questions 27 to 40.</p></details>
+      <details class="reveal"><summary>Is there negative marking in IELTS Reading?</summary><p>No. Wrong answers do not lose marks, so you should never leave a question blank. Make an educated guess if you are unsure.</p></details>
+      <details class="reveal"><summary>Should I read the passage or the questions first?</summary><p>Many candidates skim the passage for structure, then read the questions and scan for keywords. Others read the questions first. Try both methods in mock tests and keep the one that gives you the best accuracy within 20 minutes per passage.</p></details>
+      <details class="reveal"><summary>What happens if I run out of time in IELTS Reading?</summary><p>The test stops after 60 minutes and unanswered questions score zero. Practise the 20-minute-per-passage rhythm, skip time-consuming questions and return to them later, and guess the remaining answers in the last minute.</p></details>
+      <details class="reveal"><summary>Can a mock test predict my real IELTS Reading band score?</summary><p>A mock test gives a useful estimate, but results vary with passage difficulty and your condition on the day. Take several full tests and look at your average score rather than a single result.</p></details>
+      <details class="reveal"><summary>Does spelling matter in IELTS Reading answers?</summary><p>Yes. Spelling must be correct to earn a mark. Both UK and US spellings are accepted, and you can write answers in capital or lower-case letters.</p></details>
+      <details class="reveal"><summary>How long should I prepare for IELTS Reading?</summary><p>It depends on your starting level and target band. Many learners see steady progress with 4 to 8 weeks of regular practice, combining full timed tests, passage-wise practice and careful review of every mistake.</p></details>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <a href="/" class="brand" style="margin-bottom:12px">
+          <img src="/Brandlogo.png" alt="IELTS Mockpoint" style="height:40px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <span class="txt"><i></i>IELTS Mockpoint</span>
+        </a>
+        <p style="color:var(--muted);font-size:.9rem;max-width:32ch">
+          Free, examiner-graded IELTS practice — authentic mock tests, band score evaluation, and resources.
+        </p>
+      </div>
+      <div>
+        <h4>Practice</h4>
+        <a href="/mocks.html">Full Tests</a>
+        <a href="/cambridge-listening.html">Listening</a>
+        <a href="/cambridge-reading.html">Reading</a>
+        <a href="/cambridge-writing.html">Writing</a>
+        <a href="/speaking.html">Speaking</a>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <a href="/blog.html">Blog & Tips</a>
+        <a href="/learn.html">Free lessons</a>
+        <a href="/band-calculator.html">Band score calculator</a>
+        <a href="/writing-samples.html">Writing samples</a>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <a href="/about.html">About Us</a>
+        <a href="/contact.html">Contact Us</a>
+        <a href="/institutes.html">For institutes</a>
+      </div>
+      <div>
+        <h4>Legal & Policy</h4>
+        <a href="/privacy-policy.html">Privacy Policy</a>
+        <a href="/terms-of-service.html">Terms of Service</a>
+        <a href="/disclaimer.html">Disclaimer</a>
+        <a href="/cookie-policy.html">Cookie Policy</a>
+      </div>
+    </div>
+    <div class="fbottom" style="display:flex; flex-direction:column; gap:8px; margin-top:24px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.08); font-size:0.8rem; color:var(--muted);">
+      <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+        <span>© 2026 IELTS Mockpoint. All rights reserved.</span>
+        <span>Trusted IELTS Preparation & Mock Platform.</span>
+      </div>
+      <span>
+        Disclaimer: IELTS® is a registered trademark of the University of Cambridge, the British Council, and IDP Education Australia. IELTS Mockpoint is an independent preparation platform and is not affiliated, approved, or endorsed by these official bodies.
+      </span>
+    </div>
+  </div>
+</footer>
+
+<button id="toTop" aria-label="Back to top">↑</button>
+
+<script>
+/* ---------- header / menu / progress ---------- */
+const hd=document.getElementById('hd'),bar=document.getElementById('progress'),toTop=document.getElementById('toTop');
+addEventListener('scroll',()=>{
+  hd.classList.toggle('scrolled',scrollY>10);
+  const h=document.documentElement.scrollHeight-innerHeight;
+  bar.style.width=(h>0?scrollY/h*100:0)+'%';
+  toTop.classList.toggle('show',scrollY>600);
+},{passive:true});
+toTop.onclick=()=>scrollTo({top:0,behavior:'smooth'});
+const sb=document.getElementById('sb'),ov=document.getElementById('ov');
+function setMenu(o){sb.classList.toggle('open',o);ov.classList.toggle('open',o);sb.setAttribute('aria-hidden',!o);document.body.style.overflow=o?'hidden':'';}
+document.getElementById('openMenu').onclick=()=>setMenu(true);
+document.getElementById('closeMenu').onclick=()=>setMenu(false);
+ov.onclick=()=>setMenu(false);
+sb.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setMenu(false)));
+
+/* ---------- reveal ---------- */
+const rio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');rio.unobserve(e.target);}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(i%4)*70+'ms';rio.observe(el);});
+
+/* ---------- ripple on buttons ---------- */
+document.addEventListener('click',e=>{
+  const b=e.target.closest('.btn');if(!b)return;
+  const r=b.getBoundingClientRect(),s=Math.max(r.width,r.height)/3,d=document.createElement('span');
+  d.className='ripple';d.style.cssText=`width:${s}px;height:${s}px;left:${e.clientX-r.left-s/2}px;top:${e.clientY-r.top-s/2}px`;
+  b.appendChild(d);setTimeout(()=>d.remove(),600);
+});
+
+/* ---------- data setup ---------- */
+let cambridgeTests=[];
+for(let book=12;book<=21;book++) {
+  for(let t=1;t<=4;t++) {
+    cambridgeTests.push({book, testNo:t, title:`Cambridge ${book} Reading Test ${t}`, questions:40, status:"Active"});
+  }
+}
+
+let books=[...new Set(cambridgeTests.map(t=>t.book))].sort((a,b)=>b-a);
+
+/* ---------- state ---------- */
+let filter='ALL',query='',order='new';
+const grid=document.getElementById('grid'),tabsEl=document.getElementById('tabs'),rc=document.getElementById('rc');
+const done=(()=>{try{return JSON.parse(localStorage.getItem('cr_done')||'{}');}catch(e){return{};}})();
+const saveDone=()=>{try{localStorage.setItem('cr_done',JSON.stringify(done));}catch(e){}};
+
+function setupTabs() {
+  tabsEl.innerHTML=`<button class="tab active" data-filter="ALL">All Tests <em>${cambridgeTests.length}</em></button>`+
+    books.map(b=>`<button class="tab" data-filter="${b}">Cambridge ${b} <em>${cambridgeTests.filter(t=>t.book===b).length}</em></button>`).join('');
+
+  const stTotalEl = document.getElementById('stTotal');
+  if(stTotalEl) {
+    stTotalEl.dataset.to = cambridgeTests.length;
+    stTotalEl.textContent = cambridgeTests.length;
+  }
+}
+
+tabsEl.addEventListener('click',e=>{
+  const b=e.target.closest('.tab');if(!b)return;
+  tabsEl.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');filter=b.dataset.filter;render();
+});
+
+document.getElementById('q').addEventListener('input',e=>{query=e.target.value.trim().toLowerCase();render();});
+document.getElementById('sort').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  document.querySelectorAll('#sort button').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');order=b.dataset.sort;render();
+});
+
+/* ---------- render ---------- */
+function matches(t){
+  if(filter!=='ALL'&&String(t.book)!==filter)return false;
+  if(!query)return true;
+  const hay=`cambridge ${t.book} test ${t.testNo} ${t.book} ${t.testNo} reading ielts`;
+  return query.split(/\s+/).every(w=>hay.includes(w));
+}
+
+function render(){
+  const list=cambridgeTests.filter(matches).sort((a,b)=>order==='new'?(b.book-a.book||a.testNo-b.testNo):(a.book-b.book||a.testNo-b.testNo));
+  grid.innerHTML='';
+  rc.textContent=list.length?`Showing ${list.length} of ${cambridgeTests.length} free IELTS reading mock tests`:'';
+  if(!list.length){grid.innerHTML=`<div class="empty"><strong>No tests found</strong>Try a different search, like "15" or "test 2", or pick All Tests.</div>`;return;}
+
+  list.forEach((t,i)=>{
+    const key=`${t.book}-${t.testNo}`;
+    const fullTestUrl = `/cambridge-reading-test?book=${t.book}&test=${t.testNo}`;
+    const id=`pop-${key}`;
+
+    const card=document.createElement('div');
+    card.className='card';card.style.animationDelay=Math.min(i*40,600)+'ms';
+    card.innerHTML=`
+      <span class="bignum">${String(t.testNo).padStart(2,'0')}</span>
+      <span class="pill">CAMBRIDGE ${t.book}</span>
+      <h3>${t.title}</h3>
+      <div class="chips"><span>⏱ 60 Min Timer</span><span>${t.questions} Questions</span><span>3 Passages</span>${done[key]?'<span class="done">✓ Attempted</span>':''}</div>
+      <div class="card-actions">
+        <a href="${fullTestUrl}" class="btn btn-red" data-key="${key}" title="Free IELTS Reading mock test – Cambridge ${t.book} Test ${t.testNo}" aria-label="Take free IELTS Reading mock test Cambridge ${t.book} Test ${t.testNo}">Take Test →</a>
+        <div class="practice-drop-wrap">
+          <button type="button" class="btn btn-outline" aria-haspopup="true" aria-expanded="false" aria-controls="${id}" aria-label="Practice Cambridge ${t.book} Reading Test ${t.testNo} passage by passage">Practice <span class="caret">▾</span></button>
+          <div class="part-popover" id="${id}" role="menu">
+            <a role="menuitem" href="${fullTestUrl}&part=1" data-key="${key}" title="IELTS Reading Passage 1 practice – Cambridge ${t.book} Test ${t.testNo}">Passage 1 <span>Q 1-13</span></a>
+            <a role="menuitem" href="${fullTestUrl}&part=2" data-key="${key}" title="IELTS Reading Passage 2 practice – Cambridge ${t.book} Test ${t.testNo}">Passage 2 <span>Q 14-26</span></a>
+            <a role="menuitem" href="${fullTestUrl}&part=3" data-key="${key}" title="IELTS Reading Passage 3 practice – Cambridge ${t.book} Test ${t.testNo}">Passage 3 <span>Q 27-40</span></a>
           </div>
         </div>
       </div>`;
