@@ -80,7 +80,7 @@
       <h4 class="mb-0 fw-bold"><i class="bi bi-pencil-square me-2"></i>Cambridge Writing Test Builder</h4>
       <small class="text-white-50">Upload & Manage Task 1 & Task 2 Questions</small>
     </div>
-    <a href="/cambridge/writing" class="btn btn-outline-light btn-sm fw-bold">Back to Writing Hub</a>
+    <a href="/cambridge-writing" class="btn btn-outline-light btn-sm fw-bold">Back to Writing Hub</a>
   </div>
 
   <div class="container" style="max-width: 900px;">
@@ -188,6 +188,28 @@
     document.getElementById("bookInput").addEventListener("input", updateTitleDefault);
     document.getElementById("testNoInput").addEventListener("input", updateTitleDefault);
 
+    // Normalize: builder format (task1/task2) OR old format (writing.questions[])
+    function normalizeTest(t) {
+      let task1 = t.task1 || null;
+      let task2 = t.task2 || null;
+
+      const qs = (t.writing && Array.isArray(t.writing.questions)) ? t.writing.questions : [];
+      if (!task1) {
+        const q1 = qs.find(q => parseInt(q.part) === 1);
+        if (q1) {
+          task1 = {
+            prompt: q1.question || "",
+            image: Array.isArray(q1.image) ? (q1.image[0] || "") : (q1.image || "")
+          };
+        }
+      }
+      if (!task2) {
+        const q2 = qs.find(q => parseInt(q.part) === 2);
+        if (q2) task2 = { prompt: q2.question || "" };
+      }
+      return { title: t.title || "", task1: task1 || {}, task2: task2 || {} };
+    }
+
     // Fetch existing test data from DB
     async function fetchExistingData() {
       const book = document.getElementById("bookInput").value;
@@ -199,12 +221,12 @@
         const data = await res.json();
 
         if (data.success && data.test) {
-          const t = data.test;
-          document.getElementById("titleInput").value = t.title || "";
-          document.getElementById("task1Prompt").value = t.task1?.prompt || "";
-          document.getElementById("task1Image").value = t.task1?.image || "";
-          previewImage(t.task1?.image || "");
-          document.getElementById("task2Prompt").value = t.task2?.prompt || "";
+          const t = normalizeTest(data.test);
+          document.getElementById("titleInput").value = t.title;
+          document.getElementById("task1Prompt").value = t.task1.prompt || "";
+          document.getElementById("task1Image").value = t.task1.image || "";
+          previewImage(t.task1.image || "");
+          document.getElementById("task2Prompt").value = t.task2.prompt || "";
 
           alertBox.className = "alert alert-success";
           alertBox.textContent = `Found existing data for Cambridge ${book} Test ${testNo}! Loaded into form.`;
@@ -281,6 +303,12 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
         });
+
+        const contentType = res.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          throw new Error(`Server returned non-JSON response (${res.status} ${res.statusText})`);
+        }
+
         const data = await res.json();
 
         if (data.success) {
@@ -291,8 +319,8 @@
           alert("Error: " + data.message);
         }
       } catch (err) {
-        statusText.textContent = "Network Error.";
-        alert("Network Error: " + err.message);
+        statusText.textContent = "Error: " + err.message;
+        alert("API Error: " + err.message);
       }
     }
 

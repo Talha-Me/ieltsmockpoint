@@ -351,121 +351,99 @@ async function submitTest() {
   showDynamicAIResultModal(submissionPayload);
 }
 
-// 10. AI Evaluation Modal (Comprehensive Prompts + Return to Practice)
+// ==========================================
+// 10. AI Evaluation Modal (AUTO EVALUATION FOR BOTH SINGLE & FULL MODES)
+// ==========================================
 function showDynamicAIResultModal(data) {
   const existingModal = document.getElementById("instant-result-modal");
   if (existingModal) existingModal.remove();
 
-  const task1Text = data["part-1"] || "No submission provided for Task 1.";
-  const task2Text = data["part-2"] || "No submission provided for Task 2.";
+  const task1Text = data["part-1"] ? data["part-1"].trim() : "";
+  const task2Text = data["part-2"] ? data["part-2"].trim() : "";
 
   const minutesSpent = Math.floor(elapsedSeconds / 60);
   const secondsSpent = elapsedSeconds % 60;
   const formattedTime = `${String(minutesSpent).padStart(2, "0")}:${String(secondsSpent).padStart(2, "0")}`;
+
+  // প্রশ্ন সংগ্রহ (যদি DOM বা অবজেক্টে থাকে)
+  let q1Text = "";
+  let q2Text = "";
+  try {
+    const p1El = document.getElementById("info-panel-1");
+    const p2El = document.getElementById("info-panel-2");
+    if (p1El) q1Text = p1El.innerText.trim();
+    if (p2El) q2Text = p2El.innerText.trim();
+  } catch (e) {}
 
   let promptContent = "";
   let reviewSectionHtml = "";
 
   // Scenario A: Only Task 1 Practice
   if (singleTaskMode === 1) {
-    promptContent = `You are a certified, official IELTS Writing Senior Examiner. Please thoroughly evaluate my IELTS Writing Task 1 response and provide an official assessment.
-
-Please provide:
-1. Overall Estimated Band Score (0 - 9)
-2. Criterion Breakdown:
-   - Task Achievement
-   - Coherence and Cohesion
-   - Lexical Resource
-   - Grammatical Range and Accuracy
-3. Specific Mistakes & Errors: Point out exact grammar, punctuation, sentence structure, and vocabulary errors that I made.
-4. Solutions & Corrections: Explain what is the exact solution/correction for each mistake and how I should rephrase those sentences.
-5. High-Scoring Band 8.5+ Model Answer: Rewrite a perfect version based on my submission.
-
----
-### MY TASK 1 WRITING SUBMISSION:
+    promptContent = `You are a certified IELTS Writing Examiner. Evaluate my Task 1 response:
+Topic: ${q1Text || "IELTS Writing Task 1"}
+Submission:
 ${task1Text}`;
 
     reviewSectionHtml = `
       <div style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:18px; margin-bottom:16px;">
         <strong style="color:var(--navy); font-size:14px; display:block; margin-bottom:8px;">Task 1 Response (${task1Text.split(/\s+/).filter(Boolean).length} words):</strong>
-        <textarea readonly style="width:100%; min-height:120px; padding:10px; font-size:13px; border-radius:8px; border:1px solid #cbd5e1; background:#f8fafc; color:#334155; line-height:1.5;">${task1Text}</textarea>
+        <textarea readonly style="width:100%; min-height:100px; padding:10px; font-size:13px; border-radius:8px; border:1px solid #cbd5e1; background:#f8fafc; color:#334155; line-height:1.5;">${task1Text || "(No submission)"}</textarea>
       </div>
     `;
   }
   // Scenario B: Only Task 2 Practice
   else if (singleTaskMode === 2) {
-    promptContent = `You are a certified, official IELTS Writing Senior Examiner. Please thoroughly evaluate my IELTS Writing Task 2 essay and provide an official assessment.
-
-Please provide:
-1. Overall Estimated Band Score (0 - 9)
-2. Criterion Breakdown:
-   - Task Response
-   - Coherence and Cohesion
-   - Lexical Resource
-   - Grammatical Range and Accuracy
-3. Specific Mistakes & Errors: Point out exact grammar, vocabulary, idea progression, and linking errors that I made.
-4. Solutions & Corrections: Explain what is the exact solution/correction for each mistake and how to fix them for a higher band.
-5. High-Scoring Band 8.5+ Model Essay: Provide an enhanced Band 8.5+ model essay based on my arguments and topic.
-
----
-### MY TASK 2 ESSAY SUBMISSION:
+    promptContent = `You are a certified IELTS Writing Examiner. Evaluate my Task 2 response:
+Topic: ${q2Text || "IELTS Writing Task 2"}
+Submission:
 ${task2Text}`;
 
     reviewSectionHtml = `
       <div style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:18px; margin-bottom:16px;">
         <strong style="color:var(--navy); font-size:14px; display:block; margin-bottom:8px;">Task 2 Response (${task2Text.split(/\s+/).filter(Boolean).length} words):</strong>
-        <textarea readonly style="width:100%; min-height:140px; padding:10px; font-size:13px; border-radius:8px; border:1px solid #cbd5e1; background:#f8fafc; color:#334155; line-height:1.5;">${task2Text}</textarea>
+        <textarea readonly style="width:100%; min-height:120px; padding:10px; font-size:13px; border-radius:8px; border:1px solid #cbd5e1; background:#f8fafc; color:#334155; line-height:1.5;">${task2Text || "(No submission)"}</textarea>
       </div>
     `;
   }
   // Scenario C: Full Test (Both Task 1 & Task 2)
   else {
-    promptContent = `You are a certified, official IELTS Writing Senior Examiner. Please thoroughly evaluate my complete IELTS Academic Writing test submission (Task 1 and Task 2) and provide an official assessment.
-
-Please provide:
-1. Overall Estimated Writing Band Score (0 - 9) with individual Task 1 and Task 2 scores.
-2. Criterion Breakdown for both tasks:
-   - Task Achievement / Task Response
-   - Coherence and Cohesion
-   - Lexical Resource
-   - Grammatical Range and Accuracy
-3. Mistakes & Errors Analysis: Explicitly highlight every grammatical, vocabulary, colocation, and structural mistake in both tasks.
-4. Solutions & Improvements: Give the exact corrections and solutions for each highlighted mistake.
-5. Enhanced Band 8.5+ Model Answers for both Task 1 and Task 2.
-
----
-### MY TASK 1 WRITING SUBMISSION:
+    promptContent = `You are a certified IELTS Writing Examiner. Evaluate both tasks:
+Task 1:
 ${task1Text}
-
----
-### MY TASK 2 ESSAY SUBMISSION:
+Task 2:
 ${task2Text}`;
 
     reviewSectionHtml = `
-      <div style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:18px; margin-bottom:14px;">
-        <strong style="color:var(--navy); font-size:14px; display:block; margin-bottom:8px;">Task 1 Response (${task1Text.split(/\s+/).filter(Boolean).length} words):</strong>
-        <textarea readonly style="width:100%; min-height:90px; padding:10px; font-size:13px; border-radius:8px; border:1px solid #cbd5e1; background:#f8fafc; color:#334155; line-height:1.5;">${task1Text}</textarea>
+      <div style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:16px; margin-bottom:12px;">
+        <strong style="color:var(--navy); font-size:13.5px; display:block; margin-bottom:6px;">Task 1 Response (${task1Text.split(/\s+/).filter(Boolean).length} words):</strong>
+        <textarea readonly style="width:100%; min-height:80px; padding:8px; font-size:13px; border-radius:8px; border:1px solid #cbd5e1; background:#f8fafc; color:#334155; line-height:1.5;">${task1Text || "(No submission)"}</textarea>
       </div>
-      <div style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:18px;">
-        <strong style="color:var(--navy); font-size:14px; display:block; margin-bottom:8px;">Task 2 Response (${task2Text.split(/\s+/).filter(Boolean).length} words):</strong>
-        <textarea readonly style="width:100%; min-height:110px; padding:10px; font-size:13px; border-radius:8px; border:1px solid #cbd5e1; background:#f8fafc; color:#334155; line-height:1.5;">${task2Text}</textarea>
+      <div style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:16px; margin-bottom:16px;">
+        <strong style="color:var(--navy); font-size:13.5px; display:block; margin-bottom:6px;">Task 2 Response (${task2Text.split(/\s+/).filter(Boolean).length} words):</strong>
+        <textarea readonly style="width:100%; min-height:100px; padding:8px; font-size:13px; border-radius:8px; border:1px solid #cbd5e1; background:#f8fafc; color:#334155; line-height:1.5;">${task2Text || "(No submission)"}</textarea>
       </div>
     `;
   }
 
   const modalHtml = `
     <div id="instant-result-modal" style="position:fixed; inset:0; background:rgba(11,43,82,0.85); backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center; z-index:999999; font-family:'Sora', -apple-system, sans-serif;">
-      <div style="background:#ffffff; border-radius:18px; max-width:820px; width:95%; max-height:92vh; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 25px 60px rgba(0,0,0,0.35); border:1px solid #e3e9f3;">
+      <div style="background:#ffffff; border-radius:18px; max-width:840px; width:95%; max-height:92vh; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 25px 60px rgba(0,0,0,0.35); border:1px solid #e3e9f3;">
         
         <!-- Header -->
-        <div style="background:var(--navy); color:white; padding:22px 28px; position:relative; box-shadow:inset 0 -3px 0 var(--red);">
+        <div style="background:var(--navy, #0b2b52); color:white; padding:20px 28px; position:relative; box-shadow:inset 0 -3px 0 var(--red, #e0202d);">
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
             <div>
               <h2 style="margin:0; font-size:20px; font-weight:700;">🎉 Test Completed! (${singleTaskMode ? 'Task ' + singleTaskMode + ' Practice' : 'Full Writing Test'})</h2>
-              <p style="margin:4px 0 0; opacity:0.85; font-size:13px;">Your submission is ready for AI band evaluation.</p>
+              <p style="margin:4px 0 0; opacity:0.85; font-size:13px;">Official IELTS Examiner AI Assessment</p>
             </div>
-            <div style="background:rgba(255,255,255,0.12); padding:6px 14px; border-radius:8px; font-size:13px; font-weight:600;">
-              ⏱️ Time Spent: <span style="color:#38bdf8;">${formattedTime}</span>
+            <div style="display:flex; gap:10px; align-items:center;">
+              <span id="ai-band-badge" style="background:var(--red, #e0202d); color:#fff; padding:6px 16px; border-radius:30px; font-weight:800; font-size:15px;">
+                Band: Calculating...
+              </span>
+              <div style="background:rgba(255,255,255,0.12); padding:6px 14px; border-radius:8px; font-size:13px; font-weight:600;">
+                ⏱️ Time: <span style="color:#38bdf8;">${formattedTime}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -473,47 +451,43 @@ ${task2Text}`;
         <!-- Body -->
         <div style="padding:22px 28px; overflow-y:auto; flex:1; background:#f8fafc;">
           
-          <div style="background:#eaf2fd; border:1px solid #cfe1fa; border-left:5px solid var(--blue); padding:14px 18px; border-radius:10px; margin-bottom:18px;">
-            <div style="font-weight:700; color:var(--navy); font-size:14.5px; margin-bottom:4px;">
-              💡 Get your Instant Band Score & Feedback:
-            </div>
-            <div style="color:#334155; font-size:13px; line-height:1.5;">
-              1. Click <strong>"Copy Evaluation Prompt"</strong> below.<br>
-              2. Open ChatGPT, Gemini, or Claude.<br>
-              3. Just paste and send! You will get your estimated Band Score, mistakes analysis, and model answer instantly without typing anything!
+          <!-- AI Assessment Results Box -->
+          <div id="ai-cambridge-results-container" style="margin-bottom:18px;">
+            <div style="background:#fff; border:1px solid #cbd5e1; border-left:5px solid var(--navy, #0b2b52); border-radius:12px; padding:20px; text-align:center; color:var(--navy, #0b2b52); font-weight:600; font-size:14px;">
+              ⏳ Evaluating your submission with IELTS Examiner AI... Please wait (2-3 seconds).
             </div>
           </div>
 
           <!-- Quick Open AI Evaluators -->
-          <div style="margin-bottom:18px;">
-            <div style="font-size:12.5px; font-weight:700; color:#475569; text-transform:uppercase; margin-bottom:8px;">
-              Quick Open AI:
+          <div style="margin-bottom:16px; background:#f1f5f9; padding:10px 14px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+            <div style="font-size:12px; font-weight:700; color:#475569; text-transform:uppercase;">
+              Alternative External AI:
             </div>
-            <div style="display:flex; gap:10px; flex-wrap:wrap;">
-              <a href="https://chatgpt.com" target="_blank" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background:#10a37f; color:#fff; padding:6px 14px; border-radius:6px; font-size:12.5px; font-weight:700;">
+            <div style="display:flex; gap:8px;">
+              <a href="https://chatgpt.com" target="_blank" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background:#10a37f; color:#fff; padding:5px 12px; border-radius:6px; font-size:12px; font-weight:700;">
                 <i class="bi bi-robot"></i> ChatGPT
               </a>
-              <a href="https://gemini.google.com" target="_blank" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background:#1a73e8; color:#fff; padding:6px 14px; border-radius:6px; font-size:12.5px; font-weight:700;">
+              <a href="https://gemini.google.com" target="_blank" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background:#1a73e8; color:#fff; padding:5px 12px; border-radius:6px; font-size:12px; font-weight:700;">
                 <i class="bi bi-stars"></i> Gemini
               </a>
-              <a href="https://claude.ai" target="_blank" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background:#cc785c; color:#fff; padding:6px 14px; border-radius:6px; font-size:12.5px; font-weight:700;">
+              <a href="https://claude.ai" target="_blank" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background:#cc785c; color:#fff; padding:5px 12px; border-radius:6px; font-size:12px; font-weight:700;">
                 <i class="bi bi-chat-left-dots"></i> Claude
               </a>
             </div>
           </div>
 
-          <!-- Review Box(es) -->
+          <!-- Student Written Text Review Box -->
           ${reviewSectionHtml}
 
         </div>
 
         <!-- Footer Actions -->
         <div style="padding:14px 28px; background:#ffffff; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-          <button id="copy-ai-btn" style="background:var(--red); color:#fff; border:none; padding:9px 20px; border-radius:8px; font-size:13.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
-            <i class="bi bi-clipboard-check"></i> Copy Evaluation Prompt
+          <button id="copy-ai-btn" style="background:#fff; color:var(--navy, #0b2b52); border:2px solid var(--navy, #0b2b52); padding:8px 18px; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+            <i class="bi bi-clipboard-check"></i> Copy Prompt
           </button>
           
-          <button id="finish-home-btn" style="background:#0f172a; color:#fff; border:none; padding:9px 18px; border-radius:8px; font-size:13.5px; font-weight:600; cursor:pointer;">
+          <button id="finish-home-btn" style="background:#0f172a; color:#fff; border:none; padding:10px 20px; border-radius:8px; font-size:13.5px; font-weight:600; cursor:pointer;">
             Return to Practice
           </button>
         </div>
@@ -524,19 +498,167 @@ ${task2Text}`;
 
   document.body.insertAdjacentHTML("beforeend", modalHtml);
 
+  // Helper function to render a task's 4-criteria card
+  function renderTaskCard(evalData, title, taskNo) {
+    const isT1 = taskNo === 1;
+    const crit1 = isT1 ? "Task Achievement" : "Task Response";
+    return `
+      <div style="background:#ffffff; border-radius:12px; border:1px solid #e2e8f0; border-top:4px solid var(--red, #e0202d); padding:16px; margin-bottom:14px; box-shadow:0 4px 10px rgba(0,0,0,0.04);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <h4 style="margin:0; color:var(--navy, #0b2b52); font-size:16px; font-weight:700;">${title}</h4>
+          <span style="background:var(--red, #e0202d); color:#fff; font-weight:800; font-size:14px; padding:3px 12px; border-radius:20px;">Band: ${evalData.overall_band}</span>
+        </div>
+        
+        <div style="font-size:13px; color:#334155; line-height:1.5; background:#f8fafc; padding:10px 12px; border-radius:6px; border-left:4px solid var(--navy, #0b2b52); margin-bottom:12px;">
+          <b>Feedback:</b> ${evalData.summary_feedback}
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:10px;">
+            <div style="display:flex; justify-content:space-between; font-weight:700; font-size:12.5px; color:var(--navy, #0b2b52);">
+              <span>${crit1}</span><span style="color:var(--red, #e0202d);">${evalData.task_response.score}</span>
+            </div>
+            <p style="margin:4px 0 0; font-size:12px; color:#64748b; line-height:1.4;">${evalData.task_response.comment}</p>
+          </div>
+
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:10px;">
+            <div style="display:flex; justify-content:space-between; font-weight:700; font-size:12.5px; color:var(--navy, #0b2b52);">
+              <span>Coherence & Cohesion</span><span style="color:var(--red, #e0202d);">${evalData.coherence_cohesion.score}</span>
+            </div>
+            <p style="margin:4px 0 0; font-size:12px; color:#64748b; line-height:1.4;">${evalData.coherence_cohesion.comment}</p>
+          </div>
+
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:10px;">
+            <div style="display:flex; justify-content:space-between; font-weight:700; font-size:12.5px; color:var(--navy, #0b2b52);">
+              <span>Lexical Resource</span><span style="color:var(--red, #e0202d);">${evalData.lexical_resource.score}</span>
+            </div>
+            <p style="margin:4px 0 0; font-size:12px; color:#64748b; line-height:1.4;">${evalData.lexical_resource.comment}</p>
+          </div>
+
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:10px;">
+            <div style="display:flex; justify-content:space-between; font-weight:700; font-size:12.5px; color:var(--navy, #0b2b52);">
+              <span>Grammar & Accuracy</span><span style="color:var(--red, #e0202d);">${evalData.grammar.score}</span>
+            </div>
+            <p style="margin:4px 0 0; font-size:12px; color:#64748b; line-height:1.4;">${evalData.grammar.comment}</p>
+          </div>
+        </div>
+
+        <div style="background:#fffafa; border:1px dashed var(--red, #e0202d); border-radius:6px; padding:10px 14px;">
+          <b style="color:var(--red, #e0202d); font-size:12.5px; display:block; margin-bottom:4px;">Priority Improvement Tips:</b>
+          <ul style="margin:0; padding-left:16px; font-size:12px; color:#334155; line-height:1.5;">
+            ${(evalData.key_improvements || []).map(tip => `<li>${tip}</li>`).join("")}
+          </ul>
+        </div>
+      </div>
+    `;
+  }
+
+  // AUTO-EVALUATION LOGIC
+  (async function executeAutoEvaluation() {
+    const badge = document.getElementById("ai-band-badge");
+    const container = document.getElementById("ai-cambridge-results-container");
+
+    try {
+      // ১. SINGLE TASK 1
+      if (singleTaskMode === 1) {
+        if (!task1Text || task1Text.length < 10) throw new Error("No answer submitted for Task 1.");
+        
+        let res = await fetch("/evaluate-essay", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ topic: q1Text || "IELTS Writing Task 1", essay: task1Text })
+        });
+        if (res.status === 404) {
+          res = await fetch("/api/evaluate-essay", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ topic: q1Text || "IELTS Writing Task 1", essay: task1Text })
+          });
+        }
+        const json = await res.json();
+        if (!json.success) throw new Error(json.message);
+
+        if (badge) badge.textContent = `Band: ${json.data.overall_band}`;
+        container.innerHTML = renderTaskCard(json.data, "Writing Task 1 Assessment", 1);
+      }
+      // ২. SINGLE TASK 2
+      else if (singleTaskMode === 2) {
+        if (!task2Text || task2Text.length < 10) throw new Error("No answer submitted for Task 2.");
+        
+        let res = await fetch("/evaluate-essay", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ topic: q2Text || "IELTS Writing Task 2", essay: task2Text })
+        });
+        if (res.status === 404) {
+          res = await fetch("/api/evaluate-essay", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ topic: q2Text || "IELTS Writing Task 2", essay: task2Text })
+          });
+        }
+        const json = await res.json();
+        if (!json.success) throw new Error(json.message);
+
+        if (badge) badge.textContent = `Band: ${json.data.overall_band}`;
+        container.innerHTML = renderTaskCard(json.data, "Writing Task 2 Assessment", 2);
+      }
+      // ৩. FULL TEST (BOTH TASKS)
+      else {
+        let res = await fetch("/evaluate-writing-all", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            task1: { question: q1Text || "IELTS Writing Task 1", essay: task1Text },
+            task2: { question: q2Text || "IELTS Writing Task 2", essay: task2Text }
+          })
+        });
+        if (res.status === 404) {
+          res = await fetch("/api/evaluate-writing-all", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              task1: { question: q1Text || "IELTS Writing Task 1", essay: task1Text },
+              task2: { question: q2Text || "IELTS Writing Task 2", essay: task2Text }
+            })
+          });
+        }
+        const json = await res.json();
+        if (!json.success) throw new Error(json.message);
+
+        const { final_band, task1, task2 } = json.data;
+        if (badge) badge.textContent = `Overall Band: ${final_band}`;
+
+        container.innerHTML = `
+          ${renderTaskCard(task1, "Task 1 Assessment", 1)}
+          ${renderTaskCard(task2, "Task 2 Assessment", 2)}
+        `;
+      }
+    } catch (err) {
+      console.error("Cambridge AI eval error:", err);
+      if (badge) badge.textContent = "Band: --";
+      container.innerHTML = `<div style="background:#fff; border:1px solid #fecaca; color:#b91c1c; padding:14px; border-radius:8px; font-size:13px; text-align:center;">Evaluation could not be completed (${err.message}). Please try again.</div>`;
+    }
+  })();
+
+  // Copy Prompt Button
   document.getElementById("copy-ai-btn").addEventListener("click", function () {
     navigator.clipboard.writeText(promptContent).then(() => {
       const orig = this.innerHTML;
-      this.innerHTML = `<i class="bi bi-check2"></i> Copied to Clipboard!`;
+      this.innerHTML = `<i class="bi bi-check2"></i> Copied!`;
       this.style.background = "#10b981";
+      this.style.color = "#fff";
+      this.style.borderColor = "#10b981";
       setTimeout(() => {
         this.innerHTML = orig;
-        this.style.background = "var(--red)";
+        this.style.background = "#fff";
+        this.style.color = "var(--navy, #0b2b52)";
+        this.style.borderColor = "var(--navy, #0b2b52)";
       }, 2000);
     });
   });
 
-  // Return to Practice Button Handler
+  // Return to Practice Button
   document.getElementById("finish-home-btn").addEventListener("click", () => {
     window.location.href = "/cambridge-writing.html";
   });

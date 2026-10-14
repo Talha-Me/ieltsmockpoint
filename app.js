@@ -1037,6 +1037,14 @@ app.use((req, res, next) => {
   app.get("/cambridge-listening-test", authRoutes.cambridge_listening_test);
   app.get("/cambridge-reading-test", authRoutes.cambridge_reading_test);
   app.get("/cambridge-writing-test", authRoutes.cambridge_writing_test);
+   app.get("/cambridge/writing/:book/:testNo", (req, res) => {
+    res.sendFile(
+      path.join(__dirname, "views", "cambridgetest", "cambridge-writing-test.html"),
+      (err) => {
+        if (err && !res.headersSent) res.status(err.status || 500).send(err.message);
+      }
+    );
+  });
 
   // ==========================================
   // PRACTICE BY QUESTION TYPE PAGES
@@ -1048,6 +1056,30 @@ app.use((req, res, next) => {
   // API and Admin Routes
   app.use("/api", apiRoutes);
   app.use("/admin_superAdmin", adminRoutes);
+  // ▼▼▼ NOTUN: writing test data API ▼▼▼
+  app.get("/api/cambridge-writing-test-data/:book/:testNo", async (req, res) => {
+    try {
+      const book = Number(req.params.book);
+      const testNo = Number(req.params.testNo);
+
+      const Model =
+        mongoose.models.CambridgeWriting ||
+        mongoose.model("CambridgeWriting", new mongoose.Schema({}, { strict: false }));
+      // collection name alada hole: mongoose.model("CambridgeWriting", schema, "apnar_collection_name")
+
+      const test = await Model.findOne({
+        $or: [{ book, testNo }, { bookNumber: book, testNumber: testNo }],
+      }).lean();
+
+      if (!test) {
+        return res.status(404).json({ success: false, message: "Test not found" });
+      }
+      res.json({ success: true, data: test });
+    } catch (err) {
+      console.error("Writing test data error:", err);
+      res.status(500).json({ success: false, message: err.message });
+    }
+  });
 
   // =========================================================================
   // 1. PRACTICE BY QUESTION TYPE SAVE POST APIS (WITH UPSERT & SCHEMA FLEXIBILITY)
@@ -1306,6 +1338,24 @@ app.post(["/api/save-cambridge-listening", "/admin/api/cambridge-listening/save"
   } catch (err) {
     console.error("--> Save Error:", err);
     return res.status(500).json({ success: false, message: err.message });
+  }
+});
+app.post('/api/cambridge-writing/save', async (req, res) => {
+  try {
+    const { book, testNo, title, task1, task2 } = req.body;
+
+    // Database Operation (MongoDB / MySQL)
+    // await WritingTest.updateOne({ book, testNo }, req.body, { upsert: true });
+
+    return res.status(200).json({ 
+      success: true, 
+      message: "Saved successfully!" 
+    });
+  } catch (err) {
+    return res.status(500).json({ 
+      success: false, 
+      message: err.message 
+    });
   }
 });
 
@@ -1806,7 +1856,15 @@ app.get('/sitemap.xml', async (req, res) => {
   }
 });
 
+// app.js
 
+// ১. এটি অবশ্যই রাউটের উপরে থাকতে হবে
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// ২. রাউট মাউন্ট
+const evaluateRoute = require("./routes/evaluate"); // ফাইল পাথ মিলিয়ে নিন
+app.use("/", evaluateRoute);
 
   // Other Modular Routes
   app.use("/admin_orgs", adminOrgsRoutes);
