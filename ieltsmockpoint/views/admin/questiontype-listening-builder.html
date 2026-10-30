@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IELTS Listening Question Builder</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body { background-color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding-bottom: 80px; }
+    .card { border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    .badge-qtype { font-size: 0.85rem; padding: 6px 12px; }
+    .form-label { font-weight: 600; color: #334155; }
+    .group-box { background: #ffffff; border: 2px solid #cbd5e1; border-radius: 10px; padding: 20px; margin-bottom: 24px; position: relative; }
+    .remove-btn { position: absolute; right: 16px; top: 16px; }
+    .field-hint { font-size: 0.8rem; color: #64748b; margin-top: 4px; }
+    .json-preview { max-height: 400px; overflow-y: auto; background: #0f172a; color: #38bdf8; font-family: monospace; font-size: 13px; }
+  </style>
+</head>
+<body>
+
+<div class="container py-5">
+  <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+    <div>
+      <h2 class="fw-bold mb-1">🎧 IELTS Listening Question Builder</h2>
+      <p class="text-muted mb-0">Build & directly save 7 types of listening practice questions to MongoDB</p>
+    </div>
+    <span class="badge bg-primary badge-qtype">Target: listening-practices</span>
+  </div>
+
+  <form id="builderForm">
+    <!-- Meta Info Card -->
+    <div class="card p-4 mb-4">
+      <h5 class="fw-bold text-primary mb-3">1. Test Metadata & Audio</h5>
+      <div class="row g-3">
+        <div class="col-md-3">
+          <label class="form-label">Practice Number</label>
+          <input type="text" class="form-control" id="pracNumber" placeholder="e.g. Practice-1" value="Practice-1" required />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Question Category Type (Hub Key)</label>
+          <select class="form-select" id="mainType" required>
+            <option value="Form-Completion">Form-Completion</option>
+            <option value="Note-Completion">Note-Completion</option>
+            <option value="Table-Completion">Table-Completion</option>
+            <option value="Sentence-Completion">Sentence-Completion</option>
+            <option value="Multiple-Choice">Multiple-Choice</option>
+            <option value="MCQ-Two-Choice">MCQ-Two-Choice</option>
+            <option value="Matching">Matching</option>
+            <option value="Map-Labelling">Map-Labelling</option>
+          </select>
+          <div class="field-hint">Must match your Practice Hub card's exact <code>t</code> key.</div>
+        </div>
+        <div class="col-md-5">
+          <label class="form-label">Audio File URL / Path</label>
+          <input type="text" class="form-control" id="audioUrl" placeholder="/audio/listening/test1-part1.mp3" required />
+          <div class="field-hint">Relative URL (e.g. <code>/audio/file.mp3</code>) or external link.</div>
+        </div>
+        <div class="col-md-12">
+          <label class="form-label">Section Title / Context</label>
+          <input type="text" class="form-control" id="sectionTitle" placeholder="e.g. Customer Order Enquiry / Campus Tour" value="Listening Practice Test" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Question Groups Container -->
+    <div class="card p-4 mb-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold text-primary mb-0">2. Question Groups</h5>
+        <button type="button" class="btn btn-outline-success btn-sm fw-bold" id="addGroupBtn">+ Add Question Group</button>
+      </div>
+
+      <div id="groupsContainer">
+        <!-- Dynamic Groups Render Here -->
+      </div>
+    </div>
+
+    <!-- Actions & Preview -->
+    <div class="d-flex gap-3 mb-4">
+      <button type="button" class="btn btn-dark fw-bold px-4" id="generateJsonBtn">🔍 Preview JSON Payload</button>
+      <button type="submit" class="btn btn-success fw-bold px-4" id="saveDbBtn">💾 Save Question to Database</button>
+    </div>
+
+    <div class="card p-3 d-none" id="previewCard">
+      <h6 class="fw-bold mb-2">Generated Payload Preview:</h6>
+      <pre class="json-preview p-3 rounded" id="jsonPreviewBox"></pre>
+    </div>
+  </form>
+</div>
+
+<script>
+let groupCounter = 0;
+
+// Question Type Form Templates
+const typeForms = {
+  "form-completion": () => `
+    <div class="mb-3">
+      <label class="form-label">Form Title</label>
+      <input type="text" class="form-control form-heading" placeholder="e.g. CAR RENTAL BOOKING FORM" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Form Fields & Sentences (one per line, use [blank] for gap)</label>
+      <textarea class="form-control form-lines" rows="4" placeholder="Customer Name: John [blank]
+Contact Number: [blank]
+Rental Duration: [blank] days"></textarea>
+      <div class="field-hint">Put <code>[blank]</code> where user needs to type.</div>
+    </div>
+  `,
+  "note-completion": () => `
+    <div class="mb-3">
+      <label class="form-label">Note Heading</label>
+      <input type="text" class="form-control note-heading" placeholder="e.g. FIELD TRIP ARRANGEMENTS" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Note Bullet Points (one per line, use [blank])</label>
+      <textarea class="form-control note-bullets" rows="4" placeholder="Depart at [blank] am from main gate
+Must bring sturdy [blank]
+Lunch provided: sandwich and [blank]"></textarea>
+    </div>
+  `,
+  "table-completion": () => `
+    <div class="mb-3">
+      <label class="form-label">Table Columns (comma-separated headers)</label>
+      <input type="text" class="form-control table-headers" placeholder="Event, Location, Ticket Price" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Table Rows (one line per row, cells separated by | and use [blank])</label>
+      <textarea class="form-control table-rows" rows="4" placeholder="Jazz Night | Town Hall | $[blank]
+Art Expo | [blank] Gallery | Free
+Food Festival | Central Park | $[blank]"></textarea>
+      <div class="field-hint">Format: <code>Column 1 | Column 2 | Column 3</code> with <code>[blank]</code> in missing cells.</div>
+    </div>
+  `,
+  "sentence-completion": () => `
+    <div class="mb-3">
+      <label class="form-label">Sentences (one per line, use [blank])</label>
+      <textarea class="form-control sentence-items" rows="4" placeholder="The museum was originally founded in [blank].
+Visitors must book tickets at least [blank] hours in advance."></textarea>
+    </div>
+  `,
+  "mcq-one-choice": () => `
+    <div class="mb-3">
+      <label class="form-label">Multiple Choice Questions (Format: Question | OptA, OptB, OptC)</label>
+      <textarea class="form-control mcq-items" rows="4" placeholder="What is the main topic of the speech? | Campus safety, Club activities, Exam rules
+Where can students get parking permits? | Library, Student union, Security office"></textarea>
+      <div class="field-hint">One line per MCQ: <code>Question text | Option 1, Option 2, Option 3</code></div>
+    </div>
+  `,
+  "mcq-two-choice": () => `
+    <div class="mb-3">
+      <label class="form-label">Questions & Options (Format: Question | OptA, OptB, OptC, OptD, OptE)</label>
+      <textarea class="form-control mcq-two-items" rows="4" placeholder="Which TWO skills are required? | solving problems, teamwork, communication, leadership, punctuality"></textarea>
+      <div class="field-hint">Format: <code>Question text | Option 1, Option 2, Option 3, Option 4, Option 5</code> (one question pair per line)</div>
+    </div>
+  `,
+  "matching": () => `
+    <div class="mb-3">
+      <label class="form-label">Options List (Options to choose from, e.g. A-E, one per line)</label>
+      <textarea class="form-control matching-options" rows="3" placeholder="A. Too expensive
+B. Difficult to reach
+C. Very popular"></textarea>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Items to Match (Statements/Places, one per line)</label>
+      <textarea class="form-control matching-items" rows="3" placeholder="North Library
+Sports Complex
+Cafeteria"></textarea>
+    </div>
+  `,
+  "map-labelling": () => `
+    <div class="mb-3">
+      <label class="form-label">Map / Diagram Image URL</label>
+      <input type="text" class="form-control map-image" placeholder="/images/listening/map-1.png" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Map Options / Letter Markers (comma-separated)</label>
+      <input type="text" class="form-control map-letters" placeholder="A, B, C, D, E, F" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Locations / Places to Label (one per line)</label>
+      <textarea class="form-control map-locations" rows="3" placeholder="Information Desk
+Ticket Counter
+Souvenir Shop"></textarea>
+    </div>
+  `
+};
+
+function addGroup() {
+  groupCounter++;
+  const box = document.createElement("div");
+  box.className = "group-box";
+  box.dataset.group = groupCounter;
+
+  box.innerHTML = `
+    <button type="button" class="btn btn-outline-danger btn-sm remove-btn">✕ Remove Group</button>
+    <div class="row g-3 mb-3">
+      <div class="col-md-6">
+        <label class="form-label">Question Sub-Type</label>
+        <select class="form-select group-type">
+          <option value="form-completion">Form Completion</option>
+          <option value="note-completion">Note Completion</option>
+          <option value="table-completion">Table Completion</option>
+          <option value="sentence-completion">Sentence Completion</option>
+          <option value="mcq-one-choice">Multiple Choice (Single Choice)</option>
+          <option value="mcq-two-choice">Multiple Choice (Two Choices)</option>
+          <option value="matching">Matching</option>
+          <option value="map-labelling">Map Labelling</option>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Question Numbers Range</label>
+        <input type="text" class="form-control group-range" placeholder="e.g. 1-5 or 1,2,3,4,5" required />
+        <div class="field-hint">Defines the question IDs (e.g. 1 to 5).</div>
+      </div>
+      <div class="col-md-12">
+        <label class="form-label">Instruction Text</label>
+        <input type="text" class="form-control group-instruction" value="Write ONE WORD AND/OR A NUMBER for each answer." required />
+      </div>
+    </div>
+
+    <!-- Dynamic Form Area -->
+    <div class="type-container mb-3 border-top pt-3">
+      ${typeForms["form-completion"]()}
+    </div>
+
+    <!-- Answers & Explanations -->
+    <div class="row g-3 border-top pt-3 bg-light p-3 rounded">
+      <div class="col-md-6">
+        <label class="form-label">Answers (One per line in ID order)</label>
+        <textarea class="form-control group-answers" rows="4" placeholder="Smith&#10;0171234567&#10;3" required></textarea>
+        <div class="field-hint">Slash <code>/</code> for alternate accepted answers: <code>Smith / Smyth</code></div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Answer Explanations (One per line in ID order)</label>
+        <textarea class="form-control group-explanations" rows="4" placeholder="The speaker spells S-M-I-T-H.&#10;He clearly mentions 0171234567.&#10;He asks for 3 days rental."></textarea>
+      </div>
+    </div>
+  `;
+
+  // Type change listener
+  const selectElem = box.querySelector(".group-type");
+  const typeContainer = box.querySelector(".type-container");
+  selectElem.addEventListener("change", (e) => {
+    typeContainer.innerHTML = typeForms[e.target.value] ? typeForms[e.target.value]() : "";
+  });
+
+  // Remove group
+  box.querySelector(".remove-btn").addEventListener("click", () => box.remove());
+
+  document.getElementById("groupsContainer").appendChild(box);
+}
+
+// Default 1 group add
+addGroup();
+document.getElementById("addGroupBtn").addEventListener("click", addGroup);
+
+// ID Parser helper: "1-5" -> [1, 2, 3, 4, 5]
+function parseIds(str) {
+  str = str.trim();
+  if (str.includes("-")) {
+    const parts = str.split("-").map(n => parseInt(n.trim(), 10));
+    const ids = [];
+    for (let i = parts[0]; i <= parts[1]; i++) ids.push(i);
+    return ids;
+  }
+  return str.split(",").map(n => parseInt(n.trim(), 10)).filter(Boolean);
+}
+
+// Build Payload
+function buildPayload() {
+  const pracNumber = document.getElementById("pracNumber").value.trim();
+  const mainType = document.getElementById("mainType").value.trim();
+  const audioUrl = document.getElementById("audioUrl").value.trim();
+  const sectionTitle = document.getElementById("sectionTitle").value.trim();
+
+  const questions = [];
+  const instructions = [];
+  const answers = {};
+  const answerExplanations = {};
+
+  const groupBoxes = document.querySelectorAll(".group-box");
+
+  groupBoxes.forEach((box, gIdx) => {
+    const gType = box.querySelector(".group-type").value;
+    const ids = parseIds(box.querySelector(".group-range").value);
+    const instr = box.querySelector(".group-instruction")?.value.trim() || "";
+
+    instructions.push({
+      group: gIdx + 1,
+      instruction: instr
+    });
+
+    const qObj = {
+      part: 1,
+      group: gIdx + 1,
+      type: gType,
+      id: ids,
+      heading: box.querySelector(".note-heading, .form-heading")?.value.trim() || ""
+    };
+
+    // 1 & 2. Note Completion & Form Completion
+    if (gType === "note-completion" || gType === "form-completion") {
+      const rawText = box.querySelector(".note-bullets, .form-lines")?.value || "";
+      const lines = rawText.split("\n").map(s => s.trim()).filter(Boolean);
+      qObj.paragraphs = [lines];
+      qObj.lines = lines;
+      qObj.bullets = lines;
+    } 
+
+    // 3. Table Completion
+    else if (gType === "table-completion") {
+      qObj.headers = (box.querySelector(".table-headers")?.value || "").split(",").map(s => s.trim()).filter(Boolean);
+      qObj.rows = (box.querySelector(".table-rows")?.value || "")
+        .split("\n")
+        .map(s => s.trim())
+        .filter(Boolean)
+        .map(row => row.split("|").map(c => c.trim()));
+    } 
+
+    // 4. Sentence Completion
+    else if (gType === "sentence-completion") {
+      const rawSentences = box.querySelector(".sentence-items")?.value.split("\n").map(s => s.trim()).filter(Boolean) || [];
+      qObj.sentences = rawSentences;
+      qObj.questions = rawSentences;
+    } 
+
+    // 5. Multiple Choice (Single Choice)
+    else if (gType === "mcq-one-choice") {
+      qObj.questions = [];
+      qObj.options = [];
+      const lines = (box.querySelector(".mcq-items")?.value || "").split("\n").map(s => s.trim()).filter(Boolean);
+      lines.forEach(line => {
+        const [qText, optText] = line.split("|");
+        qObj.questions.push(qText ? qText.trim() : "");
+        qObj.options.push(optText ? optText.split(",").map(o => o.trim()) : []);
+      });
+    } 
+
+    // 6. Multiple Choice (Two Choices)
+    else if (gType === "mcq-two-choice") {
+      qObj.questions = [];
+      qObj.options = [];
+      
+      // Pairs array for two-choice e.g., [[17, 18]]
+      const pairs = [];
+      for (let i = 0; i < ids.length; i += 2) {
+        if (ids[i + 1] !== undefined) {
+          pairs.push([ids[i], ids[i + 1]]);
+        } else {
+          pairs.push([ids[i], ids[i]]);
+        }
+      }
+      qObj.id = pairs;
+
+      const lines = (box.querySelector(".mcq-two-items")?.value || "").split("\n").map(s => s.trim()).filter(Boolean);
+      lines.forEach(line => {
+        const [qText, optText] = line.split("|");
+        qObj.questions.push([qText ? qText.trim() : ""]);
+        qObj.options.push(optText ? optText.split(",").map(o => o.trim()) : []);
+      });
+    }
+
+    // 7. Matching
+    else if (gType === "matching") {
+      const rawOptions = (box.querySelector(".matching-options")?.value || "").split("\n").map(s => s.trim()).filter(Boolean);
+      const rawItems = (box.querySelector(".matching-items")?.value || "").split("\n").map(s => s.trim()).filter(Boolean);
+      qObj.options = rawOptions;
+      qObj.items = rawItems;
+      qObj.statements = rawItems;
+      qObj.features = rawItems;
+    } 
+
+    // 8. Map Labelling
+    else if (gType === "map-labelling") {
+      qObj.image = box.querySelector(".map-image")?.value.trim() || "";
+      qObj.letters = (box.querySelector(".map-letters")?.value || "").split(",").map(s => s.trim()).filter(Boolean);
+      qObj.locations = (box.querySelector(".map-locations")?.value || "").split("\n").map(s => s.trim()).filter(Boolean);
+    }
+
+    questions.push(qObj);
+
+    // Answers and Explanations mapping
+    const ansLines = (box.querySelector(".group-answers")?.value || "").split("\n").map(s => s.trim()).filter(Boolean);
+    const expLines = (box.querySelector(".group-explanations")?.value || "").split("\n").map(s => s.trim()).filter(Boolean);
+
+    ids.forEach((idNum, i) => {
+      if (ansLines[i]) {
+        answers[String(idNum)] = ansLines[i].split("/").map(a => a.trim());
+      }
+      if (expLines[i]) {
+        answerExplanations[String(idNum)] = [expLines[i]];
+      }
+    });
+  });
+
+  return {
+    pracNumber,
+    type: mainType,
+    plan: "Academic",
+    listening: {
+      audioUrl: audioUrl,
+      title: sectionTitle,
+      instructions: instructions,
+      questions: questions,
+      answers: answers,
+      answerExplanations: answerExplanations
+    }
+  };
+}
+
+// JSON Preview Click
+document.getElementById("generateJsonBtn").addEventListener("click", () => {
+  const payload = buildPayload();
+  document.getElementById("jsonPreviewBox").textContent = JSON.stringify(payload, null, 2);
+  document.getElementById("previewCard").classList.remove("d-none");
+});
+
+// Save to Database
+document.getElementById("builderForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const payload = buildPayload();
+
+  try {
+    const res = await fetch("/api/listening-practice-questions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    const result = await res.json();
+
+    if (result.success) {
+      alert("✅ Listening Practice saved successfully to DB! (ID: " + result.id + ")");
+    } else {
+      alert("❌ Error saving: " + (result.message || "Unknown error"));
+    }
+  } catch (err) {
+    alert("❌ Network Error: " + err.message);
+  }
+});
+</script>
+</body>
+</html>

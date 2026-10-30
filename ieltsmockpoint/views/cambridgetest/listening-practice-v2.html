@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>IELTS Listening Practice V2 - IELTS Mockpoint</title>
+  <link rel="icon" type="image/png" href="/mpfavicon.png">
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Custom Styles V2 -->
+  <link rel="stylesheet" href="/cambridgetest/styles-listening-v2.css">
+</head>
+<body>
+
+  <!-- Top Fixed Navbar -->
+  <header class="cl-navbar">
+    <!-- Left: Brand Logo & Test Title Identity -->
+    <div class="cl-nav-left">
+      <a href="/" class="cl-brand-link" title="IELTS Mockpoint Hub">
+        <div class="cl-brand-badge">
+          <img src="/Brandlogo.png" alt="IELTS Mockpoint" class="cl-brand-img">
+        </div>
+      </a>
+      <div class="cl-nav-divider"></div>
+      <div class="cl-test-identity">
+        <span class="cl-test-book-pill" id="testBookBadge">Cambridge 21</span>
+        <span class="cl-test-title-text" id="testTitleBadge">Academic Listening Test 1</span>
+      </div>
+    </div>
+
+    <!-- Center: Audio Player Controls -->
+    <div class="cl-nav-center">
+      <div class="cl-audio-bar" id="audioPlayerControls">
+        <button id="audioRewindBtn" class="cl-audio-btn" title="Rewind 10s">
+          <i class="bi bi-arrow-counterclockwise"></i>
+        </button>
+        <button id="audioPlayPauseBtn" class="cl-audio-btn cl-audio-btn-primary" title="Play / Pause">
+          <i class="bi bi-play-fill" id="playPauseIcon"></i>
+        </button>
+        <button id="audioForwardBtn" class="cl-audio-btn" title="Forward 10s">
+          <i class="bi bi-arrow-clockwise"></i>
+        </button>
+        <input type="range" id="audioSeekSlider" class="cl-audio-slider" min="0" max="100" value="0">
+        <span class="cl-audio-time" id="audioTimeLabel">00:00 / 00:00</span>
+      </div>
+    </div>
+
+    <!-- Right: Timer, Notes, Fullscreen & Finish Test -->
+    <div class="cl-nav-right">
+      <div class="cl-timer-pill">
+        <i class="bi bi-clock"></i> <span id="minutes">00</span>:<span id="seconds">00</span>
+      </div>
+      <button type="button" class="cl-icon-btn" id="fullscreenBtn" title="Toggle Fullscreen" onclick="toggleFullScreen()">
+        <i class="bi bi-arrows-fullscreen"></i>
+      </button>
+      <button type="button" class="cl-icon-btn" id="notesBtn" title="Scratchpad / Notes" onclick="toggleNotes()">
+        <i class="bi bi-journal-text"></i>
+      </button>
+      <button type="button" class="cl-btn-finish" id="finishBtn">
+        Finish Test
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Question & Content Area -->
+  <main class="cl-main-wrap">
+    <div id="partsContainer">
+      <div style="text-align:center; padding: 60px 20px;">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p style="margin-top: 15px; color: var(--muted); font-weight: 600;">Loading Cambridge IELTS Listening Test...</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Bottom Part Navigation Bar (Cambridge IELTS Exam Style) -->
+  <footer class="cl-bottom-bar">
+    <div class="cl-bottom-nav-container">
+      <!-- 4 Part Cards Container -->
+      <div class="cl-part-cards-row">
+        <!-- Part 1 Card -->
+        <div class="cl-part-card active" id="bottomPartCard-1">
+          <div class="cl-part-card-title" onclick="window.clV2.switchPart(1)">Part 1</div>
+          <div class="cl-part-card-nums" id="partNums-1"></div>
+        </div>
+
+        <!-- Part 2 Card -->
+        <div class="cl-part-card" id="bottomPartCard-2">
+          <div class="cl-part-card-title" onclick="window.clV2.switchPart(2)">Part 2</div>
+          <div class="cl-part-card-nums" id="partNums-2"></div>
+        </div>
+
+        <!-- Part 3 Card -->
+        <div class="cl-part-card" id="bottomPartCard-3">
+          <div class="cl-part-card-title" onclick="window.clV2.switchPart(3)">Part 3</div>
+          <div class="cl-part-card-nums" id="partNums-3"></div>
+        </div>
+
+        <!-- Part 4 Card -->
+        <div class="cl-part-card" id="bottomPartCard-4">
+          <div class="cl-part-card-title" onclick="window.clV2.switchPart(4)">Part 4</div>
+          <div class="cl-part-card-nums" id="partNums-4"></div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Finish Warning Modal -->
+  <div id="submitModal" class="cl-modal-overlay" style="display:none;">
+    <div class="cl-result-modal" style="max-width: 440px;">
+      <h3 style="font-family:'Sora',sans-serif; color:var(--navy); font-size:20px; font-weight:800; margin-bottom:10px;">
+        Finish Listening Practice?
+      </h3>
+      <p style="color:var(--muted); font-size:14px; margin-bottom:24px;">
+        Your answers will be checked immediately, and you will see your band score, question explanations, and audio transcripts with highlighted answers.
+      </p>
+      <div style="display:flex; gap:10px; justify-content:center;">
+        <button type="button" class="cl-btn-finish" id="confirmSubmitBtn" style="padding:10px 24px;">
+          Submit Now
+        </button>
+        <button type="button" class="cl-btn-finish" id="cancelSubmitBtn" style="background:#fff; color:var(--navy); border:1.5px solid var(--line); padding:10px 20px;">
+          Keep Practicing
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notes Popup -->
+  <div id="notesModal" class="cl-modal-overlay" style="display:none;" onclick="if(event.target === this) this.style.display='none'">
+    <div class="cl-result-modal" style="max-width: 520px; text-align: left;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <h4 style="font-family:'Sora',sans-serif; color:var(--navy); font-weight:700;">Scratchpad / Notes</h4>
+        <button type="button" onclick="document.getElementById('notesModal').style.display='none'" style="background:none; border:none; font-size:20px; cursor:pointer;">&times;</button>
+      </div>
+      <textarea id="notesArea" rows="12" style="width:100%; border:1.5px solid var(--line); border-radius:8px; padding:12px; font-family:inherit; font-size:14px; resize:vertical; outline:none;" placeholder="Write your practice notes here..."></textarea>
+    </div>
+  </div>
+
+  <!-- Floating Highlight / Unhighlight Context Tooltip -->
+  <div id="clHighlightTooltip" class="cl-hl-tooltip" style="display:none;">
+    <button type="button" id="clDoHighlightBtn" class="cl-hl-tooltip-btn">
+      <i class="bi bi-pen-fill" style="color:#facc15;"></i> Highlight
+    </button>
+    <button type="button" id="clDoUnhighlightBtn" class="cl-hl-tooltip-btn" style="display:none;">
+      <i class="bi bi-eraser-fill" style="color:#f87171;"></i> Remove Highlight
+    </button>
+  </div>
+
+  <script>
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+    function toggleNotes() {
+      const el = document.getElementById("notesModal");
+      if (el) el.style.display = (el.style.display === "none") ? "flex" : "none";
+    }
+  </script>
+
+  <!-- Script V2 -->
+  <script src="/cambridgetest/scripts-listening-practice-v2.js"></script>
+</body>
+</html>

@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>IELTS Academic Listening Note Completion Practice Exercises | IELTS Mockpoint</title>
+  <meta name="description" content="Practice IELTS Academic Listening questions by question type with authentic exercises taken from Cambridge IELTS tests in the modern exam interface.">
+  <link rel="canonical" href="https://www.ieltsmockpoint.com/listening-exercises">
+  <link rel="icon" type="image/png" href="/mpfavicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #0b2b52;
+      --blue: #1565c9;
+      --blue-light: #eaf2fd;
+      --red: #e0202d;
+      --red-dark: #b5121d;
+      --surface: #f4f7fb;
+      --bg: #ffffff;
+      --text: #0f2038;
+      --muted: #5d708c;
+      --line: #e3e9f3;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.2;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* Top progress */
+    #prog {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      width: 0;
+      background: linear-gradient(90deg, var(--blue), var(--red));
+      z-index: 200;
+      transition: width 0.1s linear;
+    }
+
+    /* Container */
+    .wrap {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 24px;
+      width: 100%;
+    }
+
+    /* Shared Header & Nav */
+    header {
+      position: sticky;
+      top: env(safe-area-inset-top, 0);
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+      transition: box-shadow 0.25s;
+    }
+    header.scrolled {
+      box-shadow: 0 6px 18px rgba(11, 43, 82, 0.08);
+    }
+    nav.wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 74px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      font-family: 'Sora', sans-serif;
+      font-weight: 800;
+      font-size: 1.3rem;
+      color: var(--navy);
+    }
+    .brand img {
+      height: 44px;
+      width: auto;
+      display: block;
+    }
+    .brand .txt {
+      display: none;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand .txt i {
+      width: 11px;
+      height: 11px;
+      border-radius: 3px;
+      background: var(--red);
+      box-shadow: 5px 5px 0 var(--blue);
+      margin-right: 5px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 24px;
+    }
+    .nav-links a {
+      font-size: 0.92rem;
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 500;
+      position: relative;
+      padding: 6px 0;
+      transition: color 0.2s;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -2px;
+      width: 0;
+      height: 2px;
+      background: var(--red);
+      transition: width 0.2s;
+    }
+    .nav-links a:hover, .nav-links a.current {
+      color: var(--navy);
+    }
+    .nav-links a:hover::after, .nav-links a.current::after {
+      width: 100%;
+    }
+    .nav-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 9px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      text-decoration: none;
+      border: 1.5px solid transparent;
+      cursor: pointer;
+      font-family: inherit;
+      transition: transform 0.15s, box-shadow 0.2s, background 0.2s, color 0.2s, border-color 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-red {
+      background: var(--red);
+      color: #fff;
+    }
+    .btn-red:hover {
+      background: var(--red-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(224, 32, 45, 0.28);
+    }
+    .btn-outline {
+      color: var(--navy);
+      border-color: var(--line);
+      background: #fff;
+    }
+    .btn-outline:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+    .menu-btn {
+      display: none;
+      background: var(--blue-light);
+      border: none;
+      color: var(--navy);
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      font-size: 1.3rem;
+      cursor: pointer;
+    }
+    @media (max-width: 920px) {
+      .nav-links, .nav-actions { display: none; }
+      .menu-btn { display: block; }
+    }
+
+    /* Mobile Sidebar */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 43, 82, 0.55);
+      backdrop-filter: blur(3px);
+      z-index: 90;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .overlay.open { opacity: 1; pointer-events: auto; }
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: min(320px, 86vw);
+      background: #fff;
+      z-index: 100;
+      transform: translateX(100%);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      padding: 22px 24px calc(24px + env(safe-area-inset-bottom, 0));
+      box-shadow: -12px 0 40px rgba(11, 43, 82, 0.18);
+    }
+    .sidebar.open { transform: none; }
+    .sb-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+    .sb-close {
+      background: var(--surface);
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: var(--navy);
+    }
+    .sb-links a {
+      display: block;
+      padding: 14px 4px;
+      border-bottom: 1px solid var(--line);
+      text-decoration: none;
+      font-weight: 600;
+      color: var(--navy);
+      transition: padding 0.2s, color 0.2s;
+    }
+    .sb-links a:hover { color: var(--red); padding-left: 12px; }
+    .sb-actions { margin-top: auto; display: grid; gap: 10px; }
+
+    /* Main Content */
+    main {
+      flex: 1;
+      padding: 34px 0 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Breadcrumbs */
+    .breadcrumbs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+    .breadcrumbs a:hover {
+      color: var(--blue);
+      text-decoration: underline;
+    }
+    .breadcrumbs span.sep {
+      color: var(--line);
+    }
+    .breadcrumbs span.current {
+      color: var(--navy);
+      font-weight: 600;
+    }
+
+    /* Page Header */
+    .page-header {
+      margin-bottom: 28px;
+    }
+    .page-title {
+      font-size: clamp(1.8rem, 3.2vw, 2.5rem);
+      margin-bottom: 12px;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+    }
+    .page-subtitle {
+      font-size: 1.02rem;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 900px;
+    }
+    .page-subtitle strong {
+      color: var(--navy);
+    }
+    .page-subtitle a {
+      color: var(--red);
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* Question Type Pills Switcher - All Visible Upfront (No Horizontal Slider Bar) */
+    .type-switcher {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 32px;
+      padding: 2px 0;
+    }
+    .type-pill {
+      flex: 0 0 auto;
+      padding: 9px 16px;
+      background: #fff;
+      border: 1.5px solid var(--line);
+      border-radius: 999px;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.86rem;
+      color: var(--muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+      user-select: none;
+    }
+    .type-pill svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      color: currentColor;
+    }
+    .type-pill em {
+      font-style: normal;
+      font-size: 0.72rem;
+      background: var(--surface);
+      color: var(--muted);
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-weight: 800;
+      transition: all 0.22s;
+    }
+    .type-pill:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+      transform: translateY(-2px);
+    }
+    .type-pill.active {
+      background: var(--navy);
+      border-color: var(--navy);
+      color: #fff;
+      box-shadow: 0 10px 22px rgba(11, 43, 82, 0.22);
+    }
+    .type-pill.active em {
+      background: var(--red);
+      color: #fff;
+    }
+
+    /* Section Bar */
+    .section-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 26px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+    .sec-h {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .sec-h h2 {
+      font-size: 1.35rem;
+    }
+    .count-badge {
+      font-size: 0.82rem;
+      font-weight: 700;
+      background: var(--blue-light);
+      color: var(--blue);
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+    .sec-left {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .source-filter-tabs {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+    .source-tab {
+      padding: 7px 16px;
+      border-radius: 999px;
+      border: 1.5px solid var(--line);
+      background: #fff;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.82rem;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      user-select: none;
+    }
+    .source-tab:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+      transform: translateY(-1px);
+    }
+    .source-tab.active {
+      background: var(--navy);
+      border-color: var(--navy);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(11, 43, 82, 0.16);
+    }
+    .search-box {
+      position: relative;
+    }
+    .search-box input {
+      font-family: inherit;
+      font-size: 0.88rem;
+      padding: 10px 16px 10px 38px;
+      border: 1.5px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      width: 260px;
+      color: var(--text);
+      transition: all 0.25s;
+    }
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--blue);
+      box-shadow: 0 0 0 4px var(--blue-light);
+      width: 300px;
+    }
+    .search-box svg {
+      position: absolute;
+      left: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      color: var(--muted);
+      pointer-events: none;
+    }
+
+    /* Cambridge Reading Cards Grid & Animations */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(275px, 1fr));
+      gap: 24px;
+      padding-bottom: 70px;
+      min-height: 320px;
+      perspective: 1200px;
+    }
+
+    .card {
+      --rx: 0deg;
+      --ry: 0deg;
+      --ty: 0px;
+      --mx: 50%;
+      --my: 50%;
+      position: relative;
+      background: #fff;
+      border: 1.5px solid var(--line);
+      border-radius: 20px;
+      padding: 26px 22px 22px;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      translate: 0 16px;
+      animation: rise 0.45s ease forwards;
+      transform: rotateX(var(--rx)) rotateY(var(--ry)) translateY(var(--ty));
+      transition: transform 0.2s ease-out, border-color 0.25s, box-shadow 0.25s;
+      will-change: transform;
+    }
+    @keyframes rise { to { opacity: 1; translate: 0 0; } }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 4px;
+      width: 100%;
+      background: linear-gradient(90deg, var(--blue), var(--red));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.35s;
+      border-radius: 20px 20px 0 0;
+    }
+    .card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      background: radial-gradient(260px circle at var(--mx) var(--my), rgba(21, 101, 201, 0.10), transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .card:hover {
+      --ty: -8px;
+      border-color: var(--blue);
+      box-shadow: 0 22px 44px rgba(21, 101, 201, 0.14);
+    }
+    .card:hover::before { transform: scaleX(1); }
+    .card:hover::after { opacity: 1; }
+
+    .card .bignum {
+      position: absolute;
+      right: 16px;
+      top: -2px;
+      font-family: 'Sora', sans-serif;
+      font-weight: 800;
+      font-size: 4.8rem;
+      color: var(--blue-light);
+      line-height: 1;
+      transition: color 0.3s, transform 0.4s;
+      user-select: none;
+      pointer-events: none;
+    }
+    .card:hover .bignum {
+      color: #fdecee;
+      transform: scale(1.08) translateX(-4px);
+    }
+
+    .card .pill {
+      position: relative;
+      align-self: flex-start;
+      max-width: 85%;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      padding: 5px 12px;
+      border-radius: 999px;
+      margin-bottom: 24px;
+    }
+    .card .pill.pill-cambridge {
+      background: var(--blue-light);
+      color: var(--blue);
+    }
+    .card .pill.pill-bank {
+      background: #ecfdf5;
+      color: #047857;
+      border: 1px solid #a7f3d0;
+    }
+
+    .card h3 {
+      position: relative;
+      font-size: 1.24rem;
+      margin-bottom: 6px;
+      color: var(--navy);
+      line-height: 1.3;
+    }
+
+    .card .sub-source {
+      position: relative;
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 14px;
+      font-weight: 500;
+    }
+
+    .chips {
+      position: relative;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 22px;
+    }
+    .chips span {
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--muted);
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 5px 10px;
+    }
+    .chips span.q-range-chip {
+      color: var(--blue);
+      background: var(--blue-light);
+      font-weight: 700;
+    }
+    .chips span.done {
+      background: #e6f7ee;
+      color: #137a3f;
+    }
+
+    .card-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      position: relative;
+      margin-top: auto;
+      padding-top: 14px;
+      border-top: 1px solid var(--surface);
+    }
+    .q-count {
+      font-size: 0.84rem;
+      color: var(--muted);
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .q-count svg {
+      width: 15px;
+      height: 15px;
+      color: var(--blue);
+    }
+      transition: all 0.2s ease;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn-start:hover {
+      background: #006a5d;
+      box-shadow: 0 4px 14px rgba(0, 130, 114, 0.32);
+      transform: translateY(-1px);
+      color: #ffffff;
+    }
+
+    /* Empty state */
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      background: var(--surface);
+      border-radius: 18px;
+      border: 1px dashed var(--line);
+    }
+    .empty-state h3 {
+      font-size: 1.25rem;
+      margin-bottom: 8px;
+    }
+    .empty-state p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* Skeleton Loading State */
+    .sk-card {
+      height: 220px;
+      border-radius: 20px;
+      background: linear-gradient(90deg, var(--surface) 25%, #fff 45%, var(--surface) 65%);
+      background-size: 200% 100%;
+      animation: shim 1.4s linear infinite;
+      border: 1.5px solid var(--line);
+    }
+    @keyframes shim { to { background-position: -200% 0; } }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 56px 0 32px;
+      background: var(--surface);
+      margin-top: auto;
+    }
+    .fgrid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr 1.1fr;
+      gap: 32px;
+      margin-bottom: 36px;
+    }
+    .fgrid h4 {
+      font-size: 0.88rem;
+      color: var(--blue);
+      margin-bottom: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .fgrid a {
+      display: block;
+      font-size: 0.9rem;
+      color: var(--muted);
+      text-decoration: none;
+      margin-bottom: 10px;
+      transition: color 0.15s ease;
+    }
+    .fgrid a:hover { color: var(--red); }
+    .fbottom {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      border-top: 1px solid var(--line);
+      padding-top: 22px;
+      line-height: 1.6;
+    }
+    /* ==========================================================================
+       RESPONSIVE DESIGN BREAKPOINTS (MOBILE, TABLET, DESKTOP)
+       ========================================================================== */
+    @media (max-width: 1024px) {
+      .grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+      }
+      .type-pill {
+        padding: 8px 14px;
+        font-size: 0.84rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      main {
+        padding: 24px 0 60px;
+      }
+      .wrap {
+        padding: 0 18px;
+      }
+      .breadcrumbs {
+        flex-wrap: wrap;
+        gap: 6px;
+        font-size: 0.80rem;
+        margin-bottom: 16px;
+      }
+      .page-header {
+        margin-bottom: 22px;
+      }
+      .page-title {
+        font-size: 1.65rem;
+        margin-bottom: 10px;
+      }
+      .page-subtitle {
+        font-size: 0.94rem;
+        line-height: 1.55;
+      }
+      .type-switcher {
+        gap: 8px;
+        margin-bottom: 26px;
+      }
+      .type-pill {
+        padding: 8px 13px;
+        font-size: 0.80rem;
+      }
+      .type-pill svg {
+        width: 14px;
+        height: 14px;
+      }
+      .type-pill em {
+        font-size: 0.68rem;
+        padding: 1px 6px;
+      }
+      .section-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        margin-bottom: 22px;
+      }
+      .sec-h {
+        justify-content: space-between;
+        width: 100%;
+      }
+      .sec-h h2 {
+        font-size: 1.2rem;
+      }
+      .search-box {
+        width: 100%;
+      }
+      .search-box input {
+        width: 100%;
+      }
+      .search-box input:focus {
+        width: 100%;
+      }
+      .grid {
+        grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+        gap: 16px;
+      }
+      .card {
+        padding: 22px 18px 20px;
+        border-radius: 16px;
+      }
+      .card .bignum {
+        font-size: 3.8rem;
+        right: 12px;
+        top: 2px;
+      }
+      .fgrid {
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+    }
+
+    @media (max-width: 540px) {
+      .wrap {
+        padding: 0 14px;
+      }
+      .page-title {
+        font-size: 1.45rem;
+      }
+      .type-switcher {
+        gap: 6px;
+        margin-bottom: 22px;
+      }
+      .type-pill {
+        padding: 7px 11px;
+        font-size: 0.76rem;
+        gap: 6px;
+      }
+      .grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .card-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      .card-actions .btn {
+        flex: 0 0 auto;
+        padding: 9px 16px;
+        font-size: 0.84rem;
+      }
+      .q-count {
+        font-size: 0.82rem;
+        white-space: nowrap;
+      }
+      .fgrid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+    }
+  </style>
+<script src="/shared-layout.js"></script>
+<script src="/auth-nav.js"></script>
+</head>
+<body>
+  <div id="prog"></div>
+
+  <!-- Shared Header -->
+  <header id="hd">
+  <nav class="wrap" aria-label="Main navigation">
+    <a href="/" class="brand" title="IELTS Mockpoint – Free IELTS Mock Test">
+      <img src="/Brandlogo.png" width="138" height="46" decoding="sync" alt="IELTS Mockpoint – free IELTS mock test online" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <span class="txt"><i></i>IELTS Mockpoint</span>
+    </a>
+    <div class="nav-links">
+      <a href="/mocks.html">Full Tests</a>
+      <a href="/cambridge-listening.html">Listening</a>
+      <a href="/cambridge-reading.html">Reading</a>
+      <a href="/cambridge-writing.html">Writing</a>
+      <a href="/speaking.html">Speaking</a>
+      <a href="/practice-hub">Question Types</a>
+      <a href="/blog.html">Blog</a>
+    </div>
+    <div class="nav-actions">
+      <a href="/login.html" class="btn btn-outline">Sign in</a>
+      <a href="/register.html" class="btn btn-red">Start free</a>
+    </div>
+    <button class="menu-btn" id="openMenu" type="button" aria-label="Open menu">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+        <path d="M4 7h16M4 12h16M4 17h16"/>
+      </svg>
+    </button>
+  </nav>
+</header>
+
+  <!-- Mobile Sidebar & Overlay -->
+  <div class="overlay" id="ov"></div>
+  <aside class="sidebar" id="sb" aria-hidden="true">
+  <div class="sb-head">
+    <a href="/" class="brand">
+      <img src="/Brandlogo.png" width="114" height="38" alt="IELTS Mockpoint" style="height:38px;width:114px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <span class="txt"><i></i>IELTS Mockpoint</span>
+    </a>
+    <button class="sb-close" id="closeMenu" type="button" aria-label="Close menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+        <path d="M6 6l12 12M18 6L6 18"/>
+      </svg>
+    </button>
+  </div>
+  <nav class="sb-links" aria-label="Mobile navigation">
+    <a href="/mocks.html">Full Tests</a>
+    <a href="/cambridge-listening.html">Listening</a>
+    <a href="/cambridge-reading.html">Reading</a>
+    <a href="/cambridge-writing.html">Writing</a>
+    <a href="/speaking.html">Speaking</a>
+    <a href="/practice-hub">Question Types</a>
+    <a href="/learn.html">Learn</a>
+    <a href="/blog.html">Blog</a>
+  </nav>
+  <div class="sb-actions">
+    <a href="/login.html" class="btn btn-outline">Sign in</a>
+    <a href="/register.html" class="btn btn-red">Start free</a>
+  </div>
+</aside>
+
+  <main class="wrap">
+    <!-- Breadcrumbs -->
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <a href="/home.html">Home</a>
+      <span class="sep">/</span>
+      <a href="/practice-hub">Practice Hub</a>
+      <span class="sep">/</span>
+      <a href="/cambridge-reading.html">Reading</a>
+      <span class="sep">/</span>
+      <span class="current" id="bcType">Note Completion</span>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1 class="page-title" id="pageTitle">IELTS Academic Listening Note Completion Practice Exercises</h1>
+      <p class="page-subtitle" id="pageSubtitle">
+        Practice official IELTS Academic Listening <strong id="typeBoldText">Note Completion</strong> questions with these <strong id="totalCountSpan">83</strong> exercises from Cambridge IELTS 12–21 and curated practice tests. Experience authentic audio recordings, real exam-style questions, instant audio playback and full answer keys.
+      </p>
+    </div>
+
+        <!-- Question Types Switcher Pills (Pure Clean SVG Icons - NO EMOJIS) -->
+    <div class="type-switcher" id="typeSwitcher">
+      <button class="type-pill active" data-type="Note-Completion">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        <span>Note Completion</span>
+        <em>83</em>
+      </button>
+      <button class="type-pill" data-type="Form-Completion">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M7 8h10"/><path d="M7 12h10"/><path d="M7 16h6"/></svg>
+        <span>Form Completion</span>
+        <em>14</em>
+      </button>
+      <button class="type-pill" data-type="Table-Completion">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>
+        <span>Table Completion</span>
+        <em>14</em>
+      </button>
+      <button class="type-pill" data-type="Multiple Choice">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>
+        <span>Multiple Choice</span>
+        <em>59</em>
+      </button>
+      <button class="type-pill" data-type="Multiple Choice (Two Choices)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="4"/><polyline points="9 12 11 14 15 10"/></svg>
+        <span>Multiple Choice (Two Choices)</span>
+        <em>80</em>
+      </button>
+      <button class="type-pill" data-type="Matching">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+        <span>Matching</span>
+        <em>45</em>
+      </button>
+      <button class="type-pill" data-type="Map-Labelling">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
+        <span>Plan, Map & Diagram Labelling</span>
+        <em>12</em>
+      </button>
+      <button class="type-pill" data-type="Flow-chart Completion">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><path d="M10 6.5h4"/><path d="M17.5 10v4"/></svg>
+        <span>Flow-chart Completion</span>
+        <em>6</em>
+      </button>
+    </div>
+
+    <!-- Section Bar with Criteria Switcher -->
+    <div class="section-bar">
+      <div class="sec-left">
+        <div class="sec-h">
+          <h2>Practice Exercises</h2>
+          <span class="count-badge" id="badgeCount">100 exercises</span>
+        </div>
+        <div class="source-filter-tabs" id="sourceFilterTabs">
+          <button type="button" class="source-tab active" data-src="all">All Exercises (<span id="countAll">100</span>)</button>
+          <button type="button" class="source-tab" data-src="cambridge">Cambridge Official (<span id="countCambridge">60</span>)</button>
+          <button type="button" class="source-tab" data-src="practice_bank">Practice Bank (<span id="countBank">40</span>)</button>
+        </div>
+      </div>
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input type="search" id="searchExercises" placeholder="Search test, book, passage..." aria-label="Search exercises">
+      </div>
+    </div>
+
+    <!-- Cambridge-Style Grid of Cards -->
+    <div class="grid" id="exercisesGrid">
+      <div class="sk-card"></div>
+      <div class="sk-card"></div>
+      <div class="sk-card"></div>
+      <div class="sk-card"></div>
+      <div class="sk-card"></div>
+      <div class="sk-card"></div>
+      <div class="sk-card"></div>
+      <div class="sk-card"></div>
+    </div>
+  </main>
+
+  <!-- Shared Footer -->
+  <footer>
+    <div class="wrap">
+      <div class="fgrid">
+        <div>
+          <a href="/home.html" class="brand" style="margin-bottom:14px">
+            <img src="/Brandlogo.png" alt="IELTS Mockpoint" style="height:38px" onerror="this.style.display='none'">
+            <span class="txt"><i></i>IELTS Mockpoint</span>
+          </a>
+          <p style="color:var(--muted);font-size:.9rem;line-height:1.6">
+            Free, authentic IELTS mock tests and question-type practice with instant evidence highlighting, explanations, and accurate band score evaluation.
+          </p>
+        </div>
+        <div>
+          <h4>Practice</h4>
+          <a href="/mocks.html">Full Tests</a>
+          <a href="/cambridge-listening.html">Listening</a>
+          <a href="/cambridge-reading.html">Reading</a>
+          <a href="/cambridge-writing.html">Writing</a>
+          <a href="/speaking.html">Speaking</a>
+        </div>
+        <div>
+          <h4>Question Types</h4>
+          <a href="/listening-exercises?type=Summary-Completion">Note Completion</a>
+          <a href="/listening-exercises?type=True-False-NotGiven">True / False / Not Given</a>
+          <a href="/listening-exercises?type=Matching-Headings">Matching Headings</a>
+          <a href="/listening-exercises?type=Multiple-Choice">Multiple Choice</a>
+        </div>
+        <div>
+          <h4>Resources</h4>
+          <a href="/blog.html">Blog & Tips</a>
+          <a href="/practice-hub">Practice Hub</a>
+          <a href="/band-calculator.html">Band Calculator</a>
+        </div>
+        <div>
+          <h4>Company</h4>
+          <a href="/about.html">About Us</a>
+          <a href="/contact.html">Contact Us</a>
+          <a href="/privacy-policy.html">Privacy Policy</a>
+          <a href="/terms.html">Terms of Service</a>
+        </div>
+      </div>
+      <div class="fbottom">
+        <div>© 2026 IELTS Mockpoint. All rights reserved.</div>
+        <div>Disclaimer: IELTS® is a registered trademark of the University of Cambridge, the British Council, and IDP Education Australia. IELTS Mockpoint is an independent platform and not affiliated with these bodies.</div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    let currentType = 'Note-Completion';
+    let currentSource = 'all'; // 'all', 'cambridge', 'practice_bank'
+    let allExercises = [];
+    let doneStore = {};
+    try {
+      doneStore = JSON.parse(localStorage.getItem('mp_done') || '{}');
+    } catch(e) {}
+
+    // DOM Elements
+    const grid = document.getElementById('exercisesGrid');
+    const pageTitle = document.getElementById('pageTitle');
+    const pageSubtitle = document.getElementById('pageSubtitle');
+    const typeBoldText = document.getElementById('typeBoldText');
+    const totalCountSpan = document.getElementById('totalCountSpan');
+    const badgeCount = document.getElementById('badgeCount');
+    const bcType = document.getElementById('bcType');
+    const searchInput = document.getElementById('searchExercises');
+    const typeSwitcher = document.getElementById('typeSwitcher');
+    const sourceFilterTabs = document.getElementById('sourceFilterTabs');
+    const countAll = document.getElementById('countAll');
+    const countCambridge = document.getElementById('countCambridge');
+    const countBank = document.getElementById('countBank');
+
+    // Mobile Menu
+    // Mobile menu & navbar are handled by /shared-layout.js
+
+    // Parse URL param if provided (e.g. ?type=Summary-Completion)
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialType = urlParams.get('type');
+    if (initialType) {
+      const decoded = decodeURIComponent(initialType).replace(/[-_]+/g, ' ').toLowerCase();
+      const matchedBtn = Array.from(typeSwitcher.querySelectorAll('.type-pill')).find(btn => {
+        const t = btn.dataset.type.replace(/[-_]+/g, ' ').toLowerCase();
+        return t === decoded || t.includes(decoded) || decoded.includes(t);
+      });
+      if (matchedBtn) {
+        currentType = matchedBtn.dataset.type;
+        typeSwitcher.querySelectorAll('.type-pill').forEach(b => b.classList.remove('active'));
+        matchedBtn.classList.add('active');
+      }
+    }
+
+    // Fetch exercises for current type
+    async function loadExercises(type) {
+      currentType = type;
+      grid.innerHTML = '<div class="sk-card"></div>'.repeat(8);
+
+      try {
+        const res = await fetch(`/api/listening-exercises?type=${encodeURIComponent(type)}`);
+        const data = await res.json();
+        
+        if (data.success && Array.isArray(data.exercises)) {
+          allExercises = data.exercises;
+          
+          if (countAll) countAll.textContent = data.totalExercises || allExercises.length;
+          if (countCambridge) countCambridge.textContent = data.cambridgeCount || 0;
+          if (countBank) countBank.textContent = data.bankCount || 0;
+
+          applyFilterAndSearch();
+          updateHeaderInfo(data.typeName || type, data.totalExercises || allExercises.length);
+
+          if (data.categoryCounts) {
+            typeSwitcher.querySelectorAll('.type-pill').forEach(btn => {
+              const t = btn.dataset.type;
+              const count = data.categoryCounts[t];
+              if (count !== undefined) {
+                const em = btn.querySelector('em');
+                if (em) em.textContent = count;
+              }
+            });
+          }
+        } else {
+          grid.innerHTML = `
+            <div class="empty-state">
+              <h3>No exercises found</h3>
+              <p>No practice exercises currently available for this question type.</p>
+            </div>
+          `;
+        }
+      } catch (err) {
+        console.error('Fetch error:', err);
+        grid.innerHTML = `
+          <div class="empty-state">
+            <h3>Unable to load exercises</h3>
+            <p>Please check your connection and try again.</p>
+          </div>
+        `;
+      }
+    }
+
+    // Update Header labels
+    function updateHeaderInfo(typeName, count) {
+      document.title = `IELTS Academic Listening ${typeName} Practice Exercises | IELTS Mockpoint`;
+      pageTitle.textContent = `IELTS Academic Listening ${typeName} Practice Exercises`;
+      typeBoldText.textContent = typeName;
+      totalCountSpan.textContent = count;
+      badgeCount.textContent = `${count} exercises`;
+      bcType.textContent = typeName;
+    }
+
+    // Render cards into grid (Cambridge Official + Practice Bank with criteria badges)
+    function renderExercises(items) {
+      if (!items.length) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <h3>No matching exercises</h3>
+            <p>Try searching for a different keyword or selecting a different source criteria.</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = items.map((ex, idx) => {
+        const isBank = ex.sourceType === 'practice_bank';
+        const storageKey = isBank ? `pb_l|${ex.pracType || currentType}|${ex.setNumber}` : `cl_v2|${ex.book}|${ex.testNo}|${ex.qRange}`;
+        const isDone = !!doneStore[storageKey];
+        const numStr = String(ex.setNumber || ex.exerciseNumber || idx + 1).padStart(2, '0');
+        const pillClass = isBank ? 'pill pill-bank' : 'pill pill-cambridge';
+        const pillText = ex.badgeText || (isBank ? `PRACTICE BANK • SET ${ex.setNumber}` : `CAMBRIDGE ${ex.book} • TEST ${ex.testNo}`);
+        const titleText = isBank ? (ex.title || `Practice Set ${ex.setNumber}`) : (ex.title || `Exercise ${idx + 1}`);
+        const sourceText = ex.source || (isBank ? `from IELTS Mockpoint Practice Bank` : `from Cambridge IELTS ${ex.book} Academic Listening Test ${ex.testNo}`);
+        const partLabel = ex.partTitle || (`Listening Part ${ex.part || 1}`);
+
+        return `
+          <article class="card ${isDone ? 'done' : ''}" data-k="${storageKey}" data-source="${ex.sourceType || 'cambridge'}">
+            <span class="bignum">${numStr}</span>
+            <span class="${pillClass}">${escapeHtml(pillText)}</span>
+            <h3>${escapeHtml(titleText)}</h3>
+            <div class="sub-source">${escapeHtml(sourceText)}</div>
+            <div class="chips">
+              <span title="${escapeHtml(partLabel)}">${escapeHtml(partLabel.slice(0, 32))}${partLabel.length > 32 ? '...' : ''}</span>
+              <span class="q-range-chip">${escapeHtml(ex.qRange || 'Questions')}</span>
+              ${isDone ? '<span class="done">Completed ✓</span>' : ''}
+            </div>
+            <div class="card-actions">
+              <span class="q-count">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                ${ex.questionsCount || 10} questions
+              </span>
+              <a href="${ex.link}" target="_blank" rel="noopener noreferrer" class="btn btn-red" onclick="markDone('${storageKey}')">
+                Start practice →
+              </a>
+            </div>
+          </article>
+        `;
+      }).join('');
+
+      wireTilt();
+    }
+
+    /* Cambridge 3D Tilt + Cursor Spotlight Effect */
+    function wireTilt() {
+      const cards = document.querySelectorAll('.card');
+      cards.forEach(card => {
+        card.addEventListener('mousemove', e => {
+          if (matchMedia('(hover:none)').matches) return;
+          const r = card.getBoundingClientRect();
+          const x = (e.clientX - r.left) / r.width;
+          const y = (e.clientY - r.top) / r.height;
+          card.style.setProperty('--mx', (x * 100) + '%');
+          card.style.setProperty('--my', (y * 100) + '%');
+          card.style.setProperty('--ry', ((x - 0.5) * 8) + 'deg');
+          card.style.setProperty('--rx', ((0.5 - y) * 8) + 'deg');
+        });
+        card.addEventListener('mouseleave', () => {
+          card.style.setProperty('--rx', '0deg');
+          card.style.setProperty('--ry', '0deg');
+          card.style.setProperty('--mx', '50%');
+          card.style.setProperty('--my', '50%');
+        });
+      });
+    }
+
+    // Filter by criteria source and search query
+    function applyFilterAndSearch() {
+      const q = searchInput ? searchInput.value.trim().toLowerCase() : '';
+      let list = allExercises;
+
+      if (currentSource !== 'all') {
+        list = list.filter(ex => ex.sourceType === currentSource);
+      }
+
+      if (q) {
+        list = list.filter(ex => 
+          ex.title.toLowerCase().includes(q) ||
+          ex.source.toLowerCase().includes(q) ||
+          ex.partTitle.toLowerCase().includes(q) ||
+          ex.qRange.toLowerCase().includes(q) ||
+          (ex.badgeText && ex.badgeText.toLowerCase().includes(q)) ||
+          String(ex.book || '').toLowerCase() === q ||
+          String(ex.exerciseNumber || '') === q ||
+          String(ex.setNumber || '') === q
+        );
+      }
+
+      renderExercises(list);
+      badgeCount.textContent = `${list.length} exercise${list.length === 1 ? '' : 's'}`;
+    }
+
+    // Mark as done
+    window.markDone = function(key) {
+      doneStore[key] = 1;
+      try {
+        localStorage.setItem('mp_done', JSON.stringify(doneStore));
+      } catch(e) {}
+    };
+
+    function escapeHtml(str) {
+      return String(str || '').replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[m]));
+    }
+
+    // Criteria Source Filter Switcher
+    if (sourceFilterTabs) {
+      sourceFilterTabs.addEventListener('click', (e) => {
+        const btn = e.target.closest('.source-tab');
+        if (!btn) return;
+        sourceFilterTabs.querySelectorAll('.source-tab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentSource = btn.dataset.src;
+        applyFilterAndSearch();
+      });
+    }
+
+    // Type switcher event
+    typeSwitcher.addEventListener('click', (e) => {
+      const btn = e.target.closest('.type-pill');
+      if (!btn) return;
+      typeSwitcher.querySelectorAll('.type-pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      
+      const newType = btn.dataset.type;
+      history.pushState(null, '', `?type=${encodeURIComponent(newType.replace(/\s+/g, '-'))}`);
+      loadExercises(newType);
+    });
+
+    // Real-time Search filter
+    searchInput.addEventListener('input', applyFilterAndSearch);
+
+    // 3D Card tilt on hover
+    grid.addEventListener('mousemove', (e) => {
+      const c = e.target.closest('.card');
+      if (!c) return;
+      const r = c.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width;
+      const py = (e.clientY - r.top) / r.height;
+      c.style.setProperty('--rx', `${(0.5 - py) * 6}deg`);
+      c.style.setProperty('--ry', `${(px - 0.5) * 8}deg`);
+      c.style.setProperty('--mx', `${px * 100}%`);
+      c.style.setProperty('--my', `${py * 100}%`);
+    });
+    grid.addEventListener('mouseleave', (e) => {
+      const c = e.target.closest('.card');
+      if (c) {
+        c.style.setProperty('--rx', '0deg');
+        c.style.setProperty('--ry', '0deg');
+      }
+    });
+
+    // Scroll progress bar
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement;
+      const pct = (window.scrollY / (h.scrollHeight - h.clientHeight || 1)) * 100;
+      document.getElementById('prog').style.width = pct + '%';
+      document.getElementById('hd').classList.toggle('scrolled', window.scrollY > 10);
+    }, { passive: true });
+
+    // Initial load
+    loadExercises(currentType);
+  </script>
+</body>
+</html>

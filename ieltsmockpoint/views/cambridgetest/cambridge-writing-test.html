@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/png" href="/mpfavicon.png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IELTS Writing Practice - IELTS Mockpoint</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --navy: #0b2b52;
+      --navy-dark: #071c35;
+      --blue: #1565c9;
+      --blue-light: #eaf2fd;
+      --red: #e0202d;
+      --red-dark: #b5121d;
+      --surface: #f4f7fb;
+      --muted: #5d708c;
+      --line: #cbd5e1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--surface);
+      font-family: 'Segoe UI', 'Sora', sans-serif;
+      color: #0f172a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Top navbar */
+    .navbar-custom {
+      background: var(--navy-dark) !important;
+      color: #fff;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      border-bottom: 2px solid var(--red);
+      flex-shrink: 0;
+      z-index: 1000;
+    }
+    .navbar-custom .navbar-left {
+      color: #fff;
+      font-family: 'Sora', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+    #userID {
+      color: #cfe1fa;
+      letter-spacing: .06em;
+      margin-right: 15px;
+    }
+
+    /* Top-right buttons */
+    #finishBtn {
+      background: var(--red) !important;
+      color: #fff !important;
+      border: none !important;
+      border-radius: 4px !important;
+      padding: 4px 14px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    #finishBtn:hover {
+      background: var(--red-dark) !important;
+    }
+    .btn-flat {
+      color: rgba(255,255,255,.9);
+      background: transparent;
+      border: none;
+      padding: 4px 8px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+    .btn-flat:hover {
+      opacity: 1;
+      color: #fff;
+    }
+
+    /* Main Container */
+    .main-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 12px 16px;
+      gap: 12px;
+    }
+
+    /* Part headers */
+    .part-header {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--red);
+      border-radius: 6px;
+      padding: 12px 20px;
+    }
+    .part-header h2 {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 4px;
+      font-size: 1.35rem;
+    }
+    .part-header-p {
+      color: var(--muted);
+      margin: 0;
+      font-size: 0.9rem;
+    }
+
+    /* Split Screen Panels */
+    .info-panel, .write-panel {
+      background: #fff;
+      border: 1.5px solid var(--line);
+      border-radius: 8px;
+      min-height: calc(100vh - 220px);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+    }
+    .info-panel {
+      overflow-y: auto;
+    }
+    .word-count {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      color: var(--blue);
+      font-size: 0.92rem;
+    }
+    .write-input {
+      flex: 1;
+      width: 100%;
+      min-height: 440px;
+      border-radius: 6px;
+      border: 1.5px solid var(--line);
+      padding: 16px;
+      font-size: 1.02rem;
+      line-height: 1.7;
+      color: #1e293b;
+      outline: none;
+      resize: vertical;
+      font-family: inherit;
+    }
+    .write-input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(21,101,201,.15);
+    }
+
+    /* Bottom navigation */
+    .bottom-navbar {
+      background: #fff;
+      border-top: 1.5px solid var(--line);
+      padding: 10px 16px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      box-shadow: 0 -4px 15px rgba(0,0,0,.03);
+    }
+    .nav-button {
+      border: 1.5px solid var(--line);
+      background: #fff;
+      border-radius: 6px;
+      color: var(--navy);
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      padding: 8px 26px;
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .nav-button:hover {
+      background: var(--blue-light);
+      border-color: var(--navy);
+    }
+    .nav-button.active {
+      background: var(--navy);
+      color: #fff;
+      border-color: var(--navy);
+    }
+
+    /* Popups and Modals (Always hidden by default) */
+    .menu-hidden {
+      display: none !important;
+    }
+    .popup-settings, .popup-note {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 20px 60px rgba(11,43,82,.35);
+      border-top: 4px solid var(--red);
+      padding: 22px 26px;
+      width: 90%;
+      max-width: 480px;
+      z-index: 99999;
+    }
+    .popup-settings.menu-visible, .popup-note.menu-visible {
+      display: block !important;
+    }
+    .close-settings {
+      background: var(--surface);
+      color: var(--navy);
+      border-radius: 6px;
+      border: none;
+      padding: 4px 10px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .close-settings:hover {
+      background: var(--red);
+      color: #fff;
+    }
+    #notesArea {
+      border-radius: 8px;
+      width: 100%;
+      border: 1px solid var(--line);
+      padding: 12px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    /* Start Overlay & Confirmation Modal */
+    .listening-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(11,43,82,.75);
+      backdrop-filter: blur(4px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 99999;
+    }
+    .listening-popup {
+      background: #fff;
+      border-radius: 14px;
+      padding: 30px;
+      max-width: 440px;
+      text-align: center;
+      border-top: 4px solid var(--red);
+      box-shadow: 0 25px 60px rgba(0,0,0,.3);
+    }
+    .listening-continue-btn, .submit-ok-button {
+      background: var(--red);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-weight: 700;
+      padding: 8px 24px;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .listening-continue-btn:hover, .submit-ok-button:hover {
+      background: var(--red-dark);
+    }
+    .submit-stay-button {
+      background: #fff;
+      color: var(--navy);
+      border: 1.5px solid var(--navy);
+      border-radius: 6px;
+      font-weight: 700;
+      padding: 8px 20px;
+      cursor: pointer;
+      margin-left: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <div class="navbar-custom">
+    <div class="d-flex align-items-center">
+      <div id="userID" class="navbar-left">Candidate</div>
+      <div class="navbar-left timer">
+        <i class="bi bi-clock-history me-1"></i> Time Spent: <span id="minutes">00</span>:<span id="seconds">00</span>
+      </div>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <button id="finishBtn" class="btn btn-sm">Finish Test</button>
+      <button id="fullscreenToggleBtn" class="bi bi-arrows-fullscreen btn-flat" title="Toggle Fullscreen"></button>
+      <button class="bi bi-gear btn-flat" onclick="settingsMenu()" title="Settings"></button>
+      <button class="bi bi-journal-text btn-flat" onclick="openNotes()" title="Notes"></button>
+    </div>
+  </div>
+
+  <!-- Settings Popup -->
+  <div class="popup-settings" id="popup-settings">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+      <h4 style="margin:0; font-weight:700; color:var(--navy);">Settings</h4>
+      <button class="close-settings" onclick="closeSettings()">✕</button>
+    </div>
+    <label for="font-size-selector" style="font-weight:600; font-size:14px; margin-bottom:6px; display:block;">Select Font Size:</label>
+    <select id="font-size-selector" class="form-select" onchange="changeFontSize(this.value)">
+      <option value="15px">Small</option>
+      <option value="17px" selected>Medium</option>
+      <option value="20px">Large</option>
+    </select>
+  </div>
+
+  <!-- Notes Popup -->
+  <div class="popup-note" id="popup-note">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <h4 style="margin:0; font-weight:700; color:var(--navy);">Scratchpad / Notes</h4>
+      <button class="close-settings" onclick="closeSettings()">✕</button>
+    </div>
+    <textarea spellcheck="false" id="notesArea" rows="12" placeholder="Draft your outline, vocabulary or points here..."></textarea>
+  </div>
+
+  <!-- Start Test Modal -->
+  <div id="listeningOverlay" class="listening-overlay">
+    <div class="listening-popup">
+      <h3 style="font-family:'Sora',sans-serif; font-weight:700; margin-bottom:12px; color:var(--navy);">IELTS Writing Practice</h3>
+      <p style="color:#5d708c; font-size:14px; margin-bottom:20px;">
+        Count-up timer will track your progress. Write your answers comfortably and submit when you are done.
+      </p>
+      <button class="listening-continue-btn" onclick="closeListeningPopup()">Start Test</button>
+    </div>
+  </div>
+
+  <!-- Finish Warning Modal -->
+  <div id="submit-warning-modal" style="display:none; position:fixed; inset:0; background:rgba(11,43,82,.75); backdrop-filter:blur(4px); z-index:99999; justify-content:center; align-items:center;">
+    <div class="listening-popup">
+      <h4 style="font-family:'Sora',sans-serif; font-weight:700; margin-bottom:10px; color:var(--navy);">Are you sure you want to finish?</h4>
+      <p style="color:#5d708c; font-size:14px; margin-bottom:20px;">Your response will be recorded and formatted into an evaluation prompt.</p>
+      <button class="submit-ok-button" id="submit-ok-btn">Yes, Finish</button>
+      <button class="submit-stay-button" id="submit-stay-btn">Keep Writing</button>
+    </div>
+  </div>
+
+  <!-- Main Content Form -->
+  <main class="main-wrapper">
+    <!-- Part 1 -->
+    <div class="part-1 part" id="part-1" style="display:block;">
+      <div id="part-header-1" class="part-header mb-3">
+        <h2>Task 1</h2>
+        <p class="part-header-p">Suggested time: <strong>20 minutes</strong>. Write at least <strong>150 words</strong>.</p>
+      </div>
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div id="info-panel-1" class="info-panel"></div>
+        </div>
+        <div class="col-lg-6">
+          <div id="write-panel-1" class="write-panel">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span style="font-size:14px; font-weight:600; color:var(--muted);">Your Answer:</span>
+              <div class="word-count" id="wordCount-1">Word Count: 0</div>
+            </div>
+            <textarea spellcheck="false" class="write-input" id="writer-1" placeholder="Type your Task 1 response here..."></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Part 2 -->
+    <div class="part-2 part" id="part-2" style="display:none;">
+      <div id="part-header-2" class="part-header mb-3">
+        <h2>Task 2</h2>
+        <p class="part-header-p">Suggested time: <strong>40 minutes</strong>. Write at least <strong>250 words</strong>.</p>
+      </div>
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div id="info-panel-2" class="info-panel"></div>
+        </div>
+        <div class="col-lg-6">
+          <div id="write-panel-2" class="write-panel">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span style="font-size:14px; font-weight:600; color:var(--muted);">Your Answer:</span>
+              <div class="word-count" id="wordCount-2">Word Count: 0</div>
+            </div>
+            <textarea spellcheck="false" class="write-input" id="writer-2" placeholder="Type your Task 2 response here..."></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Bottom Part Navigation -->
+  <footer class="bottom-navbar" id="bottom-navbar">
+    <button class="nav-button active" id="nav-tab-1" onclick="showPart(1)">Task 1</button>
+    <button class="nav-button" id="nav-tab-2" onclick="showPart(2)">Task 2</button>
+  </footer>
+
+  <script src="/cambridgetest/cambridge-writing-test.js"></script>
+</body>
+</html>
