@@ -985,7 +985,7 @@
 // });
 
 // ==========================================
-// 1. POPUP SETTINGS & NOTES LOGIC
+// 1. POPUP SETTINGS, NOTES, FULLSCREEN & TIMER
 // ==========================================
 const popupSettings = document.getElementById("popup-settings");
 const popupNote = document.getElementById("popup-note");
@@ -1001,6 +1001,63 @@ function closeSettings() {
 
 function openNotes() {
   if (popupNote) popupNote.classList.toggle("menu-visible");
+}
+
+// Count-up Timer & Fullscreen Toggle for V2 Topbar
+let pracElapsedSeconds = 0;
+let pracTimerInterval = null;
+const pracMinutesEl = document.getElementById("minutes");
+const pracSecondsEl = document.getElementById("seconds");
+
+function startPracTimer() {
+  if (pracTimerInterval) clearInterval(pracTimerInterval);
+  pracTimerInterval = setInterval(() => {
+    pracElapsedSeconds++;
+    const mins = Math.floor(pracElapsedSeconds / 60);
+    const secs = pracElapsedSeconds % 60;
+    if (pracMinutesEl) pracMinutesEl.textContent = String(mins).padStart(2, "0");
+    if (pracSecondsEl) pracSecondsEl.textContent = String(secs).padStart(2, "0");
+  }, 1000);
+}
+
+function stopPracTimer() {
+  if (pracTimerInterval) clearInterval(pracTimerInterval);
+}
+
+const pracFullscreenBtn = document.getElementById("fullscreenToggleBtn");
+function syncPracFullscreenIcon() {
+  if (!pracFullscreenBtn) return;
+  const icon = pracFullscreenBtn.querySelector("i");
+  if (icon) {
+    icon.className = document.fullscreenElement ? "bi bi-fullscreen-exit" : "bi bi-arrows-fullscreen";
+  }
+}
+if (pracFullscreenBtn) {
+  pracFullscreenBtn.addEventListener("click", () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    } else if (document.exitFullscreen) {
+      document.exitFullscreen();
+    }
+    syncPracFullscreenIcon();
+  });
+}
+document.addEventListener("fullscreenchange", syncPracFullscreenIcon);
+
+function updatePracTopbarBadges(rawType, rawSet) {
+  const t1Types = ["1", "Line-Graph", "Bar-Chart", "Pie-Chart", "Table", "Process-Diagram", "Map", "Mixed-Charts"];
+  const cleanType = String(rawType || "").trim();
+  const isT1 = t1Types.includes(cleanType) || cleanType.toLowerCase().includes("map") || cleanType.toLowerCase().includes("graph") || cleanType.toLowerCase().includes("chart") || cleanType.toLowerCase().includes("table") || cleanType.toLowerCase().includes("process");
+
+  const bookBadge = document.getElementById("testBookBadge");
+  const titleBadge = document.getElementById("testTitleBadge");
+  const modeText = document.getElementById("writingModeText");
+
+  if (bookBadge) bookBadge.textContent = cleanType ? (isT1 ? "Task 1" : "Task 2") : "Writing Practice";
+  const prettyType = cleanType ? cleanType.replace(/-/g, " ") : "Academic Writing";
+  const prettySet = rawSet ? String(rawSet).replace(/-/g, " ") : "";
+  if (titleBadge) titleBadge.textContent = prettySet ? `${prettyType} · ${prettySet}` : prettyType;
+  if (modeText) modeText.textContent = cleanType ? `${isT1 ? "Task 1" : "Task 2"} Question Type Practice` : "Question Type Practice";
 }
 
 // ==========================================
@@ -1082,6 +1139,10 @@ let questionType;
 // 5. MAIN FUNCTION
 // ==========================================
 async function main() {
+  const urlParams = new URLSearchParams(window.location.search);
+  updatePracTopbarBadges(urlParams.get("type"), urlParams.get("pracNumber"));
+  startPracTimer();
+
   const submitBtn = document.getElementById("finishBtn");
   const submitModal = document.getElementById("submit-warning-modal");
   const submitOkButton = document.getElementById("submit-ok-btn");
@@ -1104,6 +1165,7 @@ async function main() {
   if (submitOkButton && submitModal) {
     submitOkButton.addEventListener("click", (e) => {
       e.preventDefault();
+      stopPracTimer();
       submitModal.style.display = "none";
       showWritingAIResultModal();
     });
@@ -1120,6 +1182,7 @@ async function main() {
   if (!data) return;
 
   questionType = data.type || "";
+  updatePracTopbarBadges(questionType || urlParams.get("type"), data.pracNumber || urlParams.get("pracNumber"));
   questions = data.writing ? data.writing.questions : (data.questions || []);
 
   const task1Types = [
@@ -1346,13 +1409,21 @@ ${studentAnswer}`;
       return;
     }
 
+    const escHtml = (str) =>
+      String(str ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+
     try {
       const res = await fetch("/evaluate-essay", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           topic: questionTopic || (isPart1 ? "IELTS Writing Task 1" : "IELTS Writing Task 2"),
-          essay: studentAnswer
+          essay: studentAnswer,
+          taskType: isPart1 ? "task1" : "task2"
         })
       });
 
@@ -1366,53 +1437,87 @@ ${studentAnswer}`;
         badge.textContent = `Band: ${evalData.overall_band}`;
       }
 
-      // ২. ভেতরে ৪টি ক্রাইটেরিয়া কার্ড রেন্ডার
+      const strengthsList = Array.isArray(evalData.strengths) ? evalData.strengths.filter(Boolean) : [];
+      const correctionsList = Array.isArray(evalData.corrections) ? evalData.corrections.filter(c => c && (c.original || c.improved)) : [];
+
+      const strengthsHtml = strengthsList.length
+        ? `
+          <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:11px 14px; margin-bottom:14px;">
+            <b style="color:#15803d; font-size:13px; display:block; margin-bottom:5px;">✓ What You Did Well:</b>
+            <ul style="margin:0; padding-left:18px; font-size:12.5px; color:#166534; line-height:1.55;">
+              ${strengthsList.map(item => `<li>${escHtml(item)}</li>`).join("")}
+            </ul>
+          </div>
+        `
+        : "";
+
+      const correctionsHtml = correctionsList.length
+        ? `
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px 14px; margin-bottom:14px;">
+            <b style="color:#0b2b52; font-size:13px; display:block; margin-bottom:8px;">Sentence Corrections & Band 8+ Upgrades:</b>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              ${correctionsList.map(c => `
+                <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:6px; padding:9px 11px; font-size:12.5px; line-height:1.5;">
+                  ${c.original ? `<div style="color:#b91c1c; margin-bottom:3px;"><b>Original:</b> <span style="text-decoration:line-through; opacity:0.9;">${escHtml(c.original)}</span></div>` : ""}
+                  ${c.improved ? `<div style="color:#15803d; margin-bottom:3px;"><b>Band 8+ Upgrade:</b> ${escHtml(c.improved)}</div>` : ""}
+                  ${c.reason ? `<div style="color:#64748b; font-size:11.5px;"><i>Why:</i> ${escHtml(c.reason)}</div>` : ""}
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `
+        : "";
+
+      // ২. ভেতরে ৪টি ক্রাইটেরিয়া কার্ড + ফিডব্যাক রেন্ডার
       const criteria1Name = isPart1 ? "Task Achievement" : "Task Response";
       container.innerHTML = `
         <div style="background:#ffffff; border-radius:12px; border:1px solid #e2e8f0; border-top:4px solid #e0202d; padding:18px; box-shadow:0 4px 12px rgba(11,43,82,0.06);">
           
           <div style="margin-bottom:14px; font-size:13.5px; color:#334155; line-height:1.6; background:#f8fafc; padding:12px 14px; border-radius:8px; border-left:4px solid #0b2b52;">
-            <b style="color:#0b2b52;">Examiner Summary:</b> ${evalData.summary_feedback}
+            <b style="color:#0b2b52;">Examiner Summary:</b> ${escHtml(evalData.summary_feedback)}
           </div>
 
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
             <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px;">
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
                 <b style="color:#0b2b52; font-size:13px;">${criteria1Name}</b>
-                <span style="color:#e0202d; font-weight:800; font-size:14px;">${evalData.task_response.score}</span>
+                <span style="color:#e0202d; font-weight:800; font-size:14px;">${escHtml(evalData.task_response.score)}</span>
               </div>
-              <p style="margin:0; font-size:12px; color:#64748b; line-height:1.4;">${evalData.task_response.comment}</p>
+              <p style="margin:0; font-size:12px; color:#64748b; line-height:1.4;">${escHtml(evalData.task_response.comment)}</p>
             </div>
 
             <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px;">
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
                 <b style="color:#0b2b52; font-size:13px;">Coherence & Cohesion</b>
-                <span style="color:#e0202d; font-weight:800; font-size:14px;">${evalData.coherence_cohesion.score}</span>
+                <span style="color:#e0202d; font-weight:800; font-size:14px;">${escHtml(evalData.coherence_cohesion.score)}</span>
               </div>
-              <p style="margin:0; font-size:12px; color:#64748b; line-height:1.4;">${evalData.coherence_cohesion.comment}</p>
+              <p style="margin:0; font-size:12px; color:#64748b; line-height:1.4;">${escHtml(evalData.coherence_cohesion.comment)}</p>
             </div>
 
             <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px;">
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
                 <b style="color:#0b2b52; font-size:13px;">Lexical Resource</b>
-                <span style="color:#e0202d; font-weight:800; font-size:14px;">${evalData.lexical_resource.score}</span>
+                <span style="color:#e0202d; font-weight:800; font-size:14px;">${escHtml(evalData.lexical_resource.score)}</span>
               </div>
-              <p style="margin:0; font-size:12px; color:#64748b; line-height:1.4;">${evalData.lexical_resource.comment}</p>
+              <p style="margin:0; font-size:12px; color:#64748b; line-height:1.4;">${escHtml(evalData.lexical_resource.comment)}</p>
             </div>
 
             <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px;">
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
                 <b style="color:#0b2b52; font-size:13px;">Grammar & Accuracy</b>
-                <span style="color:#e0202d; font-weight:800; font-size:14px;">${evalData.grammar.score}</span>
+                <span style="color:#e0202d; font-weight:800; font-size:14px;">${escHtml(evalData.grammar.score)}</span>
               </div>
-              <p style="margin:0; font-size:12px; color:#64748b; line-height:1.4;">${evalData.grammar.comment}</p>
+              <p style="margin:0; font-size:12px; color:#64748b; line-height:1.4;">${escHtml(evalData.grammar.comment)}</p>
             </div>
           </div>
+
+          ${strengthsHtml}
+          ${correctionsHtml}
 
           <div style="background:#fffafa; border:1px dashed #e0202d; border-radius:8px; padding:12px 16px;">
             <b style="color:#e0202d; font-size:13px; display:block; margin-bottom:6px;">Priority Tips to Improve Band:</b>
             <ul style="margin:0; padding-left:18px; font-size:12.5px; color:#334155; line-height:1.6;">
-              ${(evalData.key_improvements || []).map(tip => `<li>${tip}</li>`).join("")}
+              ${(evalData.key_improvements || []).map(tip => `<li>${escHtml(tip)}</li>`).join("")}
             </ul>
           </div>
 
@@ -1448,6 +1553,8 @@ ${studentAnswer}`;
   });
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
-  await main();
-});
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => { main(); });
+} else {
+  main();
+}

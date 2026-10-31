@@ -265,14 +265,15 @@ body {
   position: fixed;
   top: 0;
   right: 0;
-  width: 250px;
-  height: 15%;
+  width: 260px;
+  height: auto;
+  min-height: 140px;
   background-color: #f9f9f9;
   box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
   padding: 20px;
   transition: transform 0.3s ease-in-out;
   transform: translateX(100%);
-  z-index: 1000;
+  z-index: 10000;
 }
 
 #popup-settings.menu-visible{

@@ -2794,7 +2794,8 @@ function showFinalComprehensiveResultModal(writingData, reason) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             topic: t.question || `IELTS Writing Task ${t.no}`,
-            essay: t.essay
+            essay: t.essay,
+            taskType: Number(t.no) === 1 ? "task1" : "task2"
           })
         });
 
@@ -2802,6 +2803,33 @@ function showFinalComprehensiveResultModal(writingData, reason) {
         if (!resData.success) throw new Error(resData.message || "Failed");
 
         const data = resData.data;
+        const crit1Label = Number(t.no) === 1 ? "Task Achievement" : "Task Response";
+        const strengthsList = Array.isArray(data.strengths) ? data.strengths.filter(Boolean) : [];
+        const correctionsList = Array.isArray(data.corrections) ? data.corrections.filter(c => c && (c.original || c.improved)) : [];
+
+        const strengthsHtml = strengthsList.length
+          ? `<div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:10px 14px; margin:12px 0;">
+              <b style="color:#15803d; font-size:13px; display:block; margin-bottom:4px;">✓ What You Did Well:</b>
+              <ul style="margin:0; padding-left:18px; font-size:12.5px; color:#166534; line-height:1.5;">
+                ${strengthsList.map(s => `<li>${escapeHtml(s)}</li>`).join("")}
+              </ul>
+            </div>`
+          : "";
+
+        const correctionsHtml = correctionsList.length
+          ? `<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:11px 14px; margin:12px 0;">
+              <b style="color:#0a2a6e; font-size:13px; display:block; margin-bottom:8px;">Sentence Corrections & Band 8+ Upgrades:</b>
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                ${correctionsList.map(c => `
+                  <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:6px; padding:8px 10px; font-size:12.5px; line-height:1.45;">
+                    ${c.original ? `<div style="color:#b91c1c; margin-bottom:3px;"><b>Original:</b> <span style="text-decoration:line-through; opacity:0.9;">${escapeHtml(c.original)}</span></div>` : ""}
+                    ${c.improved ? `<div style="color:#15803d; margin-bottom:3px;"><b>Band 8+ Upgrade:</b> ${escapeHtml(c.improved)}</div>` : ""}
+                    ${c.reason ? `<div style="color:#64748b; font-size:11.5px;"><i>Why:</i> ${escapeHtml(c.reason)}</div>` : ""}
+                  </div>
+                `).join("")}
+              </div>
+            </div>`
+          : "";
 
         resultContainer.innerHTML = `
           <div class="bc-ai-card">
@@ -2816,7 +2844,7 @@ function showFinalComprehensiveResultModal(writingData, reason) {
 
             <div class="bc-ai-criteria">
               <div class="bc-crit-box">
-                <b>Task Response</b> <span class="score">${data.task_response.score}</span>
+                <b>${crit1Label}</b> <span class="score">${data.task_response.score}</span>
                 <p>${escapeHtml(data.task_response.comment)}</p>
               </div>
               <div class="bc-crit-box">
@@ -2832,6 +2860,9 @@ function showFinalComprehensiveResultModal(writingData, reason) {
                 <p>${escapeHtml(data.grammar.comment)}</p>
               </div>
             </div>
+
+            ${strengthsHtml}
+            ${correctionsHtml}
 
             <div class="bc-ai-tips">
               <h5>Priority Improvement Tips:</h5>
@@ -2917,6 +2948,49 @@ function showFinalComprehensiveResultModal(writingData, reason) {
       // ২. নিচের টাস্ক কার্ডে বিস্তারিত ফলাফল
       const renderTaskResult = (container, data, taskNo) => {
         if (!container) return;
+        if (data && data.not_submitted) {
+          container.innerHTML = `
+            <div class="bc-ai-card" style="border-style:dashed; border-color:#cbd5e1;">
+              <div class="bc-ai-head">
+                <h4 style="margin:0; color:#0a2a6e; font-size:17px;">Task ${taskNo} Assessment</h4>
+                <span class="bc-ai-score-pill" style="background:#94a3b8;">Not Submitted</span>
+              </div>
+              <p style="font-size:13.5px; color:#64748b; margin:0;">
+                ${escapeHtml(data.summary_feedback || "No response was submitted for this task.")}
+              </p>
+            </div>
+          `;
+          return;
+        }
+
+        const crit1Label = taskNo === 1 ? "Task Achievement" : "Task Response";
+        const strengthsList = Array.isArray(data.strengths) ? data.strengths.filter(Boolean) : [];
+        const correctionsList = Array.isArray(data.corrections) ? data.corrections.filter(c => c && (c.original || c.improved)) : [];
+
+        const strengthsHtml = strengthsList.length
+          ? `<div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:10px 14px; margin:12px 0;">
+              <b style="color:#15803d; font-size:13px; display:block; margin-bottom:4px;">✓ What You Did Well:</b>
+              <ul style="margin:0; padding-left:18px; font-size:12.5px; color:#166534; line-height:1.5;">
+                ${strengthsList.map(s => `<li>${escapeHtml(s)}</li>`).join("")}
+              </ul>
+            </div>`
+          : "";
+
+        const correctionsHtml = correctionsList.length
+          ? `<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:11px 14px; margin:12px 0;">
+              <b style="color:#0a2a6e; font-size:13px; display:block; margin-bottom:8px;">Sentence Corrections & Band 8+ Upgrades:</b>
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                ${correctionsList.map(c => `
+                  <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:6px; padding:8px 10px; font-size:12.5px; line-height:1.45;">
+                    ${c.original ? `<div style="color:#b91c1c; margin-bottom:3px;"><b>Original:</b> <span style="text-decoration:line-through; opacity:0.9;">${escapeHtml(c.original)}</span></div>` : ""}
+                    ${c.improved ? `<div style="color:#15803d; margin-bottom:3px;"><b>Band 8+ Upgrade:</b> ${escapeHtml(c.improved)}</div>` : ""}
+                    ${c.reason ? `<div style="color:#64748b; font-size:11.5px;"><i>Why:</i> ${escapeHtml(c.reason)}</div>` : ""}
+                  </div>
+                `).join("")}
+              </div>
+            </div>`
+          : "";
+
         container.innerHTML = `
           <div class="bc-ai-card">
             <div class="bc-ai-head">
@@ -2924,11 +2998,11 @@ function showFinalComprehensiveResultModal(writingData, reason) {
               <span class="bc-ai-score-pill">Band: ${data.overall_band}</span>
             </div>
             <p style="font-size:13.5px; color:#333; line-height:1.5; margin-bottom:12px;">
-              <b>Feedback:</b> ${escapeHtml(data.summary_feedback)}
+              <b>Examiner Summary:</b> ${escapeHtml(data.summary_feedback)}
             </p>
             <div class="bc-ai-criteria">
               <div class="bc-crit-box">
-                <b>Task Response</b> <span class="score">${data.task_response.score}</span>
+                <b>${crit1Label}</b> <span class="score">${data.task_response.score}</span>
                 <p>${escapeHtml(data.task_response.comment)}</p>
               </div>
               <div class="bc-crit-box">
@@ -2944,8 +3018,10 @@ function showFinalComprehensiveResultModal(writingData, reason) {
                 <p>${escapeHtml(data.grammar.comment)}</p>
               </div>
             </div>
+            ${strengthsHtml}
+            ${correctionsHtml}
             <div class="bc-ai-tips">
-              <h5>Priority Fixes:</h5>
+              <h5>Priority Improvement Tips:</h5>
               <ul>
                 ${(data.key_improvements || []).map(tip => `<li>${escapeHtml(tip)}</li>`).join("")}
               </ul>

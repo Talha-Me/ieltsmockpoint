@@ -52,9 +52,21 @@ async function loadQuestions() {
       singleTaskMode = null;
     }
 
+    const modeTextEl = document.getElementById("writingModeText");
+    if (modeTextEl) {
+      if (singleTaskMode === 1) modeTextEl.textContent = "Task 1 Practice Only";
+      else if (singleTaskMode === 2) modeTextEl.textContent = "Task 2 Practice Only";
+      else modeTextEl.textContent = "Full Writing Mock Test";
+    }
+
     if (pathParts.includes("writing") && pathParts.length >= 4) {
       const book = pathParts[2];
       const testNo = pathParts[3];
+
+      const bookBadgeEl = document.getElementById("testBookBadge");
+      const titleBadgeEl = document.getElementById("testTitleBadge");
+      if (bookBadgeEl) bookBadgeEl.textContent = `Cambridge ${book}`;
+      if (titleBadgeEl) titleBadgeEl.textContent = `Academic Writing Test ${testNo}`;
 
       const res = await fetch(`/api/cambridge-writing-test-data/${book}/${testNo}`);
       const result = await res.json();
@@ -192,43 +204,35 @@ function closeListeningPopup() {
 
 // 4. Manual Fullscreen Toggle
 const fullscreenBtn = document.getElementById("fullscreenToggleBtn");
+function syncFullscreenIcon() {
+  if (!fullscreenBtn) return;
+  const icon = fullscreenBtn.querySelector("i");
+  const isFs = !!document.fullscreenElement;
+  if (icon) {
+    icon.className = isFs ? "bi bi-fullscreen-exit" : "bi bi-arrows-fullscreen";
+  } else {
+    fullscreenBtn.className = isFs
+      ? "bi bi-fullscreen-exit btn-flat"
+      : "bi bi-arrows-fullscreen btn-flat";
+  }
+}
+
 if (fullscreenBtn) {
   fullscreenBtn.addEventListener("click", () => {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch((err) => {
         console.warn("Fullscreen error:", err);
       });
-      fullscreenBtn.className = "bi bi-fullscreen-exit btn-flat";
-    } else {
-      if (document.exitFullscreen) document.exitFullscreen();
-      fullscreenBtn.className = "bi bi-arrows-fullscreen btn-flat";
+    } else if (document.exitFullscreen) {
+      document.exitFullscreen();
     }
+    syncFullscreenIcon();
   });
 }
 
-document.addEventListener("fullscreenchange", () => {
-  if (fullscreenBtn) {
-    fullscreenBtn.className = document.fullscreenElement
-      ? "bi bi-fullscreen-exit btn-flat"
-      : "bi bi-arrows-fullscreen btn-flat";
-  }
-});
+document.addEventListener("fullscreenchange", syncFullscreenIcon);
 
 // 5. Part Navigation Logic
-function showPart(part) {
-  [1, 2].forEach((p) => {
-    const el = document.getElementById(`part-${p}`);
-    const tab = document.getElementById(`nav-tab-${p}`);
-    if (el) el.style.display = p === part ? "block" : "none";
-    if (tab) {
-      if (p === part) tab.classList.add("active");
-      else tab.classList.remove("active");
-    }
-  });
-
-  currentPart = part;
-  updateNavButtons();
-}
 
 function showNext(event) {
   if (event) event.preventDefault();
@@ -498,55 +502,110 @@ ${task2Text}`;
 
   document.body.insertAdjacentHTML("beforeend", modalHtml);
 
-  // Helper function to render a task's 4-criteria card
+  function escHtml(str) {
+    return String(str ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  // Helper function to render a task's 4-criteria + examiner feedback card
   function renderTaskCard(evalData, title, taskNo) {
     const isT1 = taskNo === 1;
     const crit1 = isT1 ? "Task Achievement" : "Task Response";
+
+    if (evalData && evalData.not_submitted) {
+      return `
+        <div style="background:#ffffff; border-radius:12px; border:1px dashed #cbd5e1; padding:16px; margin-bottom:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <h4 style="margin:0; color:var(--navy, #0b2b52); font-size:15.5px; font-weight:700;">${escHtml(title)}</h4>
+            <span style="background:#94a3b8; color:#fff; font-weight:700; font-size:12.5px; padding:3px 10px; border-radius:20px;">Not Submitted</span>
+          </div>
+          <p style="margin:0; font-size:12.5px; color:#64748b;">${escHtml(evalData.summary_feedback || "No response was submitted for this task.")}</p>
+        </div>
+      `;
+    }
+
+    const strengthsList = Array.isArray(evalData.strengths) ? evalData.strengths.filter(Boolean) : [];
+    const correctionsList = Array.isArray(evalData.corrections) ? evalData.corrections.filter(c => c && (c.original || c.improved)) : [];
+
+    const strengthsHtml = strengthsList.length
+      ? `
+        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:10px 14px; margin-bottom:12px;">
+          <b style="color:#15803d; font-size:12.5px; display:block; margin-bottom:4px;">✓ What You Did Well:</b>
+          <ul style="margin:0; padding-left:16px; font-size:12px; color:#166534; line-height:1.5;">
+            ${strengthsList.map(item => `<li>${escHtml(item)}</li>`).join("")}
+          </ul>
+        </div>
+      `
+      : "";
+
+    const correctionsHtml = correctionsList.length
+      ? `
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:11px 14px; margin-bottom:12px;">
+          <b style="color:var(--navy, #0b2b52); font-size:12.5px; display:block; margin-bottom:8px;">Sentence Corrections & Band 8+ Upgrades:</b>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            ${correctionsList.map(c => `
+              <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:6px; padding:8px 10px; font-size:12px; line-height:1.45;">
+                ${c.original ? `<div style="color:#b91c1c; margin-bottom:3px;"><b>Original:</b> <span style="text-decoration:line-through; opacity:0.9;">${escHtml(c.original)}</span></div>` : ""}
+                ${c.improved ? `<div style="color:#15803d; margin-bottom:3px;"><b>Band 8+ Upgrade:</b> ${escHtml(c.improved)}</div>` : ""}
+                ${c.reason ? `<div style="color:#64748b; font-size:11.5px;"><i>Why:</i> ${escHtml(c.reason)}</div>` : ""}
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      `
+      : "";
+
     return `
       <div style="background:#ffffff; border-radius:12px; border:1px solid #e2e8f0; border-top:4px solid var(--red, #e0202d); padding:16px; margin-bottom:14px; box-shadow:0 4px 10px rgba(0,0,0,0.04);">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-          <h4 style="margin:0; color:var(--navy, #0b2b52); font-size:16px; font-weight:700;">${title}</h4>
-          <span style="background:var(--red, #e0202d); color:#fff; font-weight:800; font-size:14px; padding:3px 12px; border-radius:20px;">Band: ${evalData.overall_band}</span>
+          <h4 style="margin:0; color:var(--navy, #0b2b52); font-size:16px; font-weight:700;">${escHtml(title)}</h4>
+          <span style="background:var(--red, #e0202d); color:#fff; font-weight:800; font-size:14px; padding:3px 12px; border-radius:20px;">Band: ${escHtml(evalData.overall_band)}</span>
         </div>
         
         <div style="font-size:13px; color:#334155; line-height:1.5; background:#f8fafc; padding:10px 12px; border-radius:6px; border-left:4px solid var(--navy, #0b2b52); margin-bottom:12px;">
-          <b>Feedback:</b> ${evalData.summary_feedback}
+          <b>Examiner Summary:</b> ${escHtml(evalData.summary_feedback)}
         </div>
 
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
           <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:10px;">
             <div style="display:flex; justify-content:space-between; font-weight:700; font-size:12.5px; color:var(--navy, #0b2b52);">
-              <span>${crit1}</span><span style="color:var(--red, #e0202d);">${evalData.task_response.score}</span>
+              <span>${crit1}</span><span style="color:var(--red, #e0202d);">${escHtml(evalData.task_response.score)}</span>
             </div>
-            <p style="margin:4px 0 0; font-size:12px; color:#64748b; line-height:1.4;">${evalData.task_response.comment}</p>
+            <p style="margin:4px 0 0; font-size:12px; color:#64748b; line-height:1.4;">${escHtml(evalData.task_response.comment)}</p>
           </div>
 
           <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:10px;">
             <div style="display:flex; justify-content:space-between; font-weight:700; font-size:12.5px; color:var(--navy, #0b2b52);">
-              <span>Coherence & Cohesion</span><span style="color:var(--red, #e0202d);">${evalData.coherence_cohesion.score}</span>
+              <span>Coherence & Cohesion</span><span style="color:var(--red, #e0202d);">${escHtml(evalData.coherence_cohesion.score)}</span>
             </div>
-            <p style="margin:4px 0 0; font-size:12px; color:#64748b; line-height:1.4;">${evalData.coherence_cohesion.comment}</p>
+            <p style="margin:4px 0 0; font-size:12px; color:#64748b; line-height:1.4;">${escHtml(evalData.coherence_cohesion.comment)}</p>
           </div>
 
           <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:10px;">
             <div style="display:flex; justify-content:space-between; font-weight:700; font-size:12.5px; color:var(--navy, #0b2b52);">
-              <span>Lexical Resource</span><span style="color:var(--red, #e0202d);">${evalData.lexical_resource.score}</span>
+              <span>Lexical Resource</span><span style="color:var(--red, #e0202d);">${escHtml(evalData.lexical_resource.score)}</span>
             </div>
-            <p style="margin:4px 0 0; font-size:12px; color:#64748b; line-height:1.4;">${evalData.lexical_resource.comment}</p>
+            <p style="margin:4px 0 0; font-size:12px; color:#64748b; line-height:1.4;">${escHtml(evalData.lexical_resource.comment)}</p>
           </div>
 
           <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:10px;">
             <div style="display:flex; justify-content:space-between; font-weight:700; font-size:12.5px; color:var(--navy, #0b2b52);">
-              <span>Grammar & Accuracy</span><span style="color:var(--red, #e0202d);">${evalData.grammar.score}</span>
+              <span>Grammar & Accuracy</span><span style="color:var(--red, #e0202d);">${escHtml(evalData.grammar.score)}</span>
             </div>
-            <p style="margin:4px 0 0; font-size:12px; color:#64748b; line-height:1.4;">${evalData.grammar.comment}</p>
+            <p style="margin:4px 0 0; font-size:12px; color:#64748b; line-height:1.4;">${escHtml(evalData.grammar.comment)}</p>
           </div>
         </div>
+
+        ${strengthsHtml}
+        ${correctionsHtml}
 
         <div style="background:#fffafa; border:1px dashed var(--red, #e0202d); border-radius:6px; padding:10px 14px;">
           <b style="color:var(--red, #e0202d); font-size:12.5px; display:block; margin-bottom:4px;">Priority Improvement Tips:</b>
           <ul style="margin:0; padding-left:16px; font-size:12px; color:#334155; line-height:1.5;">
-            ${(evalData.key_improvements || []).map(tip => `<li>${tip}</li>`).join("")}
+            ${(evalData.key_improvements || []).map(tip => `<li>${escHtml(tip)}</li>`).join("")}
           </ul>
         </div>
       </div>
@@ -566,13 +625,13 @@ ${task2Text}`;
         let res = await fetch("/evaluate-essay", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ topic: q1Text || "IELTS Writing Task 1", essay: task1Text })
+          body: JSON.stringify({ topic: q1Text || "IELTS Writing Task 1", essay: task1Text, taskType: "task1" })
         });
         if (res.status === 404) {
           res = await fetch("/api/evaluate-essay", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ topic: q1Text || "IELTS Writing Task 1", essay: task1Text })
+            body: JSON.stringify({ topic: q1Text || "IELTS Writing Task 1", essay: task1Text, taskType: "task1" })
           });
         }
         const json = await res.json();
@@ -588,13 +647,13 @@ ${task2Text}`;
         let res = await fetch("/evaluate-essay", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ topic: q2Text || "IELTS Writing Task 2", essay: task2Text })
+          body: JSON.stringify({ topic: q2Text || "IELTS Writing Task 2", essay: task2Text, taskType: "task2" })
         });
         if (res.status === 404) {
           res = await fetch("/api/evaluate-essay", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ topic: q2Text || "IELTS Writing Task 2", essay: task2Text })
+            body: JSON.stringify({ topic: q2Text || "IELTS Writing Task 2", essay: task2Text, taskType: "task2" })
           });
         }
         const json = await res.json();
