@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 36" height="32" width="98">
+  <path d="M19 6h7.5c4.8 0 8 3 7.2 7.8-1 5.5-5 8.2-9.7 8.2h-3.8l-2.4 12H12l5.7-28z" fill="#003087"/>
+  <path d="M23.5 11h7.5c4.2 0 7 2.6 6.3 6.8-1 5-4.5 7.2-8.8 7.2h-4l-2 11h-5.2l6.2-25z" fill="#0079C1"/>
+  <text x="39" y="25" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="19" font-weight="800" fill="#003087">Pay<tspan fill="#0079C1">Pal</tspan></text>
+</svg>

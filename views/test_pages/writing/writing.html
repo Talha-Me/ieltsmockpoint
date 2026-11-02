@@ -296,7 +296,7 @@
       <div class="cr-timer-pill" id="writingTimerPill">
         <i class="bi bi-clock"></i> <span id="minutes">60</span>:<span id="seconds">00</span>
       </div>
-      <button type="button" class="cr-icon-btn" id="fullscreenToggleBtn" title="Toggle Fullscreen">
+      <button type="button" class="cr-icon-btn" id="fullscreenToggleBtn" title="Toggle Fullscreen" onclick="toggleFullScreen()">
         <i class="bi bi-arrows-fullscreen"></i>
       </button>
       <button type="button" class="cr-icon-btn" title="Font Size / Settings" onclick="settingsMenu()">
@@ -453,5 +453,17 @@
            }
          })();
        </script>
-    </body>
+      <script>
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
 </html>

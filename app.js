@@ -2274,6 +2274,14 @@ app.post(["/api/save-cambridge-reading", "/admin/api/cambridge-reading/save"], a
 app.get(["/admin", "/admin/dashboard", "/admin-dashboard"], (req, res) => {
   res.sendFile(path.join(__dirname, "views", "admin", "dashboard.html"));
 });
+
+app.get(["/pricing", "/pricing.html"], (req, res) => {
+  res.sendFile(path.join(__dirname, "FrontPage", "Frontend", "pricing.html"));
+});
+
+app.get(["/dashboard", "/student-dashboard", "/candidate-dashboard"], (req, res) => {
+  res.sendFile(path.join(__dirname, "FrontPage", "Frontend", "dashboard.html"));
+});
 app.get("/admin/cambridge-reading-builder", (req, res) => {
   res.render("admin/cambridge-reading-builder", {
     pageTitle: "Cambridge Reading Builder"
@@ -2321,6 +2329,7 @@ app.get('/sitemap.xml', async (req, res) => {
     const staticPages = [
       { url: '', priority: '1.0', changefreq: 'daily' },
       { url: '/practice-hub', priority: '0.9', changefreq: 'weekly' },
+      { url: '/pricing', priority: '0.9', changefreq: 'weekly' },
       { url: '/mocks', priority: '0.9', changefreq: 'weekly' },
       { url: '/cam-listening', priority: '0.8', changefreq: 'weekly' },
       { url: '/cam-reading', priority: '0.8', changefreq: 'weekly' },

@@ -28,6 +28,7 @@
       <!-- Resources & Blog -->
       <div>
         <h4>Resources</h4>
+        <a href="/dashboard" style="font-weight:700; color:var(--blue,#1565c9);">Candidate Dashboard</a>
         <a href="/blog.html">Blog & Tips</a>
         <a href="/learn.html">Free lessons</a>
         <a href="/band-calculator.html">Band score calculator</a>
@@ -38,6 +39,7 @@
       <!-- Company & Support -->
       <div>
         <h4>Company</h4>
+        <a href="/pricing" class="footer-pricing-link" id="footer-pricing-link" style="display:none; color:var(--red,#e0202d); font-weight:700;">Plans &amp; Pricing <span style="font-size:0.68rem; background:#fdecee; color:#e0202d; padding:2px 7px; border-radius:99px; border:1px solid #fecaca; margin-left:4px; font-weight:800;">PASS</span></a>
         <a href="/about.html">About Us</a>
         <a href="/contact.html">Contact Us</a>
         <a href="/institutes.html">For institutes</a>
@@ -65,3 +67,29 @@
     </div>
   </div>
 </footer>
+
+
+<script>
+(function() {
+  function syncFooterPricingLink() {
+    fetch('/api/system-settings')
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        if (d && d.success && d.settings) {
+          var isPhase3 = Number(d.settings.currentPhase) === 3;
+          var els = document.querySelectorAll('.footer-pricing-link, #footer-pricing-link');
+          els.forEach(function(el) {
+            el.style.display = isPhase3 ? 'inline-flex' : 'none';
+            if (isPhase3) el.style.alignItems = 'center';
+          });
+        }
+      })
+      .catch(function() {});
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', syncFooterPricingLink);
+  } else {
+    syncFooterPricingLink();
+  }
+})();
+</script>

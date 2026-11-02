@@ -19,28 +19,246 @@
       }
       body{ background:var(--surface); }
 
-      /* Top navbar */
-      .navbar-custom{
-        background:var(--navy) !important;
-        color:#fff;
-        box-shadow:inset 0 -3px 0 var(--red), 0 6px 20px rgba(11,43,82,.25);
-      }
-      .navbar-custom .navbar-left, .navbar-custom .timer{ color:#fff; font-family:'Sora',sans-serif; font-weight:600; }
-      #userID{ color:#cfe1fa; letter-spacing:.06em; }
+      /* Top V2 Navbar (Matched with Writing V2 & Cambridge V2) */
+    .cr-navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 56px;
+      background: #ffffff;
+      border-bottom: 1.5px solid #e2e8f0;
+      box-shadow: 0 2px 10px rgba(11, 43, 82, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      z-index: 1000;
+    }
+    .cr-nav-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+    .cr-brand-link {
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .cr-brand-badge {
+      display: flex;
+      align-items: center;
+      background: #ffffff;
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+    .cr-brand-img {
+      height: 38px;
+      width: auto;
+      aspect-ratio: 3 / 1;
+      object-fit: contain;
+      display: block;
+    }
+    .cr-nav-divider {
+      width: 1.5px;
+      height: 24px;
+      background: #cbd5e1;
+      flex-shrink: 0;
+    }
+    .cr-test-identity {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+    .cr-test-book-pill {
+      background: var(--navy);
+      color: #ffffff;
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 0.80rem;
+      padding: 3px 10px;
+      border-radius: 6px;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .cr-test-title-text {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--navy);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .cr-nav-center {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .cr-reading-badge {
+      background: var(--blue-light);
+      color: var(--blue);
+      border: 1px solid rgba(21, 101, 201, 0.2);
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .audio-playing {
+      background: rgba(21, 101, 201, 0.12);
+      color: var(--navy);
+      border-radius: 999px;
+      padding: 2px 10px;
+      font-size: 0.80rem;
+      font-weight: 700;
+    }
+    .cr-nav-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .cr-timer-pill {
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      color: var(--navy);
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 0.88rem;
+      padding: 5px 12px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+    .cr-timer-pill.timer-low {
+      background: #fff5f5;
+      border-color: #fecaca;
+      color: var(--red);
+    }
+    .cr-icon-btn {
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      color: var(--navy);
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 1rem;
+      padding: 0;
+    }
+    .cr-icon-btn:hover {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+      color: var(--navy);
+    }
+    .cr-btn-finish {
+      background: var(--red) !important;
+      color: #ffffff !important;
+      border: none !important;
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 0.88rem;
+      padding: 7px 18px;
+      border-radius: 8px !important;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      white-space: nowrap;
+    }
+    .cr-btn-finish:hover {
+      background: var(--red-dark) !important;
+      color: #ffffff !important;
+    }
+    @media (max-width: 992px) {
+      .cr-nav-center { display: none; }
+    }
+    @media (max-width: 768px) {
+      .cr-navbar { padding: 0 12px; }
+      .cr-nav-left { gap: 8px; }
+      .cr-brand-img { height: 30px; }
+      .cr-nav-divider, .cr-test-title-text { display: none; }
+      .cr-nav-right { gap: 6px; }
+      .cr-timer-pill { padding: 4px 8px; font-size: 0.8rem; }
+      .cr-icon-btn { width: 32px; height: 32px; font-size: 0.9rem; }
+      .cr-btn-finish { padding: 6px 12px; font-size: 0.8rem; }
+    }
+    @media (max-width: 560px) {
+      .cr-test-identity, #fullscreenToggleBtn { display: none; }
+      .cr-brand-img { height: 28px; }
+    }
 
-      /* Top-right buttons */
-      #finishBtn{
-        background:var(--red) !important; color:#fff !important;
-        border-color:var(--red) !important; border-radius:10px !important; font-weight:700;
-        transition:background .2s, color .2s, border-color .2s;
-      }
-      #finishBtn:hover{ background:#fff !important; color:var(--navy) !important; border-color:#fff !important; }
-      .btn-flat{ color:rgba(255,255,255,.9); border-radius:8px; transition:background .2s; }
-      .btn-flat:hover{ background:rgba(255,255,255,.16); color:#fff; }
-
-      /* Highlighter button */
-      #highlight-btn{ background:#fff; border-radius:10px; box-shadow:0 6px 16px rgba(11,43,82,.14), inset 0 0 0 1.5px var(--line); }
-      #highlight-btn:hover{ background:var(--blue-light); }
+    /* Floating Text Highlight / Remove Tooltip (V2 Design) */
+    .cr-user-hl,
+    .cr-user-highlight {
+      background-color: #fef08a !important;
+      color: #0f172a !important;
+      border-radius: 3px;
+      padding: 1px 3px;
+      cursor: pointer;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+      border-bottom: 2px solid #eab308;
+      transition: all 0.15s ease;
+    }
+    .cr-user-hl:hover,
+    .cr-user-highlight:hover {
+      background-color: #fde047 !important;
+      box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.4);
+    }
+    .cr-hl-tooltip {
+      position: fixed;
+      z-index: 10005;
+      background: #0b2b52;
+      color: #ffffff;
+      padding: 4px 6px;
+      border-radius: 6px;
+      box-shadow: 0 6px 18px rgba(11, 43, 82, 0.35);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-family: 'Sora', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      user-select: none;
+      animation: crFadeIn 0.15s ease;
+    }
+    .cr-hl-tooltip-btn {
+      background: transparent;
+      border: none;
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.12s ease;
+    }
+    .cr-hl-tooltip-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    @keyframes crFadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
       /* Part headers */
       .part-header{ background:var(--blue-light); border-radius:12px; box-shadow:inset 6px 0 0 var(--red), inset 0 0 0 1px #cfe1fa; }
@@ -116,22 +334,60 @@
     </head>
     <body>
 
-<button id="highlight-btn"><img src="https://i.ibb.co/ym9KSdkd/marker.png" alt="highlighter" border="0" style="width: 20px; height: 20px; padding-bottom: 5px;"></button>
-    <!-- top navbar -->
-  <div class="navbar-custom">
-    <div class="navbar-grid">
-    <div id="userID" class="navbar-left">XXXXXXXXXX</div>
-    <div class="navbar-left"><span class="timer-blunt timer"><span id="timer">60</span> minutes remaining</span></div>
-    <div class="navbar-left timer-specific timer" id="timer">
-            <span id="minutes">60</span>:<span id="seconds">00</span> minutes
+<!-- Top V2 Navbar (Matched with Writing V2 & Cambridge V2) -->
+  <header class="cr-navbar">
+    <span id="userID" style="display:none;">XXXXXXXXXX</span>
+    <span id="timer" style="display:none;">60</span>
+    <span class="timer-blunt" style="display:none;"></span>
+    <span class="timer-specific" style="display:none;"></span>
+
+    <!-- Left: Brand Logo & Test Title Identity -->
+    <div class="cr-nav-left">
+      <a href="/" class="cr-brand-link" title="IELTS Mockpoint Hub">
+        <div class="cr-brand-badge">
+          <img src="/Brandlogo.png" alt="IELTS Mockpoint" class="cr-brand-img" width="114" height="38">
         </div>
+      </a>
+      <div class="cr-nav-divider"></div>
+      <div class="cr-test-identity">
+        <span class="cr-test-book-pill" id="testBookBadge">Full Mock</span>
+        <span class="cr-test-title-text" id="testTitleBadge">Academic Reading Test</span>
+      </div>
     </div>
-    <div class="navbar-right">
-      <button id="finishBtn" name="submit-button" form="quiz-form" class="btn btn-outline-dark btn-sm">Finish test</button>
-      <button class="bi bi-wifi btn-flat"></button>
-      <button class="bi bi-gear btn-flat" onclick="settingsMenu()"></button>
-      <button class="bi bi-journal-text btn-flat" onclick="openNotes()"></button>
+
+    <!-- Center: Mode Badge -->
+    <div class="cr-nav-center">
+      <div class="cr-reading-badge" id="readingModeBadge">
+        <i class="bi bi-book"></i> <span id="readingModeText">Full Reading Mock Test</span>
+      </div>
     </div>
+
+    <!-- Right: Timer, Fullscreen, Settings, Notes & Finish Test -->
+    <div class="cr-nav-right">
+      <div class="cr-timer-pill" id="readingTimerPill">
+        <i class="bi bi-clock"></i> <span id="minutes">60</span>:<span id="seconds">00</span>
+      </div>
+      <button type="button" class="cr-icon-btn" id="fullscreenToggleBtn" title="Toggle Fullscreen" onclick="toggleFullScreen()">
+        <i class="bi bi-arrows-fullscreen"></i>
+      </button>
+      <button type="button" class="cr-icon-btn" title="Font Size / Settings" onclick="settingsMenu()">
+        <i class="bi bi-sliders"></i>
+      </button>
+      <button type="button" class="cr-icon-btn" title="Scratchpad / Notes" onclick="openNotes()">
+        <i class="bi bi-journal-text"></i>
+      </button>
+      <button id="finishBtn" name="submit-button" form="quiz-form" class="cr-btn-finish">Finish Test</button>
+    </div>
+  </header>
+
+  <!-- Floating Text Highlight / Remove Tooltip (V2 Design) -->
+  <div id="crHighlightTooltip" class="cr-hl-tooltip" style="display:none;">
+    <button type="button" id="crDoHighlightBtn" class="cr-hl-tooltip-btn">
+      <i class="bi bi-pen-fill" style="color:#facc15;"></i> Highlight
+    </button>
+    <button type="button" id="crDoUnhighlightBtn" class="cr-hl-tooltip-btn" style="display:none;">
+      <i class="bi bi-eraser-fill" style="color:#f87171;"></i> Remove Highlight
+    </button>
   </div>
 
   <!--popup menu for changin font-size-->
@@ -292,5 +548,17 @@
        <script src="scripts-reading.js">
         
        </script> 
-    </body>
+      <script>
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
 </html>

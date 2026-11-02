@@ -1,0 +1,95 @@
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <!-- Brand & Mission -->
+      <div>
+        <a href="/" class="brand" style="margin-bottom:12px">
+          <img src="/Brandlogo.png" width="120" height="40" alt="IELTS Mockpoint" style="height:40px;width:120px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <span class="txt"><i></i>IELTS Mockpoint</span>
+        </a>
+        <p style="color:var(--muted);font-size:.9rem;max-width:32ch">
+          Free, examiner-graded IELTS practice — authentic mock tests, band score evaluation, and resources.
+        </p>
+      </div>
+
+      <!-- Practice Modules -->
+      <div>
+        <h4>Practice</h4>
+        <a href="/mocks.html">Full Tests</a>
+        <a href="/cambridge-listening.html">Listening</a>
+        <a href="/cambridge-reading.html">Reading</a>
+        <a href="/cambridge-writing.html">Writing</a>
+        <a href="/speaking.html">Speaking</a>
+        <a href="/practice-hub">Practice Hub</a>
+        <a href="/listening-exercises">Listening Exercises</a>
+        <a href="/reading-exercises">Reading Exercises</a>
+      </div>
+
+      <!-- Resources & Blog -->
+      <div>
+        <h4>Resources</h4>
+        <a href="/dashboard" style="font-weight:700; color:var(--blue,#1565c9);">Candidate Dashboard</a>
+        <a href="/blog.html">Blog & Tips</a>
+        <a href="/learn.html">Free lessons</a>
+        <a href="/band-calculator.html">Band score calculator</a>
+        <a href="/writing-samples.html">Writing samples</a>
+        <a href="/faq">Frequently Asked Questions</a>
+      </div>
+
+      <!-- Company & Support -->
+      <div>
+        <h4>Company</h4>
+        <a href="/pricing" class="footer-pricing-link" id="footer-pricing-link" style="display:none; color:var(--red,#e0202d); font-weight:700;">Plans &amp; Pricing <span style="font-size:0.68rem; background:#fdecee; color:#e0202d; padding:2px 7px; border-radius:99px; border:1px solid #fecaca; margin-left:4px; font-weight:800;">PASS</span></a>
+        <a href="/about.html">About Us</a>
+        <a href="/contact.html">Contact Us</a>
+        <a href="/institutes.html">For institutes</a>
+      </div>
+
+      <!-- Legal & AdSense Compliance -->
+      <div>
+        <h4>Legal & Policy</h4>
+        <a href="/privacy-policy.html">Privacy Policy</a>
+        <a href="/terms-of-service.html">Terms of Service</a>
+        <a href="/disclaimer.html">Disclaimer</a>
+        <a href="/cookie-policy.html">Cookie Policy</a>
+      </div>
+    </div>
+
+    <!-- Bottom Copyright & Disclaimer -->
+    <div class="fbottom" style="display:flex; flex-direction:column; gap:8px; margin-top:24px; padding-top:16px; border-top:1px solid var(--line, #e3e9f3); font-size:0.8rem; color:var(--muted);">
+      <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+        <span>© 2026 IELTS Mockpoint. All rights reserved.</span>
+        <span>Trusted IELTS Preparation & Mock Platform.</span>
+      </div>
+      <span>
+        Disclaimer: IELTS® is a registered trademark of the University of Cambridge, the British Council, and IDP Education Australia. IELTS Mockpoint is an independent preparation platform and is not affiliated, approved, or endorsed by these official bodies.
+      </span>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+(function() {
+  function syncFooterPricingLink() {
+    fetch('/api/system-settings')
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        if (d && d.success && d.settings) {
+          var isPhase3 = Number(d.settings.currentPhase) === 3;
+          var els = document.querySelectorAll('.footer-pricing-link, #footer-pricing-link');
+          els.forEach(function(el) {
+            el.style.display = isPhase3 ? 'inline-flex' : 'none';
+            if (isPhase3) el.style.alignItems = 'center';
+          });
+        }
+      })
+      .catch(function() {});
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', syncFooterPricingLink);
+  } else {
+    syncFooterPricingLink();
+  }
+})();
+</script>

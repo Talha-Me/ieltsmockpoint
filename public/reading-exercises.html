@@ -466,11 +466,10 @@
     /* Cambridge Reading Cards Grid & Animations */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(275px, 1fr));
-      gap: 24px;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important;
+      gap: 20px !important;
       padding-bottom: 70px;
       min-height: 320px;
-      perspective: 1200px;
     }
 
     .card {
@@ -844,7 +843,299 @@
         gap: 20px;
       }
     }
-  </style>
+  
+.card.is-locked {
+  position: relative;
+  cursor: pointer;
+}
+.card.is-locked .btn-locked {
+  background: #f1f5f9 !important;
+  color: #64748b !important;
+  border: 1px solid #cbd5e1 !important;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+.card.is-locked:hover .btn-locked {
+  background: #e2e8f0 !important;
+  color: #1e293b !important;
+}
+.card-glass-lock {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  box-shadow: 0 4px 12px rgba(11, 43, 82, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  z-index: 5;
+  transition: all 0.2s ease;
+}
+.card.is-locked:hover .card-glass-lock {
+  background: rgba(224, 32, 45, 0.12);
+  border-color: rgba(224, 32, 45, 0.45);
+  color: #e0202d;
+  transform: scale(1.08);
+}
+
+
+/* ========================================================
+   Exact Mockup: Soft Ice-Blue Frosted Card with Center Lock & Bottom Unlock Prompt
+   ======================================================== */
+.card.is-locked {
+  position: relative !important;
+  background: #f1f6fd !important;
+  border: 1.5px solid #dbeafe !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 18px rgba(21, 101, 201, 0.05) !important;
+  transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s !important;
+}
+
+.card.is-locked .bignum {
+  color: #dbeafe !important;
+}
+
+.card.is-locked .pill,
+.card.is-locked .pill.pill-cambridge,
+.card.is-locked .pill.pill-bank {
+  background: #e0edfe !important;
+  color: #1e40af !important;
+}
+
+.card.is-locked h3 {
+  color: #0b2b52 !important;
+  opacity: 0.9;
+}
+
+.card.is-locked .chips span {
+  background: #e2edfb !important;
+  color: #475569 !important;
+}
+
+/* Translucent Frosted Start Button */
+.card.is-locked .btn,
+.card.is-locked a.btn,
+.card.is-locked .btn.btn-red,
+.card.is-locked .btn.btn-locked {
+  background: rgba(224, 32, 45, 0.42) !important;
+  color: rgba(255, 255, 255, 0.88) !important;
+  border: none !important;
+  backdrop-filter: blur(2px) !important;
+  -webkit-backdrop-filter: blur(2px) !important;
+  box-shadow: none !important;
+  pointer-events: none !important;
+  user-select: none !important;
+}
+
+/* Floating Centerpiece Padlock Badge */
+.card-center-lock {
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.center-lock-circle {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 2px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 10px 26px rgba(21, 101, 201, 0.18), 0 2px 6px rgba(0, 0, 0, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.center-lock-circle svg {
+  fill: #0b2b52 !important;
+  width: 26px !important;
+  height: 26px !important;
+  display: block;
+  transition: fill 0.25s ease;
+}
+
+/* Bottom Left 'Unlock Exercise >' Indicator */
+.card-bottom-unlock {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #64748b;
+  user-select: none;
+  transition: color 0.22s ease, transform 0.22s ease;
+}
+
+.card-bottom-unlock svg {
+  stroke: #64748b;
+  width: 16px !important;
+  height: 16px !important;
+  display: inline-block;
+  vertical-align: middle;
+  transition: stroke 0.22s ease;
+  flex-shrink: 0;
+}
+
+/* Hover States matching user screenshot */
+.card.is-locked:hover {
+  transform: translateY(-6px) !important;
+  border-color: #bfdbfe !important;
+  box-shadow: 0 16px 36px rgba(21, 101, 201, 0.12) !important;
+}
+
+.card.is-locked:hover .center-lock-circle {
+  transform: scale(1.1);
+  box-shadow: 0 14px 32px rgba(224, 32, 45, 0.22);
+  border-color: rgba(224, 32, 45, 0.3);
+}
+
+.card.is-locked:hover .center-lock-circle svg {
+  fill: #e0202d !important;
+}
+
+.card.is-locked:hover .card-bottom-unlock {
+  color: #e0202d;
+  transform: translateX(2px);
+}
+
+.card.is-locked:hover .card-bottom-unlock svg {
+  stroke: #e0202d;
+}
+
+
+/* ========================================================
+   Uniform Sizing matching /mocks (Clean ~270px proportions)
+   ======================================================== */
+.card {
+  position: relative !important;
+  background: #fff;
+  border: 1.5px solid var(--line) !important;
+  border-radius: 20px !important;
+  padding: 24px 22px 22px !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 275px !important;
+  max-height: 310px !important;
+  box-sizing: border-box !important;
+  transition: transform 0.25s ease-out, border-color 0.25s, box-shadow 0.25s !important;
+}
+.card:hover {
+  transform: translateY(-6px) !important;
+  border-color: var(--blue) !important;
+  box-shadow: 0 20px 40px rgba(21, 101, 201, 0.13) !important;
+}
+.card .bignum {
+  position: absolute !important;
+  right: 14px !important;
+  top: -6px !important;
+  font-family: 'Sora', sans-serif !important;
+  font-weight: 800 !important;
+  font-size: 5rem !important;
+  color: var(--blue-light) !important;
+  line-height: 1 !important;
+  pointer-events: none !important;
+  user-select: none !important;
+  transition: color 0.3s !important;
+}
+.card:hover .bignum {
+  color: #fdecee !important;
+}
+.card .pill {
+  position: relative !important;
+  align-self: flex-start !important;
+  max-width: 82% !important;
+  font-size: 0.66rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.06em !important;
+  padding: 4px 10px !important;
+  border-radius: 999px !important;
+  margin-bottom: 14px !important;
+}
+.card h3 {
+  position: relative !important;
+  font-family: 'Sora', sans-serif !important;
+  font-size: 1.15rem !important;
+  font-weight: 700 !important;
+  color: var(--navy) !important;
+  margin-bottom: 4px !important;
+  line-height: 1.35 !important;
+}
+.card .sub-source {
+  position: relative !important;
+  font-size: 0.78rem !important;
+  color: var(--muted) !important;
+  margin-bottom: 10px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 88% !important;
+}
+.chips {
+  position: relative !important;
+  display: flex !important;
+  gap: 6px !important;
+  flex-wrap: wrap !important;
+  margin-bottom: 16px !important;
+}
+.chips span {
+  font-size: 0.74rem !important;
+  font-weight: 600 !important;
+  color: var(--muted) !important;
+  background: var(--surface) !important;
+  border-radius: 8px !important;
+  padding: 4px 8px !important;
+}
+.card-actions {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  position: relative !important;
+  margin-top: auto !important;
+  padding-top: 0 !important;
+  border-top: none !important;
+  width: 100% !important;
+}
+.card-actions .btn {
+  width: 100% !important;
+  justify-content: center !important;
+  padding: 10px 18px !important;
+  font-size: 0.88rem !important;
+  font-weight: 700 !important;
+  box-sizing: border-box !important;
+}
+.center-lock-circle {
+  width: 54px !important;
+  height: 54px !important;
+}
+.center-lock-circle svg {
+  width: 24px !important;
+  height: 24px !important;
+}
+.card-bottom-unlock {
+  margin-top: 10px !important;
+  font-size: 0.8rem !important;
+}
+
+</style>
 <script src="/shared-layout.js"></script>
 <script src="/auth-nav.js"></script>
 </head>
@@ -1386,6 +1677,95 @@
     }
 
     // Render cards into grid (Cambridge Official + Practice Bank with criteria badges)
+    
+    let exPhase = 1;
+    let exFreeQuota = 2;
+
+    fetch('/api/system-settings')
+      .then(r => r.json())
+      .then(d => {
+        if (d && d.success && d.settings) {
+          exPhase = Number(d.settings.currentPhase) || 1;
+          exFreeQuota = d.settings.freePracticeHubSets !== undefined ? Number(d.settings.freePracticeHubSets) : 2;
+          applyFilterAndSearch();
+        }
+      }).catch(() => {});
+
+    function isExerciseLocked(idx) {
+      if (exPhase === 1) return false;
+      let user = null;
+      try { user = JSON.parse(localStorage.getItem('user') || 'null'); } catch(e) {}
+      const isLoggedIn = !!(user && (user.email || user.name));
+      const isPremium = !!(user && (user.isPremium || user.role === 'admin' || user.plan === 'premium'));
+      if (exPhase === 2 && isLoggedIn) return false;
+      if (exPhase === 3 && isPremium) return false;
+      return idx >= exFreeQuota;
+    }
+
+    function openExUnlockModal(phaseOverride) {
+      const phase = phaseOverride || exPhase;
+      const modal = document.getElementById('ex-unlock-modal');
+      if (!modal) return;
+      const iconWrap = document.getElementById('exUnlockIconWrap');
+      const tagBadge = document.getElementById('exUnlockBadge');
+      const titleEl = document.getElementById('exUnlockTitle');
+      const descEl = document.getElementById('exUnlockDesc');
+      const primaryBtn = document.getElementById('exUnlockPrimaryBtn');
+
+      if (phase === 3) {
+        if (iconWrap) {
+          iconWrap.style.background = 'rgba(224, 32, 45, 0.08)';
+          iconWrap.style.borderColor = 'rgba(224, 32, 45, 0.28)';
+          iconWrap.style.color = '#e0202d';
+          iconWrap.innerHTML = '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>';
+        }
+        if (tagBadge) {
+          tagBadge.style.background = '#fee2e2';
+          tagBadge.style.color = '#b91c1c';
+          tagBadge.textContent = 'PREMIUM PLAN REQUIRED';
+        }
+        if (titleEl) titleEl.textContent = 'Unlock with Premium Access';
+        if (descEl) descEl.textContent = 'Upgrade to IELTS Mockpoint Premium or purchase a test pass to unlock all Reading exercises without limits.';
+        if (primaryBtn) {
+          primaryBtn.style.background = '#e0202d';
+          primaryBtn.href = '/pricing';
+          primaryBtn.innerHTML = '<span>Upgrade to Premium / Buy Pass</span> &rarr;';
+        }
+      } else {
+        if (iconWrap) {
+          iconWrap.style.background = '#fdecee';
+          iconWrap.style.borderColor = 'rgba(224, 32, 45, 0.28)';
+          iconWrap.style.color = '#e0202d';
+          iconWrap.innerHTML = '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#e0202d" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>';
+        }
+        if (tagBadge) {
+          tagBadge.style.background = '#fdecee';
+          tagBadge.style.color = '#e0202d';
+          tagBadge.style.border = '1px solid rgba(224, 32, 45, 0.25)';
+          tagBadge.textContent = 'FREE CANDIDATE ACCOUNT';
+        }
+        if (titleEl) titleEl.textContent = 'Sign In Required to Unlock';
+        if (descEl) descEl.textContent = 'Please log in or create a free candidate account to practice all Reading exercises for every question type and save your progress to your personal dashboard.';
+        if (primaryBtn) {
+          primaryBtn.style.background = '#e0202d';
+          primaryBtn.style.boxShadow = '0 8px 20px rgba(224, 32, 45, 0.28)';
+          primaryBtn.href = '/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search);
+          primaryBtn.innerHTML = '<span>Sign In / Register Free</span> &rarr;';
+        }
+      }
+
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeExUnlockModal() {
+      const modal = document.getElementById('ex-unlock-modal');
+      if (modal) modal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+    window.openExUnlockModal = openExUnlockModal;
+    window.closeExUnlockModal = closeExUnlockModal;
+
     function renderExercises(items) {
       if (!items.length) {
         grid.innerHTML = `
@@ -1407,26 +1787,44 @@
         const titleText = isBank ? (ex.title || `Exercise ${idx + 1}`) : (ex.title || `Exercise ${idx + 1}`);
         const sourceText = ex.source || (isBank ? `from Practice Bank Set ${ex.setNumber} Academic Reading` : `from Cambridge IELTS ${ex.book} Academic Reading Test ${ex.testNo}`);
 
+        const isLocked = isExerciseLocked(idx);
+        const lockIcon = isLocked ? '<div class="card-glass-lock" title="Sign in to unlock"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></div>' : '';
+        const btnHtml = isLocked
+          ? '<button type="button" class="btn btn-red btn-locked" onclick="openExUnlockModal()">Start practice &rarr;</button>'
+          : `<a href="${ex.link}" target="_blank" rel="noopener noreferrer" class="btn btn-red" onclick="markDone('${storageKey}')">Start practice &rarr;</a>`;
+
         return `
-          <article class="card ${isDone ? 'done' : ''}" data-k="${storageKey}" data-source="${ex.sourceType || 'cambridge'}">
+          <article class="card ${isDone ? 'done' : ''} ${isLocked ? 'is-locked' : ''}" data-k="${storageKey}" data-source="${ex.sourceType || 'cambridge'}" onclick="${isLocked ? 'openExUnlockModal()' : ''}">
+            ${isLocked ? `
+              <div class="card-center-lock" aria-hidden="true">
+                <div class="center-lock-circle">
+                  <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+                  </svg>
+                </div>
+              </div>
+            ` : ''}
             <span class="bignum">${numStr}</span>
             <span class="${pillClass}">${escapeHtml(pillText)}</span>
             <h3>${escapeHtml(titleText)}</h3>
             <div class="sub-source">${escapeHtml(sourceText)}</div>
             <div class="chips">
-              <span title="${escapeHtml(ex.passageTitle)}">${escapeHtml(ex.passageTitle.slice(0, 32))}${ex.passageTitle.length > 32 ? '...' : ''}</span>
               <span class="q-range-chip">${escapeHtml(ex.qRange)}</span>
+              <span>${ex.questionsCount || 6} Questions</span>
               ${isDone ? '<span class="done">Completed ✓</span>' : ''}
             </div>
             <div class="card-actions">
-              <span class="q-count">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                ${ex.questionsCount || 6} questions
-              </span>
-              <a href="${ex.link}" target="_blank" rel="noopener noreferrer" class="btn btn-red" onclick="markDone('${storageKey}')">
-                Start practice →
-              </a>
+              ${btnHtml}
             </div>
+            ${isLocked ? `
+              <div class="card-bottom-unlock">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                <span>Unlock Exercise &rsaquo;</span>
+              </div>
+            ` : ''}
           </article>
         `;
       }).join('');
@@ -1555,5 +1953,37 @@
     // Initial load
     loadExercises(currentType);
   </script>
+
+<!-- Exercise Unlock Modal -->
+<div id="ex-unlock-modal" style="position:fixed; inset:0; z-index:99999; background:rgba(11,43,82,0.58); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); display:none; align-items:center; justify-content:center; padding:16px;" onclick="if(event.target===this)closeExUnlockModal();">
+  <div style="background:#fff; border-radius:24px; max-width:440px; width:100%; text-align:center; padding:36px 30px; position:relative; box-shadow:0 24px 60px rgba(11,43,82,0.24); border:1.5px solid #dbeafe; overflow:hidden;">
+    <div style="position:absolute; top:0; left:0; width:100%; height:4px; background:linear-gradient(90deg, #0b2b52 0%, #1565c9 50%, #e0202d 100%);"></div>
+    <button type="button" onclick="closeExUnlockModal()" style="position:absolute; right:16px; top:16px; width:34px; height:34px; border-radius:50%; border:1px solid #e2e8f0; background:#f8fafc; color:#0b2b52; font-size:18px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s;">&times;</button>
+    <div id="exUnlockIconWrap" style="width:58px; height:58px; border-radius:16px; background:#fdecee; border:1.5px solid rgba(224, 32, 45, 0.28); display:inline-flex; align-items:center; justify-content:center; color:#e0202d; margin:0 auto 16px;">
+      <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#e0202d" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+    </div>
+    <div id="exUnlockBadge" style="display:inline-block; font-size:0.75rem; font-weight:800; letter-spacing:0.06em; padding:4px 12px; border-radius:999px; margin-bottom:12px; background:#fdecee; color:#e0202d; border:1px solid rgba(224, 32, 45, 0.25);">FREE CANDIDATE ACCOUNT</div>
+    <h3 id="exUnlockTitle" style="font-family:'Sora',sans-serif; font-size:1.35rem; font-weight:800; color:#0b2b52; margin-bottom:10px; line-height:1.3;">Sign In Required to Unlock</h3>
+    <p id="exUnlockDesc" style="font-size:0.89rem; color:#475569; line-height:1.6; margin-bottom:24px;">
+      Please log in or create a free candidate account to practice all Reading exercises for every question type and save your progress to your personal dashboard.
+    </p>
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <a href="/login?redirect=" id="exUnlockPrimaryBtn" style="padding:13px 22px; border-radius:12px; background:#e0202d; color:#fff; text-decoration:none; font-weight:700; font-size:0.95rem; font-family:'Sora',sans-serif; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 8px 20px rgba(224, 32, 45, 0.28); transition:all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);">
+        <span>Sign In / Register Free</span> &rarr;
+      </a>
+      <button type="button" onclick="closeExUnlockModal()" style="padding:11px 18px; border-radius:12px; background:#f8fafc; border:1.5px solid #dbeafe; color:#0b2b52; font-weight:700; font-size:0.88rem; font-family:'Sora',sans-serif; cursor:pointer; transition:all 0.2s;">
+        Maybe Later
+      </button>
+    </div>
+  </div>
+</div>
+
+
+// Reset modal and unlock body when navigating back (e.g. from login page)
+window.addEventListener('pageshow', () => {
+  try { closeExUnlockModal(); } catch(e) {}
+  document.body.style.overflow = '';
+});
+
 </body>
 </html>

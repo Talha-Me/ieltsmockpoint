@@ -1654,224 +1654,199 @@
 
 
 
-// //highlight button logic
+// // ==========================================
+// V2 TEXT HIGHLIGHT & REMOVE SYSTEM (MATCHING CAMBRIDGE V2)
+// ==========================================
+(function initTextHighlight() {
+  let savedSelectionRange = null;
+  let activeTargetHighlight = null;
 
-// const button = document.getElementById('highlight-btn');
+  const tooltip = document.getElementById("crHighlightTooltip");
+  const doHlBtn = document.getElementById("crDoHighlightBtn");
+  const doUnhlBtn = document.getElementById("crDoUnhighlightBtn");
+  if (!tooltip) return;
 
-//     document.addEventListener('mouseup', () => {
-//       const selection = window.getSelection();
-//       if (selection && selection.rangeCount > 0 && !selection.isCollapsed) {
-//         const range = selection.getRangeAt(0);
-//         const rect = range.getBoundingClientRect();
+  document.addEventListener("mouseup", handleSelectionChange);
+  document.addEventListener("keyup", handleSelectionChange);
 
-//         // Show button near selection
-//         button.style.top =  `${window.scrollY + rect.top + 20}px`;
-//         button.style.left = `${window.scrollX + rect.right - 35}px`;
-//         button.style.display = 'block';
-//       } else {
-//         button.style.display = 'none';
-//       }
-//     });
+  document.addEventListener("click", (e) => {
+    const hlMark = e.target.closest(".cr-user-hl, .cr-user-highlight");
+    if (hlMark) {
+      e.stopPropagation();
+      showUnhighlightTooltip(hlMark);
+      return;
+    }
 
-//     button.addEventListener('click', () => {
-//       const selection = window.getSelection();
-//       if (selection && selection.rangeCount > 0 && !selection.isCollapsed) {
-//         //const range = selection.getRangeAt(0);
-//         //console.log(range.toString());
-//         //const span = document.createElement('span');
-//         //span.classList.add('highlighted');
-//         //range.surroundContents(span);
-//         //highlightRangeTest(range);
-//         highlightSelection();
-//         selection.removeAllRanges();
-//         button.style.display = 'none';
-//       }
-//     });
+    if (!e.target.closest("#crHighlightTooltip")) {
+      hideHighlightTooltip();
+    }
+  });
 
+  if (doHlBtn) {
+    doHlBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      highlightCurrentSelection();
+    });
+  }
 
-// function highlightSelection() {
-//   var userSelection = window.getSelection().getRangeAt(0);
-//   var safeRanges = getSafeRanges(userSelection);
-//   for (var i = 0; i < safeRanges.length; i++) {
-//     highlightRange(safeRanges[i]);
-//   }
-// }
+  if (doUnhlBtn) {
+    doUnhlBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (activeTargetHighlight) {
+        removeUserHighlight(activeTargetHighlight);
+      } else if (savedSelectionRange) {
+        removeHighlightsInSelection(savedSelectionRange);
+      }
+    });
+  }
 
-// function highlightRange(range) {
-//   var newNode = document.createElement("div");
-//   newNode.setAttribute(
-//     "class",
-//     "highlight-wrapper"
-//   );
-//   range.surroundContents(newNode);
-// }
+  function handleSelectionChange(e) {
+    if (e && e.target && e.target.closest("#crHighlightTooltip")) return;
 
-// (function () {
-//   const popup = document.getElementById('unhighlightPopup');
-//   let currentHighlight = null;
+    setTimeout(() => {
+      const sel = window.getSelection();
+      if (!sel || sel.isCollapsed || !sel.rangeCount) {
+        if (!activeTargetHighlight) hideHighlightTooltip();
+        return;
+      }
 
-//   // Interactive elements that should be allowed to receive clicks/focus
-//   const interactiveSelector = 'input, textarea, select, button, a, label, [contenteditable="true"]';
+      const text = sel.toString().trim();
+      if (text.length === 0) {
+        if (!activeTargetHighlight) hideHighlightTooltip();
+        return;
+      }
 
-//   function showPopupFor(wrapper, clickEvent) {
-//     currentHighlight = wrapper;
-//     const rect = wrapper.getBoundingClientRect();
+      const range = sel.getRangeAt(0);
+      const containerEl = range.commonAncestorContainer.nodeType === 1
+        ? range.commonAncestorContainer
+        : range.commonAncestorContainer.parentElement;
 
-//     // position a little below the wrapper
-//     popup.style.top = `${rect.bottom + window.scrollY + 6}px`;
-//     // ensure popup doesn't run off-screen left
-//     const left = Math.max(rect.left + window.scrollX, 6);
-//     popup.style.left = `${left}px`;
-//     popup.style.display = 'block';
+      if (!containerEl || containerEl.closest("input, textarea, select, button, #crHighlightTooltip, .cr-navbar, .bottom-navbar, .popup-settings, .popup-note")) {
+        hideHighlightTooltip();
+        return;
+      }
 
-//     // focus so keyboard users can press Enter
-//     popup.focus();
-//   }
+      const rect = range.getBoundingClientRect();
+      if (rect.width === 0 && rect.height === 0) return;
 
-//   function hidePopup() {
-//     popup.style.display = 'none';
-//     currentHighlight = null;
-//   }
+      savedSelectionRange = range.cloneRange();
+      activeTargetHighlight = null;
 
-//   function unwrapHighlight(wrapper) {
-//     if (!wrapper) return;
-//     // Move all child nodes into a fragment to preserve elements exactly
-//     const frag = document.createDocumentFragment();
-//     while (wrapper.firstChild) {
-//       frag.appendChild(wrapper.firstChild);
-//     }
-//     // Replace the wrapper with its children (preserves structure)
-//     wrapper.replaceWith(frag);
+      const commonNode = range.commonAncestorContainer;
+      const enclosingHighlight = commonNode.nodeType === 1
+        ? commonNode.closest(".cr-user-hl, .cr-user-highlight")
+        : (commonNode.parentElement ? commonNode.parentElement.closest(".cr-user-hl, .cr-user-highlight") : null);
 
-//     // clean up references
-//     hidePopup();
-//   }
+      if (enclosingHighlight) {
+        activeTargetHighlight = enclosingHighlight;
+        if (doHlBtn) doHlBtn.style.display = "none";
+        if (doUnhlBtn) doUnhlBtn.style.display = "inline-flex";
+      } else {
+        const fragment = range.cloneContents();
+        const hasHighlightsInside = fragment.querySelector && fragment.querySelector(".cr-user-hl, .cr-user-highlight");
+        if (hasHighlightsInside) {
+          if (doHlBtn) doHlBtn.style.display = "inline-flex";
+          if (doUnhlBtn) doUnhlBtn.style.display = "inline-flex";
+        } else {
+          if (doHlBtn) doHlBtn.style.display = "inline-flex";
+          if (doUnhlBtn) doUnhlBtn.style.display = "none";
+        }
+      }
 
-//   // click handler for the whole document
-//   document.addEventListener('click', function (e) {
-//     const target = e.target;
+      positionTooltip(rect);
+    }, 30);
+  }
 
-//     // if popup clicked → unhighlight the stored wrapper
-//     if (target === popup || popup.contains(target)) {
-//       if (currentHighlight) {
-//         unwrapHighlight(currentHighlight);
-//       } else {
-//         hidePopup();
-//       }
-//       e.stopPropagation();
-//       return;
-//     }
+  function positionTooltip(rect) {
+    if (!tooltip) return;
+    tooltip.style.display = "flex";
+    const tipWidth = tooltip.offsetWidth || 150;
+    const left = Math.max(10, Math.min(window.innerWidth - tipWidth - 10, rect.left + rect.width / 2 - tipWidth / 2));
+    const top = Math.max(10, rect.top - 46);
 
-//     // Did we click inside a highlight wrapper (or its descendants)?
-//     const wrapper = target.closest && target.closest('.highlight-wrapper');
+    tooltip.style.left = left + "px";
+    tooltip.style.top = top + "px";
+  }
 
-//     if (wrapper) {
-//       // If the click target is an interactive element, allow normal interaction (don't show popup)
-//       if (target.matches(interactiveSelector)) {
-//         // don't show popup; let the input/select get focus
-//         hidePopup();
-//         return;
-//       }
+  function showUnhighlightTooltip(hlMark) {
+    activeTargetHighlight = hlMark;
+    savedSelectionRange = null;
+    const rect = hlMark.getBoundingClientRect();
+    if (doHlBtn) doHlBtn.style.display = "none";
+    if (doUnhlBtn) doUnhlBtn.style.display = "inline-flex";
+    positionTooltip(rect);
+  }
 
-//       // Otherwise show popup for the nearest wrapper clicked
-//       showPopupFor(wrapper, e);
-//       e.stopPropagation();
-//       return;
-//     }
+  function hideHighlightTooltip() {
+    if (tooltip) tooltip.style.display = "none";
+    activeTargetHighlight = null;
+  }
 
-//     // Click outside → hide popup
-//     hidePopup();
-//   }, true); // use capture to reduce chance popup immediately hides
+  function highlightCurrentSelection() {
+    const sel = window.getSelection();
+    let range = savedSelectionRange;
+    if (sel && !sel.isCollapsed && sel.rangeCount) {
+      range = sel.getRangeAt(0);
+    }
+    if (!range) return;
 
-//   // keyboard shortcuts
-//   document.addEventListener('keydown', function (e) {
-//     if (e.key === 'Escape') {
-//       hidePopup();
-//       return;
-//     }
-//     if ((e.key === 'Enter' || e.key === ' ') && document.activeElement === popup) {
-//       // Enter or Space on the popup triggers unhighlight
-//       if (currentHighlight) unwrapHighlight(currentHighlight);
-//       e.preventDefault();
-//       return;
-//     }
-//   });
+    const text = range.toString().trim();
+    if (!text) return;
 
-//   // Reposition popup when scrolling / resizing so it stays near the wrapper
-//   function repositionPopup() {
-//     if (!currentHighlight || popup.style.display === 'none') return;
-//     const rect = currentHighlight.getBoundingClientRect();
-//     popup.style.top = `${rect.bottom + window.scrollY + 6}px`;
-//     popup.style.left = `${Math.max(rect.left + window.scrollX, 6)}px`;
-//   }
-//   window.addEventListener('scroll', repositionPopup, { passive: true });
-//   window.addEventListener('resize', repositionPopup);
+    try {
+      const mark = document.createElement("mark");
+      mark.className = "cr-user-hl cr-user-highlight";
+      mark.title = "Click to remove highlight";
+      range.surroundContents(mark);
+    } catch (e) {
+      try {
+        const fragment = range.extractContents();
+        const mark = document.createElement("mark");
+        mark.className = "cr-user-hl cr-user-highlight";
+        mark.title = "Click to remove highlight";
+        mark.appendChild(fragment);
+        range.insertNode(mark);
+      } catch (err) {
+        console.warn("Could not wrap selection:", err);
+      }
+    }
 
-// })();
+    if (sel) sel.removeAllRanges();
+    savedSelectionRange = null;
+    hideHighlightTooltip();
+  }
 
-// function getSafeRanges(dangerous) {
-//   var a = dangerous.commonAncestorContainer;
-//   // Starts -- Work inward from the start, selecting the largest safe range
-//   var s = new Array(0), rs = new Array(0);
-//   if (dangerous.startContainer != a) {
-//     for (var i = dangerous.startContainer; i != a; i = i.parentNode) {
-//       s.push(i);
-//     }
-//   }
-//   if (s.length > 0) {
-//     for (var i = 0; i < s.length; i++) {
-//       var xs = document.createRange();
-//       if (i) {
-//         xs.setStartAfter(s[i - 1]);
-//         xs.setEndAfter(s[i].lastChild);
-//       } else {
-//         xs.setStart(s[i], dangerous.startOffset);
-//         xs.setEndAfter((s[i].nodeType == Node.TEXT_NODE) ? s[i] : s[i].lastChild);
-//       }
-//       rs.push(xs);
-//     }
-//   }
+  function removeUserHighlight(markEl) {
+    if (!markEl || !markEl.parentNode) return;
+    const parent = markEl.parentNode;
+    while (markEl.firstChild) {
+      parent.insertBefore(markEl.firstChild, markEl);
+    }
+    parent.removeChild(markEl);
+    parent.normalize();
+    hideHighlightTooltip();
+  }
 
-//   // Ends -- basically the same code reversed
-//   var e = new Array(0), re = new Array(0);
-//   if (dangerous.endContainer != a) {
-//     for (var i = dangerous.endContainer; i != a; i = i.parentNode) {
-//       e.push(i);
-//     }
-//   }
-//   if (e.length > 0) {
-//     for (var i = 0; i < e.length; i++) {
-//       var xe = document.createRange();
-//       if (i) {
-//         xe.setStartBefore(e[i].firstChild);
-//         xe.setEndBefore(e[i - 1]);
-//       } else {
-//         xe.setStartBefore((e[i].nodeType == Node.TEXT_NODE) ? e[i] : e[i].firstChild);
-//         xe.setEnd(e[i], dangerous.endOffset);
-//       }
-//       re.unshift(xe);
-//     }
-//   }
-
-//   // Middle -- the uncaptured middle
-//   if ((s.length > 0) && (e.length > 0)) {
-//     var xm = document.createRange();
-//     xm.setStartAfter(s[s.length - 1]);
-//     xm.setEndBefore(e[e.length - 1]);
-//   } else {
-//     return [dangerous];
-//   }
-
-//   // Concat
-//   rs.push(xm);
-//   response = rs.concat(re);
-
-//   // Send to Console
-//   return response;
-// }
-
-
-// // hightlight button logic //
+  function removeHighlightsInSelection(range) {
+    if (!range) return;
+    const commonNode = range.commonAncestorContainer;
+    const root = commonNode.nodeType === 1 ? commonNode : (commonNode.parentElement || document.body);
+    const marks = root.querySelectorAll(".cr-user-hl, .cr-user-highlight");
+    marks.forEach(m => {
+      try {
+        if (range.intersectsNode(m)) {
+          removeUserHighlight(m);
+        }
+      } catch (e) {
+        removeUserHighlight(m);
+      }
+    });
+    const sel = window.getSelection();
+    if (sel) sel.removeAllRanges();
+    savedSelectionRange = null;
+    hideHighlightTooltip();
+  }
+})();
 
 
 // //scrolling while dragging
@@ -4208,224 +4183,7 @@ document.addEventListener("DOMContentLoaded", (event)=>{
 
 
 
-//highlight button logic
-
-const button = document.getElementById('highlight-btn');
-
-    document.addEventListener('mouseup', () => {
-      const selection = window.getSelection();
-      if (selection && selection.rangeCount > 0 && !selection.isCollapsed) {
-        const range = selection.getRangeAt(0);
-        const rect = range.getBoundingClientRect();
-
-        // Show button near selection
-        button.style.top =  `${window.scrollY + rect.top + 20}px`;
-        button.style.left = `${window.scrollX + rect.right - 35}px`;
-        button.style.display = 'block';
-      } else {
-        button.style.display = 'none';
-      }
-    });
-
-    button.addEventListener('click', () => {
-      const selection = window.getSelection();
-      if (selection && selection.rangeCount > 0 && !selection.isCollapsed) {
-        //const range = selection.getRangeAt(0);
-        //console.log(range.toString());
-        //const span = document.createElement('span');
-        //span.classList.add('highlighted');
-        //range.surroundContents(span);
-        //highlightRangeTest(range);
-        highlightSelection();
-        selection.removeAllRanges();
-        button.style.display = 'none';
-      }
-    });
-
-
-function highlightSelection() {
-  var userSelection = window.getSelection().getRangeAt(0);
-  var safeRanges = getSafeRanges(userSelection);
-  for (var i = 0; i < safeRanges.length; i++) {
-    highlightRange(safeRanges[i]);
-  }
-}
-
-function highlightRange(range) {
-  var newNode = document.createElement("div");
-  newNode.setAttribute(
-    "class",
-    "highlight-wrapper"
-  );
-  range.surroundContents(newNode);
-}
-
-(function () {
-  const popup = document.getElementById('unhighlightPopup');
-  let currentHighlight = null;
-
-  // Interactive elements that should be allowed to receive clicks/focus
-  const interactiveSelector = 'input, textarea, select, button, a, label, [contenteditable="true"]';
-
-  function showPopupFor(wrapper, clickEvent) {
-    currentHighlight = wrapper;
-    const rect = wrapper.getBoundingClientRect();
-
-    // position a little below the wrapper
-    popup.style.top = `${rect.bottom + window.scrollY + 6}px`;
-    // ensure popup doesn't run off-screen left
-    const left = Math.max(rect.left + window.scrollX, 6);
-    popup.style.left = `${left}px`;
-    popup.style.display = 'block';
-
-    // focus so keyboard users can press Enter
-    popup.focus();
-  }
-
-  function hidePopup() {
-    popup.style.display = 'none';
-    currentHighlight = null;
-  }
-
-  function unwrapHighlight(wrapper) {
-    if (!wrapper) return;
-    // Move all child nodes into a fragment to preserve elements exactly
-    const frag = document.createDocumentFragment();
-    while (wrapper.firstChild) {
-      frag.appendChild(wrapper.firstChild);
-    }
-    // Replace the wrapper with its children (preserves structure)
-    wrapper.replaceWith(frag);
-
-    // clean up references
-    hidePopup();
-  }
-
-  // click handler for the whole document
-  document.addEventListener('click', function (e) {
-    const target = e.target;
-
-    // if popup clicked → unhighlight the stored wrapper
-    if (target === popup || popup.contains(target)) {
-      if (currentHighlight) {
-        unwrapHighlight(currentHighlight);
-      } else {
-        hidePopup();
-      }
-      e.stopPropagation();
-      return;
-    }
-
-    // Did we click inside a highlight wrapper (or its descendants)?
-    const wrapper = target.closest && target.closest('.highlight-wrapper');
-
-    if (wrapper) {
-      // If the click target is an interactive element, allow normal interaction (don't show popup)
-      if (target.matches(interactiveSelector)) {
-        // don't show popup; let the input/select get focus
-        hidePopup();
-        return;
-      }
-
-      // Otherwise show popup for the nearest wrapper clicked
-      showPopupFor(wrapper, e);
-      e.stopPropagation();
-      return;
-    }
-
-    // Click outside → hide popup
-    hidePopup();
-  }, true); // use capture to reduce chance popup immediately hides
-
-  // keyboard shortcuts
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') {
-      hidePopup();
-      return;
-    }
-    if ((e.key === 'Enter' || e.key === ' ') && document.activeElement === popup) {
-      // Enter or Space on the popup triggers unhighlight
-      if (currentHighlight) unwrapHighlight(currentHighlight);
-      e.preventDefault();
-      return;
-    }
-  });
-
-  // Reposition popup when scrolling / resizing so it stays near the wrapper
-  function repositionPopup() {
-    if (!currentHighlight || popup.style.display === 'none') return;
-    const rect = currentHighlight.getBoundingClientRect();
-    popup.style.top = `${rect.bottom + window.scrollY + 6}px`;
-    popup.style.left = `${Math.max(rect.left + window.scrollX, 6)}px`;
-  }
-  window.addEventListener('scroll', repositionPopup, { passive: true });
-  window.addEventListener('resize', repositionPopup);
-
-})();
-
-function getSafeRanges(dangerous) {
-  var a = dangerous.commonAncestorContainer;
-  // Starts -- Work inward from the start, selecting the largest safe range
-  var s = new Array(0), rs = new Array(0);
-  if (dangerous.startContainer != a) {
-    for (var i = dangerous.startContainer; i != a; i = i.parentNode) {
-      s.push(i);
-    }
-  }
-  if (s.length > 0) {
-    for (var i = 0; i < s.length; i++) {
-      var xs = document.createRange();
-      if (i) {
-        xs.setStartAfter(s[i - 1]);
-        xs.setEndAfter(s[i].lastChild);
-      } else {
-        xs.setStart(s[i], dangerous.startOffset);
-        xs.setEndAfter((s[i].nodeType == Node.TEXT_NODE) ? s[i] : s[i].lastChild);
-      }
-      rs.push(xs);
-    }
-  }
-
-  // Ends -- basically the same code reversed
-  var e = new Array(0), re = new Array(0);
-  if (dangerous.endContainer != a) {
-    for (var i = dangerous.endContainer; i != a; i = i.parentNode) {
-      e.push(i);
-    }
-  }
-  if (e.length > 0) {
-    for (var i = 0; i < e.length; i++) {
-      var xe = document.createRange();
-      if (i) {
-        xe.setStartBefore(e[i].firstChild);
-        xe.setEndBefore(e[i - 1]);
-      } else {
-        xe.setStartBefore((e[i].nodeType == Node.TEXT_NODE) ? e[i] : e[i].firstChild);
-        xe.setEnd(e[i], dangerous.endOffset);
-      }
-      re.unshift(xe);
-    }
-  }
-
-  // Middle -- the uncaptured middle
-  if ((s.length > 0) && (e.length > 0)) {
-    var xm = document.createRange();
-    xm.setStartAfter(s[s.length - 1]);
-    xm.setEndBefore(e[e.length - 1]);
-  } else {
-    return [dangerous];
-  }
-
-  // Concat
-  rs.push(xm);
-  response = rs.concat(re);
-
-  // Send to Console
-  return response;
-}
-
-
-// hightlight button logic //
+// Legacy highlight logic removed for V2 floating highlighter
 
 
 //scrolling while dragging

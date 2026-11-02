@@ -6,8 +6,24 @@
   if (window.__sharedLayoutLoaded) return;
   window.__sharedLayoutLoaded = true;
 
-  var NAV_CACHE_KEY = 'mp_shared_nav_v7';
-  var FOOTER_CACHE_KEY = 'mp_shared_footer_v4';
+  var NAV_CACHE_KEY = 'mp_shared_nav_v9';
+  
+  function syncFooterPricingLinkShared() {
+    fetch('/api/system-settings')
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        if (d && d.success && d.settings) {
+          var isPhase3 = Number(d.settings.currentPhase) === 3;
+          var els = document.querySelectorAll('.footer-pricing-link, #footer-pricing-link');
+          els.forEach(function(el) {
+            el.style.display = isPhase3 ? 'inline-flex' : 'none';
+            if (isPhase3) el.style.alignItems = 'center';
+          });
+        }
+      }).catch(function() {});
+  }
+
+  var FOOTER_CACHE_KEY = 'mp_shared_footer_v5';
   var globalListenersBound = false;
 
   var sharedCss = [
@@ -449,6 +465,7 @@
       .then(function (footerHtml) {
         try { sessionStorage.setItem(FOOTER_CACHE_KEY, footerHtml); } catch (e) {}
         applyFooterHtml(footerHtml);
+        syncFooterPricingLinkShared();
       })
       .catch(function (err) {
         console.warn('Shared footer loader fallback:', err);

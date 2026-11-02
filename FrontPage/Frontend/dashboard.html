@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Candidate Progress & Analytics Dashboard | IELTS Mockpoint</title>
+  <meta name="description" content="Track your complete IELTS preparation: Full Mocks, Cambridge Practice, Question Types, AI Writing evaluations, and band score analytics.">
+  <link rel="icon" type="image/png" href="/mpfavicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <style>
+    :root {
+      --navy: #0b2b52;
+      --navy-dark: #071c36;
+      --blue: #1565c9;
+      --blue-subtle: #f0f7ff;
+      --blue-border: #cfe2fe;
+      --red: #e0202d;
+      --red-dark: #b5121d;
+      --red-subtle: #fef2f2;
+      --green: #059669;
+      --green-subtle: #ecfdf5;
+      --amber: #d97706;
+      --amber-subtle: #fffbeb;
+      --surface: #f4f7fb;
+      --text: #0f2038;
+      --muted: #5d708c;
+      --line: #e3e9f3;
+      --radius: 16px;
+      --shadow-sm: 0 4px 14px rgba(11, 43, 82, 0.04);
+      --shadow-md: 0 10px 28px rgba(11, 43, 82, 0.08);
+      --shadow-lg: 0 20px 44px rgba(11, 43, 82, 0.12);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-padding-top: 80px; scroll-behavior: smooth; }
+    body {
+      background: var(--surface);
+      color: var(--text);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    h1, h2, h3, h4 { font-family: 'Sora', sans-serif; font-weight: 700; color: var(--navy); }
+    a { color: inherit; text-decoration: none; }
+
+    /* Container Wrap matching site layout */
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; width: 100%; }
+
+    /* Dashboard Layout */
+    .dash-main {
+      padding: 36px 0 80px;
+      flex: 1;
+    }
+
+    /* Hero / Candidate Profile Card */
+    .cand-hero {
+      background: linear-gradient(135deg, #071c36 0%, #0b2b52 50%, #1565c9 100%);
+      border-radius: 22px;
+      padding: 32px 36px;
+      color: #ffffff;
+      box-shadow: 0 16px 36px rgba(11, 43, 82, 0.18);
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+      border-top: 4px solid var(--red, #e0202d);
+    }
+    .cand-hero::before {
+      content: '';
+      position: absolute;
+      top: -90px;
+      right: -90px;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 70%);
+      pointer-events: none;
+    }
+    .cand-hero-wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 22px;
+      position: relative;
+      z-index: 2;
+    }
+    .cand-user-side {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .cand-avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      border: 3.5px solid rgba(255, 255, 255, 0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Sora', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #ffffff;
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    }
+    .cand-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .cand-name {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.65rem;
+      font-weight: 800;
+      line-height: 1.2;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+    .cand-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: 0.88rem;
+      color: rgba(255, 255, 255, 0.85);
+    }
+    .cand-meta-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .cand-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .target-box {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 10px 18px;
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 100px;
+    }
+    .target-label {
+      font-size: 0.70rem;
+      text-transform: uppercase;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      color: rgba(255, 255, 255, 0.85);
+    }
+    .target-score {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.1;
+    }
+
+    .btn-quick {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 20px;
+      border-radius: 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.90rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .btn-quick-red {
+      background: var(--red, #e0202d);
+      color: #ffffff;
+      box-shadow: 0 6px 18px rgba(224, 32, 45, 0.35);
+    }
+    .btn-quick-red:hover {
+      background: var(--red-dark, #b5121d);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(224, 32, 45, 0.45);
+    }
+    .btn-quick-white {
+      background: #ffffff;
+      color: var(--navy);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    }
+    .btn-quick-white:hover {
+      background: #f8fafc;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+    .btn-quick-outline {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1.5px solid rgba(255, 255, 255, 0.35);
+      color: #ffffff;
+    }
+    .btn-quick-outline:hover {
+      background: rgba(255, 255, 255, 0.22);
+      transform: translateY(-2px);
+    }
+
+    /* 6-Card Metric Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+    .kpi-card {
+      background: #ffffff;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px 20px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: #cbd5e1;
+    }
+    .kpi-card.highlight {
+      background: linear-gradient(145deg, #0b2b52 0%, #071c36 100%);
+      border-color: #0b2b52;
+      color: #ffffff;
+      box-shadow: 0 10px 28px rgba(11, 43, 82, 0.22);
+    }
+    .kpi-card.highlight .kpi-title { color: rgba(255, 255, 255, 0.78); }
+    .kpi-card.highlight .kpi-val { color: #ffffff; }
+    .kpi-card.highlight .kpi-denom { color: rgba(255, 255, 255, 0.65); }
+    .kpi-card.highlight .kpi-sub { color: rgba(255, 255, 255, 0.75); }
+    .kpi-card.highlight .kpi-icon { background: rgba(255, 255, 255, 0.15); color: #ffffff; }
+    .kpi-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .kpi-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+    }
+    .kpi-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f1f5f9;
+      color: var(--navy);
+      flex-shrink: 0;
+    }
+    .kpi-val-row {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+    .kpi-val {
+      font-family: 'Sora', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--navy);
+    }
+    .kpi-denom {
+      font-size: 0.90rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .kpi-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 999px;
+      margin-top: 6px;
+      align-self: flex-start;
+    }
+    .badge-c1 { background: var(--red, #e0202d); color: #ffffff; }
+    .badge-b2 { background: #dbeafe; color: #1d4ed8; }
+    .badge-b1 { background: #fef3c7; color: #b45309; }
+    .kpi-sub {
+      font-size: 0.80rem;
+      color: var(--muted);
+      margin-top: auto;
+      padding-top: 8px;
+    }
+
+    /* Sub Stats Banner: Accuracy + Practice Types */
+    .sub-stats-bar {
+      background: #ffffff;
+      border: 1.5px solid var(--line);
+      border-radius: 16px;
+      padding: 16px 24px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+    .stat-pill-group {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .stat-mini-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .stat-mini-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: var(--blue-subtle);
+      color: var(--blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .stat-mini-val {
+      font-family: 'Sora', sans-serif;
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: var(--navy);
+      line-height: 1.1;
+    }
+    .stat-mini-label {
+      font-size: 0.76rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    /* Visual Analytics Grid */
+    .analytics-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+    .panel-card {
+      background: #ffffff;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      padding: 26px 28px;
+      box-shadow: var(--shadow-sm);
+    }
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1.5px solid var(--line);
+    }
+    .panel-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--navy);
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+    .chart-box {
+      position: relative;
+      height: 290px;
+      width: 100%;
+    }
+
+    /* Diagnostics & Weakness Detector */
+    .diag-item { margin-bottom: 18px; }
+    .diag-item:last-child { margin-bottom: 0; }
+    .diag-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.86rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .diag-track {
+      height: 8px;
+      background: #f1f5f9;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .diag-fill { height: 100%; border-radius: 999px; transition: width 0.6s ease; }
+    .fill-reading { background: var(--blue); }
+    .fill-listening { background: var(--red); }
+    .fill-writing { background: var(--green); }
+
+    .recom-box {
+      margin-top: 24px;
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .recom-head {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .recom-text {
+      font-size: 0.80rem;
+      color: var(--muted);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* Test History Feed with Filter Tabs */
+    .history-section {
+      background: #ffffff;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 28px;
+    }
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      border-bottom: 1.5px solid var(--line);
+      padding-bottom: 12px;
+    }
+    .filter-tab {
+      background: #f1f5f9;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.84rem;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .filter-tab:hover {
+      background: #e2e8f0;
+      color: var(--navy);
+    }
+    .filter-tab.active {
+      background: var(--red, #e0202d);
+      color: #ffffff;
+      border-color: var(--red, #e0202d);
+      box-shadow: 0 4px 14px rgba(224, 32, 45, 0.28);
+    }
+
+    .table-container {
+      overflow-x: auto;
+      width: 100%;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 0.88rem;
+    }
+    .data-table th {
+      background: #f8fafc;
+      color: var(--muted);
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      font-weight: 700;
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1.5px solid var(--line);
+      white-space: nowrap;
+    }
+    .data-table td {
+      padding: 16px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: middle;
+      color: var(--text);
+    }
+    .data-table tr:hover td {
+      background: #fbfcfe;
+    }
+    .test-cell-name {
+      font-weight: 700;
+      color: var(--navy);
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .badge-test-type {
+      font-size: 0.70rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: #f1f5f9;
+      color: #475569;
+      width: fit-content;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .badge-test-type.full { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+    .badge-test-type.cambridge { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+    .badge-test-type.hub { background: #f0f4f8; color: #0b2b52; border: 1px solid #dce4ee; }
+    .badge-test-type.writing { background: #f3e8ff; color: #7e22ce; }
+
+    .score-badge-circle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Sora', sans-serif;
+      font-weight: 800;
+      font-size: 0.86rem;
+      padding: 4px 10px;
+      border-radius: 8px;
+      min-width: 44px;
+    }
+    .score-badge-circle.overall { background: var(--navy); color: #ffffff; }
+    .score-badge-circle.mod { background: #f1f5f9; color: #334155; }
+
+    /* AI Writing Vault Section */
+    .writing-vault {
+      background: #ffffff;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow-sm);
+    }
+    .eval-card {
+      border: 1.5px solid var(--line);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 16px;
+      background: #f8fafc;
+      transition: all 0.2s;
+    }
+    .eval-card:last-child { margin-bottom: 0; }
+    .eval-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .eval-card-title {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--navy);
+    }
+    .criteria-badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .crit-chip {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #334155;
+    }
+    .crit-chip b { color: var(--blue); }
+    .eval-feedback-text {
+      font-size: 0.88rem;
+      line-height: 1.55;
+      color: #334155;
+      background: #ffffff;
+      padding: 14px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+    }
+
+    /* Auth Gate Screen */
+    .auth-gate {
+      background: #ffffff;
+      border: 1.5px solid var(--line);
+      border-radius: 22px;
+      padding: 56px 28px;
+      text-align: center;
+      max-width: 560px;
+      margin: 40px auto;
+      box-shadow: var(--shadow-md);
+    }
+    .gate-icon {
+      width: 68px;
+      height: 68px;
+      border-radius: 20px;
+      background: var(--blue-subtle);
+      border: 1.5px solid var(--blue-border);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--blue);
+      margin-bottom: 20px;
+    }
+    .gate-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 10px;
+    }
+    .gate-desc {
+      font-size: 0.94rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 26px;
+    }
+    .gate-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 42px 20px;
+      color: var(--muted);
+    }
+    .empty-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 12px;
+      color: #94a3b8;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .analytics-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .kpi-grid { grid-template-columns: 1fr; }
+      .cand-hero { padding: 24px 20px; }
+      .cand-name { font-size: 1.35rem; }
+      .cand-hero-wrap { flex-direction: column; align-items: flex-start; }
+      .sub-stats-bar { flex-direction: column; align-items: flex-start; gap: 14px; }
+    }
+  </style>
+
+  <script src="/shared-layout.js"></script>
+  <script src="/auth-nav.js"></script>
+</head>
+<body>
+
+  <!-- Shared Site Header (Hydrated by shared-layout.js and auth-nav.js) -->
+  <header id="hd">
+    <nav class="wrap" aria-label="Main navigation">
+      <a href="/" class="brand" title="IELTS Mockpoint – Free IELTS Mock Test">
+        <img src="/Brandlogo.png" width="138" height="46" decoding="sync" alt="IELTS Mockpoint" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <span class="txt"><i></i>IELTS Mockpoint</span>
+      </a>
+      <div class="nav-links">
+        <div class="nav-dd">
+          <a href="/mocks.html" class="nav-dd-trigger">Full Tests<svg class="nav-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
+          <div class="nav-dd-menu">
+            <div class="nav-dd-card">
+              <a href="/mocks.html#premium" class="nav-dd-item"><span>Premium Tests</span></a>
+              <a href="/mocks.html#academic" class="nav-dd-item"><span>Academic Tests</span></a>
+              <a href="/mocks.html#general" class="nav-dd-item"><span>General Tests</span></a>
+            </div>
+          </div>
+        </div>
+        <div class="nav-dd">
+          <a href="/cambridge-listening.html" class="nav-dd-trigger">Listening<svg class="nav-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
+          <div class="nav-dd-menu">
+            <div class="nav-dd-card">
+              <a href="/listening-exercises" class="nav-dd-item"><span>Practice by Question Type</span></a>
+              <a href="/cambridge-listening.html#tests" class="nav-dd-item"><span>Practice by Part</span></a>
+              <a href="/cambridge-listening.html" class="nav-dd-item"><span>Practice Full Test</span></a>
+            </div>
+          </div>
+        </div>
+        <div class="nav-dd">
+          <a href="/cambridge-reading.html" class="nav-dd-trigger">Reading<svg class="nav-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
+          <div class="nav-dd-menu">
+            <div class="nav-dd-card">
+              <a href="/reading-exercises" class="nav-dd-item"><span>Practice by Question Type</span></a>
+              <a href="/cambridge-reading.html#tests" class="nav-dd-item"><span>Practice by Passage</span></a>
+              <a href="/cambridge-reading.html" class="nav-dd-item"><span>Practice Full Test</span></a>
+            </div>
+          </div>
+        </div>
+        <div class="nav-dd">
+          <a href="/cambridge-writing.html" class="nav-dd-trigger">Writing<svg class="nav-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
+          <div class="nav-dd-menu">
+            <div class="nav-dd-card">
+              <a href="/cambridge-writing.html" class="nav-dd-item"><span>Cambridge Writing Simulator</span></a>
+            </div>
+          </div>
+        </div>
+        <div class="nav-dd">
+          <a href="/practice-hub" class="nav-dd-trigger">Practice Hub<svg class="nav-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
+          <div class="nav-dd-menu">
+            <div class="nav-dd-card">
+              <a href="/practice-hub?skill=listening#hub" class="nav-dd-item"><span>Listening</span></a>
+              <a href="/practice-hub?skill=reading#hub" class="nav-dd-item"><span>Reading</span></a>
+              <a href="/practice-hub?skill=writing#hub" class="nav-dd-item"><span>Writing</span></a>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+      <div class="nav-actions">
+        <a href="/login.html" class="btn btn-outline">Sign in</a>
+        <a href="/register.html" class="btn btn-red">Start free</a>
+      </div>
+      <button class="menu-btn" id="openMenu" type="button" aria-label="Open menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+          <path d="M4 7h16M4 12h16M4 17h16"/>
+        </svg>
+      </button>
+    </nav>
+  </header>
+
+  <!-- Mobile Drawer & Overlay -->
+  <div id="sb" class="sidebar">
+    <div class="sb-head">
+      <span style="font-family:'Sora',sans-serif; font-weight:800; color:var(--navy);">Menu</span>
+      <button class="sb-close" id="closeMenu" type="button" aria-label="Close menu">&times;</button>
+    </div>
+    <div class="sb-links">
+      
+      <a href="/mocks.html">Full Mock Tests</a>
+      <a href="/cambridge-listening.html">Cambridge Listening</a>
+      <a href="/cambridge-reading.html">Cambridge Reading</a>
+      <a href="/cambridge-writing.html">Cambridge Writing</a>
+      <a href="/practice-hub">Practice Hub</a>
+    </div>
+    <div class="sb-actions">
+      <a href="/login.html" class="btn btn-outline">Sign in</a>
+      <a href="/register.html" class="btn btn-red">Start free</a>
+    </div>
+  </div>
+  <div id="ov" class="overlay"></div>
+
+  <!-- Main Content Wrap -->
+  <main class="dash-main">
+    <div class="wrap">
+
+      <!-- Auth Required Gate (if guest) -->
+      <div id="dashAuthGate" class="auth-gate" style="display:none;">
+        <div class="gate-icon">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+        </div>
+        <h2 class="gate-title">Candidate Sign-In Required</h2>
+        <p class="gate-desc">Log in or create a free candidate profile to automatically track all your Full Mock tests, Cambridge exams, Question Type practice sets, and AI Writing feedback.</p>
+        <div class="gate-actions">
+          <a href="/login.html?redirect=/dashboard" class="btn-quick" style="background:var(--blue); color:#fff;">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In Free
+          </a>
+          <a href="/register.html?redirect=/dashboard" class="btn-quick" style="background:#fff; border:1.5px solid var(--line); color:var(--navy);">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+            Create Free Account
+          </a>
+        </div>
+      </div>
+
+      <!-- Authenticated Dashboard UI -->
+      <div id="dashContent">
+
+        <!-- Candidate Profile Hero Banner -->
+        <section class="cand-hero">
+          <div class="cand-hero-wrap">
+            <div class="cand-user-side">
+              <div class="cand-avatar" id="candAvatar">C</div>
+              <div>
+                <h1 class="cand-name" id="candName">Candidate Dashboard</h1>
+                <div class="cand-meta">
+                  <span id="candEmail">candidate@ieltsmockpoint.com</span>
+                  <span class="cand-meta-pill">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    Verified Student
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="cand-actions">
+              <div class="target-box">
+                <span class="target-label">Target Band</span>
+                <span class="target-score" id="targetScoreDisplay">7.5</span>
+              </div>
+              <a href="/mocks.html" class="btn-quick btn-quick-red">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                Take Full Mock
+              </a>
+              <a href="/cambridge-reading.html" class="btn-quick btn-quick-outline">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                Cambridge Practice
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4-Card Band Metrics -->
+        <section class="kpi-grid">
+          <!-- Overall Band -->
+          <div class="kpi-card highlight">
+            <div class="kpi-top">
+              <span class="kpi-title">Overall Band</span>
+              <div class="kpi-icon" style="background:#dbeafe; color:var(--blue);">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              </div>
+            </div>
+            <div class="kpi-val-row">
+              <span class="kpi-val" id="valOverallBand">--</span>
+              <span class="kpi-denom">/ 9.0</span>
+            </div>
+            <span class="kpi-badge badge-c1" id="badgeOverallLevel">Candidate Active</span>
+            <div class="kpi-sub" id="subTotalTests">0 Tests Completed</div>
+          </div>
+
+          <!-- Listening Band -->
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <span class="kpi-title">Listening Band</span>
+              <div class="kpi-icon" style="color:var(--red); background:var(--red-subtle);">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+              </div>
+            </div>
+            <div class="kpi-val-row">
+              <span class="kpi-val" id="valListeningBand">--</span>
+              <span class="kpi-denom">/ 9.0</span>
+            </div>
+            <span class="kpi-badge badge-b2" id="badgeListening">Module Active</span>
+            <div class="kpi-sub" id="subListeningScore">Avg Score: -- / 40</div>
+          </div>
+
+          <!-- Reading Band -->
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <span class="kpi-title">Reading Band</span>
+              <div class="kpi-icon" style="color:var(--blue); background:var(--blue-subtle);">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+              </div>
+            </div>
+            <div class="kpi-val-row">
+              <span class="kpi-val" id="valReadingBand">--</span>
+              <span class="kpi-denom">/ 9.0</span>
+            </div>
+            <span class="kpi-badge badge-b2" id="badgeReading">Module Active</span>
+            <div class="kpi-sub" id="subReadingScore">Avg Score: -- / 40</div>
+          </div>
+
+          <!-- Writing Band -->
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <span class="kpi-title">Writing Band</span>
+              <div class="kpi-icon" style="color:var(--green); background:var(--green-subtle);">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              </div>
+            </div>
+            <div class="kpi-val-row">
+              <span class="kpi-val" id="valWritingBand">--</span>
+              <span class="kpi-denom">/ 9.0</span>
+            </div>
+            <span class="kpi-badge badge-c1" id="badgeWriting">AI Evaluated</span>
+            <div class="kpi-sub" id="subWritingEvaluated">0 Essays Evaluated</div>
+          </div>
+        </section>
+
+        <!-- Sub Stats Bar: Accuracy + Question Volume -->
+        <section class="sub-stats-bar">
+          <div class="stat-pill-group">
+            <div class="stat-mini-item">
+              <div class="stat-mini-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+              </div>
+              <div>
+                <div class="stat-mini-val" id="valTotalQuestions">0</div>
+                <div class="stat-mini-label">Questions Attempted</div>
+              </div>
+            </div>
+            <div class="stat-mini-item">
+              <div class="stat-mini-icon" style="background:var(--green-subtle); color:var(--green);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              </div>
+              <div>
+                <div class="stat-mini-val" id="valTotalCorrect">0</div>
+                <div class="stat-mini-label">Correct Answers</div>
+              </div>
+            </div>
+            <div class="stat-mini-item">
+              <div class="stat-mini-icon" style="background:#fef3c7; color:#b45309;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+              </div>
+              <div>
+                <div class="stat-mini-val" id="valAccuracyRate">0%</div>
+                <div class="stat-mini-label">Global Accuracy</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="font-size:0.82rem; color:var(--muted); font-weight:600; display:flex; align-items:center; gap:6px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1565c9" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            Auto-synced with Full Mocks, Cambridge &amp; Practice Hub
+          </div>
+        </section>
+
+        <!-- Visual Analytics Grid: Timeline + Module Mastery -->
+        <section class="analytics-grid">
+          <!-- Band Score Progression Chart -->
+          <div class="panel-card">
+            <div class="panel-head">
+              <h2 class="panel-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                Band Progression Timeline
+              </h2>
+              <span style="font-size:0.80rem; font-weight:700; color:var(--muted);">Last 10 Test Sessions</span>
+            </div>
+            <div class="chart-box">
+              <canvas id="progressionChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Module Mastery & Diagnostics -->
+          <div class="panel-card">
+            <div class="panel-head">
+              <h2 class="panel-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
+                Module Readiness
+              </h2>
+            </div>
+            <div class="diag-item">
+              <div class="diag-row">
+                <span style="color:var(--blue);">Reading Comprehension</span>
+                <span id="pctReading">0%</span>
+              </div>
+              <div class="diag-track">
+                <div class="diag-fill fill-reading" id="barReading" style="width: 0%;"></div>
+              </div>
+            </div>
+            <div class="diag-item" style="margin-top:20px;">
+              <div class="diag-row">
+                <span style="color:var(--red);">Listening Accuracy</span>
+                <span id="pctListening">0%</span>
+              </div>
+              <div class="diag-track">
+                <div class="diag-fill fill-listening" id="barListening" style="width: 0%;"></div>
+              </div>
+            </div>
+            <div class="diag-item" style="margin-top:20px;">
+              <div class="diag-row">
+                <span style="color:var(--green);">Writing Band Standard</span>
+                <span id="pctWriting">0%</span>
+              </div>
+              <div class="diag-track">
+                <div class="diag-fill fill-writing" id="barWriting" style="width: 0%;"></div>
+              </div>
+            </div>
+
+            <!-- Smart Recommendation Card -->
+            <div class="recom-box">
+              <div class="recom-head">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                Target Advice
+              </div>
+              <p class="recom-text" id="recomText">
+                Take full mock exams regularly to balance your band scores across Listening, Reading, and Writing under real test timing.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Test History Feed with Filter Tabs -->
+        <section class="history-section">
+          <div class="panel-head">
+            <h2 class="panel-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              Complete Activity &amp; Test Records
+            </h2>
+            <span id="recordsBadge" class="badge-test-type">0 Records</span>
+          </div>
+
+          <!-- Category Filter Tabs -->
+          <div class="filter-tabs">
+            <button type="button" class="filter-tab active" onclick="filterActivity('all', this)">All Tests &amp; Practice</button>
+            <button type="button" class="filter-tab" onclick="filterActivity('full', this)">Full Mocks</button>
+            <button type="button" class="filter-tab" onclick="filterActivity('cambridge', this)">Cambridge Practice</button>
+            <button type="button" class="filter-tab" onclick="filterActivity('hub', this)">Question Types</button>
+            <button type="button" class="filter-tab" onclick="filterActivity('writing', this)">AI Writing</button>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Test &amp; Category</th>
+                  <th>Date Taken</th>
+                  <th>Listening</th>
+                  <th>Reading</th>
+                  <th>Writing</th>
+                  <th>Band Score</th>
+                </tr>
+              </thead>
+              <tbody id="activityTableBody">
+                <tr>
+                  <td colspan="6">
+                    <div class="empty-state">
+                      <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                      <p style="font-weight:700; margin-bottom:4px;">No test attempts recorded yet.</p>
+                      <p style="font-size:0.84rem;">Complete a Full Mock, Cambridge practice, or Question Type exercise to see your results tracked here.</p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- AI Writing Evaluations Vault -->
+        <section class="writing-vault">
+          <div class="panel-head">
+            <h2 class="panel-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              AI Writing Feedback Vault
+            </h2>
+            <span class="badge-test-type writing" id="writingCountBadge">0 Evaluated</span>
+          </div>
+          <div id="writingVaultList">
+            <div class="empty-state">
+              <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              <p style="font-weight:700; margin-bottom:4px;">No AI Writing evaluations saved yet.</p>
+              <p style="font-size:0.84rem;">Submit an essay in Full Mock or Cambridge Writing to receive British Council assessment feedback.</p>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Shared Site Footer -->
+  <footer id="ft">
+    <div class="wrap">
+      <div class="fgrid">
+        <div>
+          <a href="/" class="brand" style="margin-bottom:12px; display:inline-flex;">
+            <img src="/Brandlogo.png" width="138" height="46" alt="IELTS Mockpoint">
+          </a>
+          <p style="font-size:0.84rem; color:var(--muted); line-height:1.6;">
+            Free full-length IELTS mock tests and skill practice simulators designed to match real exam conditions.
+          </p>
+        </div>
+        <div>
+          <h4>Full Tests</h4>
+          <p style="margin-bottom:8px;"><a href="/mocks.html#academic" style="font-size:0.86rem; color:var(--muted);">Academic Mocks</a></p>
+          <p style="margin-bottom:8px;"><a href="/mocks.html#general" style="font-size:0.86rem; color:var(--muted);">General Training Mocks</a></p>
+          <p><a href="/mocks.html#premium" style="font-size:0.86rem; color:var(--muted);">Premium Mocks</a></p>
+        </div>
+        <div>
+          <h4>Practice</h4>
+          <p style="margin-bottom:8px;"><a href="/cambridge-listening.html" style="font-size:0.86rem; color:var(--muted);">Listening Tests</a></p>
+          <p style="margin-bottom:8px;"><a href="/cambridge-reading.html" style="font-size:0.86rem; color:var(--muted);">Reading Tests</a></p>
+          <p><a href="/cambridge-writing.html" style="font-size:0.86rem; color:var(--muted);">Writing Tests</a></p>
+        </div>
+        <div>
+          <h4>Question Types</h4>
+          <p style="margin-bottom:8px;"><a href="/practice-hub" style="font-size:0.86rem; color:var(--muted);">Practice Hub</a></p>
+          <p style="margin-bottom:8px;"><a href="/listening-exercises" style="font-size:0.86rem; color:var(--muted);">Listening Exercises</a></p>
+          <p><a href="/reading-exercises" style="font-size:0.86rem; color:var(--muted);">Reading Exercises</a></p>
+        </div>
+        <div>
+          <h4>Candidate</h4>
+          <p style="margin-bottom:8px;"><a href="/dashboard" style="font-size:0.86rem; color:var(--blue); font-weight:700;">My Dashboard</a></p>
+          <p style="margin-bottom:8px;"><a href="/login.html" style="font-size:0.86rem; color:var(--muted);">Candidate Login</a></p>
+          <p><a href="/register.html" style="font-size:0.86rem; color:var(--muted);">Register Free</a></p>
+        </div>
+      </div>
+      <div style="border-top:1px solid var(--line); padding-top:20px; font-size:0.80rem; color:var(--muted); text-align:center;">
+        &copy; 2026 IELTS Mockpoint. All rights reserved. IELTS is a registered trademark of the University of Cambridge, the British Council, and IDP Education Australia.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Client-Side Dashboard Aggregator Script -->
+  <script>
+    let globalHistory = [];
+    let activeFilter = 'all';
+    let progressionChart = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      // 1. Check local session / cached profile
+      const user = getCachedUser();
+      if (!user) {
+        showAuthGate();
+        return;
+      }
+
+      renderHeroUser(user);
+      await loadDashboardData();
+    });
+
+    function getCachedUser() {
+      try {
+        const u = JSON.parse(localStorage.getItem('user') || 'null');
+        if (u && (u.email || u.name)) return u;
+      } catch (e) {}
+      return null;
+    }
+
+    function showAuthGate() {
+      document.getElementById('dashAuthGate').style.display = 'block';
+      document.getElementById('dashContent').style.display = 'none';
+    }
+
+    function renderHeroUser(u) {
+      document.getElementById('dashAuthGate').style.display = 'none';
+      document.getElementById('dashContent').style.display = 'block';
+
+      const nameEl = document.getElementById('candName');
+      const emailEl = document.getElementById('candEmail');
+      const avatarEl = document.getElementById('candAvatar');
+
+      if (nameEl) nameEl.textContent = u.name || 'Candidate Dashboard';
+      if (emailEl) emailEl.textContent = u.email || 'Registered Candidate';
+      if (avatarEl) {
+        if (u.avatar) {
+          avatarEl.innerHTML = `<img src="${u.avatar}" alt="${u.name || ''}">`;
+        } else {
+          avatarEl.textContent = (u.name ? u.name.charAt(0).toUpperCase() : 'C');
+        }
+      }
+    }
+
+    async function loadDashboardData() {
+      try {
+        const res = await fetch('/api/student/dashboard-data');
+        if (res.status === 401) {
+          showAuthGate();
+          return;
+        }
+
+        const data = await res.json();
+        if (data && data.success) {
+          globalHistory = data.history || [];
+          renderKpis(data);
+          renderChart(globalHistory);
+          renderActivityTable(globalHistory);
+          renderWritingVault(globalHistory);
+          renderRecommendations(data);
+        }
+      } catch (err) {
+        console.error('Failed to load dashboard data:', err);
+      }
+    }
+
+    function renderKpis(data) {
+      const b = data.averages || {};
+      const tot = data.totalTests || 0;
+
+      // Overall
+      const oBand = b.overall || 0;
+      document.getElementById('valOverallBand').textContent = oBand ? oBand.toFixed(1) : '--';
+      document.getElementById('subTotalTests').textContent = `${tot} Test${tot === 1 ? '' : 's'} Completed`;
+
+      const obBadge = document.getElementById('badgeOverallLevel');
+      if (oBand >= 7.5) {
+        obBadge.className = 'kpi-badge badge-c1';
+        obBadge.textContent = 'C1 Expert Level';
+      } else if (oBand >= 6.5) {
+        obBadge.className = 'kpi-badge badge-b2';
+        obBadge.textContent = 'B2 Competent';
+      } else if (oBand > 0) {
+        obBadge.className = 'kpi-badge badge-b1';
+        obBadge.textContent = 'Developing / Foundation';
+      }
+
+      // Listening
+      const lBand = b.listening || 0;
+      document.getElementById('valListeningBand').textContent = lBand ? lBand.toFixed(1) : '--';
+      if (b.avgListeningScore) {
+        document.getElementById('subListeningScore').textContent = `Avg Score: ${b.avgListeningScore.toFixed(0)} / 40`;
+      }
+
+      // Reading
+      const rBand = b.reading || 0;
+      document.getElementById('valReadingBand').textContent = rBand ? rBand.toFixed(1) : '--';
+      if (b.avgReadingScore) {
+        document.getElementById('subReadingScore').textContent = `Avg Score: ${b.avgReadingScore.toFixed(0)} / 40`;
+      }
+
+      // Writing
+      const wBand = b.writing || 0;
+      document.getElementById('valWritingBand').textContent = wBand ? wBand.toFixed(1) : '--';
+      document.getElementById('subWritingEvaluated').textContent = `${data.evaluatedWritingCount || 0} Essays Evaluated`;
+
+      // Sub Stats Bar
+      document.getElementById('valTotalQuestions').textContent = data.totalQuestionsAttempted || 0;
+      document.getElementById('valTotalCorrect').textContent = data.totalCorrectAnswers || 0;
+      document.getElementById('valAccuracyRate').textContent = `${data.accuracyRate || 0}%`;
+
+      // Readiness Progress Bars
+      const rPct = Math.min(100, Math.round(((rBand || 0) / 9) * 100));
+      const lPct = Math.min(100, Math.round(((lBand || 0) / 9) * 100));
+      const wPct = Math.min(100, Math.round(((wBand || 0) / 9) * 100));
+
+      document.getElementById('pctReading').textContent = `${rPct}%`;
+      document.getElementById('barReading').style.width = `${rPct}%`;
+
+      document.getElementById('pctListening').textContent = `${lPct}%`;
+      document.getElementById('barListening').style.width = `${lPct}%`;
+
+      document.getElementById('pctWriting').textContent = `${wPct}%`;
+      document.getElementById('barWriting').style.width = `${wPct}%`;
+    }
+
+    function renderRecommendations(data) {
+      const b = data.averages || {};
+      const recomEl = document.getElementById('recomText');
+      if (!recomEl) return;
+
+      const r = b.reading || 0;
+      const l = b.listening || 0;
+      const w = b.writing || 0;
+
+      if (!r && !l && !w) {
+        recomEl.textContent = 'Take your first Full Mock or Cambridge practice test to establish your baseline band scores and receive customized guidance.';
+        return;
+      }
+
+      const minScore = Math.min(r || 9, l || 9, w || 9);
+      if (minScore === w && w < 7.0) {
+        recomEl.innerHTML = `<strong>Focus Area: Writing (Band ${w.toFixed(1)}):</strong> Practice Cambridge Academic Writing Task 2 essays with automated AI feedback to improve Coherence and Task Response.`;
+      } else if (minScore === r && r < 7.0) {
+        recomEl.innerHTML = `<strong>Focus Area: Reading (Band ${r.toFixed(1)}):</strong> Work on True / False / Not Given and Matching Headings question types in Cambridge reading passages to increase accuracy.`;
+      } else if (minScore === l && l < 7.0) {
+        recomEl.innerHTML = `<strong>Focus Area: Listening (Band ${l.toFixed(1)}):</strong> Train on Section 3 &amp; 4 note completion and audio speed control in Cambridge Listening simulators.`;
+      } else {
+        recomEl.innerHTML = `<strong>Strong Performance!</strong> You are maintaining solid consistency across all modules. Keep taking full-length timed mock tests to build stamina for test day.`;
+      }
+    }
+
+    function renderChart(history) {
+      const ctx = document.getElementById('progressionChart');
+      if (!ctx) return;
+
+      const items = [...history].reverse().slice(-10);
+      if (items.length === 0) {
+        items.push({ title: 'Baseline', overallBand: 0, listeningBand: 0, readingBand: 0, writingBand: 0 });
+      }
+
+      const labels = items.map((it, idx) => it.title ? (it.title.length > 14 ? it.title.substring(0, 12) + '..' : it.title) : `Test ${idx + 1}`);
+      const overallData = items.map(it => it.overallBand || 0);
+      const listeningData = items.map(it => it.listeningBand || 0);
+      const readingData = items.map(it => it.readingBand || 0);
+      const writingData = items.map(it => it.writingBand || 0);
+
+      if (progressionChart) progressionChart.destroy();
+
+      progressionChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Overall Band',
+              data: overallData,
+              borderColor: '#0b2b52',
+              backgroundColor: 'rgba(11, 43, 82, 0.08)',
+              borderWidth: 3,
+              tension: 0.35,
+              fill: false,
+              pointRadius: 5,
+              pointHoverRadius: 7
+            },
+            {
+              label: 'Listening',
+              data: listeningData,
+              borderColor: '#e0202d',
+              borderWidth: 2,
+              tension: 0.35,
+              borderDash: [4, 4],
+              pointRadius: 4
+            },
+            {
+              label: 'Reading',
+              data: readingData,
+              borderColor: '#1565c9',
+              borderWidth: 2,
+              tension: 0.35,
+              borderDash: [4, 4],
+              pointRadius: 4
+            },
+            {
+              label: 'Writing',
+              data: writingData,
+              borderColor: '#059669',
+              borderWidth: 2,
+              tension: 0.35,
+              borderDash: [4, 4],
+              pointRadius: 4
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { boxWidth: 12, font: { family: 'Inter', size: 12, weight: 600 } }
+            },
+            tooltip: {
+              backgroundColor: '#0b2b52',
+              titleFont: { family: 'Sora', size: 13, weight: 700 },
+              bodyFont: { family: 'Inter', size: 12 },
+              padding: 10,
+              cornerRadius: 8
+            }
+          },
+          scales: {
+            y: {
+              min: 0,
+              max: 9,
+              ticks: { stepSize: 1, font: { family: 'Inter', size: 11 } },
+              grid: { color: '#f1f5f9' }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { font: { family: 'Inter', size: 11 } }
+            }
+          }
+        }
+      });
+    }
+
+    function filterActivity(category, btn) {
+      activeFilter = category;
+      document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+
+      let filtered = globalHistory;
+      if (category === 'full') {
+        filtered = globalHistory.filter(h => {
+          const t = String(h.testType || '').toLowerCase();
+          return t.includes('full') || t.includes('academic') || t.includes('premium') || t.includes('general');
+        });
+      } else if (category === 'cambridge') {
+        filtered = globalHistory.filter(h => String(h.testType || '').toLowerCase().includes('cambridge'));
+      } else if (category === 'hub') {
+        filtered = globalHistory.filter(h => {
+          const t = String(h.testType || '').toLowerCase();
+          return t.includes('hub') || t.includes('question') || t.includes('type');
+        });
+      } else if (category === 'writing') {
+        filtered = globalHistory.filter(h => String(h.testType || '').toLowerCase().includes('writing') || h.writingBand > 0);
+      }
+
+      renderActivityTable(filtered);
+    }
+
+    function renderActivityTable(items) {
+      const tbody = document.getElementById('activityTableBody');
+      const counter = document.getElementById('recordsBadge');
+      if (!tbody) return;
+
+      if (!items || items.length === 0) {
+        if (counter) counter.textContent = '0 Records';
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6">
+              <div class="empty-state">
+                <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <p style="font-weight:700; margin-bottom:4px;">No records found for this category.</p>
+                <p style="font-size:0.84rem;">Switch filters or take tests to view recorded scores.</p>
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      if (counter) counter.textContent = `${items.length} Recorded`;
+      let rows = '';
+
+      items.forEach(item => {
+        const dateStr = item.completedAt ? new Date(item.completedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Recently';
+        const oBand = item.overallBand ? item.overallBand.toFixed(1) : '--';
+        const lBand = item.listeningBand ? item.listeningBand.toFixed(1) : '--';
+        const rBand = item.readingBand ? item.readingBand.toFixed(1) : '--';
+        const wBand = item.writingBand ? item.writingBand.toFixed(1) : '--';
+
+        const tType = item.testType || 'Full Mock';
+        let badgeClass = 'full';
+        const tl = tType.toLowerCase();
+        if (tl.includes('cambridge')) badgeClass = 'cambridge';
+        else if (tl.includes('hub') || tl.includes('question')) badgeClass = 'hub';
+        else if (tl.includes('writing')) badgeClass = 'writing';
+
+        rows += `
+          <tr>
+            <td>
+              <div class="test-cell-name">
+                <span>${escapeHtml(item.title || 'IELTS Mock Test')}</span>
+                <span class="badge-test-type ${badgeClass}">${escapeHtml(tType)}</span>
+              </div>
+            </td>
+            <td>${dateStr}</td>
+            <td><span class="score-badge-circle mod">${lBand}</span></td>
+            <td><span class="score-badge-circle mod">${rBand}</span></td>
+            <td><span class="score-badge-circle mod">${wBand}</span></td>
+            <td><span class="score-badge-circle overall">${oBand}</span></td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = rows;
+    }
+
+    function renderWritingVault(history) {
+      const container = document.getElementById('writingVaultList');
+      const badge = document.getElementById('writingCountBadge');
+      if (!container) return;
+
+      const writingItems = history.filter(h => h.writingBand > 0 || (h.feedback && (h.feedback.overallFeedback || h.feedback.summary)));
+      if (badge) badge.textContent = `${writingItems.length} Evaluated`;
+
+      if (writingItems.length === 0) return;
+
+      let html = '';
+      writingItems.forEach(item => {
+        const fb = item.feedback || {};
+        const dateStr = item.completedAt ? new Date(item.completedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Recently';
+        const wBand = item.writingBand ? item.writingBand.toFixed(1) : '--';
+
+        html += `
+          <div class="eval-card">
+            <div class="eval-card-top">
+              <div>
+                <h3 class="eval-card-title">${escapeHtml(item.title || 'Writing Assessment')}</h3>
+                <span style="font-size:0.80rem; color:var(--muted);">${dateStr}</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:0.82rem; font-weight:700; color:var(--muted);">Examiner Band:</span>
+                <span class="score-badge-circle overall" style="background:var(--green);">${wBand}</span>
+              </div>
+            </div>
+            
+            <div class="criteria-badges">
+              ${fb.taskResponseBand ? `<span class="crit-chip">TR: <b>${fb.taskResponseBand}</b></span>` : ''}
+              ${fb.coherenceBand ? `<span class="crit-chip">CC: <b>${fb.coherenceBand}</b></span>` : ''}
+              ${fb.lexicalBand ? `<span class="crit-chip">LR: <b>${fb.lexicalBand}</b></span>` : ''}
+              ${fb.grammarBand ? `<span class="crit-chip">GRA: <b>${fb.grammarBand}</b></span>` : ''}
+              ${item.totalWords ? `<span class="crit-chip">Total Words: <b>${item.totalWords}</b></span>` : ''}
+            </div>
+
+            <div class="eval-feedback-text">
+              <strong style="color:var(--navy); display:block; margin-bottom:4px;">Examiner Assessment:</strong>
+              ${escapeHtml(fb.overallFeedback || fb.summary || 'Official standard IELTS Writing evaluation completed under Cambridge assessment rubrics.')}
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+  </script>
+
+</body>
+</html>

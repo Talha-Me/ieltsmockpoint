@@ -11,6 +11,186 @@
   // State Variables
   // -------------------------------------------------------------
   let testData = null;
+
+  // ==========================================
+  // PHASE & ACCESS CONTROL ENGINE (Phase 2 & Phase 3)
+  // ==========================================
+  let appPhase = 1;
+  let appSettings = {};
+  let appSettingsLoaded = false;
+
+  async function fetchSystemPhase() {
+    try {
+      const res = await fetch('/api/system-settings');
+      const data = await res.json();
+      if (data && data.success && data.settings) {
+        appPhase = Number(data.settings.currentPhase) || 1;
+        appSettings = data.settings || {};
+        appSettingsLoaded = true;
+      }
+    } catch(e) {
+      console.warn('Could not fetch system settings, default to phase 1:', e);
+    }
+  }
+
+  function getUserAccessState() {
+    try {
+      const u = JSON.parse(localStorage.getItem('user') || 'null');
+      if (!u || (!u.email && !u.name)) {
+        return { isLoggedIn: false, isPremium: false };
+      }
+      const isPremium = !!(u.isPremium || u.role === 'admin' || u.plan === 'premium');
+      return { isLoggedIn: true, isPremium };
+    } catch(e) {
+      return { isLoggedIn: false, isPremium: false };
+    }
+  }
+
+  function isSectionLocked(gIdx) {
+    if (appPhase === 1) return false;
+    const user = getUserAccessState();
+    const testNum = Number(testParam) || 1;
+    const freeTestQuota = appSettings.freeFullMocksCount !== undefined ? Number(appSettings.freeFullMocksCount) : 1;
+
+    if (appPhase === 2) {
+      if (user.isLoggedIn) return false;
+      if (testNum > freeTestQuota) return true;
+      const allowed = appSettings.freeQuestionTypesPerTest !== undefined ? Number(appSettings.freeQuestionTypesPerTest) : 0;
+      return gIdx >= allowed;
+    }
+
+    if (appPhase === 3) {
+      if (user.isPremium) return false;
+      if (testNum > freeTestQuota) return true;
+      const allowed = appSettings.freeQuestionTypesPerTest !== undefined ? Number(appSettings.freeQuestionTypesPerTest) : 0;
+      return gIdx >= allowed;
+    }
+
+    return false;
+  }
+
+  function isCurrentSessionLocked() {
+    if (appPhase === 1) return false;
+    const user = getUserAccessState();
+    if (appPhase === 2 && user.isLoggedIn) return false;
+    if (appPhase === 3 && user.isPremium) return false;
+
+    const testNum = Number(testParam) || 1;
+    const freeTestsAllowed = appSettings.freeFullMocksCount !== undefined ? Number(appSettings.freeFullMocksCount) : 1;
+    if (testNum > freeTestsAllowed) return true;
+
+    if (practiceMode === 'part') {
+      const partIdx = (targetPart || 1) - 1;
+      const freePartsAllowed = appSettings.freePartsPerTest !== undefined ? Number(appSettings.freePartsPerTest) : 1;
+      if (partIdx >= freePartsAllowed) return true;
+    } else if (practiceMode === 'section') {
+      const groups = testData.questionGroups || [];
+      const gIdx = groups.indexOf(targetGroup);
+      const freeSecAllowed = appSettings.freeQuestionTypesPerTest !== undefined ? Number(appSettings.freeQuestionTypesPerTest) : 0;
+      if (gIdx >= freeSecAllowed) return true;
+    }
+
+    return false;
+  }
+
+  function openTestUnlockModal(triggerReason) {
+    const modal = document.getElementById('psUnlockModal');
+    if (!modal) return;
+
+    const iconWrap = document.getElementById('psUnlockIconWrap');
+    const tagBadge = document.getElementById('psUnlockBadge');
+    const titleEl = document.getElementById('psUnlockTitle');
+    const descEl = document.getElementById('psUnlockDesc');
+    const primaryBtn = document.getElementById('psUnlockPrimaryBtn');
+    const backBtn = document.getElementById('psUnlockBackBtn');
+    const secondaryAction = document.getElementById('psUnlockSecondaryAction');
+
+    const currUrl = encodeURIComponent(window.location.pathname + window.location.search);
+    const isSessionBlocked = isCurrentSessionLocked();
+
+    if (backBtn) {
+      if (isSessionBlocked) {
+        backBtn.textContent = 'Back to Cambridge Tests';
+        backBtn.onclick = () => { window.location.href = window.location.pathname.includes('reading') ? '/cambridge-reading.html' : '/cambridge-listening.html'; };
+      } else {
+        backBtn.textContent = 'Cancel / Keep Practicing';
+        backBtn.onclick = () => { closeTestUnlockModal(); };
+      }
+    }
+
+    if (appPhase === 3) {
+      // Phase 3: Paid / Premium
+      if (iconWrap) {
+        iconWrap.style.background = 'rgba(224, 32, 45, 0.08)';
+        iconWrap.style.borderColor = 'rgba(224, 32, 45, 0.28)';
+        iconWrap.style.color = '#e0202d';
+        iconWrap.innerHTML = '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>';
+      }
+      if (tagBadge) {
+        tagBadge.style.display = 'inline-block';
+        tagBadge.style.background = '#fee2e2';
+        tagBadge.style.color = '#b91c1c';
+        tagBadge.style.border = '1px solid #fca5a5';
+        tagBadge.textContent = 'PREMIUM PLAN REQUIRED';
+      }
+      if (titleEl) titleEl.textContent = 'Unlock with Premium Access';
+      if (descEl) descEl.textContent = 'Upgrade to IELTS Mockpoint Premium to access all Cambridge tests, individual section practices, and full audio transcripts with explanations.';
+      if (primaryBtn) {
+        primaryBtn.style.background = '#e0202d';
+        primaryBtn.href = '/pricing';
+        primaryBtn.innerHTML = '<span>Upgrade to Premium / Buy Pass</span> &rarr;';
+      }
+      if (secondaryAction) {
+        const u = getUserAccessState();
+        if (!u.isLoggedIn) {
+          secondaryAction.innerHTML = `<a href="/login?redirect=${currUrl}" style="font-size:0.86rem; color:#1565c9; text-decoration:none; font-weight:600;">Already have a paid account? <span style="text-decoration:underline;">Sign In</span></a>`;
+          secondaryAction.style.display = 'block';
+        } else {
+          secondaryAction.style.display = 'none';
+        }
+      }
+    } else {
+      // Phase 2: Candidate Free Account
+      if (iconWrap) {
+        iconWrap.style.background = '#fdecee';
+        iconWrap.style.borderColor = 'rgba(224, 32, 45, 0.28)';
+        iconWrap.style.color = '#e0202d';
+        iconWrap.innerHTML = '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#e0202d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>';
+      }
+      if (tagBadge) {
+        tagBadge.style.display = 'inline-block';
+        tagBadge.style.background = '#fdecee';
+        tagBadge.style.color = '#e0202d';
+        tagBadge.style.border = '1px solid rgba(224, 32, 45, 0.25)';
+        tagBadge.textContent = 'FREE CANDIDATE ACCOUNT';
+      }
+      if (titleEl) titleEl.textContent = 'Sign In Required to Unlock';
+      if (descEl) descEl.textContent = 'Please sign in or create a free candidate account to practice this section and save your progress to your personal dashboard.';
+      if (primaryBtn) {
+        primaryBtn.style.background = '#e0202d';
+        primaryBtn.href = `/login?redirect=${currUrl}`;
+        primaryBtn.innerHTML = '<span>Sign In / Register Free</span> &rarr;';
+      }
+      if (secondaryAction) {
+        secondaryAction.style.display = 'none';
+      }
+    }
+
+    modal.classList.add('open');
+  }
+
+  function closeTestUnlockModal() {
+    if (isCurrentSessionLocked()) {
+      window.location.href = window.location.pathname.includes('reading') ? '/cambridge-reading.html' : '/cambridge-listening.html';
+      return;
+    }
+    const m = document.getElementById('psUnlockModal');
+    if (m) m.classList.remove('open');
+  }
+
+  window.openTestUnlockModal = openTestUnlockModal;
+  window.closeTestUnlockModal = closeTestUnlockModal;
+
   let activePassage = 1; // 1, 2, or 3
   let userAnswers = {};
   let isSubmitted = false;
@@ -2187,6 +2367,40 @@
 
     // Update bottom navigation bar with green/red states
     updateAllButtons();
+
+    // Automatically record student practice in dashboard
+    try {
+      const u = JSON.parse(localStorage.getItem('user') || 'null');
+      const isPracticeBank = urlParams.get("practice") === "bank" || urlParams.has("set") || urlParams.has("pracNumber");
+      const pType = urlParams.get("type") || urlParams.get("pracType") || "Question Type Practice";
+      const pSet = (urlParams.get("set") || urlParams.get("pracNumber") || "1").replace(/\D/g, "") || "1";
+      
+      let testTitle = `Cambridge ${bookParam} Academic Reading Test ${testParam}`;
+      if (isPracticeBank) {
+        testTitle = `${pType} Practice (Set ${pSet})`;
+      } else if (practiceMode === "section") {
+        testTitle = `Cambridge ${bookParam} Reading Test ${testParam} (Q${sectionStart}-${sectionEnd})`;
+      } else if (practiceMode === "passage") {
+        testTitle = `Cambridge ${bookParam} Reading Test ${testParam} (Passage ${targetPassage})`;
+      }
+
+      fetch('/api/student/record-test', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: u ? u.email : '',
+          testType: isPracticeBank ? 'Practice Hub' : (practiceMode === 'full' ? 'Cambridge Reading' : 'Cambridge Reading Practice'),
+          module: 'reading',
+          testId: isPracticeBank ? `practice-reading-${encodeURIComponent(pType)}-set-${pSet}` : `cambridge-reading-${bookParam}-${testParam}-${practiceMode}`,
+          title: testTitle,
+          totalQuestions: totalCount,
+          readingScore: correctCount,
+          readingBand: Number(bandScore) || (totalCount > 0 ? Math.round((correctCount / totalCount) * 9 * 2) / 2 : 0),
+          overallBand: Number(bandScore) || (totalCount > 0 ? Math.round((correctCount / totalCount) * 9 * 2) / 2 : 0),
+          answers: userAnswers
+        })
+      }).catch(err => console.warn('Record sync error:', err));
+    } catch(e) {}
 
     if (finishBtn) {
       finishBtn.textContent = "Test Completed";

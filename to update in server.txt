@@ -19,3 +19,14 @@ cd ~/ieltsmockpoint
 git pull origin main
 npm install
 pm2 restart ielts-mock
+
+
+ভবিষ্যতে সার্ভার ম্যানেজমেন্টের জন্য এই কয়টি কমান্ড মনে রাখলেই চলবে:
+
+অ্যাপ স্ট্যাটাস দেখা: pm2 status
+
+লাইভ এরর/লগ দেখা: pm2 logs ielts-mock
+
+Nginx স্ট্যাটাস চেক: sudo systemctl status nginx
+
+গিটহাব থেকে কোড আপডেট: cd ~/ieltsmockpoint && git pull origin main && pm2 restart ielts-mock

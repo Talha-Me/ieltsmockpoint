@@ -2280,6 +2280,172 @@ function injectBcStyles() {
     .bc-result-footer { position: sticky; bottom: 0; background: #fff; border-top: 3px solid #d52b1e; padding: 14px 16px; text-align: center; box-shadow: 0 -6px 18px rgba(0,0,0,.08); }
     .bc-result-footer .bc-btn { flex: none; min-width: 260px; }
 
+    
+    /* Hero Overall Band Showcase */
+    .bc-hero-card {
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 16px 40px rgba(10, 42, 110, 0.12);
+      padding: 24px;
+      margin-bottom: 22px;
+      border: 1px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .bc-hero-top {
+      display: flex;
+      align-items: stretch;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .bc-overall-box {
+      background: linear-gradient(145deg, #071c4c 0%, #0d2c6e 52%, #19469d 100%);
+      color: #ffffff !important;
+      border-radius: 18px;
+      padding: 20px 24px;
+      text-align: center;
+      min-width: 170px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 10px 26px rgba(10, 42, 110, 0.25);
+      border-bottom: 4px solid #d52b1e;
+      position: relative;
+      overflow: hidden;
+    }
+    .bc-overall-box *, .bc-overall-score, .bc-overall-score * {
+      color: #ffffff !important;
+    }
+    .bc-overall-box::before {
+      content: "";
+      position: absolute;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 70%);
+      top: -50px;
+      right: -30px;
+      pointer-events: none;
+    }
+    .bc-overall-label {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      opacity: 0.85;
+      margin-bottom: 4px;
+    }
+    .bc-overall-score {
+      font-size: 46px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.5px;
+      color: #ffffff;
+      margin: 4px 0;
+    }
+    .bc-overall-sub {
+      font-size: 11.5px;
+      opacity: 0.8;
+      font-weight: 600;
+    }
+    .bc-module-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      flex: 1;
+      min-width: 280px;
+    }
+    .bc-mod-mini-card {
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border: 1.5px solid transparent;
+      transition: transform 0.2s;
+    }
+    .bc-mod-mini-card:hover {
+      transform: translateY(-2px);
+    }
+    .bc-mod-listening {
+      background: #f0f6ff;
+      border-color: #bfdbfe;
+    }
+    .bc-mod-reading {
+      background: #f0fdf4;
+      border-color: #bbf7d0;
+    }
+    .bc-mod-writing {
+      background: #fef2f2;
+      border-color: #fecaca;
+    }
+    .bc-mod-mini-head {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+    .bc-mod-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #334155;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+    .bc-mod-band {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+    .bc-mod-listening .bc-mod-band { color: #1e40af; }
+    .bc-mod-reading .bc-mod-band { color: #15803d; }
+    .bc-mod-writing .bc-mod-band { color: #b91c1c; }
+    .bc-mod-raw {
+      font-size: 12px;
+      color: #64748b;
+      font-weight: 600;
+    }
+    .bc-band-badge {
+      display: inline-block;
+      background: #0a2a6e;
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 14px;
+      letter-spacing: 0.3px;
+    }
+    .bc-module-note-banner {
+      background: #fffbeb;
+      border: 1px solid #fef3c7;
+      border-left: 4px solid #f59e0b;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #92400e;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      line-height: 1.5;
+    }
+    .bc-pulse-text {
+      animation: bcPulse 1.5s infinite ease-in-out;
+    }
+    @keyframes bcPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .bc-fade-in {
+      animation: bcFadeIn 0.4s ease;
+    }
+    @keyframes bcFadeIn {
+      from { opacity: 0; transform: scale(0.85); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
     @media (max-width: 700px) {
       .bc-score-grid { grid-template-columns: 1fr; }
       .bc-review-body { grid-template-columns: 1fr; }
@@ -2382,12 +2548,62 @@ function buildReviewItemsHtml(results, moduleName) {
   return html;
 }
 
-function buildScoreCardHtml(title, results, total) {
+
+function calculateListeningBand(correct) {
+  const c = Number(correct) || 0;
+  if (c >= 39) return 9.0;
+  if (c >= 37) return 8.5;
+  if (c >= 35) return 8.0;
+  if (c >= 32) return 7.5;
+  if (c >= 30) return 7.0;
+  if (c >= 26) return 6.5;
+  if (c >= 23) return 6.0;
+  if (c >= 18) return 5.5;
+  if (c >= 16) return 5.0;
+  if (c >= 13) return 4.5;
+  if (c >= 10) return 4.0;
+  if (c >= 6) return 3.5;
+  if (c >= 4) return 3.0;
+  return 2.5;
+}
+
+function calculateReadingBand(correct) {
+  const c = Number(correct) || 0;
+  if (c >= 39) return 9.0;
+  if (c >= 37) return 8.5;
+  if (c >= 35) return 8.0;
+  if (c >= 33) return 7.5;
+  if (c >= 30) return 7.0;
+  if (c >= 27) return 6.5;
+  if (c >= 23) return 6.0;
+  if (c >= 19) return 5.5;
+  if (c >= 15) return 5.0;
+  if (c >= 13) return 4.5;
+  if (c >= 10) return 4.0;
+  if (c >= 8) return 3.5;
+  if (c >= 6) return 3.0;
+  return 2.5;
+}
+
+function calculateOverallBand(lBand, rBand, wBand) {
+  const l = parseFloat(lBand) || 0;
+  const r = parseFloat(rBand) || 0;
+  const w = parseFloat(wBand) || 0;
+  const avg = (l + r + w) / 3;
+  const floor = Math.floor(avg);
+  const diff = avg - floor;
+  if (diff < 0.25) return (floor).toFixed(1);
+  if (diff < 0.75) return (floor + 0.5).toFixed(1);
+  return (floor + 1.0).toFixed(1);
+}
+
+function buildScoreCardHtml(title, results, total, moduleBand, icon) {
   const hasData = results.length > 0;
   const correct = results.filter((r) => r.isCorrect).length;
   const unanswered = results.filter((r) => !r.answered).length;
   const incorrect = Math.max(0, results.length - correct - unanswered);
   const deg = hasData ? Math.round((correct / total) * 360) : 0;
+  const bandStr = hasData && moduleBand !== undefined ? moduleBand.toFixed(1) : "N/A";
   return `
     <div class="bc-score-card">
       <div class="bc-ring" style="background: conic-gradient(#0a2a6e 0deg ${deg}deg, #f3c9c6 ${deg}deg 360deg);">
@@ -2397,7 +2613,10 @@ function buildScoreCardHtml(title, results, total) {
         </div>
       </div>
       <div class="bc-score-info">
-        <h3>${title}</h3>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px;">
+          <h3 style="margin:0; font-size:18px;">${icon || ""} ${title}</h3>
+          ${hasData ? `<span class="bc-band-badge">Band ${bandStr}</span>` : ""}
+        </div>
         <div class="bc-stats">
           <div class="bc-stat bc-stat-ok"><b>${hasData ? correct : "-"}</b><span>Correct</span></div>
           <div class="bc-stat bc-stat-bad"><b>${hasData ? incorrect : "-"}</b><span>Wrong</span></div>
@@ -2407,9 +2626,6 @@ function buildScoreCardHtml(title, results, total) {
     </div>`;
 }
 
-// ==========================================
-// WRITING HELPERS (word count, prompt, copy)
-// ==========================================
 function stripHtml(html) {
   if (!html) return "";
   const prepared = String(html)
@@ -2630,13 +2846,17 @@ function showFinalComprehensiveResultModal(writingData, reason) {
   const totalCorrect = listeningCorrect + readingCorrect;
   const totalQuestions = (hasListeningData ? TOTAL : 0) + (hasReadingData ? TOTAL : 0);
 
+  // Compute Module Bands
+  const listeningBand = hasListeningData ? calculateListeningBand(listeningCorrect) : 0;
+  const readingBand = hasReadingData ? calculateReadingBand(readingCorrect) : 0;
+
   // ---- Writing data ----
   const tasks = getWritingTasks(writingData);
 
   const username = (document.getElementById("userID") && document.getElementById("userID").textContent.trim()) || "";
   const subtitle = reason === "timeup"
     ? "Writing time ended &mdash; your answers were submitted automatically"
-    : "Listening, Reading and Writing";
+    : "Listening, Reading & Writing Performance Report";
 
   const penIcon = `<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>`;
 
@@ -2649,20 +2869,79 @@ function showFinalComprehensiveResultModal(writingData, reason) {
       </div>
 
       <div class="bc-result-wrap">
+        <!-- TOP HERO: OVERALL BAND SCORE & 3-MODULE BREAKDOWN -->
+        <div class="bc-hero-card">
+          <div class="bc-hero-top">
+            <!-- Overall Band -->
+            <div class="bc-overall-box">
+              <div class="bc-overall-label">OVERALL BAND</div>
+              <div id="bc-hero-overall-score" class="bc-overall-score">
+                <span class="bc-pulse-text" style="font-size:20px;">Calculating...</span>
+              </div>
+              <div class="bc-overall-sub">Based on 3 Modules</div>
+            </div>
+
+            <!-- 3 Modules Individual Bands -->
+            <div class="bc-module-grid">
+              <!-- Listening Module -->
+              <div class="bc-mod-mini-card bc-mod-listening">
+                <div class="bc-mod-mini-head">
+                  <span class="bc-mod-icon" style="display:inline-flex; align-items:center;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg></span>
+                  <span class="bc-mod-name">Listening</span>
+                </div>
+                <div class="bc-mod-band">Band ${hasListeningData ? listeningBand.toFixed(1) : "N/A"}</div>
+                <div class="bc-mod-raw">${hasListeningData ? `${listeningCorrect} / 40 correct` : "No data"}</div>
+              </div>
+
+              <!-- Reading Module -->
+              <div class="bc-mod-mini-card bc-mod-reading">
+                <div class="bc-mod-mini-head">
+                  <span class="bc-mod-icon" style="display:inline-flex; align-items:center;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg></span>
+                  <span class="bc-mod-name">Reading</span>
+                </div>
+                <div class="bc-mod-band">Band ${hasReadingData ? readingBand.toFixed(1) : "N/A"}</div>
+                <div class="bc-mod-raw">${hasReadingData ? `${readingCorrect} / 40 correct` : "No data"}</div>
+              </div>
+
+              <!-- Writing Module -->
+              <div class="bc-mod-mini-card bc-mod-writing">
+                <div class="bc-mod-mini-head">
+                  <span class="bc-mod-icon" style="display:inline-flex; align-items:center;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg></span>
+                  <span class="bc-mod-name">Writing</span>
+                </div>
+                <div id="bc-hero-writing-band" class="bc-mod-band bc-pulse-text" style="font-size:18px;">AI Evaluating...</div>
+                <div class="bc-mod-raw">${tasks[0].words + tasks[1].words} total words</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Note: 3 modules only (no speaking) -->
+          <div class="bc-module-note-banner">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; color:#d97706;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <div>
+              <strong>Exam Note:</strong> This overall band score is calculated strictly across the <strong>3 completed modules (Listening, Reading, and Writing)</strong>. The Speaking interview module is not included in this Computer-Delivered mock test.
+            </div>
+          </div>
+        </div>
+
+        <!-- MODULE DETAIL SCORE CARDS -->
         <div class="bc-score-grid">
-          ${buildScoreCardHtml("Listening", listeningResults, TOTAL)}
-          ${buildScoreCardHtml("Reading", readingResults, TOTAL)}
+          ${buildScoreCardHtml("Listening", listeningResults, TOTAL, listeningBand, '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>')}
+          ${buildScoreCardHtml("Reading", readingResults, TOTAL, readingBand, '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>')}
           
-    <div class="bc-writing-card">
+          <div class="bc-writing-card">
             <div class="bc-wc-left">
               <div class="bc-wc-icon">${penIcon}</div>
               <div>
-                <h3>Writing Official Band</h3>
-                <p>Task 1: ${tasks[0].words} words &nbsp;&middot;&nbsp; Task 2: ${tasks[1].words} words</p>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <h3 style="margin:0; display:inline-flex; align-items:center; gap:6px;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg> Writing Assessment</h3>
+                  <span id="bc-writing-band-pill" class="bc-band-badge" style="background:#d52b1e;">Evaluating...</span>
+                </div>
+                <p style="margin-top:4px;">Task 1: ${tasks[0].words} words &nbsp;&middot;&nbsp; Task 2: ${tasks[1].words} words</p>
               </div>
             </div>
             <div style="display:flex; align-items:center; gap:12px;">
-              <span id="bc-writing-total-badge" class="bc-total-pill" style="margin-top:0; background:#0a2a6e; font-size:18px;">
+              <span id="bc-writing-total-badge" class="bc-total-pill" style="margin-top:0; background:#0a2a6e; font-size:16px;">
                 AI Band: Calculating...
               </span>
               <button id="bc-goto-writing" class="bc-btn bc-btn-red" type="button" style="min-width:140px;">View Feedback &darr;</button>
@@ -2673,7 +2952,7 @@ function showFinalComprehensiveResultModal(writingData, reason) {
         <div class="bc-module-tabs">
           <button type="button" class="bc-module-tab" data-module="listening">Listening Answers</button>
           <button type="button" class="bc-module-tab" data-module="reading">Reading Answers</button>
-          <button type="button" class="bc-module-tab active" data-module="writing">Writing &amp; AI</button>
+          <button type="button" class="bc-module-tab active" data-module="writing">Writing &amp; AI Feedback</button>
         </div>
 
         <div class="bc-review-title" id="bc-review-title">
@@ -2942,6 +3221,51 @@ function showFinalComprehensiveResultModal(writingData, reason) {
       // ১. উপরের ব্যাজে মূল ব্যান্ড স্কোর আপডেট
       if (badge) {
         badge.textContent = `Writing Band: ${final_band}`;
+      const wBandNum = parseFloat(final_band) || 6.0;
+
+      // Hero Card Writing Band
+      const heroWritingBandEl = document.getElementById("bc-hero-writing-band");
+      if (heroWritingBandEl) {
+        heroWritingBandEl.textContent = `Band ${final_band}`;
+        heroWritingBandEl.classList.remove("bc-pulse-text");
+        heroWritingBandEl.style.fontSize = "24px";
+      }
+
+      // Writing Card Band Badge
+      const writingCardBandEl = document.getElementById("bc-writing-band-pill");
+      if (writingCardBandEl) {
+        writingCardBandEl.textContent = `Band ${final_band}`;
+      }
+
+      // Calculate & update Overall Band Score across 3 modules
+      const lBand = typeof listeningBand !== "undefined" ? listeningBand : (typeof calculateListeningBand === "function" ? calculateListeningBand(listeningCorrect) : 6.0);
+      const rBand = typeof readingBand !== "undefined" ? readingBand : (typeof calculateReadingBand === "function" ? calculateReadingBand(readingCorrect) : 6.0);
+      const overall = calculateOverallBand(lBand, rBand, wBandNum);
+      const overallEl = document.getElementById("bc-hero-overall-score");
+      if (overallEl) {
+        overallEl.innerHTML = `<span class="bc-fade-in">${overall}</span>`;
+      }
+
+      // Auto-record to student dashboard if logged in
+      try {
+        fetch('/api/student/record-test', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            testType: 'full-mock',
+            testId: (typeof currentMockId !== 'undefined' ? currentMockId : 'Full-Mock'),
+            title: 'IELTS Full Mock Test',
+            listeningScore: typeof listeningCorrect !== 'undefined' ? listeningCorrect : null,
+            readingScore: typeof readingCorrect !== 'undefined' ? readingCorrect : null,
+            writingScore: wBandNum,
+            listeningBand: lBand,
+            readingBand: rBand,
+            writingBand: wBandNum,
+            overallBand: parseFloat(overall) || null,
+            totalWords: (tasks[0]?.words || 0) + (tasks[1]?.words || 0)
+          })
+        }).catch(() => {});
+      } catch (e) {}
         badge.style.background = "#d52b1e";
       }
 

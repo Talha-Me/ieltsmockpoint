@@ -3199,53 +3199,230 @@ function injectResultStyles() {
   style.textContent = `
     .exam-locked .box, .exam-locked .diagram-box { pointer-events: none; }
 
-    .bc-overlay { position: fixed; inset: 0; background: rgba(8, 24, 68, 0.80); display: flex; align-items: center; justify-content: center; z-index: 100000; padding: 16px; font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif; }
-    .bc-card { background: #fff; border-radius: 14px; width: 100%; max-width: 540px; overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,0.4); animation: bcPop .25s ease; }
-    @keyframes bcPop { from { transform: scale(.94); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-    .bc-card-head { background: linear-gradient(135deg, #071d4f, #0a2a6e 55%, #1b4fb3); color: #fff; padding: 26px 24px 22px; text-align: center; border-bottom: 5px solid #d52b1e; }
-    .bc-card-head h2 { margin: 0 0 4px; font-size: 26px; letter-spacing: .3px; }
-    .bc-card-head p { margin: 0; font-size: 14px; opacity: .85; }
-    .bc-card-body { padding: 22px 28px 12px; color: #1f2a44; font-size: 15.5px; line-height: 1.65; text-align: center; }
-    .bc-card-note { font-size: 13px; color: #5b6783; margin-top: 10px; }
-    .bc-card-actions { display: flex; gap: 12px; padding: 14px 28px 28px; flex-wrap: wrap; }
+    .bc-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 27, 60, 0.82);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100000;
+      padding: 16px;
+      overflow-y: auto;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .bc-card {
+      background: #ffffff;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 500px;
+      max-height: 94vh;
+      overflow-y: auto;
+      box-shadow: 0 26px 65px -10px rgba(11, 27, 68, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.6);
+      animation: bcPop .26s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes bcPop {
+      from { transform: scale(0.92); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .bc-card-head {
+      background: linear-gradient(135deg, #071d4f, #0a2a6e 55%, #1b4fb3);
+      color: #fff;
+      padding: 22px 20px 18px;
+      text-align: center;
+      border-bottom: 4px solid #d52b1e;
+    }
+    .bc-card-head h2 { margin: 0 0 4px; font-size: 22px; letter-spacing: .2px; }
+    .bc-card-head p { margin: 0; font-size: 13px; opacity: .85; }
+    .bc-card-body { padding: 16px 22px 4px; color: #1f2a44; font-size: 14.5px; line-height: 1.5; text-align: center; }
+    .bc-card-note { font-size: 12.5px; color: #5b6783; margin-top: 8px; }
+    .bc-card-actions { display: flex; gap: 10px; padding: 12px 22px 22px; flex-wrap: wrap; }
 
-    .bc-btn { flex: 1; min-width: 170px; padding: 13px 18px; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; border: 2px solid transparent; transition: all .2s; }
+    .bc-btn { flex: 1; min-width: 160px; padding: 11px 16px; border-radius: 10px; font-size: 14.5px; font-weight: 700; cursor: pointer; border: 2px solid transparent; transition: all .2s; }
     .bc-btn-blue { background: #fff; color: #0a2a6e; border-color: #0a2a6e; }
     .bc-btn-blue:hover { background: #0a2a6e; color: #fff; }
     .bc-btn-red { background: #d52b1e; color: #fff; border-color: #d52b1e; }
     .bc-btn-red:hover { background: #b01f14; border-color: #b01f14; }
     .bc-btn:disabled { opacity: .6; cursor: not-allowed; }
 
-    .bc-card-modern { max-width: 560px; border-radius: 18px; }
-    .bc-card-modern .bc-card-head { position: relative; padding: 34px 24px 26px; overflow: hidden; }
-    .bc-card-modern .bc-card-head::before { content: ""; position: absolute; width: 220px; height: 220px; border-radius: 50%; background: rgba(255,255,255,0.06); top: -90px; right: -60px; }
-    .bc-card-modern .bc-card-head::after { content: ""; position: absolute; width: 140px; height: 140px; border-radius: 50%; background: rgba(213,43,30,0.25); bottom: -70px; left: -40px; }
-    .bc-icon { position: relative; z-index: 1; width: 68px; height: 68px; margin: 0 auto 14px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 5px rgba(213,43,30,0.9), 0 8px 20px rgba(0,0,0,0.25); }
-    .bc-card-modern .bc-card-head h2 { position: relative; z-index: 1; font-size: 28px; }
-    .bc-card-modern .bc-card-head p { position: relative; z-index: 1; text-transform: uppercase; letter-spacing: 1.5px; font-size: 12px; }
-    .bc-lead { margin: 0 0 16px; font-size: 16px; color: #1f2a44; }
-    .bc-pills { display: flex; gap: 12px; justify-content: center; margin-bottom: 18px; }
-    .bc-pill { min-width: 120px; padding: 10px 16px; border-radius: 12px; text-align: center; }
-    .bc-pill b { display: block; font-size: 26px; line-height: 1.1; }
-    .bc-pill span { font-size: 11.5px; text-transform: uppercase; letter-spacing: .6px; font-weight: 600; }
-    .bc-pill-blue { background: #e8efff; color: #0a2a6e; }
-    .bc-pill-red { background: #fdeceb; color: #d52b1e; }
-    .bc-question { margin: 0; font-weight: 700; color: #0a2a6e; font-size: 16px; }
-    .bc-options { display: grid; gap: 12px; padding: 14px 28px 8px; }
-    .bc-option { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; padding: 14px 16px; border-radius: 12px; border: 2px solid transparent; cursor: pointer; transition: all .2s; font-family: inherit; }
-    .bc-option-icon { width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .bc-option-text { display: flex; flex-direction: column; gap: 2px; }
-    .bc-option-text strong { font-size: 16px; }
-    .bc-option-text small { font-size: 12.5px; opacity: .8; }
-    .bc-option-blue { background: #fff; color: #0a2a6e; border-color: #0a2a6e; }
-    .bc-option-blue .bc-option-icon { background: #e8efff; }
-    .bc-option-blue:hover { background: #0a2a6e; color: #fff; transform: translateY(-2px); box-shadow: 0 8px 18px rgba(10,42,110,.25); }
-    .bc-option-blue:hover .bc-option-icon { background: rgba(255,255,255,0.18); }
-    .bc-option-red { background: #d52b1e; color: #fff; border-color: #d52b1e; }
-    .bc-option-red .bc-option-icon { background: rgba(255,255,255,0.2); }
-    .bc-option-red:hover { background: #b01f14; border-color: #b01f14; transform: translateY(-2px); box-shadow: 0 8px 18px rgba(213,43,30,.35); }
-    .bc-option:disabled { opacity: .65; cursor: not-allowed; transform: none; box-shadow: none; }
-    .bc-card-note-bottom { margin: 6px 28px 22px; text-align: center; font-size: 12.5px; color: #6b7690; }
+    .bc-card-modern {
+      max-width: 500px;
+      border-radius: 20px;
+      box-shadow: 0 28px 70px -10px rgba(8, 20, 50, 0.48), 0 0 0 1px rgba(255, 255, 255, 0.5);
+    }
+    .bc-card-modern .bc-card-head {
+      position: relative;
+      padding: 22px 20px 18px;
+      overflow: hidden;
+      background: linear-gradient(145deg, #071c4c 0%, #0d2c6e 52%, #19469d 100%);
+      border-bottom: 4px solid #e11d48;
+    }
+    .bc-card-modern .bc-card-head::before {
+      content: "";
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0) 70%);
+      top: -90px;
+      right: -50px;
+      pointer-events: none;
+    }
+    .bc-card-modern .bc-card-head::after {
+      content: "";
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(225,29,72,0.25) 0%, rgba(225,29,72,0) 70%);
+      bottom: -70px;
+      left: -30px;
+      pointer-events: none;
+    }
+    .bc-icon {
+      position: relative;
+      z-index: 1;
+      width: 52px;
+      height: 52px;
+      margin: 0 auto 10px;
+      border-radius: 50%;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25), 0 0 0 6px rgba(225, 29, 72, 0.25), 0 8px 20px rgba(0,0,0,0.20);
+    }
+    .bc-card-modern .bc-card-head h2 {
+      position: relative;
+      z-index: 1;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      color: #ffffff;
+      margin: 0 0 4px;
+    }
+    .bc-badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 20px;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #e2e8f0;
+      position: relative;
+      z-index: 1;
+    }
+    .bc-lead { margin: 0 0 12px; font-size: 14px; color: #475569; line-height: 1.45; }
+    .bc-pills { display: flex; gap: 10px; justify-content: center; margin-bottom: 12px; }
+    .bc-pill {
+      flex: 1;
+      max-width: 155px;
+      padding: 8px 12px;
+      border-radius: 12px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 1.5px solid transparent;
+      transition: all .2s;
+    }
+    .bc-pill b { display: block; font-size: 24px; font-weight: 800; line-height: 1.1; margin-bottom: 2px; }
+    .bc-pill span { font-size: 10.5px; text-transform: uppercase; letter-spacing: .8px; font-weight: 700; opacity: .9; }
+    .bc-pill-blue { background: #f0f6ff; border-color: #bfdbfe; color: #1e40af; box-shadow: 0 2px 6px rgba(30,64,175,0.06); }
+    .bc-pill-red { background: #fef2f2; border-color: #fecaca; color: #b91c1c; box-shadow: 0 2px 6px rgba(185,28,28,0.06); }
+    .bc-question { margin: 0; font-weight: 700; color: #0f172a; font-size: 14px; letter-spacing: -0.2px; }
+    .bc-options { display: flex; flex-direction: column; gap: 8px; padding: 10px 20px 4px; }
+    .bc-option {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      text-align: left;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1.5px solid transparent;
+      cursor: pointer;
+      transition: all .2s cubic-bezier(0.16, 1, 0.3, 1);
+      font-family: inherit;
+      outline: none;
+    }
+    .bc-option-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: transform .2s ease;
+    }
+    .bc-option:hover .bc-option-icon { transform: scale(1.06); }
+    .bc-option-text { display: flex; flex-direction: column; gap: 1px; }
+    .bc-option-text strong { font-size: 14.5px; font-weight: 700; line-height: 1.2; }
+    .bc-option-text small { font-size: 11.5px; opacity: .82; line-height: 1.3; }
+    
+    .bc-option-blue {
+      background: #ffffff;
+      color: #0a2a6e;
+      border-color: #cbd5e1;
+    }
+    .bc-option-blue .bc-option-icon { background: #eef4ff; color: #1d4ed8; }
+    .bc-option-blue:hover {
+      background: #f8fbff;
+      border-color: #1d4ed8;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(29,78,216,.14);
+    }
+    
+    .bc-option-red {
+      background: linear-gradient(135deg, #d52b1e 0%, #b81b10 100%);
+      color: #ffffff;
+      border-color: transparent;
+      box-shadow: 0 4px 12px rgba(213,43,30,0.22);
+    }
+    .bc-option-red .bc-option-icon { background: rgba(255,255,255,0.22); color: #ffffff; }
+    .bc-option-red:hover {
+      background: linear-gradient(135deg, #b81b10 0%, #9e140a 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(213,43,30,.35);
+    }
+    
+    .bc-option-finish {
+      background: #ffffff;
+      border-color: #e2e8f0;
+      color: #334155;
+    }
+    .bc-option-finish .bc-option-icon { background: #f1f5f9; color: #475569; }
+    .bc-option-finish:hover {
+      background: #fef2f2;
+      border-color: #fca5a5;
+      color: #991b1b;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(220,38,38,.12);
+    }
+    .bc-option-finish:hover .bc-option-icon { background: #fee2e2; color: #dc2626; }
+    
+    .bc-option:disabled { opacity: .65; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+    .bc-card-note-bottom {
+      margin: 8px 20px 14px;
+      text-align: center;
+      font-size: 11.5px;
+      color: #64748b;
+      line-height: 1.35;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
 
     .bc-result { position: fixed; inset: 0; z-index: 100001; background: #eef2f9; overflow-y: auto; font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif; color: #1f2a44; }
     .bc-result-header { background: linear-gradient(135deg, #071d4f, #0a2a6e 55%, #1b4fb3); color: #fff; padding: 30px 20px 80px; text-align: center; border-bottom: 6px solid #d52b1e; }
@@ -3288,48 +3465,47 @@ function injectResultStyles() {
     .bc-review-item.bad { border-left-color: #d52b1e; background: #fffafa; }
     .bc-q-num { width: 38px; height: 38px; border-radius: 50%; background: #0a2a6e; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 15px; flex-shrink: 0; }
     .bc-review-item.bad .bc-q-num { background: #d52b1e; }
-    .bc-review-body { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 18px; font-size: 14px; min-width: 0; }
-    .bc-lbl { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; color: #7a86a3; }
-    .bc-val { font-weight: 700; word-break: break-word; }
+    .bc-review-body { flex: 1; font-size: 14.5px; }
+    .bc-review-body > div { margin-bottom: 4px; }
+    .bc-lbl { font-weight: 600; color: #5b6783; width: 120px; display: inline-block; font-size: 12.5px; text-transform: uppercase; letter-spacing: .4px; }
+    .bc-val { font-weight: 700; color: #1f2a44; }
+    .bc-val.right { color: #0e7039; }
     .bc-val.wrong { color: #d52b1e; }
-    .bc-val.right { color: #0a2a6e; }
-    .bc-val.empty { color: #9aa3b8; font-style: italic; font-weight: 600; }
-    .bc-mark { font-size: 22px; font-weight: 800; flex-shrink: 0; color: #0a2a6e; }
+    .bc-val.empty { color: #8892a4; font-style: italic; font-weight: normal; }
+    .bc-mark { font-size: 22px; font-weight: 800; width: 30px; text-align: center; }
+    .bc-review-item.ok .bc-mark { color: #0e7039; }
     .bc-review-item.bad .bc-mark { color: #d52b1e; }
 
-    .bc-result-footer { position: sticky; bottom: 0; background: #fff; border-top: 3px solid #d52b1e; padding: 14px 16px; text-align: center; box-shadow: 0 -6px 18px rgba(0,0,0,.08); }
-    .bc-result-footer p { margin: 0 0 10px; font-size: 13px; color: #5b6783; }
-    .bc-result-footer .bc-btn { flex: none; min-width: 260px; }
-
-    @media (max-width: 640px) {
-      .bc-parts { grid-template-columns: repeat(2, 1fr); }
-      .bc-review-body { grid-template-columns: 1fr; }
-      .bc-result-header h1 { font-size: 22px; }
-    }
+    .bc-result-footer { background: #fff; border-top: 1px solid #d8e0ee; padding: 22px 20px; text-align: center; margin-top: 30px; }
+    .bc-result-footer p { margin: 0 0 14px; color: #5b6783; font-size: 14px; }
   `;
   document.head.appendChild(style);
 }
 
 function lockExam() {
-  injectResultStyles();
   document.body.classList.add("exam-locked");
-  const root = document.getElementById("test-content") || document;
+  const root = document.getElementById("quiz-form") || document.body;
   root.querySelectorAll("input, select, textarea").forEach((el) => { el.disabled = true; });
-  document.querySelectorAll(".box, .diagram-box").forEach((el) => el.setAttribute("draggable", "false"));
 }
 
-// Test shesh hole (time up ba manual finish) - answer lock kore card dekhabe
 function endListeningTest(reason) {
-  if (timeUpTriggered || isSubmitting) return;
-  timeUpTriggered = true;
+  if (examLocked) return;
   examLocked = true;
 
-  clearInterval(minuteInterval);
-  clearInterval(secondsInterval);
-  if (currentAudio) currentAudio.pause();
+  if (typeof currentAudio !== "undefined" && currentAudio) {
+    try {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+    } catch (e) {}
+  }
+
+  if (typeof minuteInterval !== "undefined") clearInterval(minuteInterval);
+  if (typeof secondsInterval !== "undefined") clearInterval(secondsInterval);
 
   if (submitModal) submitModal.style.display = "none";
   if (fullscreenModal) fullscreenModal.style.display = "none";
+  const listeningOverlay = document.getElementById("listeningOverlay");
+  if (listeningOverlay) listeningOverlay.style.display = "none";
 
   if (reason === "timeup") {
     const minutesDisplay = document.getElementById("minutes");
@@ -3354,6 +3530,7 @@ function countAnswered() {
 }
 
 function showTimeUpModal(reason) {
+  injectResultStyles();
   const existing = document.getElementById("bc-timeup-modal");
   if (existing) existing.remove();
 
@@ -3364,11 +3541,13 @@ function showTimeUpModal(reason) {
     : "You have finished the Listening test and your answers have been locked.";
 
   const headIcon = isTimeUp
-    ? `<svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#d52b1e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`
-    : `<svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#d52b1e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.5"/></svg>`;
+    ? `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#d52b1e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`
+    : `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#d52b1e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.5"/></svg>`;
 
-  const eyeIcon = `<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>`;
-  const arrowIcon = `<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
+  const eyeIcon = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>`;
+  const arrowIcon = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
+  const flagIcon = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>`;
+  const infoIcon = `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`;
 
   const answered = countAnswered();
   const unanswered = Math.max(0, TOTAL_QUESTIONS - answered);
@@ -3379,7 +3558,7 @@ function showTimeUpModal(reason) {
         <div class="bc-card-head">
           <div class="bc-icon">${headIcon}</div>
           <h2>${title}</h2>
-          <p>Listening Test</p>
+          <span class="bc-badge-pill"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:2px"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg> LISTENING MODULE COMPLETED</span>
         </div>
 
         <div class="bc-card-body">
@@ -3394,21 +3573,40 @@ function showTimeUpModal(reason) {
         <div class="bc-options">
           <button id="bc-preview-btn" class="bc-option bc-option-blue" type="button">
             <span class="bc-option-icon">${eyeIcon}</span>
-            <span class="bc-option-text"><strong>Preview Answers</strong><small>See your score and check every answer</small></span>
+            <span class="bc-option-text">
+              <strong>Preview Answers</strong>
+              <small>See your score and check every answer</small>
+            </span>
           </button>
+          
           <button id="bc-timeup-start-btn" class="bc-option bc-option-red" type="button">
             <span class="bc-option-icon">${arrowIcon}</span>
-            <span class="bc-option-text"><strong>Start Reading Test</strong><small>Submit now and move to the Reading test</small></span>
+            <span class="bc-option-text">
+              <strong>Start Reading Test</strong>
+              <small>Submit now and move to the Reading test</small>
+            </span>
+          </button>
+
+          <button id="bc-finish-full-test-btn" class="bc-option bc-option-finish" type="button">
+            <span class="bc-option-icon">${flagIcon}</span>
+            <span class="bc-option-text">
+              <strong>Finish Full Test</strong>
+              <small>Finish your full test without completing reading - writing-speaking part</small>
+            </span>
           </button>
         </div>
 
-        <p class="bc-card-note-bottom">Your answers will be submitted when you continue. You cannot change them after this.</p>
+        <p class="bc-card-note-bottom">
+          ${infoIcon}
+          <span>Your answers will be submitted when you continue. You cannot change them after this.</span>
+        </p>
       </div>
     </div>
   `;
   document.body.insertAdjacentHTML("beforeend", html);
 
-  document.getElementById("bc-preview-btn").addEventListener("click", showPreviewResult);
+  document.getElementById("bc-preview-btn").addEventListener("click", () => showPreviewResult());
+  
   document.getElementById("bc-timeup-start-btn").addEventListener("click", async (e) => {
     const btn = e.currentTarget;
     btn.disabled = true;
@@ -3416,6 +3614,47 @@ function showTimeUpModal(reason) {
     if (label) label.textContent = "Submitting...";
     await submitTest();
   });
+
+  const finishEarlyBtn = document.getElementById("bc-finish-full-test-btn");
+  if (finishEarlyBtn) {
+    finishEarlyBtn.addEventListener("click", async (e) => {
+      const btn = e.currentTarget;
+      btn.disabled = true;
+      const label = btn.querySelector("strong");
+      if (label) label.textContent = "Finishing Test...";
+      await submitTestWithoutRemainingModules();
+    });
+  }
+}
+
+async function submitTestWithoutRemainingModules() {
+  inputCheckUpdated();
+  sessionStorage.setItem("listeningIscompleted", "true");
+  sessionStorage.setItem("mockFinishedEarly", "true");
+  const [scoreToSend, mistakesToSend] = findDifferences(answerArrayUpdated, officialAnswers);
+
+  try {
+    sessionStorage.setItem("listeningScore", scoreToSend);
+    localStorage.setItem("listeningScore", scoreToSend);
+    sessionStorage.setItem("listeningMistakes", JSON.stringify(mistakesToSend));
+    localStorage.setItem("listeningMistakes", JSON.stringify(mistakesToSend));
+    sessionStorage.setItem("listeningAnswers", JSON.stringify(answerArrayUpdated));
+    localStorage.setItem("listeningAnswers", JSON.stringify(answerArrayUpdated));
+  } catch (err) {
+    console.warn("Storage warning:", err);
+  }
+
+  try {
+    await fetch('/api/update-mock-info', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ score: scoreToSend, mistakes: mistakesToSend, mod: "listening" })
+    });
+  } catch (err) {
+    console.error("Score sync error:", err);
+  }
+
+  showPreviewResult({ finishedFullTest: true });
 }
 
 function normalizeAns(v) {
@@ -3443,7 +3682,8 @@ function buildResultList() {
   return list;
 }
 
-function showPreviewResult() {
+function showPreviewResult(opts = {}) {
+  const isFinishedFullTest = Boolean(opts && opts.finishedFullTest);
   injectResultStyles();
   const timeUpModal = document.getElementById("bc-timeup-modal");
   if (timeUpModal) timeUpModal.remove();
@@ -3542,8 +3782,16 @@ function showPreviewResult() {
       </div>
 
       <div class="bc-result-footer">
-        <p>Your answers are locked. Click below to submit your Listening test and continue to the Reading test.</p>
-        <button id="bc-start-reading-btn" class="bc-btn bc-btn-red" type="button">Start Reading Test &rarr;</button>
+        ${isFinishedFullTest ? `
+          <p>You have finished your mock test without completing Reading, Writing and Speaking. Your Listening score has been saved.</p>
+          <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:14px;">
+            <a href="/mocks.html" class="bc-btn bc-btn-red" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center;">Back to Mocks &rarr;</a>
+            <a href="/candidate-dashboard" class="bc-btn bc-btn-blue" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center;">Go to Dashboard</a>
+          </div>
+        ` : `
+          <p>Your answers are locked. Click below to submit your Listening test and continue to the Reading test.</p>
+          <button id="bc-start-reading-btn" class="bc-btn bc-btn-red" type="button">Start Reading Test &rarr;</button>
+        `}
       </div>
     </div>
   `;
@@ -3570,14 +3818,16 @@ function showPreviewResult() {
   });
 
   // Start Reading (submit + redirect)
-  document.getElementById("bc-start-reading-btn").addEventListener("click", async (e) => {
-    e.target.disabled = true;
-    e.target.textContent = "Submitting...";
-    await submitTest();
-  });
+  const startReadingBtn = document.getElementById("bc-start-reading-btn");
+  if (startReadingBtn) {
+    startReadingBtn.addEventListener("click", async (e) => {
+      e.target.disabled = true;
+      e.target.textContent = "Submitting...";
+      await submitTest();
+    });
+  }
 }
 
-// ==========================================
 // 12. STARTUP
 // ==========================================
 window.addEventListener("DOMContentLoaded", async () => {

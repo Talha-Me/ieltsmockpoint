@@ -1416,6 +1416,44 @@ ${studentAnswer}`;
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;");
 
+    const isUserLoggedIn = !!(function() {
+      try {
+        const u = JSON.parse(localStorage.getItem('user') || 'null');
+        return u && (u.email || u.name);
+      } catch(e) { return false; }
+    })();
+
+    if (!isUserLoggedIn) {
+      const today = new Date().toISOString().slice(0, 10);
+      let guestData = { date: today, count: 0 };
+      try {
+        const raw = localStorage.getItem('mp_guest_writing_eval');
+        if (raw) {
+          const p = JSON.parse(raw);
+          if (p.date === today) guestData = p;
+        }
+      } catch(e) {}
+
+      if (guestData.count >= 1) {
+        if (badge) badge.textContent = "Limit Reached";
+        container.innerHTML = `
+          <div style="background:#fff; border: 1.5px solid #bcd9fb; border-radius:16px; padding:32px 24px; text-align:center; max-width:520px; margin: 30px auto; box-shadow: 0 8px 24px rgba(11,43,82,0.08);">
+            <div style="width:58px; height:58px; border-radius:16px; background:#eff6ff; color:#1565c9; display:inline-flex; align-items:center; justify-content:center; margin-bottom:14px;">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            </div>
+            <h4 style="font-family:'Sora',sans-serif; font-size:1.25rem; font-weight:800; color:#0b2b52; margin-bottom:8px;">Daily Free Evaluation Limit Reached</h4>
+            <p style="font-size:0.88rem; color:#64748b; line-height:1.55; margin-bottom:20px;">
+              You have completed your 1 free AI Writing evaluation for today without login. Log in or create a free candidate account to get unlimited evaluations and track all your band scores!
+            </p>
+            <a href="/login" style="display:inline-block; padding:12px 24px; border-radius:10px; background:#1565c9; color:#fff; text-decoration:none; font-weight:700; font-size:0.92rem;">
+              Sign In / Register Free &rarr;
+            </a>
+          </div>
+        `;
+        return;
+      }
+    }
+
     try {
       const res = await fetch("/evaluate-essay", {
         method: "POST",
@@ -1429,6 +1467,20 @@ ${studentAnswer}`;
 
       const json = await res.json();
       if (!json.success) throw new Error(json.message || "Failed to evaluate");
+
+      if (!isUserLoggedIn) {
+        const today = new Date().toISOString().slice(0, 10);
+        let guestData = { date: today, count: 0 };
+        try {
+          const raw = localStorage.getItem('mp_guest_writing_eval');
+          if (raw) {
+            const p = JSON.parse(raw);
+            if (p.date === today) guestData = p;
+          }
+        } catch(e) {}
+        guestData.count += 1;
+        localStorage.setItem('mp_guest_writing_eval', JSON.stringify(guestData));
+      }
 
       const evalData = json.data;
 

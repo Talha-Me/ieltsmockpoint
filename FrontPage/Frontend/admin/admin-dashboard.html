@@ -49,6 +49,23 @@ table td,table th{ vertical-align:middle; }
 .logout-buttons { display:flex; justify-content:center; gap:15px; }
 .yes-btn { background:#e63946; color:#fff; padding:8px 20px; border:none; border-radius:8px; cursor:pointer; }
 .no-btn { background:#2a9d8f; color:#fff; padding:8px 20px; border:none; border-radius:8px; cursor:pointer; }
+
+.phase-select-card {
+  border: 2px solid #e2e8f0 !important;
+  border-radius: 12px;
+  background: #ffffff;
+  transition: all 0.22s ease;
+  cursor: pointer;
+}
+.phase-select-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(11, 43, 82, 0.08);
+}
+.phase-select-card.active {
+  border-color: #1565c9 !important;
+  background: #f0f7ff !important;
+  box-shadow: 0 4px 14px rgba(21, 101, 201, 0.12);
+}
 </style>
 </head>
 <body>
@@ -67,6 +84,95 @@ table td,table th{ vertical-align:middle; }
       <small class="text-muted">Manage Users</small>
     </div>
     <input id="search" class="form-control form-control-sm" placeholder="Search name / email / phone">
+  </div>
+
+  
+  <!-- Phase & Quotas Control Panel -->
+  <div class="card p-3 card-uka mb-3" style="border: 1px solid #cbd5e1; box-shadow: 0 4px 16px rgba(11,43,82,0.06);">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div>
+        <h5 class="fw-bold mb-1" style="color: #0b2b52;">
+          <i class="fas fa-layer-group text-primary me-2"></i>Access &amp; Monetization Control (Phase Switcher)
+        </h5>
+        <div class="text-muted small">Select active platform phase and adjust free quotas for guests &amp; candidate access.</div>
+      </div>
+      <div id="activePhasePill" class="badge bg-primary px-3 py-2 fw-semibold" style="font-size: 0.85rem;">Phase 1: Open Growth Active</div>
+    </div>
+
+    <!-- 3 Phase Cards -->
+    <div class="row g-3 mb-3">
+      <!-- Phase 1 -->
+      <div class="col-md-4">
+        <div class="card p-3 h-100 phase-select-card" id="ukaPhase1" onclick="selectUkaPhase(1)">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="fw-bold" style="color: #0b2b52;"><i class="fas fa-globe text-primary me-2"></i>Phase 1: Open Growth</span>
+            <span class="badge bg-secondary" id="ukaBadge1">Standby</span>
+          </div>
+          <p class="text-muted small mb-0">100% Free &amp; Open. Zero locks anywhere. Anyone can take any test or practice without registration.</p>
+        </div>
+      </div>
+
+      <!-- Phase 2 -->
+      <div class="col-md-4">
+        <div class="card p-3 h-100 phase-select-card" id="ukaPhase2" onclick="selectUkaPhase(2)">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="fw-bold" style="color: #0b2b52;"><i class="fas fa-user-lock text-warning me-2"></i>Phase 2: Freemium Lead Gen</span>
+            <span class="badge bg-secondary" id="ukaBadge2">Standby</span>
+          </div>
+          <p class="text-muted small mb-0">Guests get configured quotas (1 Academic, 1 Premium, Cambridge 1 part, 2 Hub sets, 1 AI eval). Logging in unlocks everything 100% free!</p>
+        </div>
+      </div>
+
+      <!-- Phase 3 -->
+      <div class="col-md-4">
+        <div class="card p-3 h-100 phase-select-card" id="ukaPhase3" onclick="selectUkaPhase(3)">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="fw-bold" style="color: #0b2b52;"><i class="fas fa-gem text-success me-2"></i>Phase 3: Monetization</span>
+            <span class="badge bg-secondary" id="ukaBadge3">Standby</span>
+          </div>
+          <p class="text-muted small mb-0">Guests &amp; free accounts get trial quota. Paid premium membership unlocks unlimited full mocks, AI grading, and candidate analytics.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Free Quotas Box -->
+    <div class="p-3 rounded-3" style="background: #f8fafc; border: 1px solid #e2e8f0;">
+      <div class="fw-bold small mb-2 text-dark"><i class="fas fa-sliders-h me-1 text-secondary"></i> Guest Trial Quotas (Phase 2 &amp; Phase 3)</div>
+      <div class="row g-2 align-items-end">
+        <div class="col-sm-4 col-md-2">
+          <label class="form-label small fw-semibold text-muted mb-1">Academic Mocks</label>
+          <input type="number" id="ukaAcademicMocks" class="form-control form-control-sm" min="0" max="20" value="1">
+        </div>
+        <div class="col-sm-4 col-md-2">
+          <label class="form-label small fw-semibold text-muted mb-1">Premium Mocks</label>
+          <input type="number" id="ukaPremiumMocks" class="form-control form-control-sm" min="0" max="20" value="1">
+        </div>
+        <div class="col-sm-4 col-md-2">
+          <label class="form-label small fw-semibold text-muted mb-1">Cambridge Parts</label>
+          <input type="number" id="ukaPartsPerTest" class="form-control form-control-sm" min="0" max="4" value="1">
+        </div>
+        <div class="col-sm-4 col-md-2">
+          <label class="form-label small fw-semibold text-muted mb-1">Cambridge Q-Types</label>
+          <input type="number" id="ukaQuestionTypes" class="form-control form-control-sm" min="0" max="10" value="0">
+        </div>
+        <div class="col-sm-4 col-md-2">
+          <label class="form-label small fw-semibold text-muted mb-1">Practice Hub Sets</label>
+          <input type="number" id="ukaHubSets" class="form-control form-control-sm" min="0" max="20" value="2">
+        </div>
+        <div class="col-sm-4 col-md-2">
+          <label class="form-label small fw-semibold text-muted mb-1">Daily AI Writing</label>
+          <input type="number" id="ukaAiWriting" class="form-control form-control-sm" min="0" max="10" value="1">
+        </div>
+        <div class="col-12 mt-3 d-flex align-items-center justify-content-between">
+          <div id="ukaSaveAlert" class="small fw-bold text-success d-none">
+            <i class="fas fa-check-circle me-1"></i> Settings saved and deployed successfully!
+          </div>
+          <button type="button" class="btn btn-primary btn-sm px-4 fw-bold ms-auto" id="ukaSaveBtn" onclick="saveUkaSettings()">
+            <i class="fas fa-save me-1"></i> Save System Settings
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="row g-3 mb-3">
@@ -176,6 +282,95 @@ function renderUsers(users){
 searchInput.addEventListener("input",()=>{ fetchUsers(searchInput.value.trim()); });
 
 fetchUsers(); fetchCount();
+
+// Phase & System Settings Controller
+let ukaSelectedPhase = 1;
+
+function selectUkaPhase(phase) {
+  ukaSelectedPhase = phase;
+  for (let i = 1; i <= 3; i++) {
+    const card = document.getElementById('ukaPhase' + i);
+    const badge = document.getElementById('ukaBadge' + i);
+    if (i === phase) {
+      card?.classList.add('active');
+      if (badge) {
+        badge.className = 'badge bg-success';
+        badge.textContent = 'Active';
+      }
+    } else {
+      card?.classList.remove('active');
+      if (badge) {
+        badge.className = 'badge bg-secondary';
+        badge.textContent = 'Standby';
+      }
+    }
+  }
+  const pill = document.getElementById('activePhasePill');
+  if (pill) {
+    if (phase === 1) { pill.className = 'badge bg-primary px-3 py-2 fw-semibold'; pill.textContent = 'Phase 1: Open Growth Active'; }
+    if (phase === 2) { pill.className = 'badge bg-warning text-dark px-3 py-2 fw-semibold'; pill.textContent = 'Phase 2: Freemium Active'; }
+    if (phase === 3) { pill.className = 'badge bg-success px-3 py-2 fw-semibold'; pill.textContent = 'Phase 3: Monetization Active'; }
+  }
+}
+
+async function loadUkaSettings() {
+  try {
+    const res = await fetch('/api/system-settings');
+    const data = await res.json();
+    if (data && data.success && data.settings) {
+      const s = data.settings;
+      selectUkaPhase(s.currentPhase || 1);
+      if (document.getElementById('ukaAcademicMocks')) document.getElementById('ukaAcademicMocks').value = s.freeAcademicMocksCount ?? 1;
+      if (document.getElementById('ukaPremiumMocks')) document.getElementById('ukaPremiumMocks').value = s.freePremiumMocksCount ?? 1;
+      if (document.getElementById('ukaPartsPerTest')) document.getElementById('ukaPartsPerTest').value = s.freePartsPerTest ?? 1;
+      if (document.getElementById('ukaQuestionTypes')) document.getElementById('ukaQuestionTypes').value = s.freeQuestionTypesPerTest ?? 0;
+      if (document.getElementById('ukaHubSets')) document.getElementById('ukaHubSets').value = s.freePracticeHubSets ?? 2;
+      if (document.getElementById('ukaAiWriting')) document.getElementById('ukaAiWriting').value = s.freeAiWritingPerDay ?? 1;
+    }
+  } catch(e) {
+    console.error('Failed to load system settings:', e);
+  }
+}
+
+async function saveUkaSettings() {
+  const btn = document.getElementById('ukaSaveBtn');
+  const alertEl = document.getElementById('ukaSaveAlert');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Saving...'; }
+
+  const payload = {
+    currentPhase: ukaSelectedPhase,
+    freeAcademicMocksCount: Number(document.getElementById('ukaAcademicMocks')?.value || 1),
+    freePremiumMocksCount: Number(document.getElementById('ukaPremiumMocks')?.value || 1),
+    freeFullMocksCount: Number(document.getElementById('ukaAcademicMocks')?.value || 1),
+    freePartsPerTest: Number(document.getElementById('ukaPartsPerTest')?.value || 1),
+    freeQuestionTypesPerTest: Number(document.getElementById('ukaQuestionTypes')?.value || 0),
+    freePracticeHubSets: Number(document.getElementById('ukaHubSets')?.value || 2),
+    freeAiWritingPerDay: Number(document.getElementById('ukaAiWriting')?.value || 1),
+    cambridgeAlwaysFree: true
+  };
+
+  try {
+    const res = await fetch('/api/admin/system-settings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (data && data.success) {
+      if (alertEl) {
+        alertEl.classList.remove('d-none');
+        alertEl.innerHTML = '<i class="fas fa-check-circle me-1"></i> Settings saved &amp; deployed to Phase ' + ukaSelectedPhase + '!';
+        setTimeout(() => alertEl.classList.add('d-none'), 4000);
+      }
+    }
+  } catch(e) {
+    console.error('Failed to save settings:', e);
+  } finally {
+    if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-save me-1"></i> Save System Settings'; }
+  }
+}
+
+loadUkaSettings();
 
 function openPromoModal(){
   const modal=new bootstrap.Modal(document.getElementById("promoModal"));

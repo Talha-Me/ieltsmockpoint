@@ -20,6 +20,8 @@
     '.an-info{padding:4px 6px 12px;border-bottom:1px solid var(--line,#e3e9f3);margin-bottom:10px}',
     '.an-info b{display:block;color:var(--navy,#0b2b52);font-family:"Inter",system-ui,-apple-system,sans-serif;font-size:.95rem;font-weight:700;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
     '.an-info span{display:block;color:var(--muted,#5d708c);font-family:"Inter",system-ui,-apple-system,sans-serif;font-size:.8rem;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px}',
+    '.an-menu-link{display:flex;align-items:center;gap:8px;padding:9px 12px;margin:8px 0 10px 0;background:#f0f7ff;border:1.2px solid #cfe2fe;border-radius:10px;color:var(--navy,#0b2b52);font-family:"Inter",sans-serif;font-weight:700;font-size:.86rem;text-decoration:none;transition:all .18s ease}',
+    '.an-menu-link:hover{background:#e0effe;border-color:#93c5fd;color:var(--blue,#1565c9);transform:translateY(-1px)}',
     '.an-out{width:100%;padding:11px 14px;border:none;border-radius:10px;background:var(--red,#e0202d);color:#fff;font-family:"Inter",system-ui,-apple-system,sans-serif;font-weight:700;font-size:.9rem;line-height:1.2;cursor:pointer;transition:background .2s}',
     '.an-out:hover{background:var(--red-dark,#b5121d)}',
     '.an-side{display:grid;gap:12px}',
@@ -107,6 +109,9 @@
         '<span class="an-name">' + esc(firstName(user)) + '</span></button>' +
         '<div class="an-menu" role="menu">' +
         '<div class="an-info"><b>' + esc(user.name || 'My account') + '</b><span>' + esc(user.email || '') + '</span></div>' +
+        '<a href="/dashboard" class="an-menu-link">' +
+        '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1565c9" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>' +
+        '<span>My Progress Dashboard</span></a>' +
         '<button type="button" class="an-out">Log out</button>' +
         '</div></div>';
 
@@ -129,6 +134,9 @@
         '<div class="an-side">' +
         '<div class="an-row"><span class="an-av">' + avatarHtml(user) + '</span>' +
         '<div class="an-info"><b>' + esc(user.name || 'My account') + '</b><span>' + esc(user.email || '') + '</span></div></div>' +
+        '<a href="/dashboard" class="an-menu-link">' +
+        '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1565c9" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>' +
+        '<span>My Progress Dashboard</span></a>' +
         '<button type="button" class="an-out">Log out</button></div>';
       box.querySelector('.an-out').addEventListener('click', logout);
     });
