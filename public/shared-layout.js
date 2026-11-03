@@ -6,7 +6,7 @@
   if (window.__sharedLayoutLoaded) return;
   window.__sharedLayoutLoaded = true;
 
-  var NAV_CACHE_KEY = 'mp_shared_nav_v9';
+  var NAV_CACHE_KEY = 'mp_shared_nav_v10';
   
   function syncFooterPricingLinkShared() {
     fetch('/api/system-settings')

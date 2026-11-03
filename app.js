@@ -1,3 +1,4 @@
+require("dotenv").config({ path: require("path").resolve(__dirname, ".env") });
 
 
 // const https = require("https");
@@ -2047,6 +2048,56 @@ app.post(["/api/save-cambridge-reading", "/admin/api/cambridge-reading/save"], a
   });
 
   // ==========================================
+  // WRITING EXERCISES BY QUESTION TYPE
+  // ==========================================
+  app.get("/api/writing-exercises", async (req, res) => {
+    try {
+      const db = mongoose.connection.db || req.app.locals.db;
+      const type = req.query.type || "Bar-Chart";
+      const typeMap = {
+        "Line-Graph": "Line Graph", "Bar-Chart": "Bar Chart", "Pie-Chart": "Pie Chart",
+        "Table": "Table", "Process-Diagram": "Process Diagram", "Map": "Map Comparison",
+        "Mixed-Charts": "Mixed Charts", "Opinion-Essay": "Opinion Essay",
+        "Discussion-Essay": "Discussion Essay", "Problem-Solution": "Problem & Solution",
+        "Advantages-Disadvantages": "Advantages & Disadvantages",
+        "Two-Part-Question": "Two-Part Question", "Positive-Negative": "Positive or Negative"
+      };
+      const decoded = decodeURIComponent(type).replace(/[-_\s]+/g, "").toLowerCase();
+      const matchedKey = Object.keys(typeMap).find(k => k.replace(/[-_\s]+/g, "").toLowerCase() === decoded) || type;
+      const docs = await db.collection("writing-practices")
+        .find({ type: matchedKey, pracNumber: /^Set-\d+$/ })
+        .sort({ pracNumber: 1 }).toArray();
+      const categoryCounts = {};
+      for (const key of Object.keys(typeMap)) {
+        const cnt = await db.collection("writing-practices").countDocuments({ type: key, pracNumber: /^Set-\d+$/ });
+        if (cnt > 0) categoryCounts[key] = cnt;
+      }
+      const exercises = docs.map((doc, idx) => {
+        const setNum = parseInt((doc.pracNumber || "Set-1").replace("Set-", "")) || idx + 1;
+        const q = doc.writing && doc.writing.questions && doc.writing.questions[0];
+        const part = q ? q.part : 1;
+        const source = doc.source || `Set ${setNum}`;
+        const image = q && q.image && q.image.length > 0 ? q.image[0] : null;
+        return { setNumber: setNum, pracNumber: doc.pracNumber, type: matchedKey,
+          typeName: typeMap[matchedKey] || matchedKey, part,
+          task: part === 1 ? "Task 1" : "Task 2", source, image,
+          title: `${typeMap[matchedKey] || matchedKey} – ${source}`,
+          link: `/writing-practice?pracNumber=${encodeURIComponent(doc.pracNumber)}&type=${encodeURIComponent(matchedKey)}`
+        };
+      });
+      res.json({ success: true, type: matchedKey, typeName: typeMap[matchedKey] || matchedKey,
+        totalExercises: exercises.length, exercises, categoryCounts });
+    } catch (err) {
+      console.error("Error fetching writing exercises:", err);
+      res.status(500).json({ error: "Failed to fetch writing exercises" });
+    }
+  });
+
+  app.get(["/writing-exercises", "/writing-exercises.html"], (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "writing-exercises.html"));
+  });
+
+  // ==========================================
   // CAMBRIDGE AUDIO STREAM PROXY & HUB
   // ==========================================
   app.get("/api/cambridge-proxy-audio", (req, res) => {
@@ -2425,6 +2476,17 @@ app.use(express.urlencoded({ extended: true }));
 // ২. রাউট মাউন্ট
 const evaluateRoute = require("./routes/evaluate"); // ফাইল পাথ মিলিয়ে নিন
 app.use("/", evaluateRoute);
+
+// ==========================================
+// IELTS SPEAKING ROUTES
+// ==========================================
+app.get(["/speaking", "/speaking.html"], (req, res) => {
+  res.sendFile(path.join(__dirname, "FrontPage", "Frontend", "speaking.html"));
+});
+
+app.get(["/speaking-test", "/speaking-practice"], (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "speaking_engine", "speaking-test.html"));
+});
 
   // Other Modular Routes
   app.use("/admin_orgs", adminOrgsRoutes);

@@ -573,10 +573,7 @@
       if (minutesEl) minutesEl.textContent = String(m).padStart(2, "0");
       if (secondsEl) secondsEl.textContent = String(s).padStart(2, "0");
 
-      if (elapsedSeconds >= 3600 && !hasShownOneHourAlert && practiceMode === "full") {
-        hasShownOneHourAlert = true;
-        showOneHourModal();
-      }
+// Time limit interruption disabled: Cambridge practice is untimed
     }, 1000);
   }
 
@@ -588,25 +585,7 @@
   }
 
   function showOneHourModal() {
-    let modal = document.getElementById("oneHourModal");
-    if (!modal) {
-      modal = document.createElement("div");
-      modal.id = "oneHourModal";
-      modal.className = "cr-modal-overlay";
-      modal.innerHTML = `
-        <div class="cr-modal-box">
-          <div class="cr-modal-icon">⏳</div>
-          <h3 class="cr-modal-title">1 Hour Completed!</h3>
-          <p class="cr-modal-desc">১ ঘণ্টা পূর্ণ হয়েছে। আপনি কি টেস্টটি সাবমিট করতে চান নাকি টেস্ট চালিয়ে যেতে চান?</p>
-          <div class="cr-modal-actions">
-            <button type="button" class="cr-btn-cancel" onclick="window.crV2.continueAfterOneHour()">Continue Test</button>
-            <button type="button" class="cr-btn-confirm" onclick="window.crV2.submitFromOneHour()">Submit Now</button>
-          </div>
-        </div>
-      `;
-      document.body.appendChild(modal);
-    }
-    modal.style.display = "flex";
+    // Interruption modal removed: Cambridge tests have no time limits
   }
 
   function continueAfterOneHour() {

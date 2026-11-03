@@ -536,6 +536,7 @@
     .badge-test-type.cambridge { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
     .badge-test-type.hub { background: #f0f4f8; color: #0b2b52; border: 1px solid #dce4ee; }
     .badge-test-type.writing { background: #f3e8ff; color: #7e22ce; }
+    .badge-test-type.speaking { background: #fdf2f8; color: #db2777; border: 1px solid #fbcfe8; }
 
     .score-badge-circle {
       display: inline-flex;
@@ -676,7 +677,146 @@
       .cand-hero-wrap { flex-direction: column; align-items: flex-start; }
       .sub-stats-bar { flex-direction: column; align-items: flex-start; gap: 14px; }
     }
-  </style>
+  
+    /* Advanced Test Review Modal & Filter Controls */
+    .q-filter-pill {
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      color: #475569;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .q-filter-pill:hover {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+    }
+    .q-filter-pill.active {
+      background: #0b2b52;
+      color: #ffffff;
+      border-color: #0b2b52;
+    }
+    .score-badge-circle.band-c1 {
+      background: #059669;
+      color: #ffffff;
+    }
+    .score-badge-circle.band-b2 {
+      background: #1565c9;
+      color: #ffffff;
+    }
+    .score-badge-circle.band-b1 {
+      background: #d97706;
+      color: #ffffff;
+    }
+    .score-badge-circle.band-low {
+      background: #dc2626;
+      color: #ffffff;
+    }
+    @media print {
+      body * { visibility: hidden; }
+      #testReviewModal, #testReviewModal * { visibility: visible; }
+      #testReviewModal { position: absolute; left: 0; top: 0; width: 100%; display: block !important; background: transparent; }
+      .dash-modal-card { max-width: 100%; max-height: none; box-shadow: none; border: none; padding: 0; }
+      .review-tab-btn, .q-filter-pill, .btn-review-item, button { display: none !important; }
+      #tabContentListening, #tabContentReading, #tabContentWriting { display: block !important; max-height: none !important; }
+    }
+    /* Test Review Modal & Action Button */
+    .btn-review-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.80rem;
+      font-weight: 700;
+      color: #0b2b52;
+      background: #eaf2fd;
+      border: 1px solid #bfdbfe;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .btn-review-item:hover {
+      background: #0b2b52;
+      color: #ffffff;
+      border-color: #0b2b52;
+      transform: translateY(-1px);
+    }
+    .dash-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 43, 82, 0.72);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 200000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .dash-modal-overlay.open {
+      display: flex;
+    }
+    .dash-modal-card {
+      position: relative;
+      background: #ffffff;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 880px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 24px 60px rgba(11, 43, 82, 0.28);
+      border: 1.5px solid #dbeafe;
+      padding: 28px 24px;
+      animation: dashPop 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes dashPop {
+      from { opacity: 0; transform: scale(0.95) translateY(12px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .review-tab-btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      color: #475569;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .review-tab-btn.active {
+      background: #0b2b52;
+      color: #ffffff;
+      border-color: #0b2b52;
+    }
+    .q-rev-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      font-size: 0.86rem;
+    }
+    .q-rev-item.correct {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+    }
+    .q-rev-item.incorrect {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+    }
+    .q-rev-item.unanswered {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+    }
+  
+</style>
 
   <script src="/shared-layout.js"></script>
   <script src="/auth-nav.js"></script>
@@ -1017,12 +1157,34 @@
           </div>
 
           <!-- Category Filter Tabs -->
-          <div class="filter-tabs">
-            <button type="button" class="filter-tab active" onclick="filterActivity('all', this)">All Tests &amp; Practice</button>
-            <button type="button" class="filter-tab" onclick="filterActivity('full', this)">Full Mocks</button>
-            <button type="button" class="filter-tab" onclick="filterActivity('cambridge', this)">Cambridge Practice</button>
-            <button type="button" class="filter-tab" onclick="filterActivity('hub', this)">Question Types</button>
-            <button type="button" class="filter-tab" onclick="filterActivity('writing', this)">AI Writing</button>
+          <!-- Latest Completed Test Review Banner -->
+          <div id="latestTestReviewBanner" style="display:none; background:linear-gradient(135deg, #0b2b52 0%, #1565c9 100%); color:#fff; border-radius:14px; padding:18px 22px; margin-bottom:22px; box-shadow:0 4px 15px rgba(11,43,82,0.15); align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px;">
+            <div style="display:flex; align-items:center; gap:14px;">
+              <div style="width:44px; height:44px; border-radius:12px; background:rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0;">📋</div>
+              <div>
+                <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; opacity:0.85; font-weight:700;">Latest Exam Attempt</div>
+                <div id="bannerTestTitle" style="font-size:1.1rem; font-weight:800; font-family:'Sora',sans-serif;">IELTS Mock Test</div>
+                <div id="bannerTestScores" style="font-size:0.84rem; opacity:0.92; margin-top:2px;">Listening: -- | Reading: -- | Writing: -- | Overall: --</div>
+              </div>
+            </div>
+            <button id="bannerReviewBtn" type="button" style="background:#ffffff; color:#0b2b52; border:none; padding:10px 22px; border-radius:999px; font-weight:800; font-size:0.88rem; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 2px 8px rgba(0,0,0,0.15); transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'">
+              🔍 Review 1–40 Questions &amp; Feedback &rarr;
+            </button>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:14px;">
+            <div class="filter-tabs" style="margin-bottom:0;">
+              <button type="button" class="filter-tab active" onclick="filterActivity('all', this)">All Tests &amp; Practice</button>
+              <button type="button" class="filter-tab" onclick="filterActivity('full', this)">Full Mocks</button>
+              <button type="button" class="filter-tab" onclick="filterActivity('cambridge', this)">Cambridge Practice</button>
+              <button type="button" class="filter-tab" onclick="filterActivity('hub', this)">Question Types</button>
+              <button type="button" class="filter-tab" onclick="filterActivity('writing', this)">AI Writing</button>
+            <button type="button" class="filter-tab" onclick="filterActivity('speaking', this)">AI Speaking</button>
+            </div>
+            <div style="position:relative; min-width:240px; flex-grow:1; max-width:320px;">
+              <input type="text" id="tableSearchBox" placeholder="🔍 Search test title or book..." oninput="handleTableSearch(this.value)" style="width:100%; padding:9px 14px 9px 34px; border-radius:999px; border:1.5px solid #cbd5e1; font-size:0.84rem; outline:none; background:#ffffff; transition:border 0.2s;" onfocus="this.style.borderColor='#1565c9'" onblur="this.style.borderColor='#cbd5e1'">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.2" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); pointer-events:none;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </div>
           </div>
 
           <div class="table-container">
@@ -1034,12 +1196,14 @@
                   <th>Listening</th>
                   <th>Reading</th>
                   <th>Writing</th>
+                  <th>Speaking</th>
                   <th>Band Score</th>
+                  <th>Review</th>
                 </tr>
               </thead>
               <tbody id="activityTableBody">
                 <tr>
-                  <td colspan="6">
+                  <td colspan="7">
                     <div class="empty-state">
                       <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                       <p style="font-weight:700; margin-bottom:4px;">No test attempts recorded yet.</p>
@@ -1180,6 +1344,7 @@
           globalHistory = data.history || [];
           renderKpis(data);
           renderChart(globalHistory);
+          renderLatestBanner(globalHistory);
           renderActivityTable(globalHistory);
           renderWritingVault(globalHistory);
           renderRecommendations(data);
@@ -1389,9 +1554,34 @@
         });
       } else if (category === 'writing') {
         filtered = globalHistory.filter(h => String(h.testType || '').toLowerCase().includes('writing') || h.writingBand > 0);
+      } else if (category === 'speaking') {
+        filtered = globalHistory.filter(h => String(h.testType || '').toLowerCase().includes('speaking') || (h.speakingBand && h.speakingBand > 0) || h.module === 'speaking');
       }
 
       renderActivityTable(filtered);
+    }
+
+    function renderLatestBanner(history) {
+      const banner = document.getElementById('latestTestReviewBanner');
+      if (!banner) return;
+      if (!history || history.length === 0) {
+        banner.style.display = 'none';
+        return;
+      }
+      const latest = history[0];
+      document.getElementById('bannerTestTitle').textContent = latest.title || 'IELTS Mock Test';
+      const oBand = latest.overallBand ? latest.overallBand.toFixed(1) : (latest.listeningBand || latest.readingBand || latest.writingBand ? '--' : '--');
+      const lScore = latest.listeningBand ? 'Listening: Band ' + latest.listeningBand.toFixed(1) : (latest.listeningScore ? 'Listening: ' + latest.listeningScore + '/40' : '');
+      const rScore = latest.readingBand ? 'Reading: Band ' + latest.readingBand.toFixed(1) : (latest.readingScore ? 'Reading: ' + latest.readingScore + '/40' : '');
+      const wScore = latest.writingBand ? 'Writing: Band ' + latest.writingBand.toFixed(1) : '';
+      const scoresArr = [lScore, rScore, wScore].filter(Boolean);
+      document.getElementById('bannerTestScores').textContent = (scoresArr.length ? scoresArr.join(' | ') + ' | ' : '') + 'Overall: Band ' + oBand;
+
+      const btn = document.getElementById('bannerReviewBtn');
+      if (btn) {
+        btn.onclick = () => openTestReviewModal(latest.id);
+      }
+      banner.style.display = 'flex';
     }
 
     function renderActivityTable(items) {
@@ -1424,6 +1614,7 @@
         const lBand = item.listeningBand ? item.listeningBand.toFixed(1) : '--';
         const rBand = item.readingBand ? item.readingBand.toFixed(1) : '--';
         const wBand = item.writingBand ? item.writingBand.toFixed(1) : '--';
+        const sBand = (item.speakingBand && item.speakingBand > 0) ? item.speakingBand.toFixed(1) : '--';
 
         const tType = item.testType || 'Full Mock';
         let badgeClass = 'full';
@@ -1431,12 +1622,20 @@
         if (tl.includes('cambridge')) badgeClass = 'cambridge';
         else if (tl.includes('hub') || tl.includes('question')) badgeClass = 'hub';
         else if (tl.includes('writing')) badgeClass = 'writing';
+        else if (tl.includes('speaking')) badgeClass = 'speaking';
 
         rows += `
           <tr>
             <td>
               <div class="test-cell-name">
-                <span>${escapeHtml(item.title || 'IELTS Mock Test')}</span>
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                  <a href="javascript:void(0)" onclick="openTestReviewModal('${item.id}')" style="color:#0b2b52; font-weight:800; font-size:0.95rem; text-decoration:none;" title="Click to view full test review">
+                    ${escapeHtml(item.title || 'IELTS Mock Test')}
+                  </a>
+                  <button type="button" class="btn-review-item" onclick="openTestReviewModal('${item.id}')" style="padding:2px 8px; font-size:0.75rem; background:#0b2b52; color:#ffffff; border-radius:6px; border:none; cursor:pointer;">
+                    Review 🔍
+                  </button>
+                </div>
                 <span class="badge-test-type ${badgeClass}">${escapeHtml(tType)}</span>
               </div>
             </td>
@@ -1444,7 +1643,13 @@
             <td><span class="score-badge-circle mod">${lBand}</span></td>
             <td><span class="score-badge-circle mod">${rBand}</span></td>
             <td><span class="score-badge-circle mod">${wBand}</span></td>
+            <td><span class="score-badge-circle mod">${sBand}</span></td>
             <td><span class="score-badge-circle overall">${oBand}</span></td>
+            <td>
+              <button type="button" class="btn-review-item" onclick="openTestReviewModal('${item.id}')" style="background:#0b2b52; color:#ffffff; font-weight:800; border-color:#0b2b52; padding:7px 16px; border-radius:8px; box-shadow:0 2px 6px rgba(11,43,82,0.18);">
+                🔍 Review &rarr;
+              </button>
+            </td>
           </tr>
         `;
       });
@@ -1493,6 +1698,11 @@
               <strong style="color:var(--navy); display:block; margin-bottom:4px;">Examiner Assessment:</strong>
               ${escapeHtml(fb.overallFeedback || fb.summary || 'Official standard IELTS Writing evaluation completed under Cambridge assessment rubrics.')}
             </div>
+            <div style="margin-top:14px; display:flex; justify-content:flex-end;">
+              <button type="button" class="btn-review-item" onclick="openTestReviewModal('${item.id}', 'writing')" style="background:#0b2b52; color:#ffffff; font-weight:800; border-color:#0b2b52; padding:8px 16px; border-radius:8px;">
+                📝 View Detailed Evaluation &rarr;
+              </button>
+            </div>
           </div>
         `;
       });
@@ -1511,5 +1721,455 @@
     }
   </script>
 
+
+  <!-- Test Review Modal -->
+  <div id="testReviewModal" class="dash-modal-overlay" onclick="if(event.target===this)closeTestReviewModal();">
+    <div class="dash-modal-card">
+      <div style="position:absolute; right:18px; top:18px; display:flex; align-items:center; gap:8px;">
+        <button type="button" onclick="window.print()" style="padding:6px 12px; border-radius:8px; border:1px solid #cbd5e1; background:#f8fafc; font-size:0.78rem; font-weight:700; color:#0b2b52; cursor:pointer; display:inline-flex; align-items:center; gap:5px;" title="Print or save this score sheet as PDF">🖨️ Print Report</button>
+        <button type="button" onclick="closeTestReviewModal()" style="width:32px; height:32px; border-radius:50%; border:1px solid #e2e8f0; background:#f8fafc; font-size:20px; line-height:1; cursor:pointer; color:#0b2b52;" aria-label="Close">&times;</button>
+      </div>
+      
+      <div style="margin-bottom:18px; padding-right:36px;">
+        <span id="revBadgeType" style="display:inline-block; font-size:0.75rem; font-weight:700; padding:3px 10px; border-radius:999px; background:#eaf2fd; color:#1565c9; border:1px solid #bfdbfe; margin-bottom:8px;">Full Mock Review</span>
+        <h3 id="revTitle" style="font-family:'Sora',sans-serif; color:#0b2b52; font-size:1.35rem; font-weight:800; margin-bottom:4px;">Academic Mock Test 1</h3>
+        <p id="revDate" style="color:#64748b; font-size:0.84rem;">Completed on 03 Nov 2026</p>
+      </div>
+
+      <!-- KPI Summary Strip -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:10px; margin-bottom:20px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:12px;">
+        <div style="text-align:center;">
+          <span style="font-size:0.72rem; color:#64748b; font-weight:700; text-transform:uppercase;">Overall Band</span>
+          <div id="revOverallBand" style="font-family:'Sora',sans-serif; font-size:1.4rem; font-weight:800; color:#e0202d;">--</div>
+        </div>
+        <div style="text-align:center;">
+          <span style="font-size:0.72rem; color:#64748b; font-weight:700; text-transform:uppercase;">Listening</span>
+          <div id="revListeningBand" style="font-size:1.15rem; font-weight:700; color:#0b2b52;">--</div>
+        </div>
+        <div style="text-align:center;">
+          <span style="font-size:0.72rem; color:#64748b; font-weight:700; text-transform:uppercase;">Reading</span>
+          <div id="revReadingBand" style="font-size:1.15rem; font-weight:700; color:#0b2b52;">--</div>
+        </div>
+        <div style="text-align:center;">
+          <span style="font-size:0.72rem; color:#64748b; font-weight:700; text-transform:uppercase;">Writing</span>
+          <div id="revWritingBand" style="font-size:1.15rem; font-weight:700; color:#0b2b52;">--</div>
+        </div>
+        <div style="text-align:center;">
+          <span style="font-size:0.72rem; color:#64748b; font-weight:700; text-transform:uppercase;">Speaking</span>
+          <div id="revSpeakingBand" style="font-size:1.15rem; font-weight:700; color:#0b2b52;">--</div>
+        </div>
+      </div>
+
+      <!-- Module Navigation Tabs -->
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; border-bottom:1.5px solid #e2e8f0; padding-bottom:10px;">
+        <button type="button" class="review-tab-btn active" id="tabBtnListening" onclick="switchReviewTab('listening')">🎧 Listening (1–40)</button>
+        <button type="button" class="review-tab-btn" id="tabBtnReading" onclick="switchReviewTab('reading')">📖 Reading (1–40)</button>
+        <button type="button" class="review-tab-btn" id="tabBtnWriting" onclick="switchReviewTab('writing')">✍️ Writing AI Evaluation</button>
+        <button type="button" class="review-tab-btn" id="tabBtnSpeaking" onclick="switchReviewTab('speaking')">🎙️ Speaking AI Evaluation</button>
+      </div>
+
+      <!-- Tab Content: Listening -->
+      <div id="tabContentListening" style="display:block;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:10px 14px; margin-bottom:12px;">
+          <div id="listeningSummaryBadges" style="display:flex; gap:8px; flex-wrap:wrap; font-size:0.80rem; font-weight:700;"></div>
+          <div style="display:flex; gap:6px;">
+            <button type="button" class="q-filter-pill active" onclick="filterModalQuestions('listening', 'all', this)">All (40)</button>
+            <button type="button" class="q-filter-pill" onclick="filterModalQuestions('listening', 'mistakes', this)">Mistakes ❌</button>
+            <button type="button" class="q-filter-pill" onclick="filterModalQuestions('listening', 'correct', this)">Correct ✅</button>
+            <button type="button" class="q-filter-pill" onclick="filterModalQuestions('listening', 'unanswered', this)">Skipped ⚠️</button>
+          </div>
+        </div>
+        <div id="revListeningList" style="max-height:420px; overflow-y:auto; padding-right:6px;"></div>
+      </div>
+
+      <!-- Tab Content: Reading -->
+      <div id="tabContentReading" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:10px 14px; margin-bottom:12px;">
+          <div id="readingSummaryBadges" style="display:flex; gap:8px; flex-wrap:wrap; font-size:0.80rem; font-weight:700;"></div>
+          <div style="display:flex; gap:6px;">
+            <button type="button" class="q-filter-pill active" onclick="filterModalQuestions('reading', 'all', this)">All (40)</button>
+            <button type="button" class="q-filter-pill" onclick="filterModalQuestions('reading', 'mistakes', this)">Mistakes ❌</button>
+            <button type="button" class="q-filter-pill" onclick="filterModalQuestions('reading', 'correct', this)">Correct ✅</button>
+            <button type="button" class="q-filter-pill" onclick="filterModalQuestions('reading', 'unanswered', this)">Skipped ⚠️</button>
+          </div>
+        </div>
+        <div id="revReadingList" style="max-height:420px; overflow-y:auto; padding-right:6px;"></div>
+      </div>
+
+      <!-- Tab Content: Writing -->
+      <div id="tabContentWriting" style="display:none;">
+        <div id="revWritingContent" style="max-height:420px; overflow-y:auto; padding-right:6px;">
+          <!-- Writing tasks and criteria feedback will be injected here -->
+        </div>
+      </div>
+
+      <!-- Tab Content: Speaking -->
+      <div id="tabContentSpeaking" style="display:none;">
+        <div id="revSpeakingContent" style="max-height:420px; overflow-y:auto; padding-right:6px;">
+          <!-- Speaking criteria, examiner feedback, and corrections will be injected here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let activeReviewRecord = null;
+    let activeQuestionFilters = { listening: 'all', reading: 'all' };
+    let currentTableSearchTerm = '';
+
+    function handleTableSearch(term) {
+      currentTableSearchTerm = (term || '').toLowerCase().trim();
+      let filtered = globalHistory;
+      if (activeFilter !== 'all') {
+        filtered = globalHistory.filter(h => {
+          const t = String(h.testType || '').toLowerCase();
+          if (activeFilter === 'full') return t.includes('full') || t.includes('academic') || t.includes('premium') || t.includes('general');
+          if (activeFilter === 'cambridge') return t.includes('cambridge');
+          if (activeFilter === 'hub') return t.includes('hub') || t.includes('question') || t.includes('type');
+          if (activeFilter === 'writing') return t.includes('writing') || h.writingBand > 0;
+          if (activeFilter === 'speaking') return t.includes('speaking') || (h.speakingBand && h.speakingBand > 0) || h.module === 'speaking';
+          return true;
+        });
+      }
+      if (currentTableSearchTerm) {
+        filtered = filtered.filter(h => {
+          const title = String(h.title || '').toLowerCase();
+          const tType = String(h.testType || '').toLowerCase();
+          return title.includes(currentTableSearchTerm) || tType.includes(currentTableSearchTerm);
+        });
+      }
+      renderActivityTable(filtered);
+    }
+
+    function filterModalQuestions(mod, filterType, btn) {
+      activeQuestionFilters[mod] = filterType;
+      const parent = btn.closest('.dash-modal-card');
+      if (parent) {
+        parent.querySelectorAll(`#tabContent${mod.charAt(0).toUpperCase() + mod.slice(1)} .q-filter-pill`).forEach(b => b.classList.remove('active'));
+      }
+      btn.classList.add('active');
+      renderModuleQuestions(mod, activeReviewRecord);
+    }
+
+
+    async function openTestReviewModal(recordId, initialTab = "listening") {
+      const modal = document.getElementById('testReviewModal');
+      if (!modal) return;
+
+      // 1. Fetch complete record by ID to guarantee fresh 1-40 evaluated breakdown
+      let rec = globalHistory.find(h => String(h.id) === String(recordId)) || {};
+      try {
+        const res = await fetch('/api/student/test-record/' + recordId);
+        const data = await res.json();
+        if (data && data.success && data.record) {
+          rec = data.record;
+        }
+      } catch (e) {
+        console.warn('Could not fetch single record:', e);
+      }
+
+      activeReviewRecord = rec || {};
+
+      // Populate Header
+      document.getElementById('revTitle').textContent = rec.title || 'IELTS Mock Test';
+      document.getElementById('revDate').textContent = 'Completed on ' + (rec.completedAt ? new Date(rec.completedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit' }) : 'Recently');
+      document.getElementById('revBadgeType').textContent = rec.testType || 'Full Mock Review';
+
+      // Populate KPI Strip
+      document.getElementById('revOverallBand').textContent = rec.overallBand ? Number(rec.overallBand).toFixed(1) : (rec.readingBand && rec.listeningBand ? ((rec.readingBand + rec.listeningBand)/2).toFixed(1) : '--');
+      document.getElementById('revListeningBand').textContent = rec.listeningBand ? 'Band ' + Number(rec.listeningBand).toFixed(1) : (rec.listeningScore ? rec.listeningScore + ' / 40' : '--');
+      document.getElementById('revReadingBand').textContent = rec.readingBand ? 'Band ' + Number(rec.readingBand).toFixed(1) : (rec.readingScore ? rec.readingScore + ' / 40' : '--');
+      document.getElementById('revWritingBand').textContent = rec.writingBand ? 'Band ' + Number(rec.writingBand).toFixed(1) : '--';
+      document.getElementById('revSpeakingBand').textContent = (rec.speakingBand && rec.speakingBand > 0) ? 'Band ' + Number(rec.speakingBand).toFixed(1) : '--';
+
+      // Render Modules
+      renderModuleQuestions('listening', rec);
+      renderModuleQuestions('reading', rec);
+      renderWritingFeedback(rec);
+      renderSpeakingFeedback(rec);
+
+      // auto-select initial tab
+      if (initialTab) {
+        switchReviewTab(initialTab);
+      } else if (rec.module === 'speaking' || String(rec.testType || '').toLowerCase().includes('speaking') || (rec.speakingBand > 0 && !rec.listeningBand && !rec.readingBand)) {
+        switchReviewTab('speaking');
+      } else if (rec.module === 'writing' || String(rec.testType || '').toLowerCase().includes('writing') || (rec.writingBand > 0 && !rec.listeningBand && !rec.readingBand)) {
+        switchReviewTab('writing');
+      } else if (rec.module === 'reading' || (rec.readingBand > 0 && !rec.listeningBand)) {
+        switchReviewTab('reading');
+      } else {
+        switchReviewTab('listening');
+      }
+      modal.classList.add('open');
+    }
+
+    function closeTestReviewModal() {
+      const modal = document.getElementById('testReviewModal');
+      if (modal) modal.classList.remove('open');
+    }
+
+    function switchReviewTab(tabName) {
+      ['Listening', 'Reading', 'Writing', 'Speaking'].forEach(t => {
+        const btn = document.getElementById('tabBtn' + t);
+        const content = document.getElementById('tabContent' + t);
+        const isActive = t.toLowerCase() === tabName.toLowerCase();
+        if (btn) btn.classList.toggle('active', isActive);
+        if (content) content.style.display = isActive ? 'block' : 'none';
+      });
+    }
+
+    function renderModuleQuestions(mod, rec) {
+      const container = document.getElementById(mod === 'listening' ? 'revListeningList' : 'revReadingList');
+      const badgesContainer = document.getElementById(mod === 'listening' ? 'listeningSummaryBadges' : 'readingSummaryBadges');
+      if (!container) return;
+
+      const mistakesData = rec.mistakes || {};
+      let list = [];
+      if (Array.isArray(mistakesData[mod])) {
+        list = mistakesData[mod];
+      } else if (Array.isArray(mistakesData)) {
+        list = mistakesData;
+      } else if (typeof mistakesData[mod] === 'object' && mistakesData[mod] !== null) {
+        list = Object.keys(mistakesData[mod]).map(k => ({
+          qNum: k,
+          yourAns: mistakesData[mod][k].userAnswer || mistakesData[mod][k]['Your answer'] || '',
+          officialAns: mistakesData[mod][k].correctAnswer || mistakesData[mod][k]['Correct answer'] || '',
+          isCorrect: false
+        }));
+      }
+
+      if (list.length === 0) {
+        if (badgesContainer) badgesContainer.innerHTML = '<span style="color:#64748b;">No answer data recorded</span>';
+        container.innerHTML = '<div style="text-align:center; padding:32px 14px; color:#64748b;"><p style="font-weight:700;">Detailed 1–40 breakdown saved for this module.</p><p style="font-size:0.84rem;">Official score: ' + (mod === 'listening' ? (rec.listeningScore || 0) : (rec.readingScore || 0)) + ' / 40</p></div>';
+        return;
+      }
+
+      const totalQ = list.length;
+      let countCorrect = 0, countWrong = 0, countUnanswered = 0;
+
+      list.forEach(item => {
+        const hasAns = item.yourAns && String(item.yourAns).trim() !== '' && String(item.yourAns).trim() !== '(Not Answered)';
+        if (item.isCorrect === true) {
+          countCorrect++;
+        } else if (!hasAns) {
+          countUnanswered++;
+        } else {
+          countWrong++;
+        }
+      });
+
+      if (badgesContainer) {
+        badgesContainer.innerHTML = `
+          <span style="color:#0b2b52;">Total: ${totalQ}</span>
+          <span style="color:#16a34a;">✅ Correct: ${countCorrect}</span>
+          <span style="color:#dc2626;">❌ Wrong: ${countWrong}</span>
+          ${countUnanswered > 0 ? `<span style="color:#d97706;">⚠️ Skipped: ${countUnanswered}</span>` : ''}
+          <span style="color:#1565c9;">Band: ${mod === 'listening' ? (rec.listeningBand ? rec.listeningBand.toFixed(1) : '--') : (rec.readingBand ? rec.readingBand.toFixed(1) : '--')}</span>
+        `;
+      }
+
+      const activeF = activeQuestionFilters[mod] || 'all';
+      let html = '';
+      let visibleCount = 0;
+
+      list.forEach((item, idx) => {
+        const qNum = item.qNum || (idx + 1);
+        const isCorrect = item.isCorrect === true;
+        const hasAns = item.yourAns && String(item.yourAns).trim() !== '' && String(item.yourAns).trim() !== '(Not Answered)';
+        const isUnanswered = !hasAns;
+
+        if (activeF === 'correct' && !isCorrect) return;
+        if (activeF === 'mistakes' && isCorrect) return;
+        if (activeF === 'unanswered' && hasAns) return;
+
+        visibleCount++;
+        const yourAns = Array.isArray(item.yourAns) ? item.yourAns.join(', ') : (item.yourAns || '(Not Answered)');
+        const officialAns = Array.isArray(item.officialAns) ? item.officialAns.join(' / ') : (item.officialAns || '--');
+
+        const statusClass = isCorrect ? 'correct' : (isUnanswered ? 'unanswered' : 'incorrect');
+        const statusBadge = isCorrect
+          ? '<span style="color:#16a34a; font-weight:700;">✅ Correct</span>'
+          : (isUnanswered ? '<span style="color:#64748b; font-weight:600;">⚠️ Unanswered</span>' : '<span style="color:#dc2626; font-weight:700;">❌ Incorrect</span>');
+
+        html += '<div class="q-rev-item ' + statusClass + '">' +
+          '<div style="display:flex; align-items:center; gap:10px;">' +
+            '<span style="font-weight:800; color:#0b2b52; min-width:32px;">Q' + qNum + '</span>' +
+            '<div>' +
+              '<div><strong>Your Answer:</strong> <span style="color:' + (isCorrect ? '#16a34a' : (isUnanswered ? '#64748b' : '#dc2626')) + ';">' + escapeHtml(yourAns) + '</span></div>' +
+              (!isCorrect ? '<div style="font-size:0.80rem; color:#475569;"><strong>Correct Answer:</strong> <span style="color:#16a34a; font-weight:700;">' + escapeHtml(officialAns) + '</span></div>' : '') +
+            '</div>' +
+          '</div>' +
+          '<div>' + statusBadge + '</div>' +
+        '</div>';
+      });
+
+      if (visibleCount === 0) {
+        html = '<div style="text-align:center; padding:28px; color:#64748b;">No questions match this filter (' + activeF + ').</div>';
+      }
+
+      container.innerHTML = html;
+    }
+
+    
+    function renderSpeakingFeedback(rec) {
+      const container = document.getElementById('revSpeakingContent');
+      if (!container) return;
+
+      const fb = rec.feedback || {};
+      const fc = fb.fluency_coherence || {};
+      const lr = fb.lexical_resource || {};
+      const gra = fb.grammar || fb.grammatical_range || {};
+      const pr = fb.pronunciation || {};
+      const sBand = rec.speakingBand || fb.overallBand || fb.overall_band;
+
+      if (!sBand && !fb.summary_feedback && !fb.summary) {
+        container.innerHTML = `
+          <div style="text-align:center; padding:32px 14px; color:#64748b;">
+            <p style="font-weight:700;">No AI Speaking evaluation recorded for this session.</p>
+            <p style="font-size:0.84rem;">Take a Speaking practice test to see detailed fluency, vocabulary, grammar & pronunciation feedback here.</p>
+          </div>
+        `;
+        return;
+      }
+
+      let html = `
+        <div style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:18px; margin-bottom:14px; box-shadow:0 1px 3px rgba(0,0,0,0.03);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+            <div>
+              <span style="font-size:0.75rem; font-weight:800; color:#db2777; text-transform:uppercase; letter-spacing:0.5px;">AI Examiner Evaluation</span>
+              <h4 style="margin:2px 0 0; color:#0b2b52; font-size:1.05rem; font-weight:800;">IELTS Speaking Performance</h4>
+            </div>
+            <span class="score-badge-circle overall" style="background:#db2777;">Band ${Number(sBand).toFixed(1)}</span>
+          </div>
+          ${fb.summary_feedback || fb.summary ? `<p style="font-size:0.90rem; color:#334155; line-height:1.6; margin-bottom:14px; background:#f8fafc; padding:12px; border-radius:8px; border-left:4px solid #db2777;">${escapeHtml(fb.summary_feedback || fb.summary)}</p>` : ''}
+
+          <!-- 4 IELTS Speaking Criteria Grid -->
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-bottom:16px;">
+            <div style="background:#fdf2f8; border:1px solid #fbcfe8; border-radius:10px; padding:12px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <strong style="font-size:0.82rem; color:#9d174d;">Fluency &amp; Coherence</strong>
+                <span style="font-weight:800; font-size:0.85rem; color:#9d174d;">Band ${fc.score ? Number(fc.score).toFixed(1) : '--'}</span>
+              </div>
+              <p style="font-size:0.78rem; color:#475569; margin:0; line-height:1.4;">${escapeHtml(fc.comment || 'Good tempo, natural pauses and cohesive flow.')}</p>
+            </div>
+
+            <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:12px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <strong style="font-size:0.82rem; color:#166534;">Lexical Resource</strong>
+                <span style="font-weight:800; font-size:0.85rem; color:#166534;">Band ${lr.score ? Number(lr.score).toFixed(1) : '--'}</span>
+              </div>
+              <p style="font-size:0.78rem; color:#475569; margin:0; line-height:1.4;">${escapeHtml(lr.comment || 'Rich vocabulary and accurate topic-specific phrases.')}</p>
+            </div>
+
+            <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:12px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <strong style="font-size:0.82rem; color:#1e40af;">Grammatical Range</strong>
+                <span style="font-weight:800; font-size:0.85rem; color:#1e40af;">Band ${gra.score ? Number(gra.score).toFixed(1) : '--'}</span>
+              </div>
+              <p style="font-size:0.78rem; color:#475569; margin:0; line-height:1.4;">${escapeHtml(gra.comment || 'Variety of complex structures used accurately.')}</p>
+            </div>
+
+            <div style="background:#fefce8; border:1px solid #fef08a; border-radius:10px; padding:12px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <strong style="font-size:0.82rem; color:#854d0e;">Pronunciation</strong>
+                <span style="font-weight:800; font-size:0.85rem; color:#854d0e;">Band ${pr.score ? Number(pr.score).toFixed(1) : '--'}</span>
+              </div>
+              <p style="font-size:0.78rem; color:#475569; margin:0; line-height:1.4;">${escapeHtml(pr.comment || 'Intelligible, good rhythm and clear stress patterns.')}</p>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Corrections
+      if (Array.isArray(fb.corrections) && fb.corrections.length > 0) {
+        html += `
+          <div style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:16px; margin-bottom:14px;">
+            <h5 style="margin:0 0 10px; color:#0b2b52; font-size:0.92rem; font-weight:800;">Grammar &amp; Fluency Corrections</h5>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              ${fb.corrections.map(c => `
+                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px;">
+                  <div style="text-decoration:line-through; color:#dc2626; font-size:0.82rem; margin-bottom:2px;">${escapeHtml(c.original || '')}</div>
+                  <div style="font-weight:700; color:#16a34a; font-size:0.84rem; margin-bottom:4px;">${escapeHtml(c.improved || '')}</div>
+                  <div style="font-size:0.76rem; color:#64748b;"><strong>Note:</strong> ${escapeHtml(c.reason || '')}</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      container.innerHTML = html;
+    }
+
+    function renderWritingFeedback(rec) {
+      const container = document.getElementById('revWritingContent');
+      if (!container) return;
+
+      const fb = rec.feedback || {};
+      const t1 = fb.task1 || fb.task1Feedback || null;
+      const t2 = fb.task2 || fb.task2Feedback || null;
+
+      if (!t1 && !t2 && !rec.writingBand) {
+        container.innerHTML = '<div style="text-align:center; padding:32px 14px; color:#64748b;"><p style="font-weight:700;">No Writing evaluation recorded for this session.</p></div>';
+        return;
+      }
+
+      let html = '';
+
+      const t1Band = (t1 && !t1.not_submitted && (t1.overall_band || t1.band)) ? (t1.overall_band || t1.band) : 0;
+      const t2Band = (t2 && !t2.not_submitted && (t2.overall_band || t2.band)) ? (t2.overall_band || t2.band) : 0;
+
+      if (t1Band === 0 || t2Band === 0) {
+        html += '<div style="background:#fef2f2; border:1px solid #fecaca; border-radius:10px; padding:12px 16px; margin-bottom:16px; color:#991b1b; font-size:0.86rem; line-height:1.5;">' +
+          '<strong>⚠️ Official IELTS Weighting Rule:</strong> ' +
+          'Task 2 carries <strong>twice (2/3)</strong> the weight of Task 1 (1/3). ' +
+          (t2Band === 0 ? 'Because Task 2 was not submitted (Band 0), your combined Writing Band is calculated as: <code>(Task 1 + 2 &times; 0) / 3</code>.' : 'Because Task 1 was not submitted (Band 0), your combined Writing Band is calculated as: <code>(0 + 2 &times; Task 2) / 3</code>.') +
+        '</div>';
+      }
+
+      const renderCriteriaChips = (item) => {
+        if (!item) return '';
+        const tr = item.task_response?.score || item.taskResponseBand || '--';
+        const cc = item.coherence_cohesion?.score || item.coherenceBand || '--';
+        const lr = item.lexical_resource?.score || item.lexicalBand || '--';
+        const gr = item.grammar?.score || item.grammarBand || '--';
+        return '<div style="display:flex; gap:8px; flex-wrap:wrap; margin:10px 0;">' +
+          '<span style="background:#eaf2fd; color:#0b2b52; font-size:0.75rem; font-weight:700; padding:2px 8px; border-radius:4px;">Task Response: ' + tr + '</span>' +
+          '<span style="background:#eaf2fd; color:#0b2b52; font-size:0.75rem; font-weight:700; padding:2px 8px; border-radius:4px;">Coherence: ' + cc + '</span>' +
+          '<span style="background:#eaf2fd; color:#0b2b52; font-size:0.75rem; font-weight:700; padding:2px 8px; border-radius:4px;">Lexical: ' + lr + '</span>' +
+          '<span style="background:#eaf2fd; color:#0b2b52; font-size:0.75rem; font-weight:700; padding:2px 8px; border-radius:4px;">Grammar: ' + gr + '</span>' +
+        '</div>';
+      };
+
+      if (t1) {
+        html += '<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:16px; margin-bottom:14px;">' +
+          '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">' +
+            '<h4 style="margin:0; color:#0b2b52; font-size:1.05rem;">Writing Task 1 Assessment</h4>' +
+            '<span style="background:' + (t1Band ? '#e0202d' : '#94a3b8') + '; color:#fff; font-weight:800; font-size:0.85rem; padding:3px 10px; border-radius:999px;">' +
+              (t1Band ? 'Band ' + t1Band : 'Not Submitted (Band 0)') +
+            '</span>' +
+          '</div>' +
+          renderCriteriaChips(t1) +
+          '<p style="font-size:0.86rem; color:#475569; line-height:1.55; margin:0;">' + escapeHtml(t1.summary_feedback || t1.feedback || 'Evaluated under IELTS Task 1 criteria.') + '</p>' +
+        '</div>';
+      }
+
+      if (t2) {
+        html += '<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:16px;">' +
+          '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">' +
+            '<h4 style="margin:0; color:#0b2b52; font-size:1.05rem;">Writing Task 2 Assessment</h4>' +
+            '<span style="background:' + (t2Band ? '#e0202d' : '#94a3b8') + '; color:#fff; font-weight:800; font-size:0.85rem; padding:3px 10px; border-radius:999px;">' +
+              (t2Band ? 'Band ' + t2Band : 'Not Submitted (Band 0)') +
+            '</span>' +
+          '</div>' +
+          renderCriteriaChips(t2) +
+          '<p style="font-size:0.86rem; color:#475569; line-height:1.55; margin:0;">' + escapeHtml(t2.summary_feedback || t2.feedback || 'Evaluated under IELTS Task 2 criteria.') + '</p>' +
+        '</div>';
+      }
+
+      container.innerHTML = html;
+    }
+  </script>
+  
 </body>
 </html>

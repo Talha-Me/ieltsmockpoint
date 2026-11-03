@@ -144,7 +144,19 @@
 
 //   // Proceed দিলে রাইটিংয়ের ইনস্ট্রাকশন ভিডিও পেজে নিয়ে যাবে
 //   document.getElementById("proceed-writing-btn").addEventListener("click", () => {
-//     window.location.href = "/mock-test";
+//       const currentTestId = (typeof mockID !== "undefined" && mockID) || (typeof parsedQuestionData !== "undefined" && parsedQuestionData.mockNumber) || sessionStorage.getItem("currentMockId") || localStorage.getItem("currentMockId") || "";
+  if (currentTestId) {
+    try {
+      localStorage.removeItem("ielts_draft_reading_" + currentTestId);
+      sessionStorage.removeItem("ielts_draft_reading_" + currentTestId);
+    } catch(e) {}
+  }
+  try {
+    localStorage.removeItem("readingDraftAnswers");
+    sessionStorage.removeItem("readingDraftAnswers");
+  } catch(e) {}
+
+  window.location.href = "/mock-test";
 //   });
 // }
 
@@ -152,6 +164,7 @@
 // async function submitTest() {
 //   inputCheckUpdated();
 //   sessionStorage.setItem("readingIsCompleted", "true");
+// try { localStorage.removeItem("readingDraftAnswers"); sessionStorage.removeItem("readingDraftAnswers"); } catch(e) {}
 //   const [scoreToSend, mistakesToSend] = findDifferences(answerArrayUpdated, answers);
 //   // 👉 এই লাইনগুলো যোগ করে দাও:
 //   sessionStorage.setItem("readingScore", scoreToSend);
@@ -164,7 +177,13 @@
 //     await fetch('/api/update-mock-info', {
 //       method: 'POST',
 //       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify({ score: scoreToSend, mistakes: mistakesToSend, mod: "reading" })
+//       body: JSON.stringify({
+// score: scoreToSend,
+// mistakes: mistakesToSend,
+// mod: "reading",
+// answers: answerArrayUpdated,
+// testId: (typeof mockID !== "undefined" && mockID) || (typeof parsedQuestionData !== "undefined" && parsedQuestionData.mockNumber) || sessionStorage.getItem("currentMockId") || localStorage.getItem("currentMockId") || ""
+// })
 //     });
 //   } catch (err) {
 //     console.error("Score sync error:", err);
@@ -2690,13 +2709,20 @@ async function submitTest(reason) {
     await fetch('/api/update-mock-info', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ score: scoreToSend, mistakes: mistakesToSend, mod: "reading" })
+      body: JSON.stringify({
+        score: scoreToSend,
+        mistakes: mistakesToSend,
+        mod: "reading",
+        answers: answerArrayUpdated,
+        testId: (typeof mockID !== "undefined" && mockID) || (typeof parsedQuestionData !== "undefined" && parsedQuestionData.mockNumber) || sessionStorage.getItem("currentMockId") || localStorage.getItem("currentMockId") || ""
+      })
     });
   } catch (err) {
     console.error("Score sync error:", err);
   }
 
-  showMockConfirmationModal(scoreToSend, mistakesToSend, reason);
+    // রিডিং শেষ হলে কোনো মডাল বা ইন্টারাপশন ছাড়া সরাসরি মক লবিতে রিডাইরেক্ট করবে যাতে Writing Video ও Writing Test চালু হয়
+  window.location.href = "/mock-test";
 }
 
 async function userData() {
@@ -4511,3 +4537,137 @@ document.addEventListener("keydown", function (e) {
     e.preventDefault();
   }
 });
+
+// ==========================================
+// AUTO-SAVE & DRAFT RECOVERY (3-MIN CLOUD + REALTIME LOCAL)
+// ==========================================
+// AUTO-SAVE & DRAFT RECOVERY (TEST-SPECIFIC ISOLATION)
+// ==========================================
+let readingAutoSaveTimer = null;
+
+function getReadingTestId() {
+  return (typeof mockID !== "undefined" && mockID) ||
+    (typeof parsedQuestionData !== "undefined" && parsedQuestionData && parsedQuestionData.mockNumber) ||
+    sessionStorage.getItem("currentMockId") ||
+    localStorage.getItem("currentMockId") || "";
+}
+
+function autoSaveReadingDraft() {
+  try {
+    inputCheckUpdated();
+    const testId = getReadingTestId();
+    if (!testId) return;
+
+    // 1. Test-specific isolated local backup
+    const draftKey = "ielts_draft_reading_" + testId;
+    const payload = JSON.stringify({
+      testId: testId,
+      module: "reading",
+      updatedAt: Date.now(),
+      answers: answerArrayUpdated
+    });
+
+    localStorage.setItem(draftKey, payload);
+    sessionStorage.setItem(draftKey, payload);
+
+    // Clear legacy generic keys
+    localStorage.removeItem("readingDraftAnswers");
+    sessionStorage.removeItem("readingDraftAnswers");
+
+    // 2. Cloud auto-save if logged in
+    const u = JSON.parse(localStorage.getItem("user") || "null");
+    const email = u && u.email ? u.email : "";
+
+    fetch("/api/student/auto-save", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        testId,
+        testType: testId.includes("Premium") ? "Premium Full Mock" : "Academic Full Mock",
+        module: "reading",
+        answers: answerArrayUpdated,
+        email
+      })
+    }).catch(() => {});
+  } catch (e) {
+    console.warn("Reading auto-save notice:", e);
+  }
+}
+
+function restoreReadingDraft() {
+  try {
+    const testId = getReadingTestId();
+    if (!testId) return;
+
+    // Purge legacy generic keys
+    localStorage.removeItem("readingDraftAnswers");
+    sessionStorage.removeItem("readingDraftAnswers");
+
+    const draftKey = "ielts_draft_reading_" + testId;
+    const raw = localStorage.getItem(draftKey) || sessionStorage.getItem(draftKey);
+    if (!raw) return;
+
+    const parsed = JSON.parse(raw);
+    // STRICT VALIDATION: Only restore if draft testId strictly matches current testId
+    if (!parsed || parsed.testId !== testId || !parsed.answers) {
+      return;
+    }
+
+    const draft = parsed.answers;
+    if (!draft || typeof draft !== "object") return;
+
+    document.querySelectorAll("input").forEach((input) => {
+      const id = input.placeholder;
+      if (id && draft[id] && draft[id][0] !== undefined) {
+        if (input.type === "text") {
+          input.value = draft[id][0];
+        }
+      }
+      if (input.name && draft[input.name] && draft[input.name][0] !== undefined) {
+        if (input.value.trim() === draft[input.name][0]) {
+          input.checked = true;
+        }
+      }
+    });
+
+    document.querySelectorAll("select").forEach((select) => {
+      const id = select.name;
+      if (id && draft[id] && draft[id][0] !== undefined) {
+        select.value = draft[select.id][0];
+      }
+    });
+    console.log("Reading draft restored successfully for " + testId);
+  } catch (e) {
+    console.warn("Reading draft restore notice:", e);
+  }
+}
+
+// Start auto-save periodic loop (every 3 minutes)
+if (!readingAutoSaveTimer) {
+  readingAutoSaveTimer = setInterval(autoSaveReadingDraft, 3 * 60 * 1000);
+}
+
+// Real-time debounce local save on input change
+let readingDebounceTimeout = null;
+document.addEventListener("input", () => {
+  if (readingDebounceTimeout) clearTimeout(readingDebounceTimeout);
+  readingDebounceTimeout = setTimeout(() => {
+    inputCheckUpdated();
+    try {
+      const testId = getReadingTestId();
+      if (!testId) return;
+      const draftKey = "ielts_draft_reading_" + testId;
+      const payload = JSON.stringify({
+        testId: testId,
+        module: "reading",
+        updatedAt: Date.now(),
+        answers: answerArrayUpdated
+      });
+      localStorage.setItem(draftKey, payload);
+      sessionStorage.setItem(draftKey, payload);
+    } catch(e) {}
+  }, 3000);
+});
+
+// Restore on page load after rendering questions
+setTimeout(restoreReadingDraft, 800);

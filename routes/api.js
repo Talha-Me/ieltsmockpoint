@@ -1214,25 +1214,43 @@ router.get("/getWritingData", (req, res) => {
 // ==========================================
 // ৪. এক্সাম সাবমিশন ও রেজাল্ট প্রসেসিং
 // ==========================================
+function calcIeltsBand(raw) {
+  const score = Number(raw) || 0;
+  if (score >= 39) return 9.0;
+  if (score >= 37) return 8.5;
+  if (score >= 35) return 8.0;
+  if (score >= 32) return 7.5;
+  if (score >= 30) return 7.0;
+  if (score >= 26) return 6.5;
+  if (score >= 23) return 6.0;
+  if (score >= 18) return 5.5;
+  if (score >= 16) return 5.0;
+  if (score >= 13) return 4.5;
+  if (score >= 10) return 4.0;
+  if (score >= 7) return 3.5;
+  if (score >= 5) return 3.0;
+  if (score >= 3) return 2.5;
+  return 2.0;
+}
 router.post("/update-mock-info", async (req, res) => {
   try {
-    const { score, mistakes, mod, writingInputs } = req.body;
+    const { score, mistakes, mod, writingInputs, answers } = req.body;
     const sessionUser = req.session.user || req.session.candidate;
 
     if (!mod) {
       return res.status(400).json({ error: "Module type is required" });
     }
 
-    const currentMockId = req.session.mock ? req.session.mock.mockNumber : "Free-Mock";
+    const currentMockId = req.body.testId || (req.session.mock ? req.session.mock.mockNumber : "Free-Mock");
 
     if (!req.session.examResults) {
       req.session.examResults = {};
     }
 
     if (mod === "listening") {
-      req.session.examResults.listening = { score, mistakes };
+      req.session.examResults.listening = { score, mistakes, answers };
     } else if (mod === "reading") {
-      req.session.examResults.reading = { score, mistakes };
+      req.session.examResults.reading = { score, mistakes, answers };
     } else if (mod === "writing") {
       req.session.examResults.writing = { writingInputs };
     }
@@ -1278,25 +1296,66 @@ router.post("/update-mock-info", async (req, res) => {
         // Also sync to StudentTestRecord for seamless dashboard tracking
         try {
           const userEmail = sessionUser.email.toLowerCase().trim();
-          let record = await StudentTestRecord.findOne({ userEmail, testId: currentMockId });
+          let record = await StudentTestRecord.findOne({
+            userEmail,
+            testId: currentMockId,
+            status: "in-progress"
+          });
           if (!record) {
+            record = await StudentTestRecord.findOne({
+              userEmail,
+              testId: currentMockId
+            }).sort({ createdAt: -1 });
+          }
+          if (!record) {
+            const isPrem = currentMockId.includes("Premium");
+            const isGen = currentMockId.includes("General");
             record = new StudentTestRecord({
               userEmail,
               userId: sessionUser.id || null,
-              testType: "full-mock",
+              testType: isPrem ? "Premium Full Mock" : (isGen ? "General Full Mock" : "Academic Full Mock"),
               testId: currentMockId,
-              title: currentMockId.replace(/-UKA-FINAL-/i, " Mock Test ")
+              title: isPrem ? currentMockId.replace(/-UKA-FINAL-/i, " Premium Mock ") : currentMockId.replace(/-UKA-FINAL-/i, " Academic Mock "),
+              status: "completed",
+              answers: {},
+              mistakes: {}
             });
           }
-          if (mod === "listening" && score !== undefined) {
-            record.listeningScore = score;
-            const lB = Math.min(9, Math.max(2.5, +(score / 4.4).toFixed(1)));
-            record.listeningBand = lB;
-          } else if (mod === "reading" && score !== undefined) {
-            record.readingScore = score;
-            const rB = Math.min(9, Math.max(2.5, +(score / 4.4).toFixed(1)));
-            record.readingBand = rB;
+
+          if (!record.answers) record.answers = {};
+          if (!record.mistakes) record.mistakes = {};
+
+          if (mod === "listening") {
+            if (score !== undefined && score !== null) {
+              record.listeningScore = Number(score);
+              record.listeningBand = calcIeltsBand(score);
+            }
+            if (answers) record.answers.listening = answers;
+            if (mistakes) record.mistakes.listening = mistakes;
+          } else if (mod === "reading") {
+            if (score !== undefined && score !== null) {
+              record.readingScore = Number(score);
+              record.readingBand = calcIeltsBand(score);
+            }
+            if (answers) record.answers.reading = answers;
+            if (mistakes) record.mistakes.reading = mistakes;
+          } else if (mod === "writing") {
+            if (writingInputs) {
+              record.answers.writing = writingInputs;
+            }
           }
+
+          record.status = "completed";
+
+          const bands = [record.listeningBand, record.readingBand, record.writingBand].filter(b => typeof b === 'number' && b > 0);
+          if (bands.length > 0) {
+            const rawAvg = bands.reduce((a, b) => a + b, 0) / bands.length;
+            record.overallBand = Math.round(rawAvg * 2) / 2;
+          }
+
+          record.lastSavedAt = new Date();
+          record.markModified("answers");
+          record.markModified("mistakes");
           await record.save();
         } catch (recErr) {
           console.warn("StudentTestRecord sync notice:", recErr.message);
@@ -1690,7 +1749,16 @@ router.get("/student/dashboard-data", async (req, res) => {
     const userEmail = sessionUser.email.toLowerCase().trim();
 
     // 1. Fetch from StudentTestRecord
-    const records = await StudentTestRecord.find({ userEmail }).sort({ completedAt: -1 }).lean();
+    const records = await StudentTestRecord.find({
+      userEmail,
+      $or: [
+        { status: "completed" },
+        { listeningScore: { $ne: null } },
+        { readingScore: { $ne: null } },
+        { "answers.listening": { $exists: true } },
+        { "answers.reading": { $exists: true } }
+      ]
+    }).sort({ createdAt: -1 }).lean();
 
     // 2. Fetch from User.mockInformation
     let legacyMockList = [];
@@ -1709,6 +1777,14 @@ router.get("/student/dashboard-data", async (req, res) => {
 
     records.forEach(r => {
       seenIds.add(r.testId || r._id.toString());
+
+      const validBands = [r.listeningBand, r.readingBand, r.writingBand, r.speakingBand].filter(b => typeof b === 'number' && b > 0);
+      let calculatedOverall = r.overallBand || 0;
+      if (!calculatedOverall && validBands.length > 0) {
+        const avg = validBands.reduce((a, b) => a + b, 0) / validBands.length;
+        calculatedOverall = Math.round(avg * 2) / 2;
+      }
+
       combinedHistory.push({
         id: r._id,
         testId: r.testId,
@@ -1722,12 +1798,14 @@ router.get("/student/dashboard-data", async (req, res) => {
         listeningBand: r.listeningBand || 0,
         readingBand: r.readingBand || 0,
         writingBand: r.writingBand || 0,
-        overallBand: r.overallBand || 0,
+        speakingBand: r.speakingBand || 0,
+        speakingScore: r.speakingScore || 0,
+        overallBand: calculatedOverall,
         totalWords: r.totalWords || 0,
         feedback: r.feedback || {},
         mistakes: r.mistakes || [],
         answers: r.answers || {},
-        completedAt: r.completedAt
+        completedAt: r.completedAt || r.createdAt || new Date()
       });
     });
 
@@ -1781,8 +1859,8 @@ router.get("/student/dashboard-data", async (req, res) => {
     });
 
     // Calculate official averages
-    let sumListening = 0, sumReading = 0, sumWriting = 0, sumOverall = 0;
-    let countL = 0, countR = 0, countW = 0, countO = 0;
+    let sumListening = 0, sumReading = 0, sumWriting = 0, sumSpeaking = 0, sumOverall = 0;
+    let countL = 0, countR = 0, countW = 0, countS = 0, countO = 0;
     let sumLRaw = 0, sumRRaw = 0;
     let totalQuestionsAttempted = 0;
     let totalCorrectAnswers = 0;
@@ -1791,7 +1869,8 @@ router.get("/student/dashboard-data", async (req, res) => {
       fullMock: 0,
       cambridge: 0,
       questionType: 0,
-      writing: 0
+      writing: 0,
+      speaking: 0
     };
 
     combinedHistory.forEach(h => {
@@ -1802,6 +1881,8 @@ router.get("/student/dashboard-data", async (req, res) => {
         categoryBreakdown.questionType++;
       } else if (typeLower.includes('writing')) {
         categoryBreakdown.writing++;
+      } else if (typeLower.includes('speaking')) {
+        categoryBreakdown.speaking++;
       } else if (typeLower.includes('cambridge')) {
         categoryBreakdown.cambridge++;
       }
@@ -1821,6 +1902,7 @@ router.get("/student/dashboard-data", async (req, res) => {
         totalQuestionsAttempted += (h.totalQuestions || 40);
       }
       if (h.writingBand > 0) { sumWriting += h.writingBand; countW++; }
+      if (h.speakingBand > 0) { sumSpeaking += h.speakingBand; countS++; }
       if (h.overallBand > 0) { sumOverall += h.overallBand; countO++; }
     });
 
@@ -1831,6 +1913,7 @@ router.get("/student/dashboard-data", async (req, res) => {
       listening: countL ? Math.round((sumListening / countL) * 2) / 2 : 0,
       reading: countR ? Math.round((sumReading / countR) * 2) / 2 : 0,
       writing: countW ? Math.round((sumWriting / countW) * 2) / 2 : 0,
+      speaking: countS ? Math.round((sumSpeaking / countS) * 2) / 2 : 0,
       avgListeningScore: countL ? sumLRaw / countL : 0,
       avgReadingScore: countR ? sumRRaw / countR : 0
     };
@@ -1852,7 +1935,196 @@ router.get("/student/dashboard-data", async (req, res) => {
   }
 });
 
-// Record test completion endpoint
+// ==========================================
+// AUTO-SAVE PROGRESS (EVERY 2-3 MINUTES & DRAFT RESTORE)
+// ==========================================
+router.post("/student/auto-save", async (req, res) => {
+  try {
+    const sessionUser = req.session.user || req.session.candidate;
+    const userEmail = (sessionUser && sessionUser.email ? sessionUser.email : (req.body.email || '')).toLowerCase().trim();
+
+    if (!userEmail || userEmail === 'guest@ieltsmockpoint.com') {
+      return res.json({ success: true, savedTo: 'local-only', message: 'Guest session' });
+    }
+
+    const {
+      testId,
+      testType,
+      module: modName,
+      title,
+      answers,
+      remainingSeconds
+    } = req.body;
+
+    if (!testId) {
+      return res.status(400).json({ error: "testId is required" });
+    }
+
+    let record = await StudentTestRecord.findOne({
+      userEmail,
+      testId,
+      status: "in-progress"
+    });
+
+    if (!record) {
+      record = new StudentTestRecord({
+        userEmail,
+        userId: (sessionUser && sessionUser.id) || null,
+        testId,
+        testType: testType || (testId.includes("Premium") ? "Premium Full Mock" : "Academic Full Mock"),
+        module: modName || null,
+        title: title || testId.replace(/-UKA-FINAL-/i, " Mock Test "),
+        status: "in-progress",
+        answers: {}
+      });
+    }
+
+    if (!record.answers) record.answers = {};
+    if (modName && answers) {
+      record.answers[modName] = answers;
+    } else if (answers) {
+      record.answers = Object.assign(record.answers, answers);
+    }
+
+    record.lastSavedAt = new Date();
+    record.markModified("answers");
+    await record.save();
+
+    return res.json({ success: true, recordId: record._id, lastSavedAt: record.lastSavedAt });
+  } catch (err) {
+    console.error("Auto-save error:", err);
+    return res.status(500).json({ error: "Failed to auto-save" });
+  }
+});
+
+// Fetch single test record with dynamic 1-40 question breakdown for review modal
+router.get("/student/test-record/:id", async (req, res) => {
+  try {
+    const sessionUser = req.session.user || req.session.candidate;
+    let record = await StudentTestRecord.findById(req.params.id).lean();
+    if (!record) {
+      return res.status(404).json({ success: false, message: "Record not found" });
+    }
+
+    // Ownership check
+    if (sessionUser && sessionUser.email) {
+      const userEmail = sessionUser.email.toLowerCase().trim();
+      if (record.userEmail !== userEmail && record.userEmail !== 'guest@ieltsmockpoint.com' && sessionUser.role !== 'admin') {
+        return res.status(403).json({ success: false, message: "Access denied" });
+      }
+    }
+
+    // Dynamic reconstruction of 1-40 reviews if mistakes is empty or incomplete
+    try {
+      const testId = record.testId;
+      if (testId) {
+        const testDoc = await TestQuestions.findOne({ mockNumber: testId }).lean()
+          || await TestQuestions.findOne({ mockNumber: new RegExp('^' + testId.replace(/[-\[\]{}()*+?.,\\^$|#\s]/g, '\\$&') + '$', 'i') }).lean();
+
+        if (testDoc) {
+          if (!record.mistakes) record.mistakes = {};
+          if (!record.answers) record.answers = {};
+
+          // Dynamic evaluate Listening
+          const officialL = testDoc.listening && testDoc.listening.answers;
+          const userL = record.answers.listening || {};
+          const hasLMistakes = Array.isArray(record.mistakes.listening) && record.mistakes.listening.length > 0;
+          if (officialL && (!hasLMistakes || record.mistakes.listening.length < 40)) {
+            const listL = [];
+            let correctL = 0;
+            for (let q = 1; q <= 40; q++) {
+              const qStr = String(q);
+              const uRaw = userL[qStr] || userL[q] || [];
+              const uArr = Array.isArray(uRaw) ? uRaw.map(v => String(v).trim()).filter(Boolean) : (uRaw ? [String(uRaw).trim()] : []);
+              const oRaw = officialL[qStr] || officialL[q] || [];
+              const oArr = Array.isArray(oRaw) ? oRaw.map(v => String(v).trim()) : (oRaw ? [String(oRaw).trim()] : []);
+
+              const isCorrect = uArr.some(uVal => {
+                const uNorm = uVal.toLowerCase();
+                return oArr.some(oVal => oVal.toLowerCase() === uNorm);
+              });
+
+              if (isCorrect) correctL++;
+              listL.push({
+                qNum: q,
+                yourAns: uArr.length > 0 ? uArr.join(', ') : '(Not Answered)',
+                officialAns: oArr.join(' / ') || '--',
+                isCorrect
+              });
+            }
+            record.mistakes.listening = listL;
+            if (record.listeningScore === null || record.listeningScore === undefined) {
+              record.listeningScore = correctL;
+              record.listeningBand = calcIeltsBand(correctL);
+            }
+          }
+
+          // Dynamic evaluate Reading
+          const officialR = testDoc.reading && testDoc.reading.answers;
+          const userR = record.answers.reading || {};
+          const hasRMistakes = Array.isArray(record.mistakes.reading) && record.mistakes.reading.length > 0;
+          if (officialR && (!hasRMistakes || record.mistakes.reading.length < 40)) {
+            const listR = [];
+            let correctR = 0;
+            for (let q = 1; q <= 40; q++) {
+              const qStr = String(q);
+              const uRaw = userR[qStr] || userR[q] || [];
+              const uArr = Array.isArray(uRaw) ? uRaw.map(v => String(v).trim()).filter(Boolean) : (uRaw ? [String(uRaw).trim()] : []);
+              const oRaw = officialR[qStr] || officialR[q] || [];
+              const oArr = Array.isArray(oRaw) ? oRaw.map(v => String(v).trim()) : (oRaw ? [String(oRaw).trim()] : []);
+
+              const isCorrect = uArr.some(uVal => {
+                const uNorm = uVal.toLowerCase();
+                return oArr.some(oVal => oVal.toLowerCase() === uNorm);
+              });
+
+              if (isCorrect) correctR++;
+              listR.push({
+                qNum: q,
+                yourAns: uArr.length > 0 ? uArr.join(', ') : '(Not Answered)',
+                officialAns: oArr.join(' / ') || '--',
+                isCorrect
+              });
+            }
+            record.mistakes.reading = listR;
+            if (record.readingScore === null || record.readingScore === undefined) {
+              record.readingScore = correctR;
+              record.readingBand = calcIeltsBand(correctR);
+            }
+          }
+
+          // Update overallBand if needed
+          const bands = [record.listeningBand, record.readingBand, record.writingBand].filter(b => typeof b === 'number' && b > 0);
+          if (bands.length > 0 && (!record.overallBand || record.overallBand === 0)) {
+            const rawAvg = bands.reduce((a, b) => a + b, 0) / bands.length;
+            record.overallBand = Math.round(rawAvg * 2) / 2;
+          }
+
+          // Persist back to DB so subsequent loads are instant
+          await StudentTestRecord.findByIdAndUpdate(record._id, {
+            mistakes: record.mistakes,
+            answers: record.answers,
+            listeningScore: record.listeningScore,
+            listeningBand: record.listeningBand,
+            readingScore: record.readingScore,
+            readingBand: record.readingBand,
+            overallBand: record.overallBand,
+            status: "completed"
+          });
+        }
+      }
+    } catch (evalErr) {
+      console.warn("Dynamic test record evaluation warning:", evalErr.message);
+    }
+
+    return res.json({ success: true, record });
+  } catch (err) {
+    console.error("Fetch test record error:", err);
+    return res.status(500).json({ error: "Failed to load test record" });
+  }
+});
+
+// Record test completion endpoint (Final Submittal & Band Scoring)
 router.post("/student/record-test", async (req, res) => {
   try {
     const sessionUser = req.session.user || req.session.candidate;
@@ -1867,9 +2139,11 @@ router.post("/student/record-test", async (req, res) => {
       listeningScore,
       readingScore,
       writingScore,
+      speakingScore,
       listeningBand,
       readingBand,
       writingBand,
+      speakingBand,
       overallBand,
       totalWords,
       feedback,
@@ -1877,27 +2151,45 @@ router.post("/student/record-test", async (req, res) => {
       answers
     } = req.body;
 
-    const detectedMod = modName || (testType && testType.toLowerCase().includes('reading') ? 'reading' : (testType && testType.toLowerCase().includes('listening') ? 'listening' : (testType && testType.toLowerCase().includes('writing') ? 'writing' : null)));
+    const detectedMod = modName || (testType && testType.toLowerCase().includes('reading') ? 'reading' : (testType && testType.toLowerCase().includes('listening') ? 'listening' : (testType && testType.toLowerCase().includes('writing') ? 'writing' : (testType && testType.toLowerCase().includes('speaking') ? 'speaking' : null))));
+    const currentId = testId || 'mock-' + Date.now();
 
-    const record = await StudentTestRecord.create({
-      userEmail,
-      testType: testType || 'Full Mock',
-      module: detectedMod,
-      testId: testId || 'mock-' + Date.now(),
-      title: title || 'Academic IELTS Mock Test',
-      totalQuestions: Number(totalQuestions) || null,
-      listeningScore: Number(listeningScore) || 0,
-      readingScore: Number(readingScore) || 0,
-      writingScore: Number(writingScore) || 0,
-      listeningBand: Number(listeningBand) || 0,
-      readingBand: Number(readingBand) || 0,
-      writingBand: Number(writingBand) || 0,
-      overallBand: Number(overallBand) || 0,
-      totalWords: Number(totalWords) || 0,
-      feedback: feedback || {},
-      mistakes: mistakes || [],
-      answers: answers || {}
-    });
+    // Look for an existing in-progress record to update or create fresh
+    let record = null;
+    if (userEmail && userEmail !== 'guest@ieltsmockpoint.com' && currentId) {
+      record = await StudentTestRecord.findOne({ userEmail, testId: currentId, status: "in-progress" });
+    }
+
+    if (!record) {
+      record = new StudentTestRecord({ userEmail, testId: currentId });
+    }
+
+    record.status = "completed";
+    record.testType = testType || 'Full Mock';
+    record.module = detectedMod;
+    record.title = title || currentId.replace(/-UKA-FINAL-/i, " Mock Test ");
+    record.totalQuestions = Number(totalQuestions) || null;
+    if (listeningScore !== undefined && listeningScore !== null) record.listeningScore = Number(listeningScore);
+    if (readingScore !== undefined && readingScore !== null) record.readingScore = Number(readingScore);
+    if (writingScore !== undefined && writingScore !== null) record.writingScore = Number(writingScore);
+    if (listeningBand !== undefined && listeningBand !== null) record.listeningBand = Number(listeningBand);
+    if (readingBand !== undefined && readingBand !== null) record.readingBand = Number(readingBand);
+    if (writingBand !== undefined && writingBand !== null) record.writingBand = Number(writingBand);
+    if (speakingScore !== undefined && speakingScore !== null) record.speakingScore = Number(speakingScore);
+    if (speakingBand !== undefined && speakingBand !== null) record.speakingBand = Number(speakingBand);
+    if (overallBand !== undefined && overallBand !== null) record.overallBand = Number(overallBand);
+    record.totalWords = Number(totalWords) || record.totalWords || 0;
+    record.feedback = feedback || record.feedback || {};
+    record.mistakes = Object.assign({}, record.mistakes || {}, mistakes || {});
+    record.answers = Object.assign({}, record.answers || {}, answers || {});
+    record.completedAt = new Date();
+    record.lastSavedAt = new Date();
+
+    record.markModified("feedback");
+    record.markModified("mistakes");
+    record.markModified("answers");
+
+    await record.save();
 
     return res.json({ success: true, recordId: record._id });
   } catch (err) {
@@ -1905,6 +2197,5 @@ router.post("/student/record-test", async (req, res) => {
     return res.status(500).json({ error: "Failed to record test" });
   }
 });
-
 
 module.exports = router;

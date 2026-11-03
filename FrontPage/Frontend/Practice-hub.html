@@ -162,7 +162,7 @@ main{position:relative;z-index:1;}
 .mod-h h2{font-size:clamp(1.55rem,2.8vw,2.2rem);margin-bottom:8px;}
 .mod-h p{color:var(--muted);max-width:62ch;font-size:.95rem;}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:18px;perspective:1000px;}
-.card{position:relative;background:#fff;border:1.5px solid var(--line);border-radius:20px;padding:22px;overflow:hidden;display:flex;flex-direction:column;transition:transform .2s ease-out,border-color .25s,box-shadow .25s;transform-style:preserve-3d;}
+.card{position:relative;background:#fff;border:1.5px solid var(--line);border-radius:20px;padding:22px;overflow:hidden;display:flex;flex-direction:column;min-height:310px;height:100%;box-sizing:border-box;transition:transform .2s ease-out,border-color .25s,box-shadow .25s;transform-style:preserve-3d;}
 .card.pop{animation:pop .5s cubic-bezier(.2,.8,.2,1) both;}
 .card::before{content:'';position:absolute;left:0;top:0;height:4px;width:100%;background:linear-gradient(90deg,var(--blue),var(--red));transform:scaleX(0);transform-origin:left;transition:transform .35s;}
 .card::after{content:'';position:absolute;inset:0;background:radial-gradient(240px circle at var(--mx,50%) var(--my,0%),rgba(21,101,201,.1),transparent 60%);opacity:0;transition:opacity .3s;pointer-events:none;}
@@ -331,18 +331,18 @@ main{position:relative;z-index:1;}
 .reading-card-cta {
   position: relative;
   margin-top: auto;
-  padding-top: 10px;
+  padding-top: 14px;
 }
 .btn-card-reading {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 8px;
   width: 100%;
-  padding: 11px 18px;
+  padding: 11px 16px;
   border-radius: 10px;
   font-family: 'Sora', sans-serif;
-  font-size: 0.88rem;
+  font-size: 0.86rem;
   font-weight: 700;
   text-decoration: none;
   color: #fff;
@@ -353,6 +353,12 @@ main{position:relative;z-index:1;}
   position: relative;
   overflow: hidden;
   cursor: pointer;
+  box-sizing: border-box;
+}
+.btn-card-reading span {
+  text-align: left;
+  line-height: 1.3;
+  flex: 1;
 }
 .btn-card-reading::before {
   content: '';
@@ -649,7 +655,25 @@ footer {
           </div>
         </div>
       </div>
-      <a href="/speaking.html">Speaking</a>
+      <div class="nav-dd">
+        <a href="/speaking.html" class="nav-dd-trigger">Speaking<svg class="nav-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
+        <div class="nav-dd-menu">
+          <div class="nav-dd-card">
+            <a href="/practice-hub?skill=speaking#sp-Part-1" class="nav-dd-item">
+              <span class="nav-dd-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg></span>
+              <span>Part 1 · Interview</span>
+            </a>
+            <a href="/practice-hub?skill=speaking#sp-Part-2" class="nav-dd-item">
+              <span class="nav-dd-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg></span>
+              <span>Part 2 · Cue Card</span>
+            </a>
+            <a href="/practice-hub?skill=speaking#sp-Part-3" class="nav-dd-item">
+              <span class="nav-dd-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg></span>
+              <span>Part 3 · Discussion</span>
+            </a>
+          </div>
+        </div>
+      </div>
       <div class="nav-dd">
         <a href="/practice-hub" class="nav-dd-trigger">Practice Hub<svg class="nav-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
         <div class="nav-dd-menu">
@@ -665,6 +689,10 @@ footer {
             <a href="/practice-hub?skill=writing#hub" class="nav-dd-item">
               <span class="nav-dd-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span>
               <span>Writing</span>
+            </a>
+            <a href="/practice-hub?skill=speaking#hub" class="nav-dd-item">
+              <span class="nav-dd-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg></span>
+              <span>Speaking</span>
             </a>
           </div>
         </div>
@@ -778,7 +806,19 @@ footer {
         <a href="/cambridge-writing.html">Practice Full Test</a>
       </div>
     </div>
-    <a href="/speaking.html">Speaking</a>
+    <div class="sb-dd">
+      <div class="sb-dd-head">
+        <a href="/speaking.html" class="sb-dd-link">Speaking</a>
+        <button type="button" class="sb-dd-btn" aria-expanded="false" aria-label="Toggle Speaking options">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+      </div>
+      <div class="sb-dd-sub">
+        <a href="/practice-hub?skill=speaking#sp-Part-1">Part 1 · Interview</a>
+        <a href="/practice-hub?skill=speaking#sp-Part-2">Part 2 · Cue Card</a>
+        <a href="/practice-hub?skill=speaking#sp-Part-3">Part 3 · Discussion</a>
+      </div>
+    </div>
     <div class="sb-dd">
       <div class="sb-dd-head">
         <a href="/practice-hub" class="sb-dd-link">Practice Hub</a>
@@ -790,6 +830,7 @@ footer {
         <a href="/practice-hub?skill=listening#hub">Listening</a>
         <a href="/practice-hub?skill=reading#hub">Reading</a>
         <a href="/practice-hub?skill=writing#hub">Writing</a>
+        <a href="/practice-hub?skill=speaking#hub">Speaking</a>
       </div>
     </div>
     <a href="/learn.html">Learn</a>
@@ -828,7 +869,7 @@ footer {
       <p class="lead">Train every Reading, Listening and Writing question type in the real exam interface with Cambridge-style timing. Fix one weak spot at a time, then check your band with a full mock.</p>
       <div class="cta-row"><a href="#hub" class="btn btn-red">Start free practice</a><a href="/mocks.html" class="btn btn-outline">Try free full mock test</a></div>
       <div class="stats">
-        <div><strong id="stS">3</strong><span>Skills</span></div>
+        <div><strong id="stS">4</strong><span>Skills</span></div>
         <div><strong id="stT">0</strong><span>Question types</span></div>
         <div><strong id="stP">0</strong><span>Practice sets</span></div>
       </div>
@@ -1027,12 +1068,14 @@ const MAX_VISIBLE=10;   // extra sets are tucked behind a "+N" button
 const url={
   reading:(t,n)=>`/reading-practice?pracNumber=Practice-${n}&type=${encodeURIComponent(t)}`,
   listening:(t,n)=>`/listening-practice?pracNumber=Practice-${n}&type=${encodeURIComponent(t)}`,
-  writing:(t,n)=>`/writing-practice?pracNumber=Set-${n}&type=${encodeURIComponent(t)}`
+  writing:(t,n)=>`/writing-practice?pracNumber=Set-${n}&type=${encodeURIComponent(t)}`,
+  speaking:(t,n)=>`/speaking-test?id=${n}&part=${String(t).replace('Part-','')}`
 };
 
 const ICONS = {
   'reading': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
   'listening': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>',
+  'speaking': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>',
   'writing': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>',
   'Note-Completion': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
   'True-False-NotGiven': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>',
@@ -1064,6 +1107,7 @@ const ICONS = {
   'Problem-Solution': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>',
   'Advantages-Disadvantages': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v1"/><polyline points="18 8 22 12 18 16"/><line x1="6" y1="12" x2="22" y2="12"/></svg>',
   'Two-Part-Question': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+  'Positive-Negative': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="12" y1="16" x2="12" y2="16.01"/></svg>',
   'default': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
 };
 function getSvgIcon(t, fallbackKey) {
@@ -1103,7 +1147,12 @@ const mods=[
   { t: "Discussion-Essay", n: "Discussion Essay", i:'', d: "Discuss both views and give your opinion." },
   { t: "Problem-Solution", n: "Problem & Solution", i:'', d: "Explain causes, problems and workable solutions." },
   { t: "Advantages-Disadvantages", n: "Advantages & Disadvantages", i:'', d: "Weigh up the pros and cons of a topic." },
-  { t: "Two-Part-Question", n: "Two-Part Question", i:'', d: "Answer two linked questions in one essay." }]}
+  { t: "Two-Part-Question", n: "Two-Part Question", i:'', d: "Answer two linked questions in one essay." },
+  { t: "Positive-Negative", n: "Positive or Negative", i:'', d: "Evaluate whether a development is overall positive or negative." }]},
+  {id:'speaking',name:'Speaking',ic:'',title:'IELTS Speaking Practice by Part',d:'Practise with a 3D AI examiner and a natural British voice. Choose Part 1, Part 2 or Part 3, then pick any of the 20 tests (Set 1 to 20) for an instant band score.',all:'/speaking.html',meta:'3D AI examiner · voice',items:[
+   { t: "Part-1", n: "Part 1 · Interview", i:'', d: "Answer everyday questions about yourself, your home, work and studies." },
+   { t: "Part-2", n: "Part 2 · Cue Card", i:'', d: "One minute to prepare, then speak for up to two minutes on a topic card." },
+   { t: "Part-3", n: "Part 3 · Discussion", i:'', d: "Discuss abstract ideas in depth and justify your opinions." }]}
 ];
 
 let store={};
@@ -1121,6 +1170,7 @@ function norm(v){
 function normalise(raw){
   const out={};
   mods.forEach(m=>{out[m.id]={};const src=(raw&&raw[m.id])||{};Object.keys(src).forEach(t=>out[m.id][t]=norm(src[t]));});
+  out.speaking={'Part-1':norm(20),'Part-2':norm(20),'Part-3':norm(20)};
   return out;
 }
 function fallback(){
@@ -1167,7 +1217,7 @@ function build(){
     const items=[...m.items];
     const extras=Object.keys(DATA[m.id]||{}).filter(t=>!known.has(t));
     if(extras.length){items.push({g:'More question types'});extras.forEach(t=>items.push({t,n:prettify(t),i:'',d:'More free IELTS practice for this question type.'}));}
-    let g=`<div class="mod-h reveal"><div><h2>${m.title}</h2><p>${m.d}</p></div><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">${m.id==='reading'?'<a class="btn btn-red" href="/reading-exercises">Practice by Question Type →</a>':''}${m.id==='listening'?'<a class="btn btn-red" href="/listening-exercises">Practice by Question Type →</a>':''}<a class="btn btn-outline" href="${m.all}">Only ${m.name} tests →</a></div></div>`;
+    let g=`<div class="mod-h reveal"><div><h2>${m.title}</h2><p>${m.d}</p></div><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">${m.id==='reading'?'<a class="btn btn-red" href="/reading-exercises">Practice by Question Type →</a>':''}${m.id==='listening'?'<a class="btn btn-red" href="/listening-exercises">Practice by Question Type →</a>':''}${m.id==='writing'?'<a class="btn btn-red" href="/writing-exercises">Practice by Question Type →</a>':''}${m.id==='speaking'?'<a class="btn btn-red" href="/speaking.html#speaking-tests">Practice by Part →</a>':''}<a class="btn btn-outline" href="${m.all}">Only ${m.name} tests →</a></div></div>`;
     if(m.id==='reading'){
       g+=`
         <div class="reading-feature-banner reveal">
@@ -1208,6 +1258,46 @@ function build(){
           </a>
         </div>
       `;
+    } else if(m.id==='speaking'){
+      g+=`
+        <div class="reading-feature-banner reveal">
+          <div class="rf-content">
+            <span class="rf-badge">NEW • AI EXAMINER</span>
+            <h3>Practice IELTS Speaking by Part</h3>
+            <p>Talk to a lifelike 3D examiner with a natural British voice (male or female). Practise Part 1, Part 2 or Part 3 on its own, or sit the full test, and get an instant band score with sentence-level upgrades.</p>
+            <div class="rf-chips">
+              <span>✓ Part 1 Interview</span>
+              <span>✓ Part 2 Cue Card + Timer</span>
+              <span>✓ Part 3 Discussion</span>
+              <span>✓ Live Speech Recognition</span>
+              <span>✓ 5 Full Tests</span>
+            </div>
+          </div>
+          <a href="/speaking.html#speaking-tests" class="btn-banner">
+            Explore All Speaking Tests →
+          </a>
+        </div>
+      `;
+    } else if(m.id==='writing'){
+      g+=`
+        <div class="reading-feature-banner reveal">
+          <div class="rf-content">
+            <span class="rf-badge">CAMBRIDGE 12–21 • TIMED PRACTICE</span>
+            <h3>Practice IELTS Writing by Task Type</h3>
+            <p>Master every Task 1 visual type and every Task 2 essay type with a live word count, timed interface, and AI band score evaluation. Authentic questions from Cambridge IELTS Books 12 to 21.</p>
+            <div class="rf-chips">
+              <span>✓ Bar Chart &amp; Line Graph</span>
+              <span>✓ Maps &amp; Process Diagrams</span>
+              <span>✓ Opinion &amp; Discussion Essays</span>
+              <span>✓ Live Word Count</span>
+              <span>✓ AI Band Score</span>
+            </div>
+          </div>
+          <a href="/writing-exercises" class="btn-banner">
+            Explore All Writing Exercises →
+          </a>
+        </div>
+      `;
     }
     g+=`<div class="grid">`;
     let k=0,grp='',pending='';
@@ -1219,20 +1309,27 @@ function build(){
       k++;
       const isReading = m.id === 'reading';
       const isListening = m.id === 'listening';
-      const isExercisesMode = isReading || isListening;
+      const isSpeaking = m.id === 'speaking';
+      const isWriting = m.id === 'writing';
+      const isExercisesMode = isReading || isListening || isSpeaking || isWriting;
       const exercisesBaseUrl = isReading ? '/reading-exercises' : '/listening-exercises';
-      const setsCount = isReading ? '100+ exercises' : (isListening ? '70+ exercises' : `${list.length} set${list.length===1?'':'s'}`);
+      const exercisesHref = isSpeaking
+        ? `/speaking.html?part=${String(o.t).replace('Part-','')}#speaking-tests`
+        : isWriting
+          ? `/writing-exercises?type=${encodeURIComponent(o.t)}`
+          : `${exercisesBaseUrl}?type=${encodeURIComponent(o.t)}`;
+      const setsCount = isReading ? '100+ exercises' : (isListening ? '70+ exercises' : (isSpeaking ? '5 tests' : (isWriting ? `${list.length} set${list.length===1?'':'s'}` : `${list.length} set${list.length===1?'':'s'}`)));
       totalTypes += 1;
       totalSets += (isReading ? 100 : (isListening ? 70 : list.length));
       const body = isExercisesMode
         ? `<div class="reading-card-cta">
-            <a href="${exercisesBaseUrl}?type=${encodeURIComponent(o.t)}" class="btn-card-reading">
+            <a href="${exercisesHref}" class="btn-card-reading">
               <span>Practice ${esc(o.n)}</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
             </a>
            </div>`
         : (list.length ? `<div class="sets">${setsHTML(m,o.t,list)}</div>` : `<div class="soon">Coming soon</div>`);
-      g+=`<article class="card reveal" data-s="${esc((m.name+' '+o.n+' '+grp+' '+o.d+' ielts practice').toLowerCase())}"><span class="bignum">${String(k).padStart(2,'0')}</span><div class="ico" aria-hidden="true">${getSvgIcon(o.t, m.id)}</div><h3>${esc(o.n)}</h3><p>${esc(o.d)}</p><div class="meta"><span>${m.name}${grp?' · '+grp.replace('Task 1 · ','T1 ').replace('Task 2 · ','T2 '):''}</span><span>${m.meta}</span><span class="cnt">${setsCount}</span><span class="ok">Free</span></div>${body}</article>`;
+      g+=`<article class="card reveal"${m.id==='speaking'?` id="sp-${o.t}"`:''} data-s="${esc((m.name+' '+o.n+' '+grp+' '+o.d+' ielts practice').toLowerCase())}"><span class="bignum">${String(k).padStart(2,'0')}</span><div class="ico" aria-hidden="true">${getSvgIcon(o.t, m.id)}</div><h3>${esc(o.n)}</h3><p>${esc(o.d)}</p><div class="meta"><span>${m.name}${grp?' · '+grp.replace('Task 1 · ','T1 ').replace('Task 2 · ','T2 '):''}</span><span>${m.meta}</span><span class="cnt">${setsCount}</span><span class="ok">Free</span></div>${body}</article>`;
     });
     s.innerHTML=g+'</div>';hub.appendChild(s);
   });
@@ -1246,7 +1343,7 @@ function countTo(el,end){
 }
 
 /* ---------- tabs / search ---------- */
-const tabs=$('tabs');const __skillParam=(new URLSearchParams(location.search).get('skill')||'').toLowerCase();let cur=['reading','listening','writing'].includes(__skillParam)?__skillParam:'all';
+const tabs=$('tabs');const __skillParam=(new URLSearchParams(location.search).get('skill')||'').toLowerCase();let cur=['reading','listening','writing','speaking'].includes(__skillParam)?__skillParam:'all';
 function buildTabs(){
   tabs.innerHTML='';
   const cnt=id=>{
@@ -1362,9 +1459,9 @@ function buildLD(){
 
 /* start */
 skeleton();
-countTo($('stS'),3);
-loadCounts().then(d=>{DATA=d;build();if(__skillParam||location.hash==='#hub'){const el=$('hub-bar')||$('hub');if(el)setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),60);}});
-function syncSkillFromUrl(scroll){const sp=(new URLSearchParams(location.search).get('skill')||'').toLowerCase();cur=['reading','listening','writing'].includes(sp)?sp:'all';tabs.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x.dataset.id===cur));filter(true);if(scroll&&(sp||location.hash==='#hub')){const el=$('hub-bar')||$('hub');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}}
+countTo($('stS'),4);
+loadCounts().then(d=>{DATA=d;build();if(__skillParam||location.hash==='#hub'||location.hash.indexOf('#sp-')===0){const el=(location.hash.indexOf('#sp-')===0&&document.getElementById(location.hash.slice(1)))||$('hub-bar')||$('hub');if(el)setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),60);}});
+function syncSkillFromUrl(scroll){const sp=(new URLSearchParams(location.search).get('skill')||'').toLowerCase();cur=['reading','listening','writing','speaking'].includes(sp)?sp:'all';tabs.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x.dataset.id===cur));filter(true);if(scroll&&(sp||location.hash==='#hub'||location.hash.indexOf('#sp-')===0)){const el=(location.hash.indexOf('#sp-')===0&&document.getElementById(location.hash.slice(1)))||$('hub-bar')||$('hub');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}}
 addEventListener('popstate',()=>syncSkillFromUrl(false));
 document.addEventListener('click',e=>{const a=e.target.closest('a[href^="/practice-hub"]');if(!a)return;try{const u=new URL(a.href,location.origin);if(u.pathname.replace(/\.html$/,'')==='/practice-hub'){e.preventDefault();history.pushState(null,'',u.pathname+u.search+u.hash);syncSkillFromUrl(true);dispatchEvent(new PopStateEvent('popstate'));}}catch(_){}});
 </script>

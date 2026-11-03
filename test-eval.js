@@ -31,7 +31,7 @@ async function evaluate(topic, essay) {
   // ১. প্রথমে Google Gemini দিয়ে চেষ্টা
   try {
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash",
+      model: "gemini-3.5-flash",
       systemInstruction: SYSTEM_PROMPT,
       generationConfig: { responseMimeType: "application/json" }
     });
@@ -41,7 +41,7 @@ async function evaluate(topic, essay) {
     console.warn("Gemini unavailable/busy, switching to Groq...", geminiErr.message);
 
     // ২. ফলব্যাক: Groq
-    const groqModels = ["llama-3.3-70b-versatile", "llama-3.1-8b-instant", "mixtral-8x7b-32768"];
+    const groqModels = ["openai/gpt-oss-120b", "qwen/qwen3.8-27b", "mixtral-8x7b-32768"];
     for (const modelName of groqModels) {
       try {
         console.log(`Evaluating using Groq model: ${modelName}`);

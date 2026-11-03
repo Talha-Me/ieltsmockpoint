@@ -65,20 +65,39 @@
 // async function submitTest() {
 //   inputCheckUpdated();
 //   sessionStorage.setItem("listeningIscompleted", "true");
+// try { localStorage.removeItem("listeningDraftAnswers"); sessionStorage.removeItem("listeningDraftAnswers"); } catch(e) {}
 //   const [scoreToSend, mistakesToSend] = findDifferences(answerArrayUpdated, officialAnswers);
 
 //   try {
 //     await fetch('/api/update-mock-info', {
 //       method: 'POST',
 //       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify({ score: scoreToSend, mistakes: mistakesToSend, mod: "listening" })
+//       body: JSON.stringify({
+// score: scoreToSend,
+// mistakes: mistakesToSend,
+// mod: "listening",
+// answers: answerArrayUpdated,
+// testId: (typeof mockID !== "undefined" && mockID) || (typeof parsedQuestionData !== "undefined" && parsedQuestionData.mockNumber) || sessionStorage.getItem("currentMockId") || localStorage.getItem("currentMockId") || ""
+// })
 //     });
 //   } catch (err) {
 //     console.error("Score sync error:", err);
 //   }
 
 //   // লিসেনিং শেষ হলে সরাসরি মক পেজে রিডাইরেক্ট করবে যাতে Reading Video চালু হয়
-//   window.location.href = "/mock-test";
+//     const currentTestId = (typeof mockID !== "undefined" && mockID) || (typeof parsedQuestionData !== "undefined" && parsedQuestionData.mockNumber) || sessionStorage.getItem("currentMockId") || localStorage.getItem("currentMockId") || "";
+  if (currentTestId) {
+    try {
+      localStorage.removeItem("ielts_draft_listening_" + currentTestId);
+      sessionStorage.removeItem("ielts_draft_listening_" + currentTestId);
+    } catch(e) {}
+  }
+  try {
+    localStorage.removeItem("listeningDraftAnswers");
+    sessionStorage.removeItem("listeningDraftAnswers");
+  } catch(e) {}
+
+  window.location.href = "/mock-test";
 // }
 
 // // ==========================================
@@ -882,7 +901,13 @@
 //     await fetch('/api/update-mock-info', {
 //       method: 'POST',
 //       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify({ score: scoreToSend, mistakes: mistakesToSend, mod: "listening" })
+//       body: JSON.stringify({
+// score: scoreToSend,
+// mistakes: mistakesToSend,
+// mod: "listening",
+// answers: answerArrayUpdated,
+// testId: (typeof mockID !== "undefined" && mockID) || (typeof parsedQuestionData !== "undefined" && parsedQuestionData.mockNumber) || sessionStorage.getItem("currentMockId") || localStorage.getItem("currentMockId") || ""
+// })
 //     });
 //   } catch (err) {
 //     console.error("Score sync error:", err);
@@ -2245,7 +2270,13 @@ async function submitTest() {
     await fetch('/api/update-mock-info', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ score: scoreToSend, mistakes: mistakesToSend, mod: "listening" })
+      body: JSON.stringify({
+        score: scoreToSend,
+        mistakes: mistakesToSend,
+        mod: "listening",
+        answers: answerArrayUpdated,
+        testId: (typeof mockID !== "undefined" && mockID) || (typeof parsedQuestionData !== "undefined" && parsedQuestionData.mockNumber) || sessionStorage.getItem("currentMockId") || localStorage.getItem("currentMockId") || ""
+      })
     });
   } catch (err) {
     console.error("Score sync error:", err);
@@ -3648,7 +3679,13 @@ async function submitTestWithoutRemainingModules() {
     await fetch('/api/update-mock-info', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ score: scoreToSend, mistakes: mistakesToSend, mod: "listening" })
+      body: JSON.stringify({
+        score: scoreToSend,
+        mistakes: mistakesToSend,
+        mod: "listening",
+        answers: answerArrayUpdated,
+        testId: (typeof mockID !== "undefined" && mockID) || (typeof parsedQuestionData !== "undefined" && parsedQuestionData.mockNumber) || sessionStorage.getItem("currentMockId") || localStorage.getItem("currentMockId") || ""
+      })
     });
   } catch (err) {
     console.error("Score sync error:", err);
@@ -4039,3 +4076,144 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 })();
 });
+
+// ==========================================
+// 13. AUTO-SAVE & DRAFT RECOVERY (TEST-SPECIFIC ISOLATION)
+// ==========================================
+let listeningAutoSaveTimer = null;
+
+function getListeningTestId() {
+  return (typeof mockID !== "undefined" && mockID) ||
+    (typeof parsedQuestionData !== "undefined" && parsedQuestionData && parsedQuestionData.mockNumber) ||
+    sessionStorage.getItem("currentMockId") ||
+    localStorage.getItem("currentMockId") || "";
+}
+
+function autoSaveListeningDraft() {
+  try {
+    inputCheckUpdated();
+    const testId = getListeningTestId();
+    if (!testId) return;
+
+    // 1. Test-specific isolated local backup
+    const draftKey = "ielts_draft_listening_" + testId;
+    const payload = JSON.stringify({
+      testId: testId,
+      module: "listening",
+      updatedAt: Date.now(),
+      answers: answerArrayUpdated
+    });
+
+    localStorage.setItem(draftKey, payload);
+    sessionStorage.setItem(draftKey, payload);
+
+    // Clear legacy generic keys
+    localStorage.removeItem("listeningDraftAnswers");
+    sessionStorage.removeItem("listeningDraftAnswers");
+
+    // 2. Cloud auto-save if logged in
+    const u = JSON.parse(localStorage.getItem("user") || "null");
+    const email = u && u.email ? u.email : "";
+
+    fetch("/api/student/auto-save", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        testId,
+        testType: testId.includes("Premium") ? "Premium Full Mock" : "Academic Full Mock",
+        module: "listening",
+        answers: answerArrayUpdated,
+        email
+      })
+    }).catch(() => {});
+  } catch (e) {
+    console.warn("Listening auto-save notice:", e);
+  }
+}
+
+function restoreListeningDraft() {
+  try {
+    const testId = getListeningTestId();
+    if (!testId) return;
+
+    // Purge legacy generic keys
+    localStorage.removeItem("listeningDraftAnswers");
+    sessionStorage.removeItem("listeningDraftAnswers");
+
+    const draftKey = "ielts_draft_listening_" + testId;
+    const raw = localStorage.getItem(draftKey) || sessionStorage.getItem(draftKey);
+    if (!raw) return;
+
+    const parsed = JSON.parse(raw);
+    // STRICT VALIDATION: Only restore if draft testId strictly matches current testId
+    if (!parsed || parsed.testId !== testId || !parsed.answers) {
+      return;
+    }
+
+    const draft = parsed.answers;
+    if (!draft || typeof draft !== "object") return;
+
+    document.querySelectorAll("input").forEach((input) => {
+      const id = input.getAttribute("data-question-id") || input.placeholder;
+      if (id && draft[id] && draft[id][0] !== undefined) {
+        if (input.type === "text") {
+          input.value = draft[id][0];
+        } else if (input.type === "radio" || input.type === "checkbox") {
+          if (input.value.trim() === draft[id][0]) {
+            input.checked = true;
+          }
+        }
+      }
+      if (input.name && draft[input.name] && draft[input.name][0] !== undefined) {
+        if (input.value.trim() === draft[input.name][0]) {
+          input.checked = true;
+        }
+      }
+    });
+
+    document.querySelectorAll('.matching-information').forEach((select) => {
+      if (select.id && draft[select.id] && draft[select.id][0] !== undefined) {
+        select.value = draft[select.id][0];
+      }
+    });
+
+    document.querySelectorAll('[data-initial="empty"]').forEach((empty) => {
+      if (empty.id && draft[empty.id] && draft[empty.id][0] !== undefined) {
+        empty.textContent = draft[empty.id][0];
+      }
+    });
+    console.log("Listening draft restored successfully for " + testId);
+  } catch (e) {
+    console.warn("Listening draft restore notice:", e);
+  }
+}
+
+// Start auto-save periodic loop (every 3 minutes)
+if (!listeningAutoSaveTimer) {
+  listeningAutoSaveTimer = setInterval(autoSaveListeningDraft, 3 * 60 * 1000);
+}
+
+// Real-time debounce local save on input change
+let listeningDebounceTimeout = null;
+document.addEventListener("input", () => {
+  if (listeningDebounceTimeout) clearTimeout(listeningDebounceTimeout);
+  listeningDebounceTimeout = setTimeout(() => {
+    inputCheckUpdated();
+    try {
+      const testId = getListeningTestId();
+      if (!testId) return;
+      const draftKey = "ielts_draft_listening_" + testId;
+      const payload = JSON.stringify({
+        testId: testId,
+        module: "listening",
+        updatedAt: Date.now(),
+        answers: answerArrayUpdated
+      });
+      localStorage.setItem(draftKey, payload);
+      sessionStorage.setItem(draftKey, payload);
+    } catch(e) {}
+  }, 3000);
+});
+
+// Restore on page load if exam was already rendered
+setTimeout(restoreListeningDraft, 800);
