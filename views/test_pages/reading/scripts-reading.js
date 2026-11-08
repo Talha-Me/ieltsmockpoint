@@ -1,2199 +1,3 @@
-// //part vars
-// let totalParts = 3;
-// let currentPart = 1;
-// const nextButton = document.getElementById("next-button");
-// const prevButton = document.getElementById("previous-button");
-
-// // লিসেনিং + রিডিং স্কোর ও উভয় মডিউলের ভুলের লিস্ট দেখানোর মডাল
-// function showReadingResultModal(score, mistakes) {
-//   const existingModal = document.getElementById("instant-result-modal");
-//   if (existingModal) existingModal.remove();
-
-//   const listeningScore = sessionStorage.getItem("listeningScore") || localStorage.getItem("listeningScore") || "N/A";
-  
-//   // স্টোরেজ থেকে লিসেনিংয়ের ভুলগুলো আনা
-//   let storedListeningMistakes = {};
-//   try {
-//     const rawMistakes = sessionStorage.getItem("listeningMistakes") || localStorage.getItem("listeningMistakes");
-//     if (rawMistakes) storedListeningMistakes = JSON.parse(rawMistakes);
-//   } catch (e) {
-//     console.error("Error parsing listening mistakes:", e);
-//   }
-
-//   // লিসেনিং ভুলের লিস্ট তৈরি
-//   let listeningMistakeHtml = "";
-//   if (Array.isArray(storedListeningMistakes) && storedListeningMistakes.length > 0) {
-//     storedListeningMistakes.forEach((m) => {
-//       listeningMistakeHtml += `
-//         <li style="margin-bottom: 8px; padding: 8px 10px; background: #fff5f5; border-left: 4px solid #e53e3e; border-radius: 6px;">
-//           <div style="font-weight: 600; color: #2d3748; font-size: 13px;">Question ${m.questionNo || m.index || 'N/A'}</div>
-//           <div style="font-size: 12.5px;">Your Answer: <span style="color: #c53030; font-weight: 600;">${m.userAnswer || "Not Answered"}</span> | Correct: <strong style="color: #2f855a;">${m.correctAnswer}</strong></div>
-//         </li>
-//       `;
-//     });
-//   } else if (typeof storedListeningMistakes === 'object' && Object.keys(storedListeningMistakes).length > 0) {
-//     Object.keys(storedListeningMistakes).forEach((key) => {
-//       const item = storedListeningMistakes[key];
-//       listeningMistakeHtml += `
-//         <li style="margin-bottom: 8px; padding: 8px 10px; background: #fff5f5; border-left: 4px solid #e53e3e; border-radius: 6px;">
-//           <div style="font-weight: 600; color: #2d3748; font-size: 13px;">Question ${key}</div>
-//           <div style="font-size: 12.5px;">Your Answer: <span style="color: #c53030; font-weight: 600;">${item["Your answer"] || "Not Answered"}</span> | Correct: <strong style="color: #2f855a;">${item["Correct answer"]}</strong></div>
-//         </li>
-//       `;
-//     });
-//   } else {
-//     listeningMistakeHtml = '<p style="color: #2f855a; font-size: 13px; font-weight: 600; margin: 4px 0;">🎉 All listening answers were correct or not recorded!</p>';
-//   }
-
-//   // রিডিং ভুলের লিস্ট তৈরি
-//   let readingMistakeHtml = "";
-//   const readingMistakeKeys = Object.keys(mistakes || {});
-//   if (readingMistakeKeys.length > 0) {
-//     readingMistakeKeys.forEach((key) => {
-//       const item = mistakes[key];
-//       const yourAns = Array.isArray(item["Your answer"]) ? item["Your answer"].join(", ") : (item["Your answer"] || "Not Answered");
-//       const correctAns = Array.isArray(item["Correct answer"]) ? item["Correct answer"].join(", ") : (item["Correct answer"] || "");
-
-//       readingMistakeHtml += `
-//         <li style="margin-bottom: 8px; padding: 8px 10px; background: #fff5f5; border-left: 4px solid #e53e3e; border-radius: 6px;">
-//           <div style="font-weight: 600; color: #2d3748; font-size: 13px;">Question ${key}</div>
-//           <div style="font-size: 12.5px;">Your Answer: <span style="color: #c53030; font-weight: 600;">${yourAns || "Not Answered"}</span> | Correct: <strong style="color: #2f855a;">${correctAns}</strong></div>
-//         </li>
-//       `;
-//     });
-//   } else {
-//     readingMistakeHtml = '<p style="color: #2f855a; font-size: 13px; font-weight: 600; margin: 4px 0;">🎉 Outstanding! All reading answers are correct!</p>';
-//   }
-
-//   const modalHtml = `
-//     <div id="instant-result-modal" style="position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: flex; align-items: center; justify-content: center; z-index: 99999; font-family: system-ui, -apple-system, sans-serif;">
-//       <div style="background: #ffffff; border-radius: 12px; max-width: 600px; width: 92%; max-height: 85vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.3);">
-        
-//         <!-- হেডার ও স্কোর -->
-//         <div style="background: #1a365d; color: white; padding: 20px; text-align: center;">
-//           <h2 style="margin: 0; font-size: 20px; font-weight: 600;">Test Summary</h2>
-//           <div style="display: flex; justify-content: center; gap: 20px; margin-top: 14px;">
-//             <div style="background: rgba(255,255,255,0.1); padding: 8px 20px; border-radius: 8px;">
-//               <div style="font-size: 12px; opacity: 0.85;">Listening Score</div>
-//               <div style="font-size: 24px; font-weight: bold; color: #63b3ed;">${listeningScore} / 40</div>
-//             </div>
-//             <div style="background: rgba(255,255,255,0.1); padding: 8px 20px; border-radius: 8px;">
-//               <div style="font-size: 12px; opacity: 0.85;">Reading Score</div>
-//               <div style="font-size: 24px; font-weight: bold; color: #68d391;">${score} / 40</div>
-//             </div>
-//           </div>
-//         </div>
-
-//         <!-- ভুলের ব্রেকডাউন -->
-//         <div style="padding: 16px 20px; overflow-y: auto; flex: 1;">
-//           <h4 style="margin: 0 0 8px; color: #2d3748; font-size: 15px; border-bottom: 2px solid #edf2f7; padding-bottom: 4px;">🎧 Listening Mistakes:</h4>
-//           <ul style="list-style: none; padding: 0; margin: 0 0 16px;">${listeningMistakeHtml}</ul>
-
-//           <h4 style="margin: 0 0 8px; color: #2d3748; font-size: 15px; border-bottom: 2px solid #edf2f7; padding-bottom: 4px;">📖 Reading Mistakes:</h4>
-//           <ul style="list-style: none; padding: 0; margin: 0;">${readingMistakeHtml}</ul>
-//         </div>
-
-//         <!-- ফুটার বাটন -->
-//         <div style="padding: 14px 20px; background: #f7fafc; text-align: right; border-top: 1px solid #e2e8f0;">
-//           <button id="close-result-btn" style="padding: 10px 22px; background: #2b6cb0; color: white; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer;">
-//             Back to Home
-//           </button>
-//         </div>
-
-//       </div>
-//     </div>
-//   `;
-
-//   document.body.insertAdjacentHTML("beforeend", modalHtml);
-//   document.getElementById("close-result-btn").addEventListener("click", () => {
-//     window.location.href = "/select-mock";
-//   });
-// }
-
-// // Next Part (Writing) অথবা Quit করার কনফার্মেশন মডাল
-// function showMockConfirmationModal(score, mistakes) {
-//   const existingConfirm = document.getElementById("mock-confirm-modal");
-//   if (existingConfirm) existingConfirm.remove();
-
-//   const confirmHtml = `
-//     <div id="mock-confirm-modal" style="position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 99999; font-family: system-ui, -apple-system, sans-serif;">
-//       <div style="background: white; border-radius: 12px; max-width: 460px; width: 90%; padding: 25px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
-//         <h3 style="margin-top: 0; color: #2d3748;">Reading Part Finished!</h3>
-//         <p style="color: #4a5568; font-size: 14.5px; margin-bottom: 25px; line-height: 1.5;">
-//           আপনি কি পরের পার্ট (Writing)-এ যেতে চান? নাকি এক্সাম Quit করে এখনই রিডিং রেজাল্ট দেখতে চান?
-//         </p>
-//         <div style="display: flex; gap: 12px; justify-content: center;">
-//           <button id="quit-test-btn" style="padding: 10px 18px; background: #e53e3e; color: white; border: none; border-radius: 6px; font-size: 14px; cursor: pointer; font-weight: 500;">
-//             Quit & View Result
-//           </button>
-//           <button id="proceed-writing-btn" style="padding: 10px 20px; background: #3182ce; color: white; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer;">
-//             Proceed to Writing
-//           </button>
-//         </div>
-//       </div>
-//     </div>
-//   `;
-
-//   document.body.insertAdjacentHTML("beforeend", confirmHtml);
-
-//   // Quit করলে সরাসরি স্ক্রিনে রেজাল্ট দেখাবে
-//   document.getElementById("quit-test-btn").addEventListener("click", () => {
-//     document.getElementById("mock-confirm-modal").remove();
-//     showReadingResultModal(score, mistakes);
-//   });
-
-//   // Proceed দিলে রাইটিংয়ের ইনস্ট্রাকশন ভিডিও পেজে নিয়ে যাবে
-//   document.getElementById("proceed-writing-btn").addEventListener("click", () => {
-//       const currentTestId = (typeof mockID !== "undefined" && mockID) || (typeof parsedQuestionData !== "undefined" && parsedQuestionData.mockNumber) || sessionStorage.getItem("currentMockId") || localStorage.getItem("currentMockId") || "";
-  if (currentTestId) {
-    try {
-      localStorage.removeItem("ielts_draft_reading_" + currentTestId);
-      sessionStorage.removeItem("ielts_draft_reading_" + currentTestId);
-    } catch(e) {}
-  }
-  try {
-    localStorage.removeItem("readingDraftAnswers");
-    sessionStorage.removeItem("readingDraftAnswers");
-  } catch(e) {}
-
-  window.location.href = "/mock-test";
-//   });
-// }
-
-// // রিডিং সাবমিট ফাংশন
-// async function submitTest() {
-//   inputCheckUpdated();
-//   sessionStorage.setItem("readingIsCompleted", "true");
-// try { localStorage.removeItem("readingDraftAnswers"); sessionStorage.removeItem("readingDraftAnswers"); } catch(e) {}
-//   const [scoreToSend, mistakesToSend] = findDifferences(answerArrayUpdated, answers);
-//   // 👉 এই লাইনগুলো যোগ করে দাও:
-//   sessionStorage.setItem("readingScore", scoreToSend);
-//   localStorage.setItem("readingScore", scoreToSend);
-//   sessionStorage.setItem("readingMistakes", JSON.stringify(mistakesToSend));
-//   localStorage.setItem("readingMistakes", JSON.stringify(mistakesToSend));
-
-//   // ব্যাকএন্ডে রিডিং স্কোর পাঠানো
-//   try {
-//     await fetch('/api/update-mock-info', {
-//       method: 'POST',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify({
-// score: scoreToSend,
-// mistakes: mistakesToSend,
-// mod: "reading",
-// answers: answerArrayUpdated,
-// testId: (typeof mockID !== "undefined" && mockID) || (typeof parsedQuestionData !== "undefined" && parsedQuestionData.mockNumber) || sessionStorage.getItem("currentMockId") || localStorage.getItem("currentMockId") || ""
-// })
-//     });
-//   } catch (err) {
-//     console.error("Score sync error:", err);
-//   }
-
-//   showMockConfirmationModal(scoreToSend, mistakesToSend);
-// }
-
-// async function userData() {
-//   try {
-//     const res = await fetch("/api/user-data");
-//     if (res.ok) {
-//       const data = await res.json();
-//       return data;
-//     }
-//   } catch (err) {
-//     console.error("User data fetch error:", err);
-//   }
-// }
-
-// document.addEventListener("DOMContentLoaded", async (e) => {
-//   e.preventDefault();
-//   const user = await userData();
-//   const userDiv = document.getElementById("userID");
-//   if (userDiv && user) {
-//     userDiv.textContent = user.username;
-//   }
-// });
-
-// // Input check and fill
-// const answerArrayUpdated = {};
-// function inputCheckUpdated() {
-//   const inputs = document.querySelectorAll("input");
-//   inputs.forEach((input) => {
-//     if (input.type == "text") {
-//       const id = input.placeholder;
-//       const answer = input.value.trim();
-//       answerArrayUpdated[id] = [answer];
-//     }
-//     if (input.checked) {
-//       const id = input.name;
-//       const answer = input.value.trim();
-//       answerArrayUpdated[id] = [answer];
-//     }
-//   });
-
-//   const selectInputs = document.querySelectorAll('.matching-information');
-//   selectInputs.forEach((selectedInput) => {
-//     const id = selectedInput.id;
-//     answerArrayUpdated[id] = [selectedInput.value];
-//   });
-
-//   const emptyInitially = document.querySelectorAll('[data-initial="empty"]');
-//   emptyInitially.forEach((empty) => {
-//     const id = empty.id;
-//     answerArrayUpdated[id] = [empty.textContent];
-//   });
-// }
-
-// const mistakes = {};
-// function findDifferences(your_answer, realAnswers) {
-//   var totalScore = 40;
-
-//   for (const key in realAnswers) {
-//     const yourAns = your_answer[key] || [];
-//     const realAns = realAnswers[key];
-
-//     const matchFound = yourAns.some((ans) => realAns.includes(ans.toLowerCase()));
-
-//     if (!matchFound) {
-//       mistakes[key] = {
-//         "Your answer": yourAns,
-//         "Correct answer": realAns
-//       };
-//       totalScore--;
-//     }
-//   }
-
-//   return [totalScore, mistakes];
-// }
-
-// setTimeout(inputCheckUpdated, 0.5 * 60 * 1000);
-
-// const submitBtn = document.getElementById("finishBtn");
-// const submitModal = document.getElementById("submit-warning-modal");
-// if (submitBtn) {
-//   submitBtn.addEventListener("click", async function (e) {
-//     e.preventDefault();
-//     if (submitModal) submitModal.style.display = "flex";
-//   });
-// }
-
-// const submitOkButton = document.getElementById("submit-ok-btn");
-// const submitStayButton = document.getElementById("submit-stay-btn");
-
-// if (submitOkButton) {
-//   submitOkButton.addEventListener("click", async (e) => {
-//     e.preventDefault();
-//     if (submitModal) submitModal.style.display = "none";
-//     await submitTest();
-//   });
-// }
-
-// if (submitStayButton) {
-//   submitStayButton.addEventListener("click", async (e) => {
-//     e.preventDefault();
-//     if (submitModal) submitModal.style.display = "none";
-//   });
-// }
-
-// window.addEventListener("keydown", function (e) {
-//   if (e.key === "F3" || (e.ctrlKey && e.key === "f") || (e.ctrlKey && e.key === "F")) {
-//     e.preventDefault();
-//   }
-// });
-
-// // Fullscreen check
-// const fullscreenModal = document.getElementById("fullscreen-warning-modal");
-// const fullscreenOkBtn = document.getElementById("fullscreen-ok-btn");
-// const fullscreenStayBtn = document.getElementById("fullscreen-stay-btn");
-
-// document.addEventListener("fullscreenchange", () => {
-//   if (!document.fullscreenElement) {
-//     if (fullscreenModal) fullscreenModal.style.display = "flex";
-//   }
-// });
-
-// if (fullscreenOkBtn) {
-//   fullscreenOkBtn.onclick = async function () {
-//     if (fullscreenModal) fullscreenModal.style.display = "none";
-//     await submitTest();
-//   };
-// }
-
-// // Stay button re-enters fullscreen
-// fullscreenStayBtn.onclick = function() {
-//   fullscreenModal.style.display = "none";
-//   document.documentElement.requestFullscreen().catch(() => {});
-// };
-
-// //fullscreen check
-
-
-
-
-
-// //popup settings logic
-// const popupSettings = document.getElementById("popup-settings");
-// const popupNote = document.getElementById("popup-note");
-// function settingsMenu(){
-//     popupSettings.classList.toggle("menu-visible")
-// }
-
-// function closeSettings(){
-//     popupSettings.classList.remove("menu-visible")
-//     popupNote.classList.remove("menu-visible");
-// }
-
-// function openNotes(){
-//     popupNote.classList.toggle("menu-visible");
-// }
-// //popup settings logic
-
-// //popup for starting reading
-//   function openListeningPopup() {
-//     document.getElementById("listeningOverlay").style.display = "flex";
-//     document.body.classList.add("listening-popup-active");
-//   }
-
-//   function closeListeningPopup() {
-//     const overlay = document.getElementById("listeningOverlay");
-//     overlay.style.display = "none";
-//     document.body.classList.remove("listening-popup-active");
-
-//     // Try fullscreen (fallback if disallowed)
-//     const elem = document.documentElement;
-//     if (elem.requestFullscreen) {
-//       elem.requestFullscreen().catch(err => console.warn("Fullscreen blocked:", err));
-//     }
-
-//     // Resume your site logic (example: play audio if present)
-//     //timer logic (timer blunt)
-
-// const timer = document.getElementById("timer");
-
-// let minutesRemaining = parseInt(timer.textContent);
-
-
-// const interval = setInterval(async()=>{
-//   minutesRemaining -= 1;
-
-
-//   if(minutesRemaining <= 10){
-//     const timerBlunt = document.querySelector(".timer-blunt");
-//     const timerSpecific = document.querySelector(".timer-specific");
-
-//     timerSpecific.style.opacity = 1;
-//     timerSpecific.style.color = "red";
-//     timerBlunt.style.opacity = 0;
-//   }
-//   if(minutesRemaining <= 0){
-//     timer.textContent = '0';
-//     await submitTest();
-//     clearInterval(interval);
-//   }else{
-//     timer.textContent = minutesRemaining;
-//   }
-// }, 1 * 60 * 1000);
-
-
-// //timer logic (timer specific)
-
-// const minutesDisplay = document.getElementById("minutes");
-// const secondsDisplay = document.getElementById("seconds");
-// let timerSpecific;
-// let totalSeconds = 60 * 60
-// function updateTimerDisplay(){
-//   let minutes = Math.floor(totalSeconds / 60);
-//   let seconds = totalSeconds % 60;
-//   minutesDisplay.textContent = String(minutes).padStart(2, "0");
-//   secondsDisplay.textContent = String(seconds).padStart(2, "0");
-// }
-
-// function startTimer(){
-//   timerSpecific = setInterval(function (){
-//     if(totalSeconds <= 0){
-//       clearInterval(timerSpecific);
-//     }else{
-//       totalSeconds--;
-//       updateTimerDisplay()
-//     }
-//   }, 1000);
-// }
-
-// startTimer();
-//   }
-//   openListeningPopup();
-// //popup for starting reading
-
-
-// //part logic
-// function showPart(part){
-//   for (let i=1; i <= totalParts; i++){
-//     document.getElementById(`part-${i}`).style.display = i === part ?
-//     "block" : "none";
-//   }
-//   currentPart = part;
-  
-// }
-
-
-
-// function showNext(event){
-//   event.preventDefault();
-//   if(currentPart < totalParts){
-//     currentPart++;
-//     showPart(currentPart);
-//   }
-// }
-
-// function showPrevious(event){
-//   event.preventDefault()
-//   if(currentPart > 1){
-//     currentPart--;
-//     showPart(currentPart);
-//   }
-// }
-
-// function update(){
-//   if(currentPart == 3){
-//     nextButton.classList.add("bton-grey");
-//     nextButton.classList.remove("next");
-//     //console.log(currentPart);
-//   }else{
-//     nextButton.classList.add("next");
-//   }
-//   if(currentPart == 1){
-//     prevButton.classList.add("bton-grey");
-//     prevButton.classList.remove("prev");
-//   }else{
-//     prevButton.classList.add("prev");
-//   }
-// }
-
-// setInterval(update, 1);
-
-
-
-
-
-// //updating question section
-// const questionData = localStorage.getItem("data");
-// const parsedQuestionData = JSON.parse(questionData);
-
-
-// //insert from database
-// const passages = parsedQuestionData.reading.passages;
-// const questions = parsedQuestionData.reading.questions;
-// const instructions = parsedQuestionData.reading.instructions;
-// const answers = parsedQuestionData.reading.answers; 
-// //insert from database
-
-
-// const part1Margin = document.getElementById('part-margin-1');
-// const part1QuestionSection = document.getElementById('question-section-1');
-// const part2Margin = document.getElementById('part-margin-2');
-// const part2QuestionSection = document.getElementById('question-section-2');
-// const part3Margin = document.getElementById('part-margin-3');
-// const part3QuestionSection = document.getElementById('question-section-3');
-
-// const questionContainer = document.getElementById("test-content");
-
-
-// const seenGroups = new Set();
-// const groupCounts = new Map();
-
-
-// //part-range logic
-// let part1IDS = [];
-// let part2IDS = [];
-// let part3IDS = [];
-// questions.forEach((part)=>{
-//   if(part.part == 1){
-//     part1IDS.push(part.id);
-//   }
-//   if(part.part == 2){
-//     part2IDS.push(part.id);
-//   }
-//   if(part.part == 3){
-//     part3IDS.push(part.id);
-//   }
-// })
-// console.log(findHighest(part1IDS));
-// console.log(part2IDS);
-// console.log(part3IDS);
-
-// const part1Lowest = findLowest(part1IDS);
-// const part1Highest = findHighest(part1IDS);
-
-// const part2Lowest = findLowest(part2IDS);
-// const part2Highest = findHighest(part2IDS);
-
-// const part3Lowest = findLowest(part3IDS);
-// const part3Highest = findHighest(part3IDS);
-
-// //part-range logic
-
-// //passage logic
-// passages.forEach((passage)=>{
-//   if(passage.part == 1){
-//     const passageScroll = document.getElementById(`passage-scroll-${passage.part}`);
-
-//     const passageSection = document.getElementById(`passage-section-${passage.part}`)
-//     const title = document.createElement("h2");
-//     title.textContent = passage.title;
-//     passageScroll.appendChild(title);
-//     passage.paragraphs.forEach((paragraph, index)=>{
-//       const paraHeading = document.createElement("div");
-//       paraHeading.classList.add("para-heading");
-//       paraHeading.setAttribute("id", `para-heading-${paragraph}`);
-//       paraHeading.textContent = paragraph;
-//       passageScroll.appendChild(paraHeading);
-//       passage["paragraph-content"][index].forEach((para)=>{
-//         const paraDIV = document.createElement("div");
-//         paraDIV.classList.add("para");
-//         paraDIV.setAttribute("id", `para-${paragraph}-${passage.part}`);
-//         paraDIV.innerHTML = para;
-//         passageScroll.appendChild(paraDIV);
-//       })
-//     })
-
-//     passageSection.appendChild(passageScroll);
-
-//     //part-header
-//     const partHeaderDIV = document.getElementById(`part-header-${passage.part}`);
-//     const partHeaderP = document.createElement("p");
-//     partHeaderP.classList.add("part-header-p");
-//     partHeaderP.textContent = `Read the text and answer questions ${part1Lowest} - ${part1Highest}`
-//     partHeaderDIV.appendChild(partHeaderP);
-//   }
-
-//   if(passage.part == 2){
-
-//     const passageScroll = document.getElementById(`passage-scroll-${passage.part}`);
-
-
-//     const passageSection = document.getElementById(`passage-section-${passage.part}`)
-//     const title = document.createElement("h2");
-//     title.textContent = passage.title;
-//     passageScroll.appendChild(title);
-//     passage.paragraphs.forEach((paragraph, index)=>{
-//       const paraHeading = document.createElement("div");
-//       paraHeading.classList.add("para-heading");
-//       paraHeading.setAttribute("id", `para-heading-${paragraph}`);
-//       paraHeading.textContent = paragraph;
-//       passageScroll.appendChild(paraHeading);
-//       passage["paragraph-content"][index].forEach((para)=>{
-//         const paraDIV = document.createElement("div");
-//         paraDIV.classList.add("para");
-//         paraDIV.setAttribute("id", `para-${paragraph}-${passage.part}`);
-//         paraDIV.innerHTML = para;
-//         passageScroll.appendChild(paraDIV);
-//       })
-//     })
-
-//     passageSection.appendChild(passageScroll);
-
-
-//     //part-header
-//     const partHeaderDIV = document.getElementById(`part-header-${passage.part}`);
-//     const partHeaderP = document.createElement("p");
-//     partHeaderP.classList.add("part-header-p");
-//     partHeaderP.textContent = `Read the text and answer questions ${part2Lowest} - ${part2Highest}`
-//     partHeaderDIV.appendChild(partHeaderP);
-//   }
-
-//   if(passage.part == 3){
-
-//     const passageScroll = document.getElementById(`passage-scroll-${passage.part}`);
-
-
-//     const passageSection = document.getElementById(`passage-section-${passage.part}`)
-//     const title = document.createElement("h2");
-//     title.textContent = passage.title;
-//     passageScroll.appendChild(title);
-//     passage.paragraphs.forEach((paragraph, index)=>{
-//       const paraHeading = document.createElement("div");
-//       paraHeading.classList.add("para-heading");
-//       paraHeading.setAttribute("id", `para-heading-${paragraph}`);
-//       paraHeading.textContent = paragraph;
-//       passageScroll.appendChild(paraHeading);
-//       passage["paragraph-content"][index].forEach((para)=>{
-//         const paraDIV = document.createElement("div");
-//         paraDIV.classList.add("para");
-//         paraDIV.setAttribute("id", `para-${paragraph}-${passage.part}`);
-//         paraDIV.innerHTML = para;
-//         passageScroll.appendChild(paraDIV);
-//       })
-//     })
-
-//     passageSection.appendChild(passageScroll);
-
-
-//     //part-header
-//     const partHeaderDIV = document.getElementById(`part-header-${passage.part}`);
-//     const partHeaderP = document.createElement("p");
-//     partHeaderP.classList.add("part-header-p");
-//     partHeaderP.textContent = `Read the text and answer questions ${part3Lowest} - ${part3Highest}`
-//     partHeaderDIV.appendChild(partHeaderP);
-//   }
-// })
-// //passage logic
-
-
-
-
-
-
-
-
-
-
-
-
-// //insert groups and question types for each part
-// questions.forEach((q)=>{
-//   groupCounts.set(q.group, (groupCounts.get(q.group) || 0) + 1);
-
-//   if(q.part == 1){
-//       if(!seenGroups.has(q.group)){
-//         const groupDiv = document.createElement("div");
-//         groupDiv.classList.add(`group-${q.group}`, "group");
-
-//         //specifically for reading
-//         const TFNotGivenContainer = document.createElement("div");
-//         TFNotGivenContainer.classList.add("True-false-notGiven");
-//         groupDiv.appendChild(TFNotGivenContainer);
-
-//         const YNNotgivenContainer = document.createElement("div");
-//         YNNotgivenContainer.classList.add("Yes-no-notGiven");
-//         groupDiv.appendChild(YNNotgivenContainer);
-
-//         const matchingInformationContainer = document.createElement("div");
-//         matchingInformationContainer.classList.add("matching-information-container");
-//         groupDiv.appendChild(matchingInformationContainer);
-
-
-//         const listOfHeadingsContainer = document.createElement("div");
-//         listOfHeadingsContainer.classList.add("list-of-headings-container");
-//         groupDiv.appendChild(listOfHeadingsContainer);
-
-//         const summaryWithListContainer = document.createElement("div");
-//         summaryWithListContainer.classList.add("summary-with-list-container");
-//         groupDiv.appendChild(summaryWithListContainer);
-
-
-//         const summaryCompletionContainer = document.createElement("div");
-//         summaryCompletionContainer.classList.add("summary-completion");
-//         groupDiv.appendChild(summaryCompletionContainer);
-
-//         //specifically for reading
-
-//         //add each type of container to each group to make life easier...
-//         //mcq(one Choice)
-//         const mcqContainerDiv = document.createElement("div");
-//         mcqContainerDiv.classList.add("mcq-container-one-choice");
-//         groupDiv.appendChild(mcqContainerDiv);
-//         //mcq(two Choice)
-
-//         const mcqContainerTwoDiv = document.createElement("div");
-//         mcqContainerTwoDiv.classList.add("mcq-container-two-choice");
-//         groupDiv.appendChild(mcqContainerTwoDiv);
-
-//         //table completion
-
-//         const tableDiv = document.createElement("div");
-//         tableDiv.classList.add("table-container");
-//         groupDiv.appendChild(tableDiv);
-
-//         //sentence completion
-
-//         const sentenceCompletionDiv = document.createElement("div");
-//         sentenceCompletionDiv.classList.add("sentence-completion-container");
-//         groupDiv.appendChild(sentenceCompletionDiv);
-        
-//         //form completion
-
-//         const formDiv = document.createElement("div");
-//         formDiv.classList.add("form-container");
-//         groupDiv.appendChild(formDiv);
-
-//         //note completion
-
-//         const noteDiv = document.createElement("div");
-//         noteDiv.classList.add("note-container");
-//         groupDiv.appendChild(noteDiv);
-
-//         //flow chart completion
-
-//         const flowChartDiv = document.createElement("div");
-//         flowChartDiv.classList.add("flowchart-container");
-//         groupDiv.appendChild(flowChartDiv);
-        
-
-//         //short answer questions
-
-//         const shortAnswerDiv = document.createElement("div");
-//         shortAnswerDiv.classList.add("short-answer-container");
-//         shortAnswerDiv.classList.add("question");
-//         groupDiv.appendChild(shortAnswerDiv);
-
-//         //matching questions
-
-//         const matchingContainer = document.createElement("div");
-//         matchingContainer.classList.add("matching-container");
-//         groupDiv.appendChild(matchingContainer);
-
-//         //diagram labelling
-
-//         const diagramLabelDiv=  document.createElement("div");
-//         diagramLabelDiv.classList.add("diagram-label-container");
-//         groupDiv.appendChild(diagramLabelDiv);
-
-
-//         const fullNoteCompletionContainer = document.createElement("div");
-//         fullNoteCompletionContainer.classList.add("full-note-completion-container");
-//         groupDiv.appendChild(fullNoteCompletionContainer);
-
-
-//         //matching table container
-
-//         const matchingTableContainer = document.createElement("div");
-//         matchingTableContainer.classList.add("matching-table-container");
-//         groupDiv.appendChild(matchingTableContainer);
-
-
-//         //add each type of container to each group to make life easier...
-      
-//         part1QuestionSection.appendChild(groupDiv);
-//         seenGroups.add(q.group);
-//       }
-//     }
-    
-//     if(q.part == 2){
-//       if(!seenGroups.has(q.group)){
-//         const groupDiv = document.createElement("div");
-//         groupDiv.classList.add(`group-${q.group}`, "group");
-
-//         //specifically for reading
-//         const TFNotGivenContainer = document.createElement("div");
-//         TFNotGivenContainer.classList.add("True-false-notGiven");
-//         groupDiv.appendChild(TFNotGivenContainer);
-
-//         const YNNotgivenContainer = document.createElement("div");
-//         YNNotgivenContainer.classList.add("Yes-no-notGiven");
-//         groupDiv.appendChild(YNNotgivenContainer);
-
-//         const matchingInformationContainer = document.createElement("div");
-//         matchingInformationContainer.classList.add("matching-information-container");
-//         groupDiv.appendChild(matchingInformationContainer);
-
-
-//         const listOfHeadingsContainer = document.createElement("div");
-//         listOfHeadingsContainer.classList.add("list-of-headings-container");
-//         groupDiv.appendChild(listOfHeadingsContainer);
-
-
-//         const summaryWithListContainer = document.createElement("div");
-//         summaryWithListContainer.classList.add("summary-with-list-container");
-//         groupDiv.appendChild(summaryWithListContainer);
-
-
-//         const summaryCompletionContainer = document.createElement("div");
-//         summaryCompletionContainer.classList.add("summary-completion");
-//         groupDiv.appendChild(summaryCompletionContainer);
-//         //specifically for reading
-
-        
-//         //add each type of container to each group to make life easier...
-//         //mcq(one Choice)
-//         const mcqContainerDiv = document.createElement("div");
-//         mcqContainerDiv.classList.add("mcq-container-one-choice");
-//         groupDiv.appendChild(mcqContainerDiv);
-//         //mcq(two Choice)
-
-//         const mcqContainerTwoDiv = document.createElement("div");
-//         mcqContainerTwoDiv.classList.add("mcq-container-two-choice");
-//         groupDiv.appendChild(mcqContainerTwoDiv);
-
-//         //table completion
-
-//         const tableDiv = document.createElement("div");
-//         tableDiv.classList.add("table-container");
-//         groupDiv.appendChild(tableDiv);
-
-//         //sentence completion
-
-//         const sentenceCompletionDiv = document.createElement("div");
-//         sentenceCompletionDiv.classList.add("sentence-completion-container");
-//         groupDiv.appendChild(sentenceCompletionDiv);
-        
-//         //form completion
-
-//         const formDiv = document.createElement("div");
-//         formDiv.classList.add("form-container");
-//         groupDiv.appendChild(formDiv);
-
-//         //note completion
-
-//         const noteDiv = document.createElement("div");
-//         noteDiv.classList.add("note-container");
-//         groupDiv.appendChild(noteDiv);
-
-//         //flow chart completion
-
-//         const flowChartDiv = document.createElement("div");
-//         flowChartDiv.classList.add("flowchart-container");
-//         groupDiv.appendChild(flowChartDiv);
-        
-
-//         //short answer questions
-
-//         const shortAnswerDiv = document.createElement("div");
-//         shortAnswerDiv.classList.add("short-answer-container");
-//         groupDiv.appendChild(shortAnswerDiv);
-
-//         //matching questions
-
-//         const matchingContainer = document.createElement("div");
-//         matchingContainer.classList.add("matching-container");
-//         groupDiv.appendChild(matchingContainer);
-
-//         //diagram labelling
-
-//         const diagramLabelDiv=  document.createElement("div");
-//         diagramLabelDiv.classList.add("diagram-label-container");
-//         groupDiv.appendChild(diagramLabelDiv);
-
-//         const fullNoteCompletionContainer = document.createElement("div");
-//         fullNoteCompletionContainer.classList.add("full-note-completion-container");
-//         groupDiv.appendChild(fullNoteCompletionContainer);
-
-
-//         //matching table container
-
-//         const matchingTableContainer = document.createElement("div");
-//         matchingTableContainer.classList.add("matching-table-container");
-//         groupDiv.appendChild(matchingTableContainer);
-
-//         //add each type of container to each group to make life easier...
-
-
-
-
-//         part2QuestionSection.appendChild(groupDiv);
-//         seenGroups.add(q.group);
-//       }
-//     }
-
-//     if(q.part == 3){
-//       if(!seenGroups.has(q.group)){
-//         const groupDiv = document.createElement("div");
-//         groupDiv.classList.add(`group-${q.group}`, "group");
-
-//         //specifically for reading
-//         const TFNotGivenContainer = document.createElement("div");
-//         TFNotGivenContainer.classList.add("True-false-notGiven");
-//         groupDiv.appendChild(TFNotGivenContainer);
-
-//         const YNNotgivenContainer = document.createElement("div");
-//         YNNotgivenContainer.classList.add("Yes-no-notGiven");
-//         groupDiv.appendChild(YNNotgivenContainer);
-
-//         const matchingInformationContainer = document.createElement("div");
-//         matchingInformationContainer.classList.add("matching-information-container");
-//         groupDiv.appendChild(matchingInformationContainer);
-
-
-//         const listOfHeadingsContainer = document.createElement("div");
-//         listOfHeadingsContainer.classList.add("list-of-headings-container");
-//         groupDiv.appendChild(listOfHeadingsContainer);
-
-//         const summaryWithListContainer = document.createElement("div");
-//         summaryWithListContainer.classList.add("summary-with-list-container");
-//         groupDiv.appendChild(summaryWithListContainer);
-
-
-//         const summaryCompletionContainer = document.createElement("div");
-//         summaryCompletionContainer.classList.add("summary-completion");
-//         groupDiv.appendChild(summaryCompletionContainer);
-//         //specifically for reading
-
-
-//         //add each type of container to each group to make life easier...
-//         //mcq(one Choice)
-//         const mcqContainerDiv = document.createElement("div");
-//         mcqContainerDiv.classList.add("mcq-container-one-choice");
-//         groupDiv.appendChild(mcqContainerDiv);
-//         //mcq(two Choice)
-
-//         const mcqContainerTwoDiv = document.createElement("div");
-//         mcqContainerTwoDiv.classList.add("mcq-container-two-choice");
-//         groupDiv.appendChild(mcqContainerTwoDiv);
-
-//         //table completion
-
-//         const tableDiv = document.createElement("div");
-//         tableDiv.classList.add("table-container");
-//         groupDiv.appendChild(tableDiv);
-
-//         //sentence completion
-
-//         const sentenceCompletionDiv = document.createElement("div");
-//         sentenceCompletionDiv.classList.add("sentence-completion-container");
-//         groupDiv.appendChild(sentenceCompletionDiv);
-        
-//         //form completion
-
-//         const formDiv = document.createElement("div");
-//         formDiv.classList.add("form-container");
-//         groupDiv.appendChild(formDiv);
-
-//         //note completion
-
-//         const noteDiv = document.createElement("div");
-//         noteDiv.classList.add("note-container");
-//         groupDiv.appendChild(noteDiv);
-
-//         //flow chart completion
-
-//         const flowChartDiv = document.createElement("div");
-//         flowChartDiv.classList.add("flowchart-container");
-//         groupDiv.appendChild(flowChartDiv);
-        
-
-//         //short answer questions
-
-//         const shortAnswerDiv = document.createElement("div");
-//         shortAnswerDiv.classList.add("short-answer-container");
-//         groupDiv.appendChild(shortAnswerDiv);
-
-//         //matching questions
-
-//         const matchingContainer = document.createElement("div");
-//         matchingContainer.classList.add("matching-container");
-//         groupDiv.appendChild(matchingContainer);
-
-//         //diagram labelling
-
-//         const diagramLabelDiv=  document.createElement("div");
-//         diagramLabelDiv.classList.add("diagram-label-container");
-//         groupDiv.appendChild(diagramLabelDiv);
-
-//         const fullNoteCompletionContainer = document.createElement("div");
-//         fullNoteCompletionContainer.classList.add("full-note-completion-container");
-//         groupDiv.appendChild(fullNoteCompletionContainer);
-
-
-//         //matching table container
-
-//         const matchingTableContainer = document.createElement("div");
-//         matchingTableContainer.classList.add("matching-table-container");
-//         groupDiv.appendChild(matchingTableContainer);
-
-//         //add each type of container to each group to make life easier...
-
-
-//         part3QuestionSection.appendChild(groupDiv);
-//         seenGroups.add(q.group);
-//       }
-//     }
-// })
-
-// //insert passages at each part
-// const part1PassageSection = document.getElementById("passage-section-1");
-// const part2PassageSection = document.getElementById("passage-section-2");
-// const part3PassageSection = document.getElementById("passage-section-3");
-
-
-
-
-// //group header logic
-// let questionRangeStarter = 1;
-// let last = 0;
-// let index = 0;
-// groupCounts.forEach((value, group)=>{
-//     const groupDiv = document.querySelector(`.group-${group}`);
-//     //trying instruction logic
-//     const groupHeader = document.createElement("div");
-//     groupHeader.classList.add("group-header");
-//     const instructionDiv = document.createElement("div");
-//     instructionDiv.classList.add("instructions");
-//     instructionDiv.innerHTML = `<h3>${instructions[index].instruction}</h3>`
-//     groupHeader.prepend(instructionDiv);
-//    // console.log(instructions[index].instruction);
-    
-//     const min = findLowest(questions[index].id)
-//     const max = findHighest(questions[index].id)
-//     console.log(min)
-//     console.log(max)
-
-//     last += value;
-    
-//     const groupRangeHeader = document.createElement("h3");
-//     groupRangeHeader.textContent = `Questions ${min} - ${max}`;
-//     groupHeader.prepend(groupRangeHeader); 
-//     questionRangeStarter += value;
-
-
-//   console.log(index)
-//   index += 1;  
-//   groupDiv.prepend(groupHeader);
-
-// })
-
-
-
-
-
-// document.addEventListener("DOMContentLoaded", ()=>{
-//   questions.forEach((q, index)=>{
-    
-//     if(q.type == "mcq-two-choice-updated"){
-//       q.questions.forEach((question, index)=>{
-//         const checkBoxes = document.querySelectorAll(`input[type="checkbox"][name="q${q.id[index][0]}"]`);
-//         //console.log(index)
-
-//         //console.log(Array.from(checkBoxes));
-//         checkBoxes.forEach(checkBox =>{
-        
-//         checkBox.addEventListener("change", ()=>{
-//         const checked = Array.from(checkBoxes).filter(cb=> cb.checked);
-//         checked.forEach((check, idx)=>{
-//           check.setAttribute("name", q.id[index][idx])
-//         })
-//         if(checked.length > 2) {
-//           checkBox.checked = false;
-//         }
-//       })
-//     })
-//       })
-      
-      
-
-      
-//     }
-//   })
-// })
-
-
-// function findLowest(arr) {
-//   const flat =  arr.flat()
-//   return Math.min(...flat);
-// }
-
-// function findHighest(arr) {
-//   const flat = arr.flat()
-//   return Math.max(...flat);
-// }
-
-// //updating question section
-
-
-// //question insert logic
-// questions.forEach((question)=>{
-//     const groupDiv = document.querySelector(`.group-${question.group}`);
-
-//   if(question.type === "T/F/NG"){
-//     const TFContainerDIV = groupDiv.querySelector(".True-false-notGiven");
-    
-//     question.questions.forEach((q, index)=>{
-//       const TFContainer = document.createElement("div");
-//       TFContainer.classList.add("TF");
-//       TFContainer.innerHTML += `<p><strong>${question.id[index]}.</strong> ${q}</p>
-//                                 <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="${question.id[index]}" data-question-id="${question.id[index]}" value="TRUE">&nbsp;&nbsp;TRUE</label>
-//                                 <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="${question.id[index]}" data-question-id="${question.id[index]}" value="FALSE">&nbsp;&nbsp;FALSE</label>
-//                                 <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="${question.id[index]}" data-question-id="${question.id[index]}" value="NOT GIVEN">&nbsp;&nbsp;NOT GIVEN</label>`
-//       TFContainerDIV.appendChild(TFContainer);
-//     })
-
-    
-//   }
-
-//   if(question.type === "note-completion"){
-//     function renderTextWithInput(text){
-//       const htmlString = text.replaceAll("[blank]", `<input spellcheck="false" type="text" class="blank-input">`);
-//       const result  = `<p>${htmlString}</p>`
-//       return result; 
-//     }
-
-//     const fullNoteCompletionContainer = groupDiv.querySelector(".full-note-completion-container");
-//     fullNoteCompletionContainer.innerHTML += `<p class="note-completion-title">${question.heading}</p>`
-//     if(!question.subheadings){
-//       question.paragraphs[0].forEach((paragraph)=>{
-//         fullNoteCompletionContainer.innerHTML += renderTextWithInput(paragraph);
-//       })
-//     } else{
-//       question.subheadings.forEach((subheading, index)=>{
-//         fullNoteCompletionContainer.innerHTML += `<p class="note-completion-subheading">${subheading}</p>`
-//         question.paragraphs[index].forEach((paragraph, index)=>{
-
-//           fullNoteCompletionContainer.innerHTML += renderTextWithInput(paragraph);
-//         })
-//       })
-//     }
-
-
-
-
-//     const inputs = fullNoteCompletionContainer.querySelectorAll("input");
-
-//     inputs.forEach((input, index)=>{
-//       input.setAttribute("placeholder", question.id[index]);
-//       input.setAttribute("data-question-id", question.id[index]);
-//     })
-
-  
-//   }
-
-//   if(question.type === "matching-information"){
-//     const matchingInformationContainer = groupDiv.querySelector(".matching-information-container");
-//     const selectElem = document.createElement("select");
-//     selectElem.setAttribute("name", `matching-information-${question.part}`);
-//     selectElem.setAttribute("class", `matching-information`);
-//     const optionElem = document.createElement("option");
-//     optionElem.setAttribute("value", "");
-//     selectElem.appendChild(optionElem);
-//     question.paragraphs.forEach((paragraph)=>{
-//       const optionELEMENT = document.createElement("option");
-//       optionELEMENT.setAttribute("value", paragraph)
-//       optionELEMENT.textContent = paragraph;
-//       selectElem.appendChild(optionELEMENT);
-//     })
-//     console.log(selectElem.outerHTML);
-
-//     question.information.forEach((info, index)=>{
-
-//       //id select
-//       selectElem.setAttribute("id", question.id[index]);
-
-//       const infoDiv = document.createElement("div");
-//       infoDiv.classList.add("matching-info-question");
-
-//       const infoPara = document.createElement("p");
-//       infoPara.innerHTML = `<strong>${question.id[index]}.</strong>&nbsp;&nbsp;${info}`;
-
-//       infoDiv.appendChild(infoPara);
-//       infoDiv.innerHTML += selectElem.outerHTML;
-//       console.log("appending>>")
-
-      
-
-//       matchingInformationContainer.appendChild(infoDiv);
-//     })
-//   }
-
-//   if(question.type === "sentence-completion"){
-//     function renderTextWithInput(text){
-//       const htmlString = text.replaceAll("[blank]", `<input spellcheck="false" type="text" class="blank-input">`);
-//       const result  = `<p>${htmlString}</p>`
-//       return result; 
-//     }
-//     const sentenceCompletionContainer = groupDiv.querySelector(".sentence-completion-container");
-
-//     const listElem = document.createElement("ul");
-//     question.sentences.forEach((sentence)=>{
-//       const liElem = document.createElement("li");
-
-//       liElem.innerHTML  = renderTextWithInput(sentence);
-
-//       listElem.appendChild(liElem);
-//     })
-
-//     sentenceCompletionContainer.appendChild(listElem);
-
-
-//     const inputs = sentenceCompletionContainer.querySelectorAll("input");
-
-//     inputs.forEach((input, index)=>{
-//       input.setAttribute("placeholder", question.id[index]);
-//       input.setAttribute("data-question-id", question.id[index]);
-//     })
-//   }
-
-
-//   //might be changed cuz drag and drop
-//   if(question.type === "feature-matching"){
-//     const matchingContainer = groupDiv.querySelector(".matching-container");
-
-
-//     const optionDIV = document.createElement("div");
-//     optionDIV.classList.add("matching-options");
-
-//     const selectElem = document.createElement("select");
-//     selectElem.setAttribute("name", `matching-${question.part}`);
-
-//     const optionElem = document.createElement("option");
-//     optionElem.setAttribute("value", "");
-//     selectElem.appendChild(optionElem);
-
-    
-//     question.options.forEach((paragraph)=>{
-//       const matchingOption = document.createElement("p");
-//       matchingOption.textContent = paragraph;
-//       optionDIV.appendChild(matchingOption);
-//       const optionELEMENT = document.createElement("option");
-
-//       optionELEMENT.setAttribute("value", paragraph);
-//       optionELEMENT.textContent = paragraph;
-
-//       selectElem.appendChild(optionELEMENT);
-//     })
-//     matchingContainer.appendChild(optionDIV);
-
-//     question.features.forEach((feature, index)=>{
-//       const featureDIV = document.createElement("div");
-//       featureDIV.classList.add("matching-feature-question");
-
-//       const featurePara = document.createElement('p');
-//       featurePara.innerHTML = `<strong>${question.id[index]}.</strong>&nbsp;&nbsp;${feature}`
-//       featureDIV.appendChild(featurePara);
-//       featureDIV.innerHTML += selectElem.outerHTML;
-
-//       matchingContainer.appendChild(featureDIV);
-//     })
-//   }
-
-//   if(question.type === "mcq-one-choice"){
-//     const mcqContainerDiv = groupDiv.querySelector(".mcq-container-one-choice");
-//     question.questions.forEach((q, index)=>{
-//       const mcqContainer = document.createElement("div");
-//       mcqContainer.classList.add("mcq");
-
-//       mcqContainer.innerHTML += `<p><strong>${question.id[index]}.</strong> ${q}</p>`
-//       question.options[index].forEach((option, idx)=>{
-//         mcqContainer.innerHTML += `
-//         <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="${question.id[index]}" data-question-id="${question.id[index]}" value="${idx+1}">&nbsp;&nbsp;${option}</label><br>`
-//       })
-//       mcqContainerDiv.appendChild(mcqContainer);
-//     })
-//   }
-
-
-//   if(question.type === "Y/N/NG"){
-//     const YNContainerDIV = groupDiv.querySelector(".Yes-no-notGiven");
-
-//     question.questions.forEach((q, index)=>{
-//       const YNContainer = document.createElement("div");
-//       YNContainer.classList.add("YN");
-//       YNContainer.innerHTML += `<p><strong>${question.id[index]}</strong> ${q}</p>
-//                                 <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="${question.id[index]}" data-question-id="${question.id[index]}" value="YES">&nbsp;&nbsp;YES</label>
-//                                 <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="${question.id[index]}" data-question-id="${question.id[index]}" value="NO">&nbsp;&nbsp;NO</label>
-//                                 <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="${question.id[index]}" data-question-id="${question.id[index]}" value="NOT GIVEN">&nbsp;&nbsp;NOT GIVEN</label>`
-
-//       YNContainerDIV.appendChild(YNContainer);
-//     })
-//   }
-
-//   if(question.type === "diagram-labelling"){
-//     const diagramContainer = groupDiv.querySelector(".diagram-label-container");
-//     const allBoxes = document.createElement("div");
-//     allBoxes.classList.add("all-boxes");
-
-//     const imagingContainer = document.createElement("div");
-//     imagingContainer.classList.add("image-div");
-//     imagingContainer.innerHTML = `<img src="${question.image}">`
-//     diagramContainer.appendChild(imagingContainer);
-
-//     const matchingLabels = document.createElement("div");
-//     matchingLabels.classList.add("matching-labels");
-
-//     const matchingOptions = document.createElement("div");
-//     matchingOptions.classList.add("matching-options");
-
-//     question.labels.forEach((label, index)=>{
-//       matchingLabels.innerHTML += `<div class="qa-pair">
-//                                   <div class="question-label"><strong>${question.id[index]}.</strong>&nbsp;&nbsp;${label}</div>
-//                                   <div id="${question.id[index]}" data-question-id="${question.id[index]}" class="box dropzone" data-class="diagram" data-item="" data-initial="empty"></div>
-//                                   </div>`
-//     })
-//     allBoxes.appendChild(matchingLabels);
-
-//     question.options.forEach((option)=>{
-//       matchingOptions.innerHTML += `<div class="box" data-class="diagram" data-item="${option}">${option}</div>`
-//     })
-//     allBoxes.appendChild(matchingOptions);
-//     diagramContainer.appendChild(allBoxes);
-//   }
-
-//   if(question.type === "feature-matching-drag-drop"){
-//     const matchingContainer = groupDiv.querySelector(".matching-container");
-//     const allBoxes = document.createElement("div");
-//     allBoxes.classList.add("all-boxes");
-
-//     const matchingFeatures = document.createElement("div");
-//     matchingFeatures.classList.add("matching-features");
-
-//     const matchingOptions = document.createElement("div");
-//     matchingOptions.classList.add("matching-options");
-
-//     question.options.forEach((option, index)=>{
-//       matchingOptions.innerHTML += `<div class="box" data-class="feature-matching" data-item="${option}">${option}</div>`
-//     })
-//     allBoxes.appendChild(matchingOptions);
-
-//     question.features.forEach((feature, index)=>{
-//       matchingFeatures.innerHTML += `<div class="qa-pair">
-//                                     <div class="question-feature"><strong>${question.id[index]}.</strong>&nbsp;&nbsp;${feature}</div>
-//                                     <div id="${question.id[index]}" data-question-id="${question.id[index]}" class="box dropzone" data-class="feature-matching" data-item="" data-initial="empty"></div>
-//                                     </div>`
-//     })
-//     allBoxes.appendChild(matchingFeatures);
-
-//     matchingContainer.appendChild(allBoxes);
-//   }
-
-//   if(question.type === "list-of-headings"){
-//       const listContainer = groupDiv.querySelector(".list-of-headings-container");
-      
-//       const passage = document.querySelector(`#passage-scroll-${question.part}`);
-
-//       const listHeadings = document.createElement("div");
-//       listHeadings.classList.add("list-headings");
-//       question.headings.forEach((heading, index)=>{
-//         listHeadings.innerHTML += `<div class="box" data-class="list-of-headings" data-item="${heading}">${heading}</div>`
-        
-        
-//       })
-
-//       question.paragraphs.forEach((paragraph, idx)=>{
-//           const emptyBox = document.createElement("div");
-//           emptyBox.setAttribute("id", question.id[idx]);
-//           emptyBox.classList.add("box", "dropzone", "box-heading");
-//           emptyBox.setAttribute("data-item", "");
-//           emptyBox.setAttribute("data-initial", "empty");
-//           emptyBox.setAttribute("data-class", "list-of-headings");
-//           emptyBox.setAttribute("data-question-id", question.id[idx]);
-//           const para = document.querySelector(`#para-${paragraph}-${question.part}`)
-//           passage.insertBefore(emptyBox, para)
-//         })
-
-//       listContainer.appendChild(listHeadings);
-//   }
-
-//   if(question.type === "summary-completion"){
-//     function renderTextWithInput(text){
-//       const htmlString = text.replaceAll("[blank]", `<input spellcheck="false" type="text" class="blank-input">`);
-//       const result  = `<p>${htmlString}</p>`
-//       return result; 
-//     }
-
-//     const summaryContainer = groupDiv.querySelector(".summary-with-list-container");
-//     const summaryTitle = document.createElement("p");
-//     summaryTitle.classList.add("summary-title");
-//     summaryTitle.textContent = question.title;
-
-//     summaryContainer.appendChild(summaryTitle);
-
-//     const summary = document.createElement("div");
-//     summary.classList.add("summary");
-//     summary.innerHTML = renderTextWithInput(question.summary[0]);
-
-//     summaryContainer.appendChild(summary);
-
-//     const inputs = summaryContainer.querySelectorAll("input");
-
-//     inputs.forEach((input, index)=>{
-//       input.setAttribute("placeholder", question.id[index]);
-//       input.setAttribute("data-question-id", question.id[index]);
-//     })
-//   }
-
-//   if(question.type === "summary-with-list-of-words"){
-//     function renderTextWithInput(text){
-//       const htmlString = text.replaceAll("[blank]", `<input spellcheck="false" type="text" class="blank-input">`);
-//       const result  = `<p>${htmlString}</p>`
-//       return result; 
-//     }
-//     const summaryContainer = groupDiv.querySelector(".summary-with-list-container");
-
-//     const wordList = document.createElement("ul");
-
-//     question["word-list"].forEach((word, index)=>{
-//         wordList.innerHTML += `<li>${word}</li>`
-//     })
-//     summaryContainer.appendChild(wordList);
-
-//     const summaryTitle = document.createElement("p");
-//     summaryTitle.classList.add("summary-title");
-//     summaryTitle.textContent = question.title;
-
-//     summaryContainer.appendChild(summaryTitle);
-
-//     const summary = document.createElement("div");
-//     summary.classList.add("summary");
-
-//     summary.innerHTML = renderTextWithInput(question.summary[0]);
-
-//     summaryContainer.appendChild(summary);
-
-//     const inputs = summaryContainer.querySelectorAll("input");
-
-//     inputs.forEach((input, index)=>{
-//       input.setAttribute("placeholder", question.id[index]);
-//       input.setAttribute("data-question-id", question.id[index]);
-//     })
-//   }
-
-//   if(question.type === "table-completion"){
-//     function renderTextWithInput(text){
-//           const htmlString = text.replaceAll("[blank]", `<input spellcheck="false" type="text" class="blank-input" placeholder="${index}">`)
-//           const result =  `<p style="text-align:center">${htmlString}</p>`;
-//           return result;
-//         }
-
-//     const tableContainer = groupDiv.querySelector(".table-container");
-//     const table = document.createElement("table");
-
-//     question["table-structure"].forEach((count, index)=>{
-//       const tr = document.createElement("tr");
-
-//       for(let i=0; i<count; i++){
-//         const td = document.createElement("td");
-
-//         if(count == findLowest(question["table-structure"])){
-//           td.colSpan = findHighest(question["table-structure"]);
-//         }
-//         td.innerHTML += renderTextWithInput(question.cells[index][i]);
-//         tr.appendChild(td);
-//       }
-//       table.appendChild(tr);
-//     })
-
-//     tableContainer.appendChild(table);
-
-//     const inputs = tableContainer.querySelectorAll("input");
-
-//     inputs.forEach((input, index)=>{
-//       input.setAttribute("placeholder", question.id[index]);
-//       input.setAttribute("data-question-id", question.id[index]);
-//     })
-//   }
-
-//   if(question.type === "mcq-two-choice-updated"){
-//     const mcqTwoChoiceContainer = groupDiv.querySelector(".mcq-container-two-choice");
-//     question.questions.forEach((q, index)=>{
-//       mcqTwoChoiceContainer.innerHTML += `<div class="question-box">
-//                                           <div class="number-boxes">
-//                                           <div class="num-box">${question.id[index][0]}</div>
-//                                           <div class="num-box">${question.id[index][1]}</div>
-//                                           </div>
-                                          
-//                                           <div class="question-text">
-//                                           ${q[0]}
-//                                           </div>
-//                                           </div>`
-//       question.options[index].forEach((option, idx)=>{
-//         mcqTwoChoiceContainer.innerHTML += `<div class="options">
-//                                             <label>${idx + 1}&nbsp;&nbsp;<input type="checkbox" name="q${question.id[index][0]}" data-question-id="${question.id[index][0]} ${question.id[index][1]}" value="${idx + 1}">   &nbsp;&nbsp;${option}</label><br>
-//                                           </div>`
-//       })
-//     })
-//   }
-
-//   if(question.type === "matching-table-container"){
-//     const matchingTableContainer = groupDiv.querySelector(".matching-table-container");
-//     const matchingTable = document.createElement("table");
-
-//     const thead = document.createElement("thead");
-//     const theadTr = document.createElement("tr");
-//     theadTr.innerHTML = "<th></th>"
-//     question.paragraphs.forEach((para)=>{
-//       theadTr.innerHTML += `<th>${para}</th>`
-//     })
-
-//     thead.appendChild(theadTr);
-
-
-
-
-//     const tbody = document.createElement("tbody");
-//     question.information.forEach((info, index)=>{
-//       const tbodyTr = document.createElement("tr");
-
-//       tbodyTr.setAttribute("data-info", `info-${index}`);
-
-//       tbodyTr.innerHTML = `<td>${info}</td>`;
-
-//       question.paragraphs.forEach((para)=>{
-//         tbodyTr.innerHTML += `<td><input type="radio" name="${question.id[index]}" data-question-id="${question.id[index]}" value="${para}" data-id="info${index}-${para}" /></td>`
-//       })
-
-//       tbody.appendChild(tbodyTr);
-//     })
-
-
-    
-
-
-
-
-//     matchingTable.appendChild(thead);
-//     matchingTable.appendChild(tbody);
-
-
-//     matchingTableContainer.appendChild(matchingTable);
-//   }
-
-// })
-
-// //question insert logic
-
-
-
-// //font-change setting
-
-// const testContent = document.getElementById("test-content");
-// const fontSizeSelector = document.getElementById("font-size-selector")
-
-
-// fontSizeSelector.addEventListener("change", function (){
-
-//   const selectedValue = this.value;
-//   testContent.style.fontSize = selectedValue;
-//   //console.log("Selected value:", selectedValue);
-  
-
-// })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// //drag & drop
-
-// //learning drag and drop
-
-// var dragElement = null;
-// var items;
-
-// function handleDragStart(e){
-//   this.style.opacity = "0.4";
-//   dragElement = this;
-
-//   e.dataTransfer.effectAllowed = "move";
-//   e.dataTransfer.setData("item", this.innerHTML)
-// }
-
-// function handleDragOver(e){
-//   if(e.preventDefault){
-//     e.preventDefault();
-//   }
-
-//   e.dataTransfer.dropEffect = "move";
-//   return false;
-// }
-
-// function handleDragEnter(e){
-//   this.classList.add("dragover");
-// }
-
-// function handleDragLeave(e){
-//   this.classList.remove("dragover");
-// }
-
-// function handleDrop(e){
-//   if (e.stopPropagation) e.stopPropagation();
-
-//   if (dragElement !== this) {
-//     const draggedGroup = dragElement.getAttribute("data-class");
-//     const targetGroup = this.getAttribute("data-class");
-
-//     if(draggedGroup !== targetGroup){
-//       this.classList.add("invalid-drop");
-//       setTimeout(() => this.classList.remove("invalid-drop"), 1000);
-//       return false;
-//     } else{
-//     const draggedHTML = dragElement.innerHTML;
-//     const draggedItem = dragElement.getAttribute("data-item");
-
-//     const targetHTML = this.innerHTML;
-//     const targetItem = this.getAttribute("data-item");
-
-    
-//     dragElement.innerHTML = targetHTML;
-//     dragElement.setAttribute("data-item", targetItem || "");
-
-//     this.innerHTML = draggedHTML;
-//     this.setAttribute("data-item", draggedItem || "");
-
-//     // Reapply
-//     addDragEvents(dragElement);
-//     addDragEvents(this);
-//     }
-
-    
-//   }
-// }
-
-// function handleDragEnd(e){
-//   this.style.opacity = "1";
-//   items.forEach((item)=>{
-//     item.classList.remove("dragover");
-//   })
-// }
-
-// function addDragEvents(element) {
-//   const hasContent = element.textContent.trim() !== "";
-
-//   element.setAttribute("draggable", hasContent);
-
-//   //attach
-//   element.addEventListener("dragenter", handleDragEnter);
-//   element.addEventListener("dragover", handleDragOver);
-//   element.addEventListener("dragleave", handleDragLeave);
-//   element.addEventListener("drop", handleDrop);
-//   element.addEventListener("dragend", handleDragEnd);
-
-//   // Only attach dragstart if content is not empty
-//   if (hasContent) {
-//     element.addEventListener("dragstart", handleDragStart);
-//   }
-// }
-
-// document.addEventListener("DOMContentLoaded", (event)=>{
-//   items = document.querySelectorAll(".box");
-
-//   items.forEach((item)=>{
-//     addDragEvents(item)
-//   })
-// })
-
-
-
-
-
-
-
-
-
-// // ==========================================
-// V2 TEXT HIGHLIGHT & REMOVE SYSTEM (MATCHING CAMBRIDGE V2)
-// ==========================================
-(function initTextHighlight() {
-  let savedSelectionRange = null;
-  let activeTargetHighlight = null;
-
-  const tooltip = document.getElementById("crHighlightTooltip");
-  const doHlBtn = document.getElementById("crDoHighlightBtn");
-  const doUnhlBtn = document.getElementById("crDoUnhighlightBtn");
-  if (!tooltip) return;
-
-  document.addEventListener("mouseup", handleSelectionChange);
-  document.addEventListener("keyup", handleSelectionChange);
-
-  document.addEventListener("click", (e) => {
-    const hlMark = e.target.closest(".cr-user-hl, .cr-user-highlight");
-    if (hlMark) {
-      e.stopPropagation();
-      showUnhighlightTooltip(hlMark);
-      return;
-    }
-
-    if (!e.target.closest("#crHighlightTooltip")) {
-      hideHighlightTooltip();
-    }
-  });
-
-  if (doHlBtn) {
-    doHlBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      highlightCurrentSelection();
-    });
-  }
-
-  if (doUnhlBtn) {
-    doUnhlBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      if (activeTargetHighlight) {
-        removeUserHighlight(activeTargetHighlight);
-      } else if (savedSelectionRange) {
-        removeHighlightsInSelection(savedSelectionRange);
-      }
-    });
-  }
-
-  function handleSelectionChange(e) {
-    if (e && e.target && e.target.closest("#crHighlightTooltip")) return;
-
-    setTimeout(() => {
-      const sel = window.getSelection();
-      if (!sel || sel.isCollapsed || !sel.rangeCount) {
-        if (!activeTargetHighlight) hideHighlightTooltip();
-        return;
-      }
-
-      const text = sel.toString().trim();
-      if (text.length === 0) {
-        if (!activeTargetHighlight) hideHighlightTooltip();
-        return;
-      }
-
-      const range = sel.getRangeAt(0);
-      const containerEl = range.commonAncestorContainer.nodeType === 1
-        ? range.commonAncestorContainer
-        : range.commonAncestorContainer.parentElement;
-
-      if (!containerEl || containerEl.closest("input, textarea, select, button, #crHighlightTooltip, .cr-navbar, .bottom-navbar, .popup-settings, .popup-note")) {
-        hideHighlightTooltip();
-        return;
-      }
-
-      const rect = range.getBoundingClientRect();
-      if (rect.width === 0 && rect.height === 0) return;
-
-      savedSelectionRange = range.cloneRange();
-      activeTargetHighlight = null;
-
-      const commonNode = range.commonAncestorContainer;
-      const enclosingHighlight = commonNode.nodeType === 1
-        ? commonNode.closest(".cr-user-hl, .cr-user-highlight")
-        : (commonNode.parentElement ? commonNode.parentElement.closest(".cr-user-hl, .cr-user-highlight") : null);
-
-      if (enclosingHighlight) {
-        activeTargetHighlight = enclosingHighlight;
-        if (doHlBtn) doHlBtn.style.display = "none";
-        if (doUnhlBtn) doUnhlBtn.style.display = "inline-flex";
-      } else {
-        const fragment = range.cloneContents();
-        const hasHighlightsInside = fragment.querySelector && fragment.querySelector(".cr-user-hl, .cr-user-highlight");
-        if (hasHighlightsInside) {
-          if (doHlBtn) doHlBtn.style.display = "inline-flex";
-          if (doUnhlBtn) doUnhlBtn.style.display = "inline-flex";
-        } else {
-          if (doHlBtn) doHlBtn.style.display = "inline-flex";
-          if (doUnhlBtn) doUnhlBtn.style.display = "none";
-        }
-      }
-
-      positionTooltip(rect);
-    }, 30);
-  }
-
-  function positionTooltip(rect) {
-    if (!tooltip) return;
-    tooltip.style.display = "flex";
-    const tipWidth = tooltip.offsetWidth || 150;
-    const left = Math.max(10, Math.min(window.innerWidth - tipWidth - 10, rect.left + rect.width / 2 - tipWidth / 2));
-    const top = Math.max(10, rect.top - 46);
-
-    tooltip.style.left = left + "px";
-    tooltip.style.top = top + "px";
-  }
-
-  function showUnhighlightTooltip(hlMark) {
-    activeTargetHighlight = hlMark;
-    savedSelectionRange = null;
-    const rect = hlMark.getBoundingClientRect();
-    if (doHlBtn) doHlBtn.style.display = "none";
-    if (doUnhlBtn) doUnhlBtn.style.display = "inline-flex";
-    positionTooltip(rect);
-  }
-
-  function hideHighlightTooltip() {
-    if (tooltip) tooltip.style.display = "none";
-    activeTargetHighlight = null;
-  }
-
-  function highlightCurrentSelection() {
-    const sel = window.getSelection();
-    let range = savedSelectionRange;
-    if (sel && !sel.isCollapsed && sel.rangeCount) {
-      range = sel.getRangeAt(0);
-    }
-    if (!range) return;
-
-    const text = range.toString().trim();
-    if (!text) return;
-
-    try {
-      const mark = document.createElement("mark");
-      mark.className = "cr-user-hl cr-user-highlight";
-      mark.title = "Click to remove highlight";
-      range.surroundContents(mark);
-    } catch (e) {
-      try {
-        const fragment = range.extractContents();
-        const mark = document.createElement("mark");
-        mark.className = "cr-user-hl cr-user-highlight";
-        mark.title = "Click to remove highlight";
-        mark.appendChild(fragment);
-        range.insertNode(mark);
-      } catch (err) {
-        console.warn("Could not wrap selection:", err);
-      }
-    }
-
-    if (sel) sel.removeAllRanges();
-    savedSelectionRange = null;
-    hideHighlightTooltip();
-  }
-
-  function removeUserHighlight(markEl) {
-    if (!markEl || !markEl.parentNode) return;
-    const parent = markEl.parentNode;
-    while (markEl.firstChild) {
-      parent.insertBefore(markEl.firstChild, markEl);
-    }
-    parent.removeChild(markEl);
-    parent.normalize();
-    hideHighlightTooltip();
-  }
-
-  function removeHighlightsInSelection(range) {
-    if (!range) return;
-    const commonNode = range.commonAncestorContainer;
-    const root = commonNode.nodeType === 1 ? commonNode : (commonNode.parentElement || document.body);
-    const marks = root.querySelectorAll(".cr-user-hl, .cr-user-highlight");
-    marks.forEach(m => {
-      try {
-        if (range.intersectsNode(m)) {
-          removeUserHighlight(m);
-        }
-      } catch (e) {
-        removeUserHighlight(m);
-      }
-    });
-    const sel = window.getSelection();
-    if (sel) sel.removeAllRanges();
-    savedSelectionRange = null;
-    hideHighlightTooltip();
-  }
-})();
-
-
-// //scrolling while dragging
-// document.addEventListener("dragover", function (e) {
-//   const scrollMargin = 80; 
-//   const scrollSpeed = 500;  
-
-//   const y = e.clientY;
-//   const windowHeight = window.innerHeight;
-
-//   if (y < scrollMargin) {
-    
-//     window.scrollBy(0, -scrollSpeed);
-//   } else if (y > windowHeight - scrollMargin) {
-    
-//     window.scrollBy(0, scrollSpeed);
-//   }
-// });
-
-
-// /* ------------------ PART NAV: small question buttons & answered-state tracking ------------------ */
-
-// /*
-//   Creates small q-buttons for each part (beside Part label) and wires:
-//    - click -> scroll to question element with data-question-id
-//    - auto highlight when question becomes answered (text/radio/select/drop)
-// */
-
-// // Utility: find question elements by numeric id. Questions in your render use data-question-id attributes.
-// function getQuestionElementById(qid) {
-//   // first try attribute selectors
-//   return document.querySelector(`[data-question-id="${qid}"], [id="${qid}"]`);
-// }
-
-// // Check whether a given question id currently has an answer (text / radio / select / dropzones)
-// function isQuestionAnswered(qid) {
-//   // 1) text inputs: inputs with data-question-id or placeholder matching qid
-//   const textInput = document.querySelector(`input[type="text"][data-question-id="${qid}"], input[type="text"][placeholder="${qid}"]`);
-//   if (textInput && textInput.value.trim() !== "") return true;
-
-//   // 2) radio / checkbox: inputs with name === qid
-//   const inputsByName = document.querySelectorAll(`input[name="${qid}"]`);
-//   if (inputsByName && inputsByName.length > 0) {
-//     for (const el of inputsByName) {
-//       if (el.type === 'radio' || el.type === 'checkbox') {
-//         if (el.checked) return true;
-//       }
-//     }
-//   }
-
-//   // 3) select (matching-information sets the select id to the q.id earlier)
-//   const select = document.getElementById(qid);
-//   if (select && select.value && select.value.trim() !== "") return true;
-
-//   // 4) dropzones / boxes (you used id on dropzone divs for many types)
-//   const dropzone = document.getElementById(String(qid));
-//   if (dropzone) {
-//     const text = dropzone.textContent.trim();
-//     // If it has visible content, consider it answered. Also check dataset.item if used.
-//     if (text !== "" && text.toLowerCase() !== "empty") return true;
-//     if (dropzone.dataset && dropzone.dataset.item && dropzone.dataset.item !== "") return true;
-//   }
-
-//   // 5) fallback: any input *inside* an element that carries the question id as parent (p tag with data-question-id etc)
-//   const questionParent = document.querySelector(`[data-question-id="${qid}"]`);
-//   if (questionParent) {
-//     const innerInputs = questionParent.querySelectorAll("input, select, textarea");
-//     for (const el of innerInputs) {
-//       if (el.type === "text" && el.value.trim() !== "") return true;
-//       if ((el.type === "radio" || el.type === "checkbox") && el.checked) return true;
-//       if (el.tagName.toLowerCase() === "select" && el.value && el.value.trim() !== "") return true;
-//     }
-//   }
-
-//   return false;
-// }
-
-// // Toggle state of qnav button for single question id
-// function updateQNavState(qid) {
-//   const btn = document.querySelector(`.qnav-btn[data-qid="${qid}"]`);
-//   if (!btn) return;
-//   if (isQuestionAnswered(qid)) {
-//     btn.classList.add("attempted");
-//   } else {
-//     btn.classList.remove("attempted");
-//   }
-// }
-
-// // Build part -> question small buttons once DOM is ready
-// // Build part -> question small buttons once DOM is ready
-// function createPartQuestionNavButtons() {
-//   for (let part = 1; part <= 4; part++) {
-//     const partEl = document.getElementById(`part-${part}`);
-//     if (!partEl) continue;
-
-//     // collect question ids inside this part
-//     const qEls = partEl.querySelectorAll("[data-question-id], [id]");
-//     const qIds = [];
-
-//     qEls.forEach(el => {
-//   const attr = el.getAttribute("data-question-id");
-//   if (!attr) return;
-
-//   // split by space to handle multiple ids
-//   const ids = attr.split(" ")
-//     .map(s => s.match(/\d+/)?.[0])
-//     .filter(Boolean);
-
-//   ids.forEach(idNum => {
-//     if (!qIds.includes(idNum)) qIds.push(idNum);
-//   });
-// });
-
-//     // Sort ids numerically
-//     qIds.sort((a, b) => Number(a) - Number(b));
-
-//     console.log(qIds);
-
-//     // find the bottom navbar's question-button-container for this part
-//     const container = document.querySelector(`.question-button-container[data-part="${part}"]`);
-//     if (!container) continue;
-
-//     // clear existing
-//     container.innerHTML = "";
-
-//     // create buttons
-//     qIds.forEach(qid => {
-//       const b = document.createElement("button");
-//       b.className = "qnav-btn";
-//       b.type = "button";
-//       b.setAttribute("data-qid", qid);
-//       b.textContent = qid;
-
-//       // click -> scroll to the question element
-//       b.addEventListener("click", (ev) => {
-//         ev.stopPropagation();
-//         const targetEl = getQuestionElementById(qid);
-//         if (targetEl) {
-//           const parentPartMatch = targetEl.closest(".part");
-//           if (parentPartMatch) {
-//             const idAttr = parentPartMatch.id || "";
-//             const whichPart = idAttr.match(/\d+/);
-//             if (whichPart) showPart(Number(whichPart[0]));
-//           }
-//           targetEl.scrollIntoView({ behavior: "smooth", block: "center" });
-//           // mark visual current
-//           document.querySelectorAll('.qnav-btn.current').forEach(x => x.classList.remove('current'));
-//           b.classList.add('current');
-//         }
-//       });
-
-//       container.appendChild(b);
-
-//       // initial state: set attempted if needed
-//       setTimeout(() => updateQNavState(qid), 10);
-//     });
-//   }
-// }
-
-// // Add listeners for inputs (text, radio, selects) so qnav state updates live
-// function attachAnswerListeners() {
-//   // text inputs
-//   document.querySelectorAll('input[type="text"]').forEach(inp=>{
-//     // trigger on input
-//     inp.addEventListener('input', () => {
-//       const qid = inp.getAttribute('data-question-id') || inp.getAttribute('placeholder') || extractNumeric(inp);
-//       if (qid) updateQNavState(String(qid));
-//     });
-//   });
-
-//   // radio / checkbox groups -> on change
-//   document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(inp=>{
-//     inp.addEventListener('change', () => {
-//       const name = inp.name;
-//       if (name) {
-//         // if name contains digits, extract the first number
-//         const found = String(name).match(/\d+/);
-//         if (found) updateQNavState(found[0]);
-//         else updateQNavState(name);
-//       }
-//     });
-//   });
-
-//   // selects (matching-information)
-//   document.querySelectorAll('select').forEach(sel=>{
-//     sel.addEventListener('change', () => {
-//       const id = sel.id || (sel.getAttribute && sel.getAttribute('name'));
-//       if (id) updateQNavState(String(id));
-//     });
-//   });
-// }
-
-// // helper: try extract numeric id from element attributes
-// function extractNumeric(el) {
-//   if (!el) return null;
-//   const attrs = ['data-question-id','id','name','placeholder'];
-//   for (const a of attrs) {
-//     const v = el.getAttribute && el.getAttribute(a);
-//     if (!v) continue;
-//     const found = String(v).match(/\d+/);
-//     if (found) return found[0];
-//   }
-//   return null;
-// }
-
-// /* --- IMPORTANT: replace or augment your existing handleDrop to call updateQNavState on affected qids.
-//    If you already have a handleDrop function, replace it with the following version below.
-// */
-
-// function handleDrop(e){
-//   if (e.stopPropagation) e.stopPropagation();
-
-//   if (dragElement !== this) {
-//     const draggedGroup = dragElement.getAttribute("data-class");
-//     const targetGroup = this.getAttribute("data-class");
-
-//     if(draggedGroup !== targetGroup){
-//       this.classList.add("invalid-drop");
-//       setTimeout(() => this.classList.remove("invalid-drop"), 1000);
-//       return false;
-//     } else{
-//       const draggedHTML = dragElement.innerHTML;
-//       const draggedItem = dragElement.getAttribute("data-item");
-
-//       const targetHTML = this.innerHTML;
-//       const targetItem = this.getAttribute("data-item");
-
-//       // Swap
-//       dragElement.innerHTML = targetHTML;
-//       dragElement.setAttribute("data-item", targetItem || "");
-
-//       this.innerHTML = draggedHTML;
-//       this.setAttribute("data-item", draggedItem || "");
-
-//       // Reapply events
-//       addDragEvents(dragElement);
-//       addDragEvents(this);
-
-//       // Update data-initial attr (if you use it)
-//       if (dragElement.dataset) dragElement.dataset.initial = dragElement.dataset.initial || "filled";
-//       if (this.dataset) this.dataset.initial = this.dataset.initial || "filled";
-
-//       // After swap, try to detect if these two elements correspond to questions (they often have id attributes equal to question ids)
-//       // If elements have an id that is numeric, update their qnav states.
-//       const idsToUpdate = new Set();
-//       const aId = dragElement.getAttribute('id');
-//       const bId = this.getAttribute('id');
-//       if (aId) { const f = aId.match(/\d+/); if (f) idsToUpdate.add(f[0]); }
-//       if (bId) { const f = bId.match(/\d+/); if (f) idsToUpdate.add(f[0]); }
-
-//       // Also check parent question containers for data-question-id
-//       [dragElement, this].forEach(el => {
-//         const qparent = el.closest('[data-question-id]');
-//         if (qparent) {
-//           const qid = qparent.getAttribute('data-question-id') || (qparent.getAttribute('id') && qparent.getAttribute('id').match(/\d+/) && qparent.getAttribute('id').match(/\d+/)[0]);
-//           if (qid) idsToUpdate.add(qid);
-//         }
-//       });
-
-//       // call update for all discovered ids
-//       idsToUpdate.forEach(id => updateQNavState(id));
-//     }
-//   }
-// }
-
-// /* --- Setup: run on DOMContentLoaded so that dynamic questions are already rendered --- */
-// document.addEventListener("DOMContentLoaded", () => {
-//   // create the small buttons inside each Part nav
-//   createPartQuestionNavButtons();
-
-//   // attach listeners for text, radio, select changes
-//   attachAnswerListeners();
-
-//   // also attach a MutationObserver for dropzones or areas that may change content dynamically
-//   const observer = new MutationObserver(muts => {
-//     muts.forEach(m => {
-//       // when nodes change, try to update states for any question ids found in mutated subtree
-//       const el = m.target;
-//       const ids = Array.from(el.querySelectorAll('[data-question-id], [id]')).map(x => {
-//         const idv = x.getAttribute('data-question-id') || x.getAttribute('id');
-//         const f = idv && String(idv).match(/\d+/);
-//         return f ? f[0] : null;
-//       }).filter(Boolean);
-//       ids.forEach(id => updateQNavState(id));
-//     });
-//   });
-
-//   // observe the whole test-content region (dropzones, inputs etc.)
-//   const observeRoot = document.getElementById('test-content') || document.body;
-//   observer.observe(observeRoot, { childList: true, subtree: true, characterData: true });
-
-//   // initial scan for all qnav states (in case some inputs are prefilled)
-//   document.querySelectorAll('.qnav-btn').forEach(b => {
-//     const qid = b.getAttribute('data-qid');
-//     updateQNavState(qid);
-//   });
-// });
-
-// /* Expose updateQNavState if you want to call it manually elsewhere */
-// window.updateQNavState = updateQNavState;
-
-// function scrollToTop() {
-//   window.scrollTo({
-//     top: 0,
-//     behavior: "smooth"
-//   });
-// }
-
-
-
-// document.addEventListener("wheel", function (e) {
-//   if (e.ctrlKey) {
-//     e.preventDefault();
-//   }
-// }, { passive: false });
-
-
-// document.addEventListener("keydown", function (e) {
-//   if (e.ctrlKey && (
-//     e.key === "+" ||
-//     e.key === "-" ||
-//     e.key === "=" ||
-//     e.key === "0"
-//   )) {
-//     e.preventDefault();
-//   }
-// });
-
 //part vars
 let totalParts = 3;
 let currentPart = 1;
@@ -2749,49 +553,67 @@ document.addEventListener("DOMContentLoaded", async (e) => {
 // Input check and fill
 const answerArrayUpdated = {};
 function inputCheckUpdated() {
+  for (const k in answerArrayUpdated) delete answerArrayUpdated[k];
+
+  // 1. Text Inputs (blank-input, note-completion, etc.)
   const inputs = document.querySelectorAll("input");
   inputs.forEach((input) => {
-    if (input.type == "text") {
-      const id = input.placeholder;
+    const qid = input.getAttribute("data-question-id") || input.placeholder;
+    if (input.type === "text" && qid) {
       const answer = input.value.trim();
-      answerArrayUpdated[id] = [answer];
+      answerArrayUpdated[qid] = [answer];
     }
-    if (input.checked) {
-      const id = input.name;
+    if (input.checked && qid) {
       const answer = input.value.trim();
-      answerArrayUpdated[id] = [answer];
+      answerArrayUpdated[qid] = [answer];
     }
   });
 
+  // 2. Select Inputs (matching-information)
   const selectInputs = document.querySelectorAll('.matching-information');
   selectInputs.forEach((selectedInput) => {
-    const id = selectedInput.id;
-    answerArrayUpdated[id] = [selectedInput.value];
+    const qid = selectedInput.getAttribute("data-question-id") || selectedInput.id;
+    if (qid) {
+      answerArrayUpdated[qid] = [(selectedInput.value || "").trim()];
+    }
   });
 
+  // 3. Dropzones / Boxes (data-initial="empty")
   const emptyInitially = document.querySelectorAll('[data-initial="empty"]');
   emptyInitially.forEach((empty) => {
-    const id = empty.id;
-    answerArrayUpdated[id] = [empty.textContent];
+    const qid = empty.getAttribute("data-question-id") || empty.id;
+    if (qid) {
+      const val = empty.getAttribute("data-item") || empty.getAttribute("data-heading-id") || (empty.classList.contains("filled") ? empty.textContent.trim() : "");
+      answerArrayUpdated[qid] = [(val || "").trim()];
+    }
   });
 }
 
 const mistakes = {};
 function findDifferences(your_answer, realAnswers) {
-  var totalScore = 40;
+  let totalScore = 0;
+  for (const k in mistakes) delete mistakes[k];
 
   for (const key in realAnswers) {
     const yourAns = your_answer[key] || [];
-    const realAns = realAnswers[key];
+    const rawReal = realAnswers[key];
+    const realAnsList = (Array.isArray(rawReal) ? rawReal : [rawReal])
+      .map(r => String(r || "").toLowerCase().trim())
+      .filter(Boolean);
 
-    const matchFound = yourAns.some((ans) => realAns.includes(ans.toLowerCase()));
+    const matchFound = yourAns.some(ans => {
+      const cleanAns = String(ans || "").toLowerCase().trim();
+      if (!cleanAns) return false;
+      return realAnsList.includes(cleanAns);
+    });
 
-    if (!matchFound) {
+    if (matchFound) {
+      totalScore++;
+    } else {
       mistakes[key] = {
         "Your answer": yourAns,
-        "Correct answer": realAns
+        "Correct answer": rawReal
       };
-      totalScore--;
     }
   }
 
@@ -3011,15 +833,47 @@ setInterval(update, 1);
 
 
 //updating question section
-const questionData = localStorage.getItem("data");
-const parsedQuestionData = JSON.parse(questionData);
+let questionData = localStorage.getItem("data");
+let parsedQuestionData = null;
+try {
+  if (questionData) parsedQuestionData = JSON.parse(questionData);
+} catch (e) {}
 
+const urlParams = new URLSearchParams(window.location.search);
+const currentUrlMockId = urlParams.get("mockID") || sessionStorage.getItem("currentMockId") || localStorage.getItem("currentMockId") || "";
+
+const needsRefresh = !parsedQuestionData ||
+  !parsedQuestionData.reading ||
+  Boolean(currentUrlMockId);
+
+if (needsRefresh) {
+  try {
+    const xhr = new XMLHttpRequest();
+    const apiUrl = currentUrlMockId ? `/api/mockTest?mockID=${encodeURIComponent(currentUrlMockId)}` : "/api/mockTest";
+    xhr.open("GET", apiUrl, false);
+    xhr.send(null);
+    if (xhr.status === 200) {
+      parsedQuestionData = JSON.parse(xhr.responseText);
+      localStorage.setItem("data", JSON.stringify(parsedQuestionData));
+      if (parsedQuestionData.mockNumber) {
+        sessionStorage.setItem("currentMockId", parsedQuestionData.mockNumber);
+        localStorage.setItem("currentMockId", parsedQuestionData.mockNumber);
+      }
+    }
+  } catch (err) {
+    console.error("Synchronous fallback for reading failed:", err);
+  }
+}
+
+if (!parsedQuestionData || !parsedQuestionData.reading) {
+  console.error("Reading questions could not be loaded!");
+}
 
 //insert from database
-const passages = parsedQuestionData.reading.passages;
-const questions = parsedQuestionData.reading.questions;
-const instructions = parsedQuestionData.reading.instructions;
-const answers = parsedQuestionData.reading.answers; 
+const passages = (parsedQuestionData && parsedQuestionData.reading && parsedQuestionData.reading.passages) || [];
+const questions = (parsedQuestionData && parsedQuestionData.reading && parsedQuestionData.reading.questions) || [];
+const instructions = (parsedQuestionData && parsedQuestionData.reading && parsedQuestionData.reading.instructions) || [];
+const answers = (parsedQuestionData && parsedQuestionData.reading && parsedQuestionData.reading.answers) || {}; 
 //insert from database
 
 
@@ -3082,7 +936,9 @@ passages.forEach((passage)=>{
       paraHeading.setAttribute("id", `para-heading-${paragraph}`);
       paraHeading.textContent = paragraph;
       passageScroll.appendChild(paraHeading);
-      passage["paragraph-content"][index].forEach((para)=>{
+      const rawPara1 = passage["paragraph-content"] ? passage["paragraph-content"][index] : "";
+      const paraList1 = Array.isArray(rawPara1) ? rawPara1 : (rawPara1 ? [rawPara1] : []);
+      paraList1.forEach((para)=>{
         const paraDIV = document.createElement("div");
         paraDIV.classList.add("para");
         paraDIV.setAttribute("id", `para-${paragraph}-${passage.part}`);
@@ -3116,7 +972,9 @@ passages.forEach((passage)=>{
       paraHeading.setAttribute("id", `para-heading-${paragraph}`);
       paraHeading.textContent = paragraph;
       passageScroll.appendChild(paraHeading);
-      passage["paragraph-content"][index].forEach((para)=>{
+      const rawPara1 = passage["paragraph-content"] ? passage["paragraph-content"][index] : "";
+      const paraList1 = Array.isArray(rawPara1) ? rawPara1 : (rawPara1 ? [rawPara1] : []);
+      paraList1.forEach((para)=>{
         const paraDIV = document.createElement("div");
         paraDIV.classList.add("para");
         paraDIV.setAttribute("id", `para-${paragraph}-${passage.part}`);
@@ -3151,7 +1009,9 @@ passages.forEach((passage)=>{
       paraHeading.setAttribute("id", `para-heading-${paragraph}`);
       paraHeading.textContent = paragraph;
       passageScroll.appendChild(paraHeading);
-      passage["paragraph-content"][index].forEach((para)=>{
+      const rawPara1 = passage["paragraph-content"] ? passage["paragraph-content"][index] : "";
+      const paraList1 = Array.isArray(rawPara1) ? rawPara1 : (rawPara1 ? [rawPara1] : []);
+      paraList1.forEach((para)=>{
         const paraDIV = document.createElement("div");
         paraDIV.classList.add("para");
         paraDIV.setAttribute("id", `para-${paragraph}-${passage.part}`);
@@ -3547,32 +1407,32 @@ let last = 0;
 let index = 0;
 groupCounts.forEach((value, group)=>{
     const groupDiv = document.querySelector(`.group-${group}`);
+    if (!groupDiv) return;
     //trying instruction logic
     const groupHeader = document.createElement("div");
     groupHeader.classList.add("group-header");
     const instructionDiv = document.createElement("div");
     instructionDiv.classList.add("instructions");
-    instructionDiv.innerHTML = `<h3>${instructions[index].instruction}</h3>`
-    groupHeader.prepend(instructionDiv);
-   // console.log(instructions[index].instruction);
+    const instrHtml = (instructions && instructions[index] && instructions[index].instruction) || (questions && questions[index] && questions[index].instruction) || "";
+    if (instrHtml) {
+      instructionDiv.innerHTML = `<h3>${instrHtml}</h3>`;
+      groupHeader.prepend(instructionDiv);
+    }
     
-    const min = findLowest(questions[index].id)
-    const max = findHighest(questions[index].id)
-    console.log(min)
-    console.log(max)
+    if (questions && questions[index] && questions[index].id) {
+      const min = findLowest(questions[index].id);
+      const max = findHighest(questions[index].id);
+      if (!isNaN(min) && !isNaN(max) && isFinite(min) && isFinite(max)) {
+        const groupRangeHeader = document.createElement("h3");
+        groupRangeHeader.textContent = `Questions ${min} - ${max}`;
+        groupHeader.prepend(groupRangeHeader); 
+      }
+    }
 
     last += value;
-    
-    const groupRangeHeader = document.createElement("h3");
-    groupRangeHeader.textContent = `Questions ${min} - ${max}`;
-    groupHeader.prepend(groupRangeHeader); 
     questionRangeStarter += value;
-
-
-  console.log(index)
-  index += 1;  
-  groupDiv.prepend(groupHeader);
-
+    index += 1;  
+    groupDiv.prepend(groupHeader);
 })
 
 
@@ -3699,6 +1559,7 @@ questions.forEach((question)=>{
 
       //id select
       selectElem.setAttribute("id", question.id[index]);
+      selectElem.setAttribute("data-question-id", question.id[index]);
 
       const infoDiv = document.createElement("div");
       infoDiv.classList.add("matching-info-question");
@@ -3876,32 +1737,216 @@ questions.forEach((question)=>{
     matchingContainer.appendChild(allBoxes);
   }
 
-  if(question.type === "list-of-headings"){
-      const listContainer = groupDiv.querySelector(".list-of-headings-container");
-      
-      const passage = document.querySelector(`#passage-scroll-${question.part}`);
+  if (question.type === "list-of-headings") {
+    const listContainer = groupDiv.querySelector(".list-of-headings-container");
+    const passage = document.querySelector(`#passage-scroll-${question.part}`);
 
-      const listHeadings = document.createElement("div");
-      listHeadings.classList.add("list-headings");
-      question.headings.forEach((heading, index)=>{
-        listHeadings.innerHTML += `<div class="box" data-class="list-of-headings" data-item="${heading}">${heading}</div>`
-        
-        
-      })
+    const romanList = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii'];
 
-      question.paragraphs.forEach((paragraph, idx)=>{
-          const emptyBox = document.createElement("div");
-          emptyBox.setAttribute("id", question.id[idx]);
-          emptyBox.classList.add("box", "dropzone", "box-heading");
-          emptyBox.setAttribute("data-item", "");
-          emptyBox.setAttribute("data-initial", "empty");
-          emptyBox.setAttribute("data-class", "list-of-headings");
-          emptyBox.setAttribute("data-question-id", question.id[idx]);
-          const para = document.querySelector(`#para-${paragraph}-${question.part}`)
-          passage.insertBefore(emptyBox, para)
-        })
+    function parseHeadingItem(h, idx) {
+      if (typeof h === 'object' && h !== null) {
+        return {
+          num: String(h.id || h.letter || romanList[idx] || (idx + 1)).toLowerCase(),
+          text: h.text || h.title || ''
+        };
+      }
+      const str = String(h || '').trim();
+      const match = str.match(/^([ivxlcdm]+|\d+)[\.\:\-\s]+(.*)$/i);
+      if (match) {
+        return {
+          num: match[1].toLowerCase(),
+          text: match[2].trim()
+        };
+      }
+      return {
+        num: romanList[idx] || String(idx + 1),
+        text: str
+      };
+    }
 
-      listContainer.appendChild(listHeadings);
+    const parsedHeadings = (question.headings || []).map((h, i) => parseHeadingItem(h, i));
+
+    const wrapDiv = document.createElement("div");
+    wrapDiv.className = "cr-headings-group-wrap";
+    wrapDiv.innerHTML = `
+      <div class="cr-heading-drag-instruction">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 5px;"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+        Drag and drop the headings to the correct paragraphs in the passage on the left, or click a heading card and then click a paragraph dropzone.
+      </div>
+      <div class="cr-headings-draggable-cards"></div>
+    `;
+
+    const cardsContainer = wrapDiv.querySelector(".cr-headings-draggable-cards");
+
+    parsedHeadings.forEach((ph) => {
+      const card = document.createElement("div");
+      card.className = "cr-heading-card";
+      card.setAttribute("draggable", "true");
+      card.setAttribute("data-heading-id", ph.num);
+      card.setAttribute("data-heading-text", ph.text);
+      card.innerHTML = `
+        <span class="cr-heading-card-roman">${ph.num}.</span>
+        <span class="cr-heading-card-text">${escapeHtml(ph.text)}</span>
+      `;
+
+      card.addEventListener("dragstart", (e) => {
+        if (typeof examLocked !== "undefined" && examLocked) { e.preventDefault(); return; }
+        card.classList.add("dragging");
+        window.__activeHeadingDrag = { num: ph.num, text: ph.text };
+        e.dataTransfer.setData("text/plain", ph.num);
+        e.dataTransfer.effectAllowed = "move";
+      });
+
+      card.addEventListener("dragend", () => {
+        card.classList.remove("dragging");
+        window.__activeHeadingDrag = null;
+      });
+
+      card.addEventListener("click", () => {
+        if (typeof examLocked !== "undefined" && examLocked) return;
+        if (window.__selectedHeadingCard === ph.num) {
+          window.__selectedHeadingCard = null;
+          document.querySelectorAll(".cr-heading-card").forEach(c => c.classList.remove("selected"));
+        } else {
+          window.__selectedHeadingCard = ph.num;
+          document.querySelectorAll(".cr-heading-card").forEach(c => c.classList.remove("selected"));
+          card.classList.add("selected");
+        }
+      });
+
+      cardsContainer.appendChild(card);
+    });
+
+    listContainer.appendChild(wrapDiv);
+
+    function updateHeadingCardsUsedState() {
+      const usedIds = new Set();
+      document.querySelectorAll(`.cr-heading-dropzone[data-part="${question.part}"]`).forEach(dz => {
+        const val = dz.getAttribute("data-item");
+        if (val) usedIds.add(String(val).toLowerCase());
+      });
+
+      document.querySelectorAll(`.cr-headings-draggable-cards .cr-heading-card`).forEach(c => {
+        const hid = String(c.getAttribute("data-heading-id") || "").toLowerCase();
+        if (usedIds.has(hid)) {
+          c.classList.add("used");
+        } else {
+          c.classList.remove("used");
+        }
+      });
+    }
+
+    function assignHeadingToDropzone(dz, num, text) {
+      if (typeof examLocked !== "undefined" && examLocked) return;
+      if (!dz || !num) return;
+      const qid = dz.getAttribute("data-question-id");
+
+      document.querySelectorAll(`.cr-heading-dropzone[data-part="${question.part}"]`).forEach(otherDz => {
+        if (otherDz !== dz && otherDz.getAttribute("data-item") === num) {
+          clearDropzone(otherDz);
+        }
+      });
+
+      dz.classList.add("filled");
+      dz.setAttribute("data-item", num);
+      dz.innerHTML = `
+        <span class="cr-qnum-badge">${qid}</span>
+        <span class="cr-heading-drop-text"><strong class="cr-heading-val">${num}.</strong> ${escapeHtml(text || "")}</span>
+        <button type="button" class="cr-heading-remove-btn" title="Remove heading">✕</button>
+      `;
+
+      const rmBtn = dz.querySelector(".cr-heading-remove-btn");
+      if (rmBtn) {
+        rmBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          clearDropzone(dz);
+        });
+      }
+
+      answerArrayUpdated[qid] = [num];
+      updateHeadingCardsUsedState();
+      updateQNavState(qid);
+
+      window.__selectedHeadingCard = null;
+      document.querySelectorAll(".cr-heading-card").forEach(c => c.classList.remove("selected"));
+    }
+
+    function clearDropzone(dz) {
+      if (typeof examLocked !== "undefined" && examLocked) return;
+      if (!dz) return;
+      const qid = dz.getAttribute("data-question-id");
+      dz.classList.remove("filled");
+      dz.setAttribute("data-item", "");
+      dz.innerHTML = `
+        <span class="cr-qnum-badge">${qid}</span>
+        <span class="cr-heading-drop-text">Drop heading here</span>
+      `;
+      delete answerArrayUpdated[qid];
+      updateHeadingCardsUsedState();
+      updateQNavState(qid);
+    }
+
+    question.paragraphs.forEach((paragraph, idx) => {
+      const qid = question.id[idx];
+      const dropzone = document.createElement("div");
+      dropzone.className = "cr-heading-dropzone";
+      dropzone.id = `headingDrop-${qid}`;
+      dropzone.setAttribute("data-qid", qid);
+      dropzone.setAttribute("data-question-id", qid);
+      dropzone.setAttribute("data-para", paragraph);
+      dropzone.setAttribute("data-part", question.part);
+      dropzone.setAttribute("data-class", "list-of-headings");
+      dropzone.setAttribute("data-initial", "empty");
+      dropzone.setAttribute("data-item", "");
+
+      dropzone.innerHTML = `
+        <span class="cr-qnum-badge">${qid}</span>
+        <span class="cr-heading-drop-text">Drop heading here</span>
+      `;
+
+      dropzone.addEventListener("dragover", (e) => {
+        if (typeof examLocked !== "undefined" && examLocked) return;
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+        dropzone.classList.add("dragover");
+      });
+
+      dropzone.addEventListener("dragleave", () => {
+        dropzone.classList.remove("dragover");
+      });
+
+      dropzone.addEventListener("drop", (e) => {
+        if (typeof examLocked !== "undefined" && examLocked) return;
+        e.preventDefault();
+        dropzone.classList.remove("dragover");
+        const headingNum = window.__activeHeadingDrag?.num || e.dataTransfer.getData("text/plain");
+        const headingText = window.__activeHeadingDrag?.text || (parsedHeadings.find(h => h.num === headingNum)?.text || "");
+        if (headingNum) {
+          assignHeadingToDropzone(dropzone, headingNum, headingText);
+        }
+      });
+
+      dropzone.addEventListener("click", () => {
+        if (typeof examLocked !== "undefined" && examLocked) return;
+        if (window.__selectedHeadingCard) {
+          const selectedHeading = parsedHeadings.find(h => h.num === window.__selectedHeadingCard);
+          if (selectedHeading) {
+            assignHeadingToDropzone(dropzone, selectedHeading.num, selectedHeading.text);
+          }
+        }
+      });
+
+      if (passage) {
+        const paraEl = passage.querySelector(`#para-${paragraph}-${question.part}`) ||
+                       passage.querySelector(`#para-heading-${paragraph}`) ||
+                       passage.querySelector(`[id^="para-${paragraph}"]`);
+        if (paraEl) {
+          passage.insertBefore(dropzone, paraEl);
+        } else {
+          passage.appendChild(dropzone);
+        }
+      }
+    });
   }
 
   if(question.type === "summary-completion"){
@@ -4240,8 +2285,8 @@ document.addEventListener("dragover", function (e) {
 
 // Utility: find question elements by numeric id. Questions in your render use data-question-id attributes.
 function getQuestionElementById(qid) {
-  // first try attribute selectors
-  return document.querySelector(`[data-question-id="${qid}"], [id="${qid}"]`);
+  // first try attribute selectors, heading dropzones, and ID
+  return document.querySelector(`[data-question-id="${qid}"], #headingDrop-${qid}, [id="${qid}"]`);
 }
 
 // Check whether a given question id currently has an answer (text / radio / select / dropzones)
@@ -4261,16 +2306,18 @@ function isQuestionAnswered(qid) {
   }
 
   // 3) select (matching-information sets the select id to the q.id earlier)
-  const select = document.getElementById(qid);
+  const select = document.getElementById(qid) || document.querySelector(`select[data-question-id="${qid}"]`);
   if (select && select.value && select.value.trim() !== "") return true;
 
-  // 4) dropzones / boxes (you used id on dropzone divs for many types)
-  const dropzone = document.getElementById(String(qid));
+  // 4) dropzones / boxes / heading dropzones
+  const dropzone = document.getElementById(String(qid)) ||
+                   document.getElementById(`headingDrop-${qid}`) ||
+                   document.querySelector(`.cr-heading-dropzone[data-question-id="${qid}"]`);
   if (dropzone) {
+    if (dropzone.classList.contains("filled")) return true;
+    if (dropzone.dataset && dropzone.dataset.item && dropzone.dataset.item.trim() !== "") return true;
     const text = dropzone.textContent.trim();
-    // If it has visible content, consider it answered. Also check dataset.item if used.
-    if (text !== "" && text.toLowerCase() !== "empty") return true;
-    if (dropzone.dataset && dropzone.dataset.item && dropzone.dataset.item !== "") return true;
+    if (text !== "" && text.toLowerCase() !== "empty" && !text.includes("Drop heading here")) return true;
   }
 
   // 5) fallback: any input *inside* an element that carries the question id as parent (p tag with data-question-id etc)

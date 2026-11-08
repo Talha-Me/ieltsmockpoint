@@ -12,20 +12,20 @@
 <meta charset="UTF-8">
 <script>document.documentElement.classList.add('js');</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Free IELTS Practice by Question Type + Free IELTS Mock Test | IELTS Mockpoint</title>
-<meta name="description" content="Free IELTS practice by question type for Reading, Listening and Writing, plus a free IELTS mock test and Cambridge-style practice in the real exam interface. No sign-up needed.">
+<title>Free IELTS Practice by Question Type Online | IELTS Mockpoint</title>
+<meta name="description" content="Free IELTS practice by question type for Reading, Listening & Writing. Master True/False/NG, Headings, Maps & Essays with authentic tests & instant band scores!">
 <meta name="keywords" content="free IELTS mock test, IELTS mock test, IELTS practice, free IELTS practice, IELTS question types, IELTS practice by question type, Cambridge IELTS practice, IELTS reading practice, IELTS listening practice, IELTS writing practice, true false not given, matching headings, map labelling, IELTS practice hub, IELTS mock practice online">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <meta name="theme-color" content="#0b2b52">
 <link rel="canonical" href="https://www.ieltsmockpoint.com/practice-hub">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="IELTS Mockpoint">
-<meta property="og:title" content="Free IELTS Practice by Question Type + Free Mock Test | IELTS Mockpoint">
-<meta property="og:description" content="Practise every IELTS question type for free, then take a free full IELTS mock test in the real exam interface.">
+<meta property="og:title" content="Free IELTS Practice by Question Type Online | IELTS Mockpoint">
+<meta property="og:description" content="Free IELTS practice by question type for Reading, Listening & Writing. Master True/False/NG, Headings, Maps & Essays with authentic tests & instant band scores!">
 <meta property="og:url" content="https://www.ieltsmockpoint.com/practice-hub">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Free IELTS Practice Hub by Question Type">
-<meta name="twitter:description" content="Free IELTS practice for Reading, Listening and Writing, plus a free IELTS mock test.">
+<meta name="twitter:title" content="Free IELTS Practice by Question Type Online | IELTS Mockpoint">
+<meta name="twitter:description" content="Free IELTS practice by question type for Reading, Listening & Writing. Master True/False/NG, Headings, Maps & Essays with authentic tests & instant band scores!">
 <link rel="icon" type="image/png" href="mpfavicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -565,6 +565,158 @@ footer {
     display: none;
   }
 }
+
+
+/* =========================================================================
+   RESPONSIVE TOOLBAR & SEARCH BAR FIX (NEVER CUT OFF)
+   ========================================================================= */
+.toolbar {
+  position: sticky;
+  top: calc(74px + env(safe-area-inset-top,0));
+  z-index: 40;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1.5px solid var(--line);
+  box-shadow: 0 2px 10px rgba(11, 43, 82, 0.04);
+}
+.toolbar .wrap {
+  display: flex !important;
+  gap: 14px !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+  flex-wrap: wrap !important;
+  overflow: visible !important;
+}
+.toolbar-left-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.toolbar-right-group {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+.search {
+  position: relative !important;
+  margin: 0 !important;
+  flex-shrink: 0 !important;
+}
+.search input {
+  font-family: inherit !important;
+  font-size: 0.88rem !important;
+  font-weight: 500 !important;
+  padding: 10px 16px 10px 38px !important;
+  border: 1.5px solid var(--line) !important;
+  border-radius: 999px !important;
+  background: var(--surface, #f8fafc) !important;
+  width: 240px !important;
+  color: var(--text) !important;
+  transition: all 0.25s ease !important;
+  outline: none !important;
+}
+.search input:focus {
+  background: #ffffff !important;
+  border-color: var(--blue) !important;
+  box-shadow: 0 0 0 3px rgba(21, 101, 201, 0.14) !important;
+  width: 270px !important;
+}
+.search svg {
+  position: absolute !important;
+  left: 13px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 16px !important;
+  height: 16px !important;
+  color: var(--muted) !important;
+  pointer-events: none !important;
+}
+
+@media (max-width: 980px) {
+  .toolbar-left-group {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .toolbar-right-group {
+    width: 100%;
+    margin-left: 0 !important;
+    margin-top: 4px;
+  }
+  .toolbar-right-group .search {
+    width: 100%;
+  }
+  .toolbar-right-group .search input {
+    width: 100% !important;
+  }
+}
+
+/* PRACTICE HUB TAXONOMY FILTER PILLS */
+.hub-taxonomy-wrap {
+  background: #ffffff;
+  border: 1.5px solid var(--line);
+  border-radius: 18px;
+  padding: 16px 20px;
+  margin: 20px auto 26px;
+  box-shadow: 0 4px 18px rgba(11, 43, 82, 0.04);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.hub-taxonomy-wrap:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 6px 22px rgba(11, 43, 82, 0.06);
+}
+.hub-tax-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.tax-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 15px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: #ffffff;
+  color: var(--navy);
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.tax-pill:hover {
+  background: var(--blue-light);
+  border-color: var(--blue);
+  color: var(--blue);
+}
+.tax-pill.active {
+  background: var(--navy);
+  color: #ffffff;
+  border-color: var(--navy);
+  box-shadow: 0 4px 12px rgba(11, 43, 82, 0.16);
+}
+.tax-pill-link {
+  background: #f8fafc;
+  color: var(--muted);
+  border-style: dashed;
+}
+.tax-pill-link:hover {
+  background: #ffffff;
+  border-style: solid;
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
 </style>
 <script src="/shared-layout.js"></script>
 <script src="/auth-nav.js"></script>
@@ -897,11 +1049,41 @@ footer {
 
 <div class="ticker" aria-hidden="true"><div id="tick"></div></div>
 
-<div class="toolbar" id="hub-bar" style="scroll-margin-top:86px"><div class="wrap">
-  <div id="tabs" role="group" aria-label="Filter by skill" style="display:flex;gap:10px"></div>
-  <a class="mocklink" href="/mocks.html">Try free full mock test →</a>
-  <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="q" type="search" placeholder="Search e.g. map, essay, headings" aria-label="Search IELTS question types"></label>
-</div></div>
+<div class="toolbar" id="hub-bar" style="scroll-margin-top:86px">
+  <div class="wrap">
+    <div class="toolbar-left-group">
+      <div id="tabs" role="group" aria-label="Filter by skill" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+      <a class="mocklink" href="/mocks.html" style="white-space:nowrap;">Try free full mock test →</a>
+    </div>
+    <div class="toolbar-right-group">
+      <label class="search" style="margin:0;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input id="q" type="search" placeholder="Search e.g. map, essay, headings" aria-label="Search IELTS question types">
+      </label>
+    </div>
+  </div>
+</div>
+
+<!-- Category Taxonomy Quick Filter Bar -->
+<div class="wrap">
+  <div class="hub-taxonomy-wrap">
+    <div class="hub-tax-pills" role="toolbar" aria-label="Popular IELTS question types">
+      <button type="button" class="tax-pill active" onclick="applyHubTaxonomy('', 'all', this)">All Question Types</button>
+      <button type="button" class="tax-pill" onclick="applyHubTaxonomy('headings', 'reading', this)">Matching Headings</button>
+      <button type="button" class="tax-pill" onclick="applyHubTaxonomy('true false', 'reading', this)">True / False / Not Given</button>
+      <button type="button" class="tax-pill" onclick="applyHubTaxonomy('map', 'listening', this)">Map Labelling</button>
+      <button type="button" class="tax-pill" onclick="applyHubTaxonomy('completion', 'listening', this)">Form &amp; Note Completion</button>
+      <button type="button" class="tax-pill" onclick="applyHubTaxonomy('multiple choice', 'all', this)">Multiple Choice (MCQ)</button>
+      <button type="button" class="tax-pill" onclick="applyHubTaxonomy('task 1', 'writing', this)">Writing Task 1 Graphs</button>
+      <button type="button" class="tax-pill" onclick="applyHubTaxonomy('task 2', 'writing', this)">Writing Task 2 Essays</button>
+      <button type="button" class="tax-pill" onclick="applyHubTaxonomy('cue card', 'speaking', this)">Speaking Cue Cards</button>
+      <a href="/mocks.html" class="tax-pill tax-pill-link" title="Full Mock Tests">Full Mock Tests ↗</a>
+      <a href="/speaking.html" class="tax-pill tax-pill-link" title="Speaking Simulator">AI Speaking ↗</a>
+    </div>
+  </div>
+</div>
+
+
 
 <div class="wrap" id="hub"></div>
 <div class="wrap"><div class="empty" id="empty"><b>No question types found</b>Try a different keyword, such as "map", "essay" or "headings".</div>
@@ -1472,6 +1654,43 @@ document.querySelectorAll('a[href]').forEach(a=>{
   let h=a.getAttribute('href');
   if(CLEAN_URLS&&/^\/[\w-]+\.html$/.test(h))a.setAttribute('href',h.replace('.html',''));
 });
+
+
+
+
+
+
+
+
+function applyHubTaxonomy(keyword, skill, btn) {
+  document.querySelectorAll('.hub-tax-pills .tax-pill').forEach(p => p.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  if (skill && skill !== 'all') {
+    cur = skill;
+    const tabsContainer = document.getElementById('tabs');
+    if (tabsContainer) {
+      tabsContainer.querySelectorAll('.tab').forEach(b => {
+        b.classList.toggle('on', b.dataset.id === skill);
+      });
+    }
+  } else if (skill === 'all') {
+    cur = 'all';
+    const tabsContainer = document.getElementById('tabs');
+    if (tabsContainer) {
+      tabsContainer.querySelectorAll('.tab').forEach(b => {
+        b.classList.toggle('on', b.dataset.id === 'all');
+      });
+    }
+  }
+
+  const qInput = document.getElementById('q');
+  if (qInput) {
+    qInput.value = keyword;
+  }
+  filter(true);
+}
+
 </script>
 </body>
 </html>

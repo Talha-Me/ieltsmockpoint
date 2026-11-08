@@ -7,6 +7,8 @@ const systemSettingsSchema = new mongoose.Schema(
     freeAcademicMocksCount: { type: Number, default: 1 },
     freePremiumMocksCount: { type: Number, default: 1 },
     freeFullMocksCount: { type: Number, default: 1 },
+    freeSpeakingTestsCount: { type: Number, default: 1 },
+    freeSpeakingPartsCount: { type: Number, default: 1 },
     freePartsPerTest: { type: Number, default: 1 },
     freeQuestionTypesPerTest: { type: Number, default: 0 },
     freePracticeHubSets: { type: Number, default: 2 },

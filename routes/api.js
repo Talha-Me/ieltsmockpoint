@@ -1177,38 +1177,107 @@ router.get("/user-data", async (req, res) => {
 // ==========================================
 // ৩. ফুল মক টেস্ট ডেটা ফেচ (test-questions কালেকশন)
 // ==========================================
-router.get("/mockTest", (req, res) => {
-  if (req.session && req.session.mock) {
-    return res.json({
-      mockNumber: req.session.mock.mockNumber,
-      plan: req.session.mock.plan || "Free",
-      listening: req.session.mock.listening,
-      reading: req.session.mock.reading,
-      writing: req.session.mock.writing,
-    });
+router.get("/mockTest", async (req, res) => {
+  try {
+    const mockID = req.query.mockID || (req.session && req.session.mock && req.session.mock.mockNumber);
+
+    if (mockID) {
+      const mockDoc = await TestQuestions.findOne({
+        $or: [
+          { mockNumber: mockID },
+          { mockNumber: String(mockID).trim() }
+        ]
+      }).lean();
+
+      if (mockDoc) {
+        if (req.session) {
+          req.session.mock = {
+            mockNumber: mockDoc.mockNumber,
+            plan: mockDoc.plan || "Free",
+            listening: mockDoc.listening,
+            reading: mockDoc.reading,
+            writing: mockDoc.writing,
+          };
+        }
+        return res.json({
+          mockNumber: mockDoc.mockNumber,
+          plan: mockDoc.plan || "Free",
+          listening: mockDoc.listening,
+          reading: mockDoc.reading,
+          writing: mockDoc.writing,
+        });
+      }
+    }
+
+    if (req.session && req.session.mock) {
+      return res.json({
+        mockNumber: req.session.mock.mockNumber,
+        plan: req.session.mock.plan || "Free",
+        listening: req.session.mock.listening,
+        reading: req.session.mock.reading,
+        writing: req.session.mock.writing,
+      });
+    }
+
+    res.status(400).json({ error: "No active mock test in session or query" });
+  } catch (err) {
+    console.error("Error in /mockTest:", err);
+    res.status(500).json({ error: "Internal server error" });
   }
-  res.status(400).json({ error: "No active mock test in session" });
 });
 
-router.get("/getListeningData", (req, res) => {
-  if (req.session && req.session.mock && req.session.mock.listening) {
-    return res.json(req.session.mock.listening);
+router.get("/getListeningData", async (req, res) => {
+  try {
+    const mockID = req.query.mockID || (req.session && req.session.mock && req.session.mock.mockNumber);
+    if (req.session && req.session.mock && req.session.mock.listening) {
+      return res.json(req.session.mock.listening);
+    }
+    if (mockID) {
+      const mockDoc = await TestQuestions.findOne({ mockNumber: mockID }).lean();
+      if (mockDoc && mockDoc.listening) {
+        return res.json(mockDoc.listening);
+      }
+    }
+    res.status(400).json({ error: "No mock listening session found" });
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
   }
-  res.status(400).json({ error: "No mock listening session found" });
 });
 
-router.get("/getReadingData", (req, res) => {
-  if (req.session && req.session.mock && req.session.mock.reading) {
-    return res.json(req.session.mock.reading);
+router.get("/getReadingData", async (req, res) => {
+  try {
+    const mockID = req.query.mockID || (req.session && req.session.mock && req.session.mock.mockNumber);
+    if (req.session && req.session.mock && req.session.mock.reading) {
+      return res.json(req.session.mock.reading);
+    }
+    if (mockID) {
+      const mockDoc = await TestQuestions.findOne({ mockNumber: mockID }).lean();
+      if (mockDoc && mockDoc.reading) {
+        return res.json(mockDoc.reading);
+      }
+    }
+    res.status(400).json({ error: "No mock reading session found" });
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
   }
-  res.status(400).json({ error: "No mock reading session found" });
 });
 
-router.get("/getWritingData", (req, res) => {
-  if (req.session && req.session.mock && req.session.mock.writing) {
-    return res.json(req.session.mock.writing);
+router.get("/getWritingData", async (req, res) => {
+  try {
+    const mockID = req.query.mockID || (req.session && req.session.mock && req.session.mock.mockNumber);
+    if (req.session && req.session.mock && req.session.mock.writing) {
+      return res.json(req.session.mock.writing);
+    }
+    if (mockID) {
+      const mockDoc = await TestQuestions.findOne({ mockNumber: mockID }).lean();
+      if (mockDoc && mockDoc.writing) {
+        return res.json(mockDoc.writing);
+      }
+    }
+    res.status(400).json({ error: "No mock writing session found" });
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
   }
-  res.status(400).json({ error: "No mock writing session found" });
 });
 
 // ==========================================
@@ -1347,7 +1416,7 @@ router.post("/update-mock-info", async (req, res) => {
 
           record.status = "completed";
 
-          const bands = [record.listeningBand, record.readingBand, record.writingBand].filter(b => typeof b === 'number' && b > 0);
+          const bands = [record.listeningBand, record.readingBand, record.writingBand, record.speakingBand].filter(b => typeof b === 'number' && b > 0);
           if (bands.length > 0) {
             const rawAvg = bands.reduce((a, b) => a + b, 0) / bands.length;
             record.overallBand = Math.round(rawAvg * 2) / 2;
@@ -1755,8 +1824,12 @@ router.get("/student/dashboard-data", async (req, res) => {
         { status: "completed" },
         { listeningScore: { $ne: null } },
         { readingScore: { $ne: null } },
+        { writingBand: { $ne: null } },
+        { speakingBand: { $ne: null } },
         { "answers.listening": { $exists: true } },
-        { "answers.reading": { $exists: true } }
+        { "answers.reading": { $exists: true } },
+        { "answers.writing": { $exists: true } },
+        { "answers.speaking": { $exists: true } }
       ]
     }).sort({ createdAt: -1 }).lean();
 
@@ -1875,16 +1948,17 @@ router.get("/student/dashboard-data", async (req, res) => {
 
     combinedHistory.forEach(h => {
       const typeLower = String(h.testType || '').toLowerCase();
-      if (typeLower.includes('full') || typeLower.includes('academic') || typeLower.includes('premium') || typeLower.includes('general')) {
-        categoryBreakdown.fullMock++;
-      } else if (typeLower.includes('hub') || typeLower.includes('question') || typeLower.includes('type')) {
-        categoryBreakdown.questionType++;
-      } else if (typeLower.includes('writing')) {
-        categoryBreakdown.writing++;
-      } else if (typeLower.includes('speaking')) {
-        categoryBreakdown.speaking++;
-      } else if (typeLower.includes('cambridge')) {
+      const modLower = String(h.module || '').toLowerCase();
+      if (typeLower.includes('cambridge')) {
         categoryBreakdown.cambridge++;
+      } else if (typeLower.includes('speaking') || modLower === 'speaking' || (h.speakingBand > 0 && !h.listeningBand && !h.readingBand)) {
+        categoryBreakdown.speaking++;
+      } else if (typeLower.includes('writing') || modLower === 'writing' || (h.writingBand > 0 && !h.listeningBand && !h.readingBand)) {
+        categoryBreakdown.writing++;
+      } else if (typeLower.includes('hub') || typeLower.includes('question') || typeLower.includes('type') || modLower === 'practice') {
+        categoryBreakdown.questionType++;
+      } else {
+        categoryBreakdown.fullMock++;
       }
 
       if (h.listeningBand > 0) { 
@@ -2016,17 +2090,39 @@ router.get("/student/test-record/:id", async (req, res) => {
 
     // Dynamic reconstruction of 1-40 reviews if mistakes is empty or incomplete
     try {
-      const testId = record.testId;
+      const testId = record.testId || record.testNumber || record.mockNumber;
+      let testDoc = null;
       if (testId) {
-        const testDoc = await TestQuestions.findOne({ mockNumber: testId }).lean()
+        testDoc = await TestQuestions.findOne({ mockNumber: testId }).lean()
           || await TestQuestions.findOne({ mockNumber: new RegExp('^' + testId.replace(/[-\[\]{}()*+?.,\\^$|#\s]/g, '\\$&') + '$', 'i') }).lean();
+      }
+      if (!testDoc && record.title) {
+        testDoc = await TestQuestions.findOne({ mockNumber: new RegExp(record.title.replace(/[-\[\]{}()*+?.,\\^$|#\s]/g, '\\$&'), 'i') }).lean();
+      }
 
-        if (testDoc) {
-          if (!record.mistakes) record.mistakes = {};
-          if (!record.answers) record.answers = {};
+      if (testDoc) {
+        if (testDoc.listening) {
+          if (testDoc.listening.transcript) record.listeningTranscript = testDoc.listening.transcript;
+          if (testDoc.listening.explanations) record.listeningExplanations = testDoc.listening.explanations;
+          if (testDoc.listening.questions) record.listeningQuestions = testDoc.listening.questions;
+          if (testDoc.listening.answers) record.listeningAnswers = testDoc.listening.answers;
+        }
+        if (testDoc.reading) {
+          if (testDoc.reading.explanations) record.readingExplanations = testDoc.reading.explanations;
+          if (testDoc.reading.passages) record.readingPassages = testDoc.reading.passages;
+          if (testDoc.reading.questions) record.readingQuestions = testDoc.reading.questions;
+          if (testDoc.reading.answers) record.readingAnswers = testDoc.reading.answers;
+        }
+        if (testDoc.writing) {
+          if (testDoc.writing.sampleAnswers) record.writingSampleAnswers = testDoc.writing.sampleAnswers;
+          if (testDoc.writing.questions) record.writingQuestions = testDoc.writing.questions;
+        }
 
-          // Dynamic evaluate Listening
-          const officialL = testDoc.listening && testDoc.listening.answers;
+        if (!record.mistakes) record.mistakes = {};
+        if (!record.answers) record.answers = {};
+
+        // Dynamic evaluate Listening
+        const officialL = testDoc.listening && testDoc.listening.answers;
           const userL = record.answers.listening || {};
           const hasLMistakes = Array.isArray(record.mistakes.listening) && record.mistakes.listening.length > 0;
           if (officialL && (!hasLMistakes || record.mistakes.listening.length < 40)) {
@@ -2094,7 +2190,7 @@ router.get("/student/test-record/:id", async (req, res) => {
           }
 
           // Update overallBand if needed
-          const bands = [record.listeningBand, record.readingBand, record.writingBand].filter(b => typeof b === 'number' && b > 0);
+          const bands = [record.listeningBand, record.readingBand, record.writingBand, record.speakingBand].filter(b => typeof b === 'number' && b > 0);
           if (bands.length > 0 && (!record.overallBand || record.overallBand === 0)) {
             const rawAvg = bands.reduce((a, b) => a + b, 0) / bands.length;
             record.overallBand = Math.round(rawAvg * 2) / 2;
@@ -2112,7 +2208,6 @@ router.get("/student/test-record/:id", async (req, res) => {
             status: "completed"
           });
         }
-      }
     } catch (evalErr) {
       console.warn("Dynamic test record evaluation warning:", evalErr.message);
     }

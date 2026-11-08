@@ -2354,7 +2354,6 @@ app.get("/", (req, res) => {
 // ==========================================
 app.get('/sitemap.xml', async (req, res) => {
   try {
-    // Helper function to escape special XML characters
     const escapeXml = (unsafe) => {
       if (!unsafe) return '';
       return String(unsafe).replace(/[<>&'"]/g, (c) => {
@@ -2368,97 +2367,118 @@ app.get('/sitemap.xml', async (req, res) => {
       });
     };
 
-    // ১. ডাটাবেজ থেকে ব্লগ এবং লেসন লোড
-    const blogs = await Blog.find({ isPublished: true }, 'slug updatedAt createdAt').lean();
-    const lessons = await Lesson.find({ isPublished: true }, 'module slug updatedAt createdAt').lean();
+    // 1. Fetch from Database
+    let blogs = [];
+    let lessons = [];
+    let cambridgeListeningDocs = [];
+    let cambridgeReadingDocs = [];
 
-    // ২. কেমব্রিজ টেস্টের বুক ও টেস্ট নম্বর লোড
-    const cambridgeListeningDocs = await CambridgeListening.find({}, 'book testNo bookNumber testNumber updatedAt').lean();
-    const cambridgeReadingDocs = await CambridgeReading.find({}, 'book testNo bookNumber testNumber updatedAt').lean();
+    try { blogs = await Blog.find({ isPublished: true }, 'slug updatedAt createdAt').lean(); } catch(e){}
+    try { lessons = await Lesson.find({ isPublished: true }, 'module slug updatedAt createdAt').lean(); } catch(e){}
+    try { cambridgeListeningDocs = await CambridgeListening.find({}, 'book testNo bookNumber testNumber updatedAt').lean(); } catch(e){}
+    try { cambridgeReadingDocs = await CambridgeReading.find({}, 'book testNo bookNumber testNumber updatedAt').lean(); } catch(e){}
 
-    // ৩. ওয়েবসাইটের মূল পেজসমূহ
+    // 2. High-value Core Landing Pages
     const staticPages = [
       { url: '', priority: '1.0', changefreq: 'daily' },
-      { url: '/practice-hub', priority: '0.9', changefreq: 'weekly' },
-      { url: '/pricing', priority: '0.9', changefreq: 'weekly' },
-      { url: '/mocks', priority: '0.9', changefreq: 'weekly' },
-      { url: '/cam-listening', priority: '0.8', changefreq: 'weekly' },
-      { url: '/cam-reading', priority: '0.8', changefreq: 'weekly' },
-      { url: '/cam-writing', priority: '0.8', changefreq: 'weekly' },
-      { url: '/speaking', priority: '0.8', changefreq: 'weekly' },
-      { url: '/blog', priority: '0.8', changefreq: 'daily' },
-      { url: '/learn', priority: '0.8', changefreq: 'daily' },
-      { url: '/faq', priority: '0.6', changefreq: 'monthly' }
+      { url: '/mocks', priority: '0.95', changefreq: 'daily' },
+      { url: '/speaking', priority: '0.95', changefreq: 'daily' },
+      { url: '/practice-hub', priority: '0.95', changefreq: 'daily' },
+      { url: '/band-calculator.html', priority: '0.90', changefreq: 'weekly' },
+      { url: '/reading-exercises', priority: '0.85', changefreq: 'weekly' },
+      { url: '/listening-exercises', priority: '0.85', changefreq: 'weekly' },
+      { url: '/writing-exercises', priority: '0.85', changefreq: 'weekly' },
+      { url: '/pricing', priority: '0.80', changefreq: 'weekly' },
+      { url: '/blog', priority: '0.85', changefreq: 'daily' },
+      { url: '/learn', priority: '0.85', changefreq: 'daily' },
+      { url: '/faq', priority: '0.70', changefreq: 'monthly' }
     ];
 
     let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
     xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
 
-    // (A) স্ট্যাটিক পেজসমূহ যুক্ত করা
+    // (A) Static Landing Pages
     staticPages.forEach(page => {
-      xml += `  <url>\n`;
-      xml += `    <loc>https://ieltsmockpoint.com${page.url}</loc>\n`;
-      xml += `    <changefreq>${page.changefreq}</changefreq>\n`;
-      xml += `    <priority>${page.priority}</priority>\n`;
-      xml += `  </url>\n`;
+      xml += '  <url>\n';
+      xml += '    <loc>https://ieltsmockpoint.com' + page.url + '</loc>\n';
+      xml += '    <changefreq>' + page.changefreq + '</changefreq>\n';
+      xml += '    <priority>' + page.priority + '</priority>\n';
+      xml += '  </url>\n';
     });
 
-    // (B) ব্লগ পোস্টসমূহ যুক্ত করা
+    // (B) 20 Authentic IELTS Speaking Mock Tests
+    for (let sId = 1; sId <= 20; sId++) {
+      xml += '  <url>\n';
+      xml += '    <loc>https://ieltsmockpoint.com/speaking-test?id=' + sId + '</loc>\n';
+      xml += '    <changefreq>weekly</changefreq>\n';
+      xml += '    <priority>0.90</priority>\n';
+      xml += '  </url>\n';
+    }
+
+    // (C) Academic & Premium Full Mock Tests (1 to 12)
+    for (let mId = 1; mId <= 12; mId++) {
+      xml += '  <url>\n';
+      xml += '    <loc>https://ieltsmockpoint.com/test3?mockNumber=' + mId + '</loc>\n';
+      xml += '    <changefreq>weekly</changefreq>\n';
+      xml += '    <priority>0.90</priority>\n';
+      xml += '  </url>\n';
+    }
+
+    // (D) Blog Posts
     blogs.forEach(post => {
       if (post.slug) {
         const dateObj = post.updatedAt || post.createdAt || new Date();
         const lastMod = new Date(dateObj).toISOString().split('T')[0];
-        xml += `  <url>\n`;
-        xml += `    <loc>https://ieltsmockpoint.com/blog/${encodeURIComponent(post.slug)}</loc>\n`;
-        xml += `    <lastmod>${lastMod}</lastmod>\n`;
-        xml += `    <changefreq>weekly</changefreq>\n`;
-        xml += `    <priority>0.7</priority>\n`;
-        xml += `  </url>\n`;
+        xml += '  <url>\n';
+        xml += '    <loc>https://ieltsmockpoint.com/blog/' + encodeURIComponent(post.slug) + '</loc>\n';
+        xml += '    <lastmod>' + lastMod + '</lastmod>\n';
+        xml += '    <changefreq>weekly</changefreq>\n';
+        xml += '    <priority>0.80</priority>\n';
+        xml += '  </url>\n';
       }
     });
 
-    // (C) লেসনসমূহ যুক্ত করা (/learn/:module/:slug)
+    // (E) Lessons
     lessons.forEach(lesson => {
       if (lesson.module && lesson.slug) {
         const dateObj = lesson.updatedAt || lesson.createdAt || new Date();
         const lastMod = new Date(dateObj).toISOString().split('T')[0];
-        xml += `  <url>\n`;
-        xml += `    <loc>https://ieltsmockpoint.com/learn/${encodeURIComponent(lesson.module)}/${encodeURIComponent(lesson.slug)}</loc>\n`;
-        xml += `    <lastmod>${lastMod}</lastmod>\n`;
-        xml += `    <changefreq>weekly</changefreq>\n`;
-        xml += `    <priority>0.7</priority>\n`;
-        xml += `  </url>\n`;
+        xml += '  <url>\n';
+        xml += '    <loc>https://ieltsmockpoint.com/learn/' + encodeURIComponent(lesson.module) + '/' + encodeURIComponent(lesson.slug) + '</loc>\n';
+        xml += '    <lastmod>' + lastMod + '</lastmod>\n';
+        xml += '    <changefreq>weekly</changefreq>\n';
+        xml += '    <priority>0.75</priority>\n';
+        xml += '  </url>\n';
       }
     });
 
-    // (D) কেমব্রিজ লিসেনিং টেস্টসমূহ
+    // (F) Cambridge Listening Tests
     cambridgeListeningDocs.forEach(item => {
       const b = item.book || item.bookNumber;
       const t = item.testNo || item.testNumber;
       if (b && t) {
-        xml += `  <url>\n`;
-        xml += `    <loc>https://ieltsmockpoint.com/cambridge-listening-test?book=${escapeXml(b)}&amp;test=${escapeXml(t)}</loc>\n`;
-        xml += `    <changefreq>monthly</changefreq>\n`;
-        xml += `    <priority>0.8</priority>\n`;
-        xml += `  </url>\n`;
+        xml += '  <url>\n';
+        xml += '    <loc>https://ieltsmockpoint.com/cambridge-listening-test?book=' + escapeXml(b) + '&amp;test=' + escapeXml(t) + '</loc>\n';
+        xml += '    <changefreq>monthly</changefreq>\n';
+        xml += '    <priority>0.85</priority>\n';
+        xml += '  </url>\n';
       }
     });
 
-    // (E) কেমব্রিজ রিডিং টেস্টসমূহ
+    // (G) Cambridge Reading Tests
     cambridgeReadingDocs.forEach(item => {
       const b = item.book || item.bookNumber;
       const t = item.testNo || item.testNumber;
       if (b && t) {
-        xml += `  <url>\n`;
-        xml += `    <loc>https://ieltsmockpoint.com/cambridge-reading-test?book=${escapeXml(b)}&amp;test=${escapeXml(t)}</loc>\n`;
-        xml += `    <changefreq>monthly</changefreq>\n`;
-        xml += `    <priority>0.8</priority>\n`;
-        xml += `  </url>\n`;
+        xml += '  <url>\n';
+        xml += '    <loc>https://ieltsmockpoint.com/cambridge-reading-test?book=' + escapeXml(b) + '&amp;test=' + escapeXml(t) + '</loc>\n';
+        xml += '    <changefreq>monthly</changefreq>\n';
+        xml += '    <priority>0.85</priority>\n';
+        xml += '  </url>\n';
       }
     });
 
     xml += '</urlset>';
-
     res.set('Content-Type', 'application/xml; charset=utf-8');
     res.status(200).send(xml);
   } catch (error) {
@@ -2487,6 +2507,8 @@ app.get(["/speaking", "/speaking.html"], (req, res) => {
 app.get(["/speaking-test", "/speaking-practice"], (req, res) => {
   res.sendFile(path.join(__dirname, "views", "speaking_engine", "speaking-test.html"));
 });
+
+
 
   // Other Modular Routes
   app.use("/admin_orgs", adminOrgsRoutes);

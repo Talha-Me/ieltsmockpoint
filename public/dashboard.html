@@ -816,6 +816,270 @@
       border: 1px solid #e2e8f0;
     }
   
+
+    /* CAMBRIDGE AUTHENTIC REVIEW CSS */
+    .dash-modal-card.cambridge-review-frame {
+      max-width: 1420px;
+      width: 97vw;
+      height: 94vh;
+      max-height: 94vh;
+      display: flex;
+      flex-direction: column;
+      padding: 0 !important;
+      overflow: hidden;
+      border-radius: 16px;
+    }
+    .cam-rev-header {
+      padding: 14px 22px;
+      background: #0b2b52;
+      color: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      border-bottom: 3.5px solid #e0202d;
+    }
+    .cam-nav-tabs-bar {
+      display: flex;
+      gap: 8px;
+      background: #f1f5f9;
+      padding: 8px 18px 0;
+      border-bottom: 1.5px solid #cbd5e1;
+      overflow-x: auto;
+    }
+    .cam-body-wrapper {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      background: #f8fafc;
+      min-height: 0;
+    }
+    .cam-split-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      padding: 14px 18px;
+      flex: 1;
+      overflow: hidden;
+      min-height: 0;
+      height: 100%;
+    }
+    @media (max-width: 920px) {
+      .cam-split-grid {
+        grid-template-columns: 1fr;
+        overflow-y: auto;
+      }
+    }
+    .cam-pane-left, .cam-pane-right {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      overflow-y: auto;
+      height: 100%;
+      padding: 16px 18px;
+      box-shadow: 0 2px 8px rgba(11, 43, 82, 0.04);
+    }
+    .cam-subnav-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .cam-pills-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .cam-subtab-btn {
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      color: #334155;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .cam-subtab-btn.active {
+      background: #0b2b52;
+      color: #ffffff;
+      border-color: #0b2b52;
+    }
+    .cam-q-palette {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      padding: 8px 10px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+    }
+    .cam-q-dot {
+      width: 27px;
+      height: 27px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      color: #334155;
+      transition: all 0.15s ease;
+    }
+    .cam-q-dot.correct {
+      background: #16a34a;
+      border-color: #15803d;
+      color: #ffffff;
+    }
+    .cam-q-dot.wrong {
+      background: #dc2626;
+      border-color: #b91c1c;
+      color: #ffffff;
+    }
+    .cam-q-dot.unanswered {
+      background: #94a3b8;
+      border-color: #64748b;
+      color: #ffffff;
+    }
+    .cam-q-dot:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .cr-status-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.76rem;
+      font-weight: 800;
+    }
+    .cr-status-tag.correct {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+    .cr-status-tag.wrong {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+    .cr-status-tag.unanswered {
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+    }
+    .cr-explain-btn, .cr-trap-btn, .cr-locate-btn {
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .cr-explain-btn {
+      background: #eff6ff;
+      color: #1d4ed8;
+      border-color: #bfdbfe;
+    }
+    .cr-explain-btn:hover {
+      background: #1d4ed8;
+      color: #ffffff;
+    }
+    .cr-trap-btn {
+      background: #fff1f2;
+      color: #e11d48;
+      border-color: #fecdd3;
+    }
+    .cr-trap-btn:hover {
+      background: #e11d48;
+      color: #ffffff;
+    }
+    .cr-locate-btn {
+      background: #fef9c3;
+      color: #854d0e;
+      border-color: #fde047;
+    }
+    .cr-locate-btn:hover {
+      background: #eab308;
+      color: #ffffff;
+    }
+    .cr-evidence-hl {
+      background: #fef08a !important;
+      color: #854d0e !important;
+      font-weight: 700;
+      padding: 2px 4px;
+      border-radius: 4px;
+      border: 1.5px solid #f59e0b;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.45);
+      animation: crPulse 1.8s ease-out;
+    }
+    @keyframes crPulse {
+      0% { transform: scale(1.02); }
+      50% { transform: scale(1); }
+      100% { transform: scale(1); }
+    }
+    .cam-para-p {
+      margin-bottom: 14px;
+      line-height: 1.75;
+      font-size: 0.90rem;
+      color: #334155;
+    }
+    .cam-para-letter {
+      color: #0b2b52;
+      font-weight: 800;
+      margin-right: 6px;
+    }
+    .writing-review-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      height: 100%;
+      overflow-y: auto;
+      padding: 16px 20px;
+    }
+    @media (max-width: 920px) {
+      .writing-review-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .writing-correction-card {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-left: 4px solid #ef4444;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 10px;
+      font-size: 0.83rem;
+      line-height: 1.55;
+    }
+    .writing-sample-box {
+      background: #f0fdf4;
+      border: 1.5px solid #86efac;
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-top: 14px;
+      font-size: 0.88rem;
+      line-height: 1.7;
+      color: #14532d;
+    }
+    
 </style>
 
   <script src="/shared-layout.js"></script>
@@ -1281,8 +1545,69 @@
     </div>
   </footer>
 
-  <!-- Client-Side Dashboard Aggregator Script -->
-  <script>
+  <!-- Test Review Modal -->
+  <div id="testReviewModal" class="dash-modal-overlay" onclick="if(event.target===this)closeTestReviewModal();">
+    <div class="dash-modal-card cambridge-review-frame" id="dashReviewCard">
+      
+      <!-- Top Cambridge Header Bar -->
+      <div class="cam-rev-header">
+        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+          <div>
+            <span id="revBadgeType" style="font-size:0.72rem; font-weight:800; padding:2px 8px; border-radius:999px; background:rgba(255,255,255,0.18); color:#fde047; text-transform:uppercase;">Full Mock Review</span>
+            <h3 id="revTitle" style="font-family:'Sora',sans-serif; color:#ffffff; font-size:1.20rem; font-weight:800; margin:2px 0 0 0;">Academic Mock Test 1</h3>
+          </div>
+          <span id="revDate" style="color:#94a3b8; font-size:0.78rem;">Completed recently</span>
+        </div>
+
+        <!-- Band Badges Strip -->
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <div style="background:rgba(255,255,255,0.12); padding:4px 10px; border-radius:8px; font-size:0.78rem;">
+            Overall: <strong id="revOverallBand" style="color:#fde047; font-size:0.95rem;">--</strong>
+          </div>
+          <div style="background:rgba(255,255,255,0.12); padding:4px 10px; border-radius:8px; font-size:0.78rem;">
+            L: <strong id="revListeningBand" style="color:#ffffff;">--</strong>
+          </div>
+          <div style="background:rgba(255,255,255,0.12); padding:4px 10px; border-radius:8px; font-size:0.78rem;">
+            R: <strong id="revReadingBand" style="color:#ffffff;">--</strong>
+          </div>
+          <div style="background:rgba(255,255,255,0.12); padding:4px 10px; border-radius:8px; font-size:0.78rem;">
+            W: <strong id="revWritingBand" style="color:#ffffff;">--</strong>
+          </div>
+          <div style="background:rgba(255,255,255,0.12); padding:4px 10px; border-radius:8px; font-size:0.78rem;">
+            S: <strong id="revSpeakingBand" style="color:#ffffff;">--</strong>
+          </div>
+
+          <button type="button" onclick="window.print()" style="padding:5px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.3); background:rgba(255,255,255,0.1); font-size:0.76rem; font-weight:700; color:#ffffff; cursor:pointer;" title="Print Report">🖨️ Print</button>
+          <button type="button" onclick="closeTestReviewModal()" style="width:30px; height:30px; border-radius:50%; border:none; background:rgba(255,255,255,0.2); font-size:18px; line-height:1; cursor:pointer; color:#ffffff;" aria-label="Close">&times;</button>
+        </div>
+      </div>
+
+      <!-- Cambridge Module Navigation Tabs -->
+      <div class="cam-nav-tabs-bar">
+        <button type="button" class="review-tab-btn active" id="tabBtnListening" onclick="switchReviewTab('listening')">🎧 Listening (1–40)</button>
+        <button type="button" class="review-tab-btn" id="tabBtnReading" onclick="switchReviewTab('reading')">📖 Reading (1–40)</button>
+        <button type="button" class="review-tab-btn" id="tabBtnWriting" onclick="switchReviewTab('writing')">✍️ Writing AI Evaluation</button>
+        <button type="button" class="review-tab-btn" id="tabBtnSpeaking" onclick="switchReviewTab('speaking')">🎙️ Speaking Evaluation</button>
+      </div>
+
+      <div class="cam-body-wrapper">
+        <!-- Tab Content: Listening -->
+        <div id="tabContentListening" style="display:block; height:100%; overflow:hidden;"></div>
+
+        <!-- Tab Content: Reading -->
+        <div id="tabContentReading" style="display:none; height:100%; overflow:hidden;"></div>
+
+        <!-- Tab Content: Writing -->
+        <div id="tabContentWriting" style="display:none; height:100%; overflow:hidden;"></div>
+
+        <!-- Tab Content: Speaking -->
+        <div id="tabContentSpeaking" style="display:none; height:100%; overflow-y:auto; padding:18px;">
+          <div id="revSpeakingContent"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+<script>
     let globalHistory = [];
     let activeFilter = 'all';
     let progressionChart = null;
@@ -1719,144 +2044,22 @@
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
     }
-  </script>
 
+    function cleanHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/<[^>]*>/g, '').trim();
+    }
 
-  <!-- Test Review Modal -->
-  <div id="testReviewModal" class="dash-modal-overlay" onclick="if(event.target===this)closeTestReviewModal();">
-    <div class="dash-modal-card">
-      <div style="position:absolute; right:18px; top:18px; display:flex; align-items:center; gap:8px;">
-        <button type="button" onclick="window.print()" style="padding:6px 12px; border-radius:8px; border:1px solid #cbd5e1; background:#f8fafc; font-size:0.78rem; font-weight:700; color:#0b2b52; cursor:pointer; display:inline-flex; align-items:center; gap:5px;" title="Print or save this score sheet as PDF">🖨️ Print Report</button>
-        <button type="button" onclick="closeTestReviewModal()" style="width:32px; height:32px; border-radius:50%; border:1px solid #e2e8f0; background:#f8fafc; font-size:20px; line-height:1; cursor:pointer; color:#0b2b52;" aria-label="Close">&times;</button>
-      </div>
-      
-      <div style="margin-bottom:18px; padding-right:36px;">
-        <span id="revBadgeType" style="display:inline-block; font-size:0.75rem; font-weight:700; padding:3px 10px; border-radius:999px; background:#eaf2fd; color:#1565c9; border:1px solid #bfdbfe; margin-bottom:8px;">Full Mock Review</span>
-        <h3 id="revTitle" style="font-family:'Sora',sans-serif; color:#0b2b52; font-size:1.35rem; font-weight:800; margin-bottom:4px;">Academic Mock Test 1</h3>
-        <p id="revDate" style="color:#64748b; font-size:0.84rem;">Completed on 03 Nov 2026</p>
-      </div>
-
-      <!-- KPI Summary Strip -->
-      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:10px; margin-bottom:20px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:12px;">
-        <div style="text-align:center;">
-          <span style="font-size:0.72rem; color:#64748b; font-weight:700; text-transform:uppercase;">Overall Band</span>
-          <div id="revOverallBand" style="font-family:'Sora',sans-serif; font-size:1.4rem; font-weight:800; color:#e0202d;">--</div>
-        </div>
-        <div style="text-align:center;">
-          <span style="font-size:0.72rem; color:#64748b; font-weight:700; text-transform:uppercase;">Listening</span>
-          <div id="revListeningBand" style="font-size:1.15rem; font-weight:700; color:#0b2b52;">--</div>
-        </div>
-        <div style="text-align:center;">
-          <span style="font-size:0.72rem; color:#64748b; font-weight:700; text-transform:uppercase;">Reading</span>
-          <div id="revReadingBand" style="font-size:1.15rem; font-weight:700; color:#0b2b52;">--</div>
-        </div>
-        <div style="text-align:center;">
-          <span style="font-size:0.72rem; color:#64748b; font-weight:700; text-transform:uppercase;">Writing</span>
-          <div id="revWritingBand" style="font-size:1.15rem; font-weight:700; color:#0b2b52;">--</div>
-        </div>
-        <div style="text-align:center;">
-          <span style="font-size:0.72rem; color:#64748b; font-weight:700; text-transform:uppercase;">Speaking</span>
-          <div id="revSpeakingBand" style="font-size:1.15rem; font-weight:700; color:#0b2b52;">--</div>
-        </div>
-      </div>
-
-      <!-- Module Navigation Tabs -->
-      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; border-bottom:1.5px solid #e2e8f0; padding-bottom:10px;">
-        <button type="button" class="review-tab-btn active" id="tabBtnListening" onclick="switchReviewTab('listening')">🎧 Listening (1–40)</button>
-        <button type="button" class="review-tab-btn" id="tabBtnReading" onclick="switchReviewTab('reading')">📖 Reading (1–40)</button>
-        <button type="button" class="review-tab-btn" id="tabBtnWriting" onclick="switchReviewTab('writing')">✍️ Writing AI Evaluation</button>
-        <button type="button" class="review-tab-btn" id="tabBtnSpeaking" onclick="switchReviewTab('speaking')">🎙️ Speaking AI Evaluation</button>
-      </div>
-
-      <!-- Tab Content: Listening -->
-      <div id="tabContentListening" style="display:block;">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:10px 14px; margin-bottom:12px;">
-          <div id="listeningSummaryBadges" style="display:flex; gap:8px; flex-wrap:wrap; font-size:0.80rem; font-weight:700;"></div>
-          <div style="display:flex; gap:6px;">
-            <button type="button" class="q-filter-pill active" onclick="filterModalQuestions('listening', 'all', this)">All (40)</button>
-            <button type="button" class="q-filter-pill" onclick="filterModalQuestions('listening', 'mistakes', this)">Mistakes ❌</button>
-            <button type="button" class="q-filter-pill" onclick="filterModalQuestions('listening', 'correct', this)">Correct ✅</button>
-            <button type="button" class="q-filter-pill" onclick="filterModalQuestions('listening', 'unanswered', this)">Skipped ⚠️</button>
-          </div>
-        </div>
-        <div id="revListeningList" style="max-height:420px; overflow-y:auto; padding-right:6px;"></div>
-      </div>
-
-      <!-- Tab Content: Reading -->
-      <div id="tabContentReading" style="display:none;">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:10px 14px; margin-bottom:12px;">
-          <div id="readingSummaryBadges" style="display:flex; gap:8px; flex-wrap:wrap; font-size:0.80rem; font-weight:700;"></div>
-          <div style="display:flex; gap:6px;">
-            <button type="button" class="q-filter-pill active" onclick="filterModalQuestions('reading', 'all', this)">All (40)</button>
-            <button type="button" class="q-filter-pill" onclick="filterModalQuestions('reading', 'mistakes', this)">Mistakes ❌</button>
-            <button type="button" class="q-filter-pill" onclick="filterModalQuestions('reading', 'correct', this)">Correct ✅</button>
-            <button type="button" class="q-filter-pill" onclick="filterModalQuestions('reading', 'unanswered', this)">Skipped ⚠️</button>
-          </div>
-        </div>
-        <div id="revReadingList" style="max-height:420px; overflow-y:auto; padding-right:6px;"></div>
-      </div>
-
-      <!-- Tab Content: Writing -->
-      <div id="tabContentWriting" style="display:none;">
-        <div id="revWritingContent" style="max-height:420px; overflow-y:auto; padding-right:6px;">
-          <!-- Writing tasks and criteria feedback will be injected here -->
-        </div>
-      </div>
-
-      <!-- Tab Content: Speaking -->
-      <div id="tabContentSpeaking" style="display:none;">
-        <div id="revSpeakingContent" style="max-height:420px; overflow-y:auto; padding-right:6px;">
-          <!-- Speaking criteria, examiner feedback, and corrections will be injected here -->
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    let activeReviewRecord = null;
+  let activeReviewRecord = null;
     let activeQuestionFilters = { listening: 'all', reading: 'all' };
-    let currentTableSearchTerm = '';
-
-    function handleTableSearch(term) {
-      currentTableSearchTerm = (term || '').toLowerCase().trim();
-      let filtered = globalHistory;
-      if (activeFilter !== 'all') {
-        filtered = globalHistory.filter(h => {
-          const t = String(h.testType || '').toLowerCase();
-          if (activeFilter === 'full') return t.includes('full') || t.includes('academic') || t.includes('premium') || t.includes('general');
-          if (activeFilter === 'cambridge') return t.includes('cambridge');
-          if (activeFilter === 'hub') return t.includes('hub') || t.includes('question') || t.includes('type');
-          if (activeFilter === 'writing') return t.includes('writing') || h.writingBand > 0;
-          if (activeFilter === 'speaking') return t.includes('speaking') || (h.speakingBand && h.speakingBand > 0) || h.module === 'speaking';
-          return true;
-        });
-      }
-      if (currentTableSearchTerm) {
-        filtered = filtered.filter(h => {
-          const title = String(h.title || '').toLowerCase();
-          const tType = String(h.testType || '').toLowerCase();
-          return title.includes(currentTableSearchTerm) || tType.includes(currentTableSearchTerm);
-        });
-      }
-      renderActivityTable(filtered);
-    }
-
-    function filterModalQuestions(mod, filterType, btn) {
-      activeQuestionFilters[mod] = filterType;
-      const parent = btn.closest('.dash-modal-card');
-      if (parent) {
-        parent.querySelectorAll(`#tabContent${mod.charAt(0).toUpperCase() + mod.slice(1)} .q-filter-pill`).forEach(b => b.classList.remove('active'));
-      }
-      btn.classList.add('active');
-      renderModuleQuestions(mod, activeReviewRecord);
-    }
-
+    let activeReadingPassageTab = 1;
+    let activeListeningPartTab = 'all';
+    let activeWritingTaskTab = 1;
 
     async function openTestReviewModal(recordId, initialTab = "listening") {
       const modal = document.getElementById('testReviewModal');
       if (!modal) return;
 
-      // 1. Fetch complete record by ID to guarantee fresh 1-40 evaluated breakdown
       let rec = globalHistory.find(h => String(h.id) === String(recordId)) || {};
       try {
         const res = await fetch('/api/student/test-record/' + recordId);
@@ -1871,24 +2074,28 @@
       activeReviewRecord = rec || {};
 
       // Populate Header
-      document.getElementById('revTitle').textContent = rec.title || 'IELTS Mock Test';
-      document.getElementById('revDate').textContent = 'Completed on ' + (rec.completedAt ? new Date(rec.completedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit' }) : 'Recently');
-      document.getElementById('revBadgeType').textContent = rec.testType || 'Full Mock Review';
+      const titleEl = document.getElementById('revTitle');
+      if (titleEl) titleEl.textContent = rec.title || 'IELTS Mock Test';
+      const dateEl = document.getElementById('revDate');
+      if (dateEl) dateEl.textContent = 'Completed on ' + (rec.completedAt ? new Date(rec.completedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit' }) : 'Recently');
+      const badgeEl = document.getElementById('revBadgeType');
+      if (badgeEl) badgeEl.textContent = rec.testType || 'Full Mock Review';
 
-      // Populate KPI Strip
-      document.getElementById('revOverallBand').textContent = rec.overallBand ? Number(rec.overallBand).toFixed(1) : (rec.readingBand && rec.listeningBand ? ((rec.readingBand + rec.listeningBand)/2).toFixed(1) : '--');
-      document.getElementById('revListeningBand').textContent = rec.listeningBand ? 'Band ' + Number(rec.listeningBand).toFixed(1) : (rec.listeningScore ? rec.listeningScore + ' / 40' : '--');
-      document.getElementById('revReadingBand').textContent = rec.readingBand ? 'Band ' + Number(rec.readingBand).toFixed(1) : (rec.readingScore ? rec.readingScore + ' / 40' : '--');
+      // KPI Strip
+      const oBand = rec.overallBand ? Number(rec.overallBand).toFixed(1) : (rec.readingBand && rec.listeningBand ? ((rec.readingBand + rec.listeningBand)/2).toFixed(1) : '--');
+      document.getElementById('revOverallBand').textContent = oBand;
+      document.getElementById('revListeningBand').textContent = rec.listeningBand ? 'Band ' + Number(rec.listeningBand).toFixed(1) : (rec.listeningScore ? rec.listeningScore + '/40' : '--');
+      document.getElementById('revReadingBand').textContent = rec.readingBand ? 'Band ' + Number(rec.readingBand).toFixed(1) : (rec.readingScore ? rec.readingScore + '/40' : '--');
       document.getElementById('revWritingBand').textContent = rec.writingBand ? 'Band ' + Number(rec.writingBand).toFixed(1) : '--';
       document.getElementById('revSpeakingBand').textContent = (rec.speakingBand && rec.speakingBand > 0) ? 'Band ' + Number(rec.speakingBand).toFixed(1) : '--';
 
-      // Render Modules
-      renderModuleQuestions('listening', rec);
-      renderModuleQuestions('reading', rec);
-      renderWritingFeedback(rec);
+      // Render Modules with Authentic Cambridge Engine
+      renderCambridgeListeningReview(rec);
+      renderCambridgeReadingReview(rec);
+      renderCambridgeWritingReview(rec);
       renderSpeakingFeedback(rec);
 
-      // auto-select initial tab
+      // Auto-select initial tab
       if (initialTab) {
         switchReviewTab(initialTab);
       } else if (rec.module === 'speaking' || String(rec.testType || '').toLowerCase().includes('speaking') || (rec.speakingBand > 0 && !rec.listeningBand && !rec.readingBand)) {
@@ -1900,6 +2107,7 @@
       } else {
         switchReviewTab('listening');
       }
+
       modal.classList.add('open');
     }
 
@@ -1918,11 +2126,1198 @@
       });
     }
 
-    function renderModuleQuestions(mod, rec) {
-      const container = document.getElementById(mod === 'listening' ? 'revListeningList' : 'revReadingList');
-      const badgesContainer = document.getElementById(mod === 'listening' ? 'listeningSummaryBadges' : 'readingSummaryBadges');
+    // ==============================================================
+    // 1. CAMBRIDGE AUTHENTIC LISTENING REVIEW
+    // ==============================================================
+    
+    function renderAuthenticCambridgeGroups(groups, explMap, userAnswers, officialAnswers, moduleType) {
+      if (!Array.isArray(groups)) return '';
+      let html = '';
+
+      groups.forEach(function(g, gIdx) {
+        const qType = (g.type || '').toLowerCase();
+        const ids = g.id || [];
+        const flatIds = [];
+        if (Array.isArray(ids[0])) {
+          ids.forEach(function(sub) { sub.forEach(function(id) { flatIds.push(id); }); });
+        } else {
+          ids.forEach(function(id) { flatIds.push(id); });
+        }
+        if (!flatIds.length) return;
+
+        const startQ = flatIds[0];
+        const endQ = flatIds[flatIds.length - 1];
+        const groupTitle = g.title ? g.title : ('Questions ' + startQ + '–' + endQ);
+
+        // Detect shared options pool across the group (e.g. matching, classification, feature matching)
+        let sharedOptions = null;
+        if (Array.isArray(g.options) && g.options.length > 0 && typeof g.options[0] === 'string') {
+          sharedOptions = g.options;
+        } else if (Array.isArray(g.paragraphs) && (qType.includes('match') || qType.includes('feature') || qType.includes('container') || qType.includes('classification'))) {
+          sharedOptions = g.paragraphs;
+        }
+
+        html += '<div class="cr-q-group-card" id="groupCard-' + moduleType + '-' + gIdx + '" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; padding:16px 18px; margin-bottom:18px; box-shadow:0 1px 3px rgba(0,0,0,0.03);">';
+        html += '<div style="border-bottom:2px solid #f1f5f9; padding-bottom:8px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">';
+        html += '<h3 style="font-family:Sora,sans-serif; font-size:1.02rem; font-weight:800; color:#0b2b52; margin:0;">' + escapeHtml(groupTitle) + '</h3>';
+        html += '<span style="font-size:0.75rem; font-weight:700; color:#64748b; background:#f1f5f9; padding:2px 8px; border-radius:4px; text-transform:uppercase;">' + escapeHtml(g.type || 'Questions') + '</span>';
+        html += '</div>';
+
+        if (g.instructions || g.instruction) {
+          html += '<div style="font-size:0.86rem; font-style:italic; color:#475569; margin-bottom:14px; background:#f8fafc; padding:8px 12px; border-radius:6px; border-left:3.5px solid #cbd5e1;">' + (g.instructions || g.instruction) + '</div>';
+        }
+
+        // Inline review box generator
+        function buildInlineReviewBox(qNum, currentOpts) {
+          const qStr = String(qNum);
+          const expl = explMap[qStr] || {};
+          const rawUser = userAnswers[qStr] !== undefined ? userAnswers[qStr] : (userAnswers[qNum] !== undefined ? userAnswers[qNum] : '');
+          const rawOff = officialAnswers[qStr] !== undefined ? officialAnswers[qStr] : (officialAnswers[qNum] !== undefined ? officialAnswers[qNum] : expl.correctAnswer);
+
+          const hasUserAns = rawUser && String(rawUser).trim() !== '' && String(rawUser).trim() !== '(Not Answered)';
+          let userAnsStr = hasUserAns ? String(rawUser).trim() : 'No Answer';
+          let officialAnsStr = Array.isArray(rawOff) ? rawOff.join(' / ') : String(rawOff || '--');
+
+          // Helper to find option text for letter
+          function getOptionDescription(letterOrNum, optList) {
+            if (!optList || !Array.isArray(optList) || !letterOrNum) return '';
+            const val = String(letterOrNum).trim().toUpperCase();
+            if (/^[A-Z]$/.test(val)) {
+              const idx = val.charCodeAt(0) - 65;
+              if (optList[idx]) {
+                const s = String(optList[idx]).trim().replace(/^[A-Z0-9]s*[.)]s*/i, '');
+                return s;
+              }
+            }
+            return '';
+          }
+
+          if (currentOpts && Array.isArray(currentOpts) && currentOpts.length > 0) {
+            const offDesc = getOptionDescription(officialAnsStr, currentOpts);
+            if (offDesc) officialAnsStr = officialAnsStr + ' (' + offDesc + ')';
+            if (hasUserAns) {
+              const uDesc = getOptionDescription(userAnsStr, currentOpts);
+              if (uDesc) userAnsStr = userAnsStr + ' (' + uDesc + ')';
+            }
+          }
+
+          let isOk = false;
+          if (hasUserAns) {
+            const uNorm = String(rawUser).toLowerCase().trim();
+            if (Array.isArray(rawOff)) {
+              isOk = rawOff.some(function(a) { return String(a).toLowerCase().trim() === uNorm; });
+            } else {
+              isOk = (uNorm === String(rawOff || '').toLowerCase().trim());
+            }
+          }
+
+          const locateFn = (moduleType === 'listening') ? ('locateInScript(' + qNum + ')') : ('locateInReadingPassage(' + qNum + ')');
+          const locateBtnText = (moduleType === 'listening') ? '🔍 Locate in Script' : '🔍 Locate in Passage';
+
+          let rBox = '<span class="cr-q-review-badge" id="reviewBox-' + qNum + '" data-status="' + (isOk ? 'correct' : (hasUserAns ? 'wrong' : 'unanswered')) + '" style="display:inline-flex; align-items:center; gap:6px; margin:3px 6px; vertical-align:middle; flex-wrap:wrap;">';
+          rBox += '<span class="cr-status-tag ' + (isOk ? 'correct' : (hasUserAns ? 'wrong' : 'unanswered')) + '" style="font-size:0.75rem; padding:2px 7px; border-radius:12px;">' + (isOk ? '✅ Correct' : (hasUserAns ? '❌ Incorrect' : '⚠️ No Answer')) + '</span>';
+          rBox += '<span style="font-size:0.83rem;"><strong>Official:</strong> <span style="color:#16a34a; font-weight:700;">' + escapeHtml(officialAnsStr) + '</span></span>';
+          if (!isOk && hasUserAns) {
+            rBox += '<span style="font-size:0.83rem;"><strong>Your Answer:</strong> <span style="color:#dc2626; font-weight:700;">' + escapeHtml(userAnsStr) + '</span></span>';
+          }
+          rBox += '<button type="button" class="cr-explain-btn" onclick="toggleCambridgeExplBox(\'exp_' + moduleType + '_' + qNum + '\')">Explain more ▶</button>';
+          if (expl.trap) {
+            rBox += '<button type="button" class="cr-trap-btn" onclick="toggleCambridgeExplBox(\'trap_' + moduleType + '_' + qNum + '\')">What\'s the trap? 💡</button>';
+          }
+          rBox += '<button type="button" class="cr-locate-btn" onclick="' + locateFn + '">' + locateBtnText + '</button>';
+          rBox += '</span>';
+
+          // Drawers
+          if (expl.analysis || expl.explanation) {
+            const mainExpl = expl.analysis || expl.explanation;
+            rBox += '<div id="exp_' + moduleType + '_' + qNum + '" class="cam-expl-drawer" style="display:none; margin:6px 0 10px 0; padding:10px 14px; background:#eff6ff; border-left:4px solid #2563eb; border-radius:6px; font-size:0.83rem; line-height:1.55; width:100%; box-sizing:border-box;">';
+            if (expl.location) rBox += '<div style="font-weight:700; color:#1e40af; margin-bottom:4px;">📍 Location: ' + escapeHtml(expl.location) + '</div>';
+            if (expl.quote) rBox += '<div style="font-style:italic; color:#334155; margin-bottom:5px; background:#ffffff; padding:6px 10px; border-radius:4px; border:1px solid #dbeafe;">&ldquo;' + escapeHtml(expl.quote) + '&rdquo;</div>';
+            rBox += '<div style="color:#1e3a8a;"><strong>💡 In-Depth Analysis:</strong> ' + escapeHtml(mainExpl) + '</div>';
+            rBox += '</div>';
+          }
+          if (expl.trap) {
+            rBox += '<div id="trap_' + moduleType + '_' + qNum + '" class="cam-trap-drawer" style="display:none; margin:6px 0 10px 0; padding:10px 14px; background:#fffbeb; border-left:4px solid #f59e0b; border-radius:6px; font-size:0.83rem; line-height:1.55; color:#78350f; width:100%; box-sizing:border-box;">';
+            rBox += '<strong style="color:#b45309;">⚠️ Cambridge Trap Alert:</strong> ' + escapeHtml(expl.trap);
+            rBox += '</div>';
+          }
+          return rBox;
+        }
+
+        // TYPE 1: Note completion
+        if (qType.includes('note-completion') || (!qType && Array.isArray(g.paragraphs)) || (qType === 'no-type' && Array.isArray(g.paragraphs))) {
+          html += '<div class="cr-notes-wrap" style="line-height:2.0; font-size:0.92rem; color:#1e293b;">';
+          if (g.heading) {
+            html += '<div style="font-family:Sora,sans-serif; font-weight:800; color:#0b2b52; margin-bottom:10px; font-size:1.02rem;">' + g.heading + '</div>';
+          }
+
+          let qIdx = 0;
+          const flatParas = [];
+          (g.paragraphs || []).forEach(function(p) {
+            if (Array.isArray(p)) p.forEach(function(sub) { flatParas.push(String(sub)); });
+            else flatParas.push(String(p));
+          });
+
+          flatParas.forEach(function(pLine) {
+            const text = String(pLine || '').trim();
+            if (!text) return;
+            const isSubheading = text.length < 50 && !text.includes('[blank') && !text.startsWith('•') && !text.startsWith('-');
+            if (isSubheading) {
+              html += '<div style="font-family:Sora,sans-serif; font-weight:700; color:#0b2b52; margin:12px 0 4px; font-size:0.96rem;">' + escapeHtml(text) + '</div>';
+              return;
+            }
+
+            const parts = text.split(/\[blank\]/i);
+            let parsed = '';
+            for (let pi = 0; pi < parts.length; pi++) {
+              parsed += parts[pi];
+              if (pi < parts.length - 1 && qIdx < flatIds.length) {
+                const qNum = flatIds[qIdx];
+                const rawUser = userAnswers[String(qNum)] || userAnswers[qNum] || '';
+                const rawOff = officialAnswers[String(qNum)] || officialAnswers[qNum] || (explMap[String(qNum)] || {}).correctAnswer;
+                const isOk = rawUser && String(rawUser).toLowerCase().trim() === String(rawOff).toLowerCase().trim();
+
+                parsed += '<span class="cr-inline-q" id="qItem-' + qNum + '" style="display:inline-flex; align-items:center; gap:5px; vertical-align:middle; margin:2px 3px;">';
+                parsed += '<span class="cr-qnum-badge" style="background:#ffffff; border:1.5px solid #0f172a; color:#0f172a; font-weight:800; font-size:12px; min-width:26px; height:26px; display:inline-flex; align-items:center; justify-content:center; border-radius:4px;">' + qNum + '</span>';
+                parsed += '<input type="text" class="cr-blank-input" value="' + escapeHtml(rawUser) + '" disabled style="height:28px; border:1.5px solid ' + (isOk ? '#22c55e' : (rawUser ? '#ef4444' : '#94a3b8')) + '; background:' + (isOk ? '#f0fdf4' : (rawUser ? '#fef2f2' : '#ffffff')) + '; border-radius:4px; padding:2px 8px; font-size:0.88rem; font-weight:700; color:#0f172a; min-width:110px; max-width:180px;">';
+                parsed += '</span>';
+                parsed += buildInlineReviewBox(qNum, null);
+                qIdx++;
+              }
+            }
+            html += '<div class="cr-note-line" style="margin-bottom:8px; line-height:1.9;">• ' + parsed + '</div>';
+          });
+          html += '</div>';
+        }
+
+        // TYPE 2: Table completion
+        else if (qType.includes('table-completion') && Array.isArray(g.cells)) {
+          html += '<div style="overflow-x:auto; margin:10px 0;">';
+          html += '<table style="width:100%; border-collapse:collapse; font-size:0.88rem; background:#ffffff; border:1px solid #cbd5e1;">';
+          let qIdx = 0;
+          g.cells.forEach(function(row) {
+            html += '<tr>';
+            const cols = Array.isArray(row) ? row : [row];
+            cols.forEach(function(cell) {
+              const cellStr = String(cell || '');
+              const parts = cellStr.split(/\[blank\]/i);
+              let parsedCell = '';
+              for (let pi = 0; pi < parts.length; pi++) {
+                parsedCell += parts[pi];
+                if (pi < parts.length - 1 && qIdx < flatIds.length) {
+                  const qNum = flatIds[qIdx];
+                  const rawUser = userAnswers[String(qNum)] || userAnswers[qNum] || '';
+                  const rawOff = officialAnswers[String(qNum)] || officialAnswers[qNum] || (explMap[String(qNum)] || {}).correctAnswer;
+                  const isOk = rawUser && String(rawUser).toLowerCase().trim() === String(rawOff).toLowerCase().trim();
+
+                  parsedCell += '<div style="margin:6px 0;" id="qItem-' + qNum + '">';
+                  parsedCell += '<span style="display:inline-flex; align-items:center; gap:5px; vertical-align:middle;">';
+                  parsedCell += '<span class="cr-qnum-badge" style="background:#ffffff; border:1.5px solid #0f172a; color:#0f172a; font-weight:800; font-size:12px; min-width:26px; height:26px; display:inline-flex; align-items:center; justify-content:center; border-radius:4px;">' + qNum + '</span>';
+                  parsedCell += '<input type="text" class="cr-blank-input" value="' + escapeHtml(rawUser) + '" disabled style="height:28px; border:1.5px solid ' + (isOk ? '#22c55e' : (rawUser ? '#ef4444' : '#94a3b8')) + '; background:' + (isOk ? '#f0fdf4' : (rawUser ? '#fef2f2' : '#ffffff')) + '; border-radius:4px; padding:2px 8px; font-size:0.88rem; font-weight:700; color:#0f172a; min-width:110px;">';
+                  parsedCell += '</span>';
+                  parsedCell += buildInlineReviewBox(qNum, null);
+                  parsedCell += '</div>';
+                  qIdx++;
+                }
+              }
+              html += '<td style="border:1px solid #cbd5e1; padding:8px 10px; vertical-align:top; line-height:1.6;">' + parsedCell + '</td>';
+            });
+            html += '</tr>';
+          });
+          html += '</table></div>';
+        }
+
+        // TYPE 3: Summary completion
+        else if (qType.includes('summary')) {
+          html += '<div class="cr-summary-wrap" style="line-height:2.0; font-size:0.92rem; color:#1e293b; background:#f8fafc; padding:14px 16px; border-radius:8px; border:1px solid #e2e8f0;">';
+          if (g['word-list'] && Array.isArray(g['word-list'])) {
+            html += '<div style="margin-bottom:12px; padding:10px 12px; background:#ffffff; border:1.5px dashed #0284c7; border-radius:6px;">';
+            html += '<div style="font-weight:800; font-size:0.8rem; color:#0284c7; margin-bottom:6px; text-transform:uppercase;">Word Choices:</div>';
+            html += '<div style="display:flex; flex-wrap:wrap; gap:8px;">';
+            g['word-list'].forEach(function(w, wi) {
+              html += '<span style="background:#f1f5f9; color:#0f172a; padding:3px 8px; border-radius:4px; font-size:0.84rem; font-weight:600; border:1px solid #cbd5e1;"><strong style="color:#0284c7;">' + String.fromCharCode(65 + wi) + '.</strong> ' + escapeHtml(w) + '</span>';
+            });
+            html += '</div></div>';
+          }
+
+          const sumStr = g.summary ? (Array.isArray(g.summary) ? g.summary.join(' ') : String(g.summary)) : '';
+          const parts = sumStr.split(/\[blank\]/i);
+          let qIdx = 0;
+          for (let pi = 0; pi < parts.length; pi++) {
+            html += parts[pi];
+            if (pi < parts.length - 1 && qIdx < flatIds.length) {
+              const qNum = flatIds[qIdx];
+              const rawUser = userAnswers[String(qNum)] || userAnswers[qNum] || '';
+              const rawOff = officialAnswers[String(qNum)] || officialAnswers[qNum] || (explMap[String(qNum)] || {}).correctAnswer;
+              const isOk = rawUser && String(rawUser).toLowerCase().trim() === String(rawOff).toLowerCase().trim();
+
+              html += '<span class="cr-inline-q" id="qItem-' + qNum + '" style="display:inline-flex; align-items:center; gap:5px; vertical-align:middle; margin:2px 3px;">';
+              html += '<span class="cr-qnum-badge" style="background:#ffffff; border:1.5px solid #0f172a; color:#0f172a; font-weight:800; font-size:12px; min-width:26px; height:26px; display:inline-flex; align-items:center; justify-content:center; border-radius:4px;">' + qNum + '</span>';
+              html += '<input type="text" class="cr-blank-input" value="' + escapeHtml(rawUser) + '" disabled style="height:28px; border:1.5px solid ' + (isOk ? '#22c55e' : (rawUser ? '#ef4444' : '#94a3b8')) + '; background:' + (isOk ? '#f0fdf4' : (rawUser ? '#fef2f2' : '#ffffff')) + '; border-radius:4px; padding:2px 8px; font-size:0.88rem; font-weight:700; color:#0f172a; min-width:110px; max-width:180px;">';
+              html += '</span>';
+              html += buildInlineReviewBox(qNum, null);
+              qIdx++;
+            }
+          }
+          html += '</div>';
+        }
+
+        // TYPE 4: Standard MCQ / T-F-NG / Matching list / Classification
+        else {
+          // If group has shared options, display a prominent Cambridge Options Box at the top
+          if (sharedOptions && sharedOptions.length > 0 && !qType.includes('t/f/ng') && !qType.includes('true') && !qType.includes('y/n/ng') && !qType.includes('yes')) {
+            html += '<div class="cr-shared-options-box" style="margin-bottom:14px; padding:12px 14px; background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:8px;">';
+            html += '<div style="font-weight:800; font-size:0.82rem; color:#0b2b52; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px;">Choose from the following options:</div>';
+            html += '<div style="display:flex; flex-direction:column; gap:6px;">';
+            sharedOptions.forEach(function(sOpt, si) {
+              const sLetter = String.fromCharCode(65 + si);
+              const sText = String(sOpt).trim();
+              const prefix = (!/^[A-Z0-9]\s*[\.\)]/i.test(sText)) ? ('<strong style="color:#0284c7; width:22px; display:inline-block;">' + sLetter + '.</strong>') : '';
+              html += '<div style="font-size:0.86rem; color:#1e293b; display:flex; align-items:baseline;">' + prefix + '<span>' + escapeHtml(sText) + '</span></div>';
+            });
+            html += '</div></div>';
+          }
+
+          flatIds.forEach(function(qNum, i) {
+            const qStr = String(qNum);
+            const expl = explMap[qStr] || {};
+            let qText = '';
+            if (Array.isArray(g.questions) && g.questions[i]) {
+              const q = g.questions[i];
+              qText = typeof q === 'string' ? q : (q.question || q.title || '');
+            } else if (Array.isArray(g.information) && g.information[i]) {
+              qText = g.information[i];
+            } else if (Array.isArray(g.features) && g.features[i]) {
+              qText = g.features[i];
+            } else if (Array.isArray(g.sentences) && g.sentences[i]) {
+              qText = g.sentences[i];
+            } else if (Array.isArray(g.labels) && g.labels[i]) {
+              qText = g.labels[i];
+            } else if (expl.question) {
+              qText = expl.question;
+            }
+
+            let opts = null;
+            if (Array.isArray(g.options) && Array.isArray(g.options[i])) {
+              opts = g.options[i];
+            } else if (sharedOptions) {
+              opts = sharedOptions;
+            } else if (Array.isArray(g.paragraphs)) {
+              opts = g.paragraphs;
+            } else if (Array.isArray(g['word-list'])) {
+              opts = g['word-list'];
+            } else if (qType.includes('t/f/ng') || qType.includes('true')) {
+              opts = ['TRUE', 'FALSE', 'NOT GIVEN'];
+            } else if (qType.includes('y/n/ng') || qType.includes('yes')) {
+              opts = ['YES', 'NO', 'NOT GIVEN'];
+            } else if (expl.options && Array.isArray(expl.options)) {
+              opts = expl.options;
+            }
+
+            const rawUser = userAnswers[qStr] || userAnswers[qNum] || '';
+            const rawOff = officialAnswers[qStr] || officialAnswers[qNum] || expl.correctAnswer || '';
+            const isOk = rawUser && String(rawUser).toLowerCase().trim() === String(rawOff).toLowerCase().trim();
+
+            html += '<div class="cam-q-block" id="qItem-' + qNum + '" style="margin-bottom:14px; padding:12px 14px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px;">';
+            html += '<div style="display:flex; align-items:flex-start; gap:8px; margin-bottom:8px;">';
+            html += '<span class="cr-qnum-badge" style="background:#ffffff; border:1.5px solid #0f172a; color:#0f172a; font-weight:800; font-size:12px; min-width:26px; height:26px; display:inline-flex; align-items:center; justify-content:center; border-radius:4px; margin-top:2px;">' + qNum + '</span>';
+            html += '<div style="font-size:0.91rem; font-weight:700; color:#0b2b52; line-height:1.5; flex:1;">' + escapeHtml(cleanHtml(qText)) + '</div>';
+            html += '</div>';
+
+            if (Array.isArray(opts) && opts.length > 0) {
+              html += '<div style="display:flex; flex-direction:column; gap:6px; margin:6px 0 10px 34px;">';
+              const normOfficial = String(rawOff).toLowerCase().trim();
+              const normUser = String(rawUser).toLowerCase().trim();
+
+              opts.forEach(function(opt, oi) {
+                const optStr = String(opt).trim();
+                const optLetter = String.fromCharCode(65 + oi);
+                const optIndexNum = String(oi + 1);
+                const normOpt = optStr.toLowerCase();
+
+                let isCorrectChoice = (normOfficial === normOpt || normOfficial === optLetter.toLowerCase() || normOfficial === optIndexNum || normOpt.startsWith(normOfficial + '.') || normOpt.startsWith(normOfficial + ')') || (normOfficial.length >= 3 && normOpt.includes(normOfficial)));
+                let isUserChoice = (normUser && (normUser === normOpt || normUser === optLetter.toLowerCase() || normUser === optIndexNum || normOpt.startsWith(normUser + '.') || normOpt.startsWith(normUser + ')') || (normUser.length >= 3 && normOpt.includes(normUser))));
+
+                let rowBg = '#ffffff';
+                let rowBorder = '1px solid #e2e8f0';
+                let badge = '';
+
+                if (isCorrectChoice) {
+                  rowBg = '#f0fdf4';
+                  rowBorder = '1.5px solid #22c55e';
+                  badge = '<span style="background:#22c55e; color:#fff; font-size:0.72rem; font-weight:800; padding:1px 6px; border-radius:10px; margin-left:auto;">✓ Correct</span>';
+                } else if (isUserChoice && !isOk) {
+                  rowBg = '#fef2f2';
+                  rowBorder = '1.5px solid #ef4444';
+                  badge = '<span style="background:#ef4444; color:#fff; font-size:0.72rem; font-weight:800; padding:1px 6px; border-radius:10px; margin-left:auto;">✗ Your Choice</span>';
+                }
+
+                let prefix = (!/^[A-Z0-9]\s*[\.\)]/i.test(optStr) && !['true', 'false', 'not given', 'yes', 'no'].includes(normOpt)) ? ('<strong style="color:#64748b; width:22px; display:inline-block;">' + optLetter + '.</strong>') : '';
+
+                html += '<div style="display:flex; align-items:center; padding:6px 10px; background:' + rowBg + '; border:' + rowBorder + '; border-radius:6px; font-size:0.84rem;">';
+                html += prefix + '<span style="color:#1e293b; font-weight:' + (isCorrectChoice ? '700' : '500') + ';">' + escapeHtml(optStr) + '</span>' + badge;
+                html += '</div>';
+              });
+              html += '</div>';
+            }
+
+            html += '<div style="margin-left:34px;">' + buildInlineReviewBox(qNum, opts) + '</div>';
+            html += '</div>';
+          });
+        }
+
+        html += '</div>'; // end cr-q-group-card
+      });
+
+      return html;
+    }
+
+    function renderCambridgeListeningReview(rec) {
+      const container = document.getElementById('tabContentListening');
       if (!container) return;
 
+      const list = getEvaluatedQuestionList('listening', rec);
+      const hasTranscript = rec.listeningTranscript && Object.keys(rec.listeningTranscript).length > 0;
+
+      // Safe Fallback if no transcript
+      if (!hasTranscript) {
+        container.innerHTML = renderStandardFallbackModule('listening', list, rec);
+        return;
+      }
+
+      const transcript = rec.listeningTranscript;
+      const explMap = {};
+      if (Array.isArray(rec.listeningExplanations)) {
+        rec.listeningExplanations.forEach(e => {
+          if (e && e.qNum) explMap[String(e.qNum)] = e;
+        });
+      }
+
+      const activeF = activeQuestionFilters['listening'] || 'all';
+
+      // Build Question Palette (1-40)
+      let paletteHtml = '<div class="cam-q-palette">';
+      list.forEach((item, idx) => {
+        const qNum = item.qNum || (idx + 1);
+        const isOk = item.isCorrect === true;
+        const hasAns = item.yourAns && String(item.yourAns).trim() !== '' && String(item.yourAns).trim() !== '(Not Answered)';
+        const dotClass = isOk ? 'correct' : (hasAns ? 'wrong' : 'unanswered');
+        paletteHtml += '<button type="button" class="cam-q-dot ' + dotClass + '" onclick="jumpToListeningQuestion(' + qNum + ')" title="Question ' + qNum + ' (' + (isOk ? 'Correct' : (hasAns ? 'Incorrect' : 'Skipped')) + ')">' + qNum + '</button>';
+      });
+      paletteHtml += '</div>';
+
+      // Build Left Pane: Audioscript with Cambridge Evidence Highlights
+      let scriptHtml = '<div class="cam-subnav-bar">';
+      scriptHtml += '<div style="font-weight:800; color:#0b2b52; font-size:0.95rem; display:flex; align-items:center; gap:6px;"><span>📜</span> Audio Transcript</div>';
+      scriptHtml += '<div class="cam-pills-row">';
+      ['all', '1', '2', '3', '4'].forEach(p => {
+        const label = p === 'all' ? 'All Parts' : 'Part ' + p;
+        scriptHtml += '<button type="button" class="cam-subtab-btn ' + (activeListeningPartTab === p ? 'active' : '') + '" onclick="filterListeningScriptPart(\'' + p + '\')">' + label + '</button>';
+      });
+      scriptHtml += '</div></div>';
+
+      scriptHtml += '<div id="listeningScriptScrollArea" style="overflow-y:auto; height:calc(100% - 46px); padding-right:4px;">';
+      Object.keys(transcript).forEach((secKey, sIdx) => {
+        const secNum = String(sIdx + 1);
+        const sec = transcript[secKey];
+        const isHidden = (activeListeningPartTab !== 'all' && activeListeningPartTab !== secNum);
+        scriptHtml += '<div class="cam-script-section-card" id="scriptSec-' + secNum + '" style="' + (isHidden ? 'display:none;' : 'display:block;') + ' margin-bottom:18px; padding-bottom:12px; border-bottom:1px solid #e2e8f0;">';
+        scriptHtml += '<h4 style="color:#0b2b52; font-size:0.92rem; font-weight:800; margin:0 0 10px 0; background:#f1f5f9; padding:6px 12px; border-radius:6px; border-left:4px solid #0b2b52;">' + escapeHtml(sec.title || ('Part ' + secNum)) + '</h4>';
+        if (Array.isArray(sec.dialogue)) {
+          sec.dialogue.forEach(line => {
+            let processedLine = line.text || '';
+            // Convert [Q1] ... to Cambridge Evidence Highlight
+            processedLine = processedLine.replace(new RegExp("<mark class=['\"]script-hl['\"]>\\[Q(\\d+)\\]\\s*([^<]*)<\\/mark>", "gi"), function(match, qNum, clueText) {
+              return '<mark class="cl-evidence-highlight" id="lEvidence-Q' + qNum + '" onclick="jumpToListeningQuestion(' + qNum + ')" title="Click to view Question ' + qNum + '"><span class="cl-evidence-q-tag">Q' + qNum + '</span>' + clueText + '</mark>';
+            });
+            processedLine = processedLine.replace(new RegExp("\\[Q(\\d+)\\]\\s*([^\\n\\.<]+)", "gi"), function(match, qNum, clueText) {
+              return '<mark class="cl-evidence-highlight" id="lEvidence-Q' + qNum + '" onclick="jumpToListeningQuestion(' + qNum + ')" title="Click to view Question ' + qNum + '"><span class="cl-evidence-q-tag">Q' + qNum + '</span>' + clueText + '</mark>';
+            });
+
+            scriptHtml += '<div class="transcript-line" style="margin-bottom:8px; line-height:1.65; font-size:0.87rem; color:#1e293b;">';
+            scriptHtml += '<strong class="transcript-speaker" style="color:#0b2b52; margin-right:6px;">' + escapeHtml(line.speaker || '') + ':</strong>';
+            scriptHtml += '<span>' + processedLine + '</span>';
+            scriptHtml += '</div>';
+          });
+        }
+        scriptHtml += '</div>';
+      });
+      scriptHtml += '</div>';
+
+      // Build Right Pane: Questions
+      let qHtml = '<div class="cam-subnav-bar">';
+      qHtml += '<div class="cam-pills-row">';
+      qHtml += '<button type="button" class="cam-subtab-btn ' + (activeF === 'all' ? 'active' : '') + '" onclick="filterCambridgeQuestions(\'listening\', \'all\')">All (40)</button>';
+      qHtml += '<button type="button" class="cam-subtab-btn ' + (activeF === 'mistakes' ? 'active' : '') + '" onclick="filterCambridgeQuestions(\'listening\', \'mistakes\')">Mistakes ❌</button>';
+      qHtml += '<button type="button" class="cam-subtab-btn ' + (activeF === 'correct' ? 'active' : '') + '" onclick="filterCambridgeQuestions(\'listening\', \'correct\')">Correct ✅</button>';
+      qHtml += '<button type="button" class="cam-subtab-btn ' + (activeF === 'unanswered' ? 'active' : '') + '" onclick="filterCambridgeQuestions(\'listening\', \'unanswered\')">Skipped ⚠️</button>';
+      qHtml += '</div>';
+      qHtml += '<button type="button" class="cam-subtab-btn" onclick="toggleAllCambridgeExpl(\'listening\')" style="background:#eff6ff; color:#1d4ed8; border-color:#bfdbfe;">💡 Expand All</button>';
+      qHtml += '</div>';
+
+      qHtml += paletteHtml;
+
+      qHtml += '<div id="listeningQuestionsScrollArea" style="overflow-y:auto; height:calc(100% - 95px); padding-right:4px;">';
+      const hasAuthLGroups = Array.isArray(rec.listeningQuestions) && rec.listeningQuestions.length > 0;
+      if (hasAuthLGroups) {
+        const userAnsMap = {};
+        const officialAnsMap = {};
+        list.forEach(item => {
+          if (item.qNum) {
+            userAnsMap[String(item.qNum)] = item.yourAns;
+            officialAnsMap[String(item.qNum)] = item.officialAns;
+          }
+        });
+        if (rec.answers && rec.answers.listening) Object.assign(userAnsMap, rec.answers.listening);
+        if (rec.listeningAnswers) Object.assign(officialAnsMap, rec.listeningAnswers);
+
+        qHtml += renderAuthenticCambridgeGroups(rec.listeningQuestions, explMap, userAnsMap, officialAnsMap, 'listening');
+      } else {
+      let visibleCount = 0;
+      list.forEach((item, idx) => {
+        const qNum = item.qNum || (idx + 1);
+        const qNumStr = String(qNum);
+        const isOk = item.isCorrect === true;
+        const hasAns = item.yourAns && String(item.yourAns).trim() !== '' && String(item.yourAns).trim() !== '(Not Answered)';
+        const isUnanswered = !hasAns;
+
+        if (activeF === 'correct' && !isOk) return;
+        if (activeF === 'mistakes' && isOk) return;
+        if (activeF === 'unanswered' && hasAns) return;
+
+        visibleCount++;
+        const yourAns = Array.isArray(item.yourAns) ? item.yourAns.join(', ') : (item.yourAns || '(Not Answered)');
+        const officialAns = Array.isArray(item.officialAns) ? item.officialAns.join(' / ') : (item.officialAns || '--');
+        const expl = explMap[qNumStr] || null;
+        const prompt = getQuestionPromptFromList(qNum, rec.listeningQuestions);
+
+        qHtml += '<div class="cam-q-review-card" id="lqCard-' + qNum + '" style="background:#ffffff; border:1.5px solid ' + (isOk ? '#bbf7d0' : '#fecaca') + '; border-radius:10px; padding:12px 14px; margin-bottom:10px; box-shadow:0 1px 4px rgba(0,0,0,0.03);">';
+        qHtml += '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; flex-wrap:wrap; gap:6px;">';
+        qHtml += '<div style="display:flex; align-items:center; gap:8px;">';
+        qHtml += '<span style="font-weight:800; color:#0b2b52; background:#f1f5f9; padding:2px 8px; border-radius:6px; font-size:0.85rem;">Q' + qNum + '</span>';
+        qHtml += '<span class="cr-status-tag ' + (isOk ? 'correct' : (isUnanswered ? 'unanswered' : 'wrong')) + '">' + (isOk ? '✅ Correct' : (isUnanswered ? '⚠️ Skipped' : '❌ Incorrect')) + '</span>';
+        qHtml += '</div>';
+
+        qHtml += '<div style="display:flex; align-items:center; gap:6px;">';
+        if (expl) {
+          qHtml += '<button type="button" class="cr-explain-btn" onclick="toggleCambridgeExplBox(\'lExpl_' + qNum + '\')">Explain more ▶</button>';
+          if (expl.trap) {
+            qHtml += '<button type="button" class="cr-trap-btn" onclick="toggleCambridgeExplBox(\'lTrap_' + qNum + '\')">What\'s the trap? 💡</button>';
+          }
+        }
+        qHtml += '<button type="button" class="cr-locate-btn" onclick="locateInScript(' + qNum + ')" title="Locate audio evidence in script">🔍 Locate in Script</button>';
+        qHtml += '</div></div>';
+
+        if (prompt) {
+          qHtml += '<div style="font-size:0.88rem; font-weight:700; color:#0b2b52; margin:4px 0 8px;">' + escapeHtml(prompt) + '</div>';
+        }
+
+        // Answers banner row
+        qHtml += '<div class="cr-ans-display-row" style="margin:6px 0 8px; padding:8px 12px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; font-size:0.86rem; color:#166534; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">';
+        qHtml += '<span><strong>Official Answer:</strong> <span style="font-weight:700;">' + escapeHtml(officialAns) + '</span></span>';
+        if (!isOk) {
+          qHtml += '<span style="color:#dc2626; margin-left:auto; font-weight:700;">(Your Answer: ' + escapeHtml(yourAns) + ')</span>';
+        }
+        qHtml += '</div>';
+
+        // Expandable Explanation Drawer
+        if (expl) {
+          qHtml += '<div id="lExpl_' + qNum + '" class="cam-expl-drawer" style="display:none; margin-top:8px; padding:10px 14px; background:#eff6ff; border-left:4px solid #2563eb; border-radius:8px; font-size:0.83rem; line-height:1.55;">';
+          if (expl.quote) {
+            qHtml += '<div style="margin-bottom:6px;"><strong style="color:#0b2b52;">🎙️ Audio Clue:</strong> <span style="color:#1e293b; font-style:italic;">&ldquo;' + escapeHtml(expl.quote) + '&rdquo;</span></div>';
+          }
+          if (expl.explanation) {
+            qHtml += '<div><strong style="color:#16a34a;">🎯 Why this is the answer:</strong> <span style="color:#1e293b;">' + escapeHtml(expl.explanation) + '</span></div>';
+          }
+          qHtml += '</div>';
+
+          if (expl.trap) {
+            qHtml += '<div id="lTrap_' + qNum + '" class="cam-trap-drawer" style="display:none; margin-top:6px; padding:8px 12px; background:#fffbeb; border-left:4px solid #f59e0b; border-radius:8px; font-size:0.82rem; line-height:1.5; color:#92400e;">';
+            qHtml += '<div style="display:flex; align-items:flex-start; gap:6px;">';
+            qHtml += '<span style="font-size:1.05rem;">⚠️</span>';
+            qHtml += '<div><strong>What\'s the trap?</strong> ' + escapeHtml(expl.trap) + '</div>';
+            qHtml += '</div></div>';
+          }
+        }
+
+        qHtml += '</div>';
+      });
+
+      if (visibleCount === 0) {
+        qHtml += '<div style="text-align:center; padding:32px 14px; color:#64748b;"><p style="font-weight:700; margin-bottom:4px;">No questions matched the selected filter.</p><p style="font-size:0.82rem;">Click "All (40)" above to view every question.</p></div>';
+      }
+      
+      } // end fallback
+      qHtml += '</div>';
+
+      container.innerHTML = '<div class="cam-split-grid">' +
+        '<div class="cam-pane-left">' + scriptHtml + '</div>' +
+        '<div class="cam-pane-right">' + qHtml + '</div>' +
+        '</div>';
+    }
+
+    function filterListeningScriptPart(partNum) {
+      activeListeningPartTab = partNum;
+      ['1', '2', '3', '4'].forEach(p => {
+        const el = document.getElementById('scriptSec-' + p);
+        if (el) el.style.display = (partNum === 'all' || partNum === p) ? 'block' : 'none';
+      });
+      const btns = document.querySelectorAll('#tabContentListening .cam-subtab-btn');
+      btns.forEach(b => {
+        if (b.textContent.toLowerCase().includes('part ' + partNum) || (partNum === 'all' && b.textContent.toLowerCase().includes('all parts'))) {
+          b.classList.add('active');
+        } else if (b.textContent.toLowerCase().includes('part')) {
+          b.classList.remove('active');
+        }
+      });
+    }
+
+    function locateInScript(qNum) {
+      const secNum = Math.ceil(qNum / 10);
+      filterListeningScriptPart(String(secNum));
+
+      setTimeout(() => {
+        const el = document.getElementById('lEvidence-Q' + qNum);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          el.style.transition = 'all 0.3s ease';
+          el.style.backgroundColor = '#f97316';
+          setTimeout(() => { el.style.backgroundColor = '#fef08a'; }, 1200);
+        } else {
+          const secEl = document.getElementById('scriptSec-' + secNum);
+          if (secEl) secEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 80);
+    }
+
+    function jumpToListeningQuestion(qNum) {
+      const target = document.getElementById('reviewBox-' + qNum) || document.getElementById('qItem-' + qNum) || document.getElementById('lqCard-' + qNum);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        target.style.transition = 'all 0.3s ease';
+        target.style.outline = '3px solid #f59e0b';
+        target.style.borderRadius = '6px';
+        setTimeout(() => {
+          target.style.outline = 'none';
+        }, 2000);
+      }
+    }
+
+    // ==============================================================
+    // 2. CAMBRIDGE AUTHENTIC READING REVIEW
+    // ==============================================================
+    function renderCambridgeReadingReview(rec) {
+      const container = document.getElementById('tabContentReading');
+      if (!container) return;
+
+      const list = getEvaluatedQuestionList('reading', rec);
+      const hasPassages = Array.isArray(rec.readingPassages) && rec.readingPassages.length > 0;
+
+      // Safe Fallback if no passages
+      if (!hasPassages) {
+        container.innerHTML = renderStandardFallbackModule('reading', list, rec);
+        return;
+      }
+
+      const passages = rec.readingPassages;
+      const explMap = {};
+      if (Array.isArray(rec.readingExplanations)) {
+        rec.readingExplanations.forEach(e => {
+          if (e && e.qNum) explMap[String(e.qNum)] = e;
+        });
+      }
+
+      const activeF = activeQuestionFilters['reading'] || 'all';
+
+      // Build Question Palette (1-40)
+      let paletteHtml = '<div class="cam-q-palette">';
+      list.forEach((item, idx) => {
+        const qNum = item.qNum || (idx + 1);
+        const isOk = item.isCorrect === true;
+        const hasAns = item.yourAns && String(item.yourAns).trim() !== '' && String(item.yourAns).trim() !== '(Not Answered)';
+        const dotClass = isOk ? 'correct' : (hasAns ? 'wrong' : 'unanswered');
+        paletteHtml += '<button type="button" class="cam-q-dot ' + dotClass + '" onclick="jumpToReadingQuestion(' + qNum + ')" title="Question ' + qNum + ' (' + (isOk ? 'Correct' : (hasAns ? 'Incorrect' : 'Skipped')) + ')">' + qNum + '</button>';
+      });
+      paletteHtml += '</div>';
+
+      // Build Left Pane: Reading Passages with Gold Evidence Highlights
+      let passHtml = '<div class="cam-subnav-bar">';
+      passHtml += '<div style="font-weight:800; color:#0b2b52; font-size:0.95rem; display:flex; align-items:center; gap:6px;"><span>📖</span> Reading Passage</div>';
+      passHtml += '<div class="cam-pills-row">';
+      passages.forEach((p, pIdx) => {
+        const pNum = pIdx + 1;
+        passHtml += '<button type="button" class="cam-subtab-btn ' + (activeReadingPassageTab === pNum ? 'active' : '') + '" onclick="switchReadingPassageTab(' + pNum + ')">Passage ' + pNum + '</button>';
+      });
+      passHtml += '</div></div>';
+
+      passHtml += '<div id="readingPassageScrollArea" style="overflow-y:auto; height:calc(100% - 46px); padding-right:6px;">';
+      passages.forEach((p, pIdx) => {
+        const pNum = pIdx + 1;
+        const isHidden = (activeReadingPassageTab !== pNum);
+        const passageQNums = [];
+        for (let q = 1; q <= 40; q++) passageQNums.push(q);
+
+        passHtml += '<div class="cam-passage-block" id="passageBlock-' + pNum + '" style="' + (isHidden ? 'display:none;' : 'display:block;') + '">';
+        passHtml += '<h3 style="color:#0b2b52; font-family:\'Sora\',sans-serif; font-size:1.08rem; font-weight:800; margin:0 0 14px 0; border-bottom:2px solid #e2e8f0; padding-bottom:6px;">' + escapeHtml(p.title || ('Reading Passage ' + pNum)) + '</h3>';
+
+        const paras = p.paragraphs || [];
+        const contents = p['paragraph-content'] || [];
+        paras.forEach((pLetter, idx) => {
+          const rawText = contents[idx] ? (Array.isArray(contents[idx]) ? contents[idx].join(' ') : contents[idx]) : '';
+          const highlightedPara = injectCambridgePassageEvidence(rawText, passageQNums, explMap);
+
+          passHtml += '<p class="cam-para-p" id="readPara-' + pNum + '-' + pLetter + '" style="margin-bottom:14px; line-height:1.75; font-size:0.92rem; color:#1e293b;">';
+          passHtml += '<strong class="cam-para-letter" style="color:#0b2b52; margin-right:6px; font-weight:800;">' + pLetter + '.</strong> ';
+          passHtml += highlightedPara;
+          passHtml += '</p>';
+        });
+        passHtml += '</div>';
+      });
+      passHtml += '</div>';
+
+      // Build Right Pane: Questions
+      let qHtml = '<div class="cam-subnav-bar">';
+      qHtml += '<div class="cam-pills-row">';
+      qHtml += '<button type="button" class="cam-subtab-btn ' + (activeF === 'all' ? 'active' : '') + '" onclick="filterCambridgeQuestions(\'reading\', \'all\')">All (40)</button>';
+      qHtml += '<button type="button" class="cam-subtab-btn ' + (activeF === 'mistakes' ? 'active' : '') + '" onclick="filterCambridgeQuestions(\'reading\', \'mistakes\')">Mistakes ❌</button>';
+      qHtml += '<button type="button" class="cam-subtab-btn ' + (activeF === 'correct' ? 'active' : '') + '" onclick="filterCambridgeQuestions(\'reading\', \'correct\')">Correct ✅</button>';
+      qHtml += '<button type="button" class="cam-subtab-btn ' + (activeF === 'unanswered' ? 'active' : '') + '" onclick="filterCambridgeQuestions(\'reading\', \'unanswered\')">Skipped ⚠️</button>';
+      qHtml += '</div>';
+      qHtml += '<button type="button" class="cam-subtab-btn" onclick="toggleAllCambridgeExpl(\'reading\')" style="background:#eff6ff; color:#1d4ed8; border-color:#bfdbfe;">💡 Expand All</button>';
+      qHtml += '</div>';
+
+      qHtml += paletteHtml;
+
+      qHtml += '<div id="readingQuestionsScrollArea" style="overflow-y:auto; height:calc(100% - 95px); padding-right:4px;">';
+      const hasAuthRGroups = Array.isArray(rec.readingQuestions) && rec.readingQuestions.length > 0;
+      if (hasAuthRGroups) {
+        const userAnsMap = {};
+        const officialAnsMap = {};
+        list.forEach(item => {
+          if (item.qNum) {
+            userAnsMap[String(item.qNum)] = item.yourAns;
+            officialAnsMap[String(item.qNum)] = item.officialAns;
+          }
+        });
+        if (rec.answers && rec.answers.reading) Object.assign(userAnsMap, rec.answers.reading);
+        if (rec.readingAnswers) Object.assign(officialAnsMap, rec.readingAnswers);
+
+        qHtml += renderAuthenticCambridgeGroups(rec.readingQuestions, explMap, userAnsMap, officialAnsMap, 'reading');
+      } else {
+      let visibleCount = 0;
+      list.forEach((item, idx) => {
+        const qNum = item.qNum || (idx + 1);
+        const qNumStr = String(qNum);
+        const isOk = item.isCorrect === true;
+        const hasAns = item.yourAns && String(item.yourAns).trim() !== '' && String(item.yourAns).trim() !== '(Not Answered)';
+        const isUnanswered = !hasAns;
+
+        if (activeF === 'correct' && !isOk) return;
+        if (activeF === 'mistakes' && isOk) return;
+        if (activeF === 'unanswered' && hasAns) return;
+
+        visibleCount++;
+        const yourAns = Array.isArray(item.yourAns) ? item.yourAns.join(', ') : (item.yourAns || '(Not Answered)');
+        const officialAns = Array.isArray(item.officialAns) ? item.officialAns.join(' / ') : (item.officialAns || '--');
+        const expl = explMap[qNumStr] || null;
+        const prompt = getQuestionPromptFromList(qNum, rec.readingQuestions);
+
+        qHtml += '<div class="cam-q-review-card" id="rqCard-' + qNum + '" style="background:#ffffff; border:1.5px solid ' + (isOk ? '#bbf7d0' : '#fecaca') + '; border-radius:10px; padding:12px 14px; margin-bottom:10px; box-shadow:0 1px 4px rgba(0,0,0,0.03);">';
+        qHtml += '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; flex-wrap:wrap; gap:6px;">';
+        qHtml += '<div style="display:flex; align-items:center; gap:8px;">';
+        qHtml += '<span style="font-weight:800; color:#0b2b52; background:#f1f5f9; padding:2px 8px; border-radius:6px; font-size:0.85rem;">Q' + qNum + '</span>';
+        qHtml += '<span class="cr-status-tag ' + (isOk ? 'correct' : (isUnanswered ? 'unanswered' : 'wrong')) + '">' + (isOk ? '✅ Correct' : (isUnanswered ? '⚠️ Skipped' : '❌ Incorrect')) + '</span>';
+        qHtml += '</div>';
+
+        qHtml += '<div style="display:flex; align-items:center; gap:6px;">';
+        if (expl) {
+          qHtml += '<button type="button" class="cr-explain-btn" onclick="toggleCambridgeExplBox(\'rExpl_' + qNum + '\')">Explain more ▶</button>';
+          if (expl.trap) {
+            qHtml += '<button type="button" class="cr-trap-btn" onclick="toggleCambridgeExplBox(\'rTrap_' + qNum + '\')">What\'s the trap? 💡</button>';
+          }
+        }
+        qHtml += '<button type="button" class="cr-locate-btn" onclick="locateInReadingPassage(' + qNum + ')" title="Locate evidence in passage">🔍 Locate in Passage</button>';
+        qHtml += '</div></div>';
+
+        if (prompt) {
+          qHtml += '<div style="font-size:0.88rem; font-weight:700; color:#0b2b52; margin:4px 0 8px;">' + escapeHtml(prompt) + '</div>';
+        }
+
+        // Answers banner row
+        qHtml += '<div class="cr-ans-display-row" style="margin:6px 0 8px; padding:8px 12px; background:#f1f5f9; border-radius:6px; font-size:0.86rem; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">';
+        qHtml += '<span><strong>Your Answer:</strong> <span style="color:' + (isOk ? '#16a34a' : (isUnanswered ? '#64748b' : '#dc2626')) + '; font-weight:700;">' + escapeHtml(yourAns) + '</span></span>';
+        if (!isOk) {
+          qHtml += '<span><strong>Official:</strong> <span style="color:#16a34a; font-weight:700;">' + escapeHtml(officialAns) + '</span></span>';
+        }
+        qHtml += '</div>';
+
+        // Expandable Explanation Drawer
+        if (expl) {
+          qHtml += '<div id="rExpl_' + qNum + '" class="cam-expl-drawer" style="display:none; margin-top:8px; padding:10px 14px; background:#eff6ff; border-left:4px solid #2563eb; border-radius:8px; font-size:0.83rem; line-height:1.55;">';
+          if (expl.quote) {
+            qHtml += '<div style="margin-bottom:6px;"><strong style="color:#0b2b52;">📖 Passage Evidence:</strong> <span style="color:#1e293b; font-style:italic;">&ldquo;' + escapeHtml(expl.quote) + '&rdquo;</span></div>';
+          }
+          if (expl.explanation) {
+            qHtml += '<div><strong style="color:#16a34a;">🎯 Why this is the answer:</strong> <span style="color:#1e293b;">' + escapeHtml(expl.explanation) + '</span></div>';
+          }
+          qHtml += '</div>';
+
+          if (expl.trap) {
+            qHtml += '<div id="rTrap_' + qNum + '" class="cam-trap-drawer" style="display:none; margin-top:6px; padding:8px 12px; background:#fffbeb; border-left:4px solid #f59e0b; border-radius:8px; font-size:0.82rem; line-height:1.5; color:#92400e;">';
+            qHtml += '<div style="display:flex; align-items:flex-start; gap:6px;">';
+            qHtml += '<span style="font-size:1.05rem;">⚠️</span>';
+            qHtml += '<div><strong>What\'s the trap?</strong> ' + escapeHtml(expl.trap) + '</div>';
+            qHtml += '</div></div>';
+          }
+        }
+
+        qHtml += '</div>';
+      });
+
+      if (visibleCount === 0) {
+        qHtml += '<div style="text-align:center; padding:32px 14px; color:#64748b;"><p style="font-weight:700; margin-bottom:4px;">No questions matched the selected filter.</p><p style="font-size:0.82rem;">Click "All (40)" above to view every question.</p></div>';
+      }
+      
+      } // end fallback
+      qHtml += '</div>';
+
+      container.innerHTML = '<div class="cam-split-grid">' +
+        '<div class="cam-pane-left">' + passHtml + '</div>' +
+        '<div class="cam-pane-right">' + qHtml + '</div>' +
+        '</div>';
+    }
+
+    function injectCambridgePassageEvidence(rawText, qNums, explMap) {
+      if (!rawText) return '';
+      let text = Array.isArray(rawText) ? rawText.join('<br>') : String(rawText);
+
+      // Collect candidate quotes
+      const candidates = [];
+      qNums.forEach(qNum => {
+        const exp = explMap[String(qNum)];
+        if (exp && exp.quote && exp.quote.trim().length >= 8) {
+          candidates.push({ qNum: qNum, quote: exp.quote.trim() });
+        }
+      });
+
+      // Sort by quote length descending
+      candidates.sort((a, b) => b.quote.length - a.quote.length);
+
+      candidates.forEach(item => {
+        const qNum = item.qNum;
+        const quote = item.quote;
+        const lowerText = text.toLowerCase();
+        
+        // Clean quote for probing
+        const cleanQ = quote.replace(/[\u2018\u2019\u201B']/g, "'").replace(/[\u201C\u201D\u201F"]/g, '"').trim();
+        let probe = cleanQ.slice(0, Math.min(26, cleanQ.length)).toLowerCase();
+        let idx = lowerText.indexOf(probe);
+
+        if (idx === -1) {
+          const words = cleanQ.replace(/[^a-zA-Z0-9\s]/g, ' ').split(/\s+/).filter(w => w.length > 2);
+          if (words.length >= 3) {
+            probe = words.slice(0, 3).join(' ').toLowerCase();
+            idx = lowerText.indexOf(probe);
+          }
+        }
+
+        if (idx !== -1) {
+          const matchLen = Math.max(probe.length, Math.min(quote.length, 120));
+          const endIdx = Math.min(text.length, idx + matchLen);
+          const origSnippet = text.substring(idx, endIdx);
+          if (!origSnippet.includes('</mark>') && !origSnippet.includes('<mark')) {
+            const repl = '<mark class="cr-evidence-hl" id="rEvidence-Q' + qNum + '" onclick="jumpToReadingQuestion(' + qNum + ')" title="Click to view Question ' + qNum + '"><span class="cr-ev-tag">Q' + qNum + '</span>' + origSnippet + '</mark>';
+            text = text.substring(0, idx) + repl + text.substring(endIdx);
+          }
+        }
+      });
+
+      return text;
+    }
+
+    function getQuestionPromptFromList(qNum, groups) {
+      if (!Array.isArray(groups)) return '';
+      for (let g of groups) {
+        if (!Array.isArray(g.id)) continue;
+        const idx = g.id.indexOf(qNum);
+        if (idx !== -1) {
+          if (Array.isArray(g.questions) && g.questions[idx]) {
+            const q = g.questions[idx];
+            return typeof q === 'string' ? q : (q.question || q.title || '');
+          }
+          if (Array.isArray(g.information) && g.information[idx]) return g.information[idx];
+          if (Array.isArray(g.features) && g.features[idx]) return g.features[idx];
+          if (g.summary && Array.isArray(g.summary) && g.summary[idx]) return g.summary[idx];
+          if (g.title) return g.title;
+          if (g.type) return g.type.replace(/-/g, ' ').toUpperCase() + ' - Question ' + qNum;
+        }
+      }
+      return '';
+    }
+
+    function switchReadingPassageTab(pNum) {
+      activeReadingPassageTab = pNum;
+      [1, 2, 3].forEach(p => {
+        const el = document.getElementById('passageBlock-' + p);
+        if (el) el.style.display = (p === pNum) ? 'block' : 'none';
+      });
+      const btns = document.querySelectorAll('#tabContentReading .cam-subtab-btn');
+      btns.forEach(b => {
+        if (b.textContent.toLowerCase().includes('passage ' + pNum)) {
+          b.classList.add('active');
+        } else if (b.textContent.toLowerCase().includes('passage')) {
+          b.classList.remove('active');
+        }
+      });
+    }
+
+    function locateInReadingPassage(qNum) {
+      let pNum = (qNum <= 13) ? 1 : (qNum <= 26 ? 2 : 3);
+      const el = document.getElementById('rEvidence-Q' + qNum);
+      if (el) {
+        const parentBlock = el.closest('.cam-passage-block');
+        if (parentBlock && parentBlock.id) {
+          const match = parentBlock.id.match(/passageBlock-(\d+)/);
+          if (match) pNum = parseInt(match[1]);
+        }
+      }
+      switchReadingPassageTab(pNum);
+
+      setTimeout(() => {
+        const targetEl = document.getElementById('rEvidence-Q' + qNum);
+        if (targetEl) {
+          targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          targetEl.style.transition = 'all 0.3s ease';
+          targetEl.style.backgroundColor = '#f97316';
+          setTimeout(() => { targetEl.style.backgroundColor = '#fef08a'; }, 1200);
+        } else {
+          const passEl = document.getElementById('passageBlock-' + pNum);
+          if (passEl) passEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 80);
+    }
+
+    function jumpToReadingQuestion(qNum) {
+      const target = document.getElementById('reviewBox-' + qNum) || document.getElementById('qItem-' + qNum) || document.getElementById('rqCard-' + qNum);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        target.style.transition = 'all 0.3s ease';
+        target.style.outline = '3px solid #f59e0b';
+        target.style.borderRadius = '6px';
+        setTimeout(() => {
+          target.style.outline = 'none';
+        }, 2000);
+      }
+    }
+
+    function filterCambridgeQuestions(mod, filterType) {
+      activeQuestionFilters[mod] = filterType;
+      const containerId = (mod === 'listening') ? 'listeningQuestionsScrollArea' : 'readingQuestionsScrollArea';
+      const container = document.getElementById(containerId);
+
+      // Update active state on filter buttons
+      const modSelector = '#tabContent' + (mod === 'listening' ? 'Listening' : 'Reading');
+      const btns = document.querySelectorAll(modSelector + ' .cam-subnav-bar:first-child .cam-subtab-btn');
+      btns.forEach(b => {
+        const text = b.textContent.toLowerCase();
+        if (filterType === 'all' && text.includes('all')) b.classList.add('active');
+        else if (filterType === 'mistakes' && text.includes('mistake')) b.classList.add('active');
+        else if (filterType === 'correct' && text.includes('correct')) b.classList.add('active');
+        else if (filterType === 'unanswered' && text.includes('skipped')) b.classList.add('active');
+        else if (['all', 'mistake', 'correct', 'skipped'].some(k => text.includes(k))) b.classList.remove('active');
+      });
+
+      if (container) {
+        const badges = container.querySelectorAll('.cr-q-review-badge, .cam-q-review-card');
+        badges.forEach(b => {
+          const status = b.getAttribute('data-status') || '';
+          let match = true;
+          if (filterType === 'mistakes') match = (status === 'wrong');
+          else if (filterType === 'correct') match = (status === 'correct');
+          else if (filterType === 'unanswered') match = (status === 'unanswered');
+
+          const card = b.closest('.cam-q-block') || b.closest('.cr-q-review-card');
+          if (card) {
+            card.style.display = (filterType === 'all' || match) ? '' : 'none';
+          } else {
+            // For inline notes / summary completion
+            const noteLine = b.closest('.cr-note-line') || b.closest('tr');
+            if (noteLine) {
+              if (filterType === 'all') {
+                noteLine.style.opacity = '1';
+                b.style.display = '';
+              } else if (match) {
+                noteLine.style.opacity = '1';
+                b.style.display = '';
+              } else {
+                noteLine.style.opacity = '0.35';
+              }
+            }
+          }
+        });
+      }
+    }
+
+    function toggleCambridgeExplBox(boxId) {
+      const box = document.getElementById(boxId);
+      if (!box) return;
+      box.style.display = (box.style.display === 'none' || !box.style.display) ? 'block' : 'none';
+    }
+
+    function toggleAllCambridgeExpl(mod) {
+      const prefix = mod === 'listening' ? 'lExpl_' : 'rExpl_';
+      const drawers = document.querySelectorAll('#tabContent' + (mod === 'listening' ? 'Listening' : 'Reading') + ' .' + (mod === 'listening' ? 'cam-expl-drawer' : 'cam-expl-drawer'));
+      let anyClosed = false;
+      drawers.forEach(d => {
+        if (d.style.display === 'none' || !d.style.display) anyClosed = true;
+      });
+      drawers.forEach(d => {
+        d.style.display = anyClosed ? 'block' : 'none';
+      });
+    }
+
+    function getEvaluatedQuestionList(mod, rec) {
+      const out = [];
+      const mList = (rec.mistakes && rec.mistakes[mod]) ? rec.mistakes[mod] : [];
+      const userAnsObj = (rec.answers && rec.answers[mod]) ? rec.answers[mod] : {};
+      const officialObj = (mod === 'listening' ? rec.listeningAnswers : rec.readingAnswers) || {};
+
+      for (let i = 1; i <= 40; i++) {
+        const found = mList.find(m => Number(m.questionNumber || m.qNum || m.id) === i);
+        if (found) {
+          out.push({
+            qNum: i,
+            isCorrect: found.isCorrect === true || found.correct === true,
+            yourAns: found.userAnswer || found.yourAnswer || userAnsObj[String(i)] || '',
+            officialAns: found.correctAnswer || found.officialAnswer || officialObj[String(i)] || ''
+          });
+        } else {
+          const uA = userAnsObj[String(i)] || '';
+          const oA = officialObj[String(i)] || '';
+          const isOk = checkAnswerMatch(uA, oA);
+          out.push({
+            qNum: i,
+            isCorrect: isOk,
+            yourAns: uA,
+            officialAns: oA
+          });
+        }
+      }
+      return out;
+    }
+
+
+        // ==============================================================
+    // 3. CAMBRIDGE AUTHENTIC WRITING REVIEW (Mistakes & Sample Ans)
+    // ==============================================================
+    function renderCambridgeWritingReview(rec) {
+      const container = document.getElementById('tabContentWriting');
+      if (!container) return;
+
+      const fb = rec.feedback || {};
+      const t1 = fb.task1 || null;
+      const t2 = fb.task2 || null;
+
+      const userWriting = rec.answers && rec.answers.writing ? rec.answers.writing : {};
+      const uText1 = userWriting['part-1'] || userWriting['task1'] || userWriting['1'] || '';
+      const uText2 = userWriting['part-2'] || userWriting['task2'] || userWriting['2'] || '';
+
+      const sampleAnswers = rec.writingSampleAnswers || {};
+      const sample1 = sampleAnswers.task1 || '';
+      const sample2 = sampleAnswers.task2 || '';
+
+      const writingQuestions = rec.writingQuestions || [];
+      const qPrompt1 = (writingQuestions[0] && writingQuestions[0].question) ? writingQuestions[0].question : 'IELTS Writing Task 1';
+      const qPrompt2 = (writingQuestions[1] && writingQuestions[1].question) ? writingQuestions[1].question : 'IELTS Writing Task 2';
+
+      const t1Band = (t1 && !t1.not_submitted && t1.overall_band) ? Number(t1.overall_band).toFixed(1) : (uText1 ? 'Under Review' : 'Not Submitted');
+      const t2Band = (t2 && !t2.not_submitted && t2.overall_band) ? Number(t2.overall_band).toFixed(1) : (uText2 ? 'Under Review' : 'Not Submitted');
+
+      let html = '<div style="padding:14px 20px 0; background:#ffffff; border-bottom:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">';
+      html += '<div class="cam-pills-row">';
+      html += '<button type="button" class="cam-subtab-btn ' + (activeWritingTaskTab === 1 ? 'active' : '') + '" onclick="switchWritingTaskTab(1)">Task 1 (Report) • Band ' + t1Band + '</button>';
+      html += '<button type="button" class="cam-subtab-btn ' + (activeWritingTaskTab === 2 ? 'active' : '') + '" onclick="switchWritingTaskTab(2)">Task 2 (Essay) • Band ' + t2Band + '</button>';
+      html += '</div>';
+
+      html += '<div style="font-size:0.80rem; color:#64748b; font-weight:600;">Overall Writing Band: <strong style="color:#e0202d; font-size:1.05rem;">' + (rec.writingBand ? Number(rec.writingBand).toFixed(1) : '--') + '</strong></div>';
+      html += '</div>';
+
+      // Task 1 Pane
+      html += '<div id="writingTaskPane-1" style="' + (activeWritingTaskTab === 1 ? 'display:block;' : 'display:none;') + ' height:calc(100% - 50px); overflow-y:auto; padding:18px 22px;">';
+      html += renderWritingTaskDetails(1, qPrompt1, uText1, t1, sample1);
+      html += '</div>';
+
+      // Task 2 Pane
+      html += '<div id="writingTaskPane-2" style="' + (activeWritingTaskTab === 2 ? 'display:block;' : 'display:none;') + ' height:calc(100% - 50px); overflow-y:auto; padding:18px 22px;">';
+      html += renderWritingTaskDetails(2, qPrompt2, uText2, t2, sample2);
+      html += '</div>';
+
+      container.innerHTML = html;
+    }
+
+    function switchWritingTaskTab(taskNum) {
+      activeWritingTaskTab = taskNum;
+      const p1 = document.getElementById('writingTaskPane-1');
+      const p2 = document.getElementById('writingTaskPane-2');
+      if (p1) p1.style.display = (taskNum === 1) ? 'block' : 'none';
+      if (p2) p2.style.display = (taskNum === 2) ? 'block' : 'none';
+
+      const btns = document.querySelectorAll('#tabContentWriting .cam-subtab-btn');
+      btns.forEach((b, idx) => {
+        b.classList.toggle('active', (idx + 1) === taskNum);
+      });
+    }
+
+    function renderWritingTaskDetails(taskNum, promptText, studentEssay, evalData, sampleAnswer) {
+      const wordCount = studentEssay ? studentEssay.trim().split(/\s+/).filter(Boolean).length : 0;
+      const band = (evalData && !evalData.not_submitted && evalData.overall_band) ? Number(evalData.overall_band).toFixed(1) : '--';
+
+      let out = '';
+
+      // 1. Task Topic & Assessment Strip
+      out += '<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:16px 20px; margin-bottom:18px;">';
+      out += '<div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; margin-bottom:12px;">';
+      out += '<div style="max-width:80%;">';
+      out += '<span style="font-size:0.75rem; font-weight:800; color:#1d4ed8; background:#eff6ff; padding:2px 8px; border-radius:4px; text-transform:uppercase;">Task ' + taskNum + ' Prompt</span>';
+      out += '<p style="color:#0b2b52; font-weight:700; font-size:0.92rem; margin:6px 0 0; white-space:pre-line; line-height:1.5;">' + escapeHtml(promptText) + '</p>';
+      out += '</div>';
+
+      out += '<div style="text-align:center; background:#ffffff; border:1.5px solid #dbeafe; border-radius:10px; padding:8px 16px;">';
+      out += '<div style="font-size:0.70rem; color:#64748b; font-weight:700; text-transform:uppercase;">Task ' + taskNum + ' Band</div>';
+      out += '<div style="font-family:\'Sora\',sans-serif; font-size:1.5rem; font-weight:800; color:#e0202d;">' + band + '</div>';
+      out += '</div></div>';
+
+      // 4-Criteria Grid
+      if (evalData && !evalData.not_submitted) {
+        const tr = evalData.task_response || {};
+        const cc = evalData.coherence_cohesion || {};
+        const lr = evalData.lexical_resource || {};
+        const gr = evalData.grammar || {};
+
+        out += '<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:10px; margin-top:14px;">';
+        
+        out += '<div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px;">';
+        out += '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">';
+        out += '<strong style="color:#0b2b52; font-size:0.80rem;">Task Response / TA</strong>';
+        out += '<span style="background:#eaf2fd; color:#1565c9; font-weight:800; font-size:0.78rem; padding:2px 6px; border-radius:4px;">' + (tr.score || '--') + '</span>';
+        out += '</div>';
+        out += '<p style="font-size:0.78rem; color:#475569; margin:0; line-height:1.45;">' + escapeHtml(tr.comment || 'Addresses prompt requirements.') + '</p>';
+        out += '</div>';
+
+        out += '<div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px;">';
+        out += '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">';
+        out += '<strong style="color:#0b2b52; font-size:0.80rem;">Coherence & Cohesion</strong>';
+        out += '<span style="background:#eaf2fd; color:#1565c9; font-weight:800; font-size:0.78rem; padding:2px 6px; border-radius:4px;">' + (cc.score || '--') + '</span>';
+        out += '</div>';
+        out += '<p style="font-size:0.78rem; color:#475569; margin:0; line-height:1.45;">' + escapeHtml(cc.comment || 'Paragraphing and logical flow.') + '</p>';
+        out += '</div>';
+
+        out += '<div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px;">';
+        out += '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">';
+        out += '<strong style="color:#0b2b52; font-size:0.80rem;">Lexical Resource</strong>';
+        out += '<span style="background:#eaf2fd; color:#1565c9; font-weight:800; font-size:0.78rem; padding:2px 6px; border-radius:4px;">' + (lr.score || '--') + '</span>';
+        out += '</div>';
+        out += '<p style="font-size:0.78rem; color:#475569; margin:0; line-height:1.45;">' + escapeHtml(lr.comment || 'Range of vocabulary.') + '</p>';
+        out += '</div>';
+
+        out += '<div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px;">';
+        out += '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">';
+        out += '<strong style="color:#0b2b52; font-size:0.80rem;">Grammar & Accuracy</strong>';
+        out += '<span style="background:#eaf2fd; color:#1565c9; font-weight:800; font-size:0.78rem; padding:2px 6px; border-radius:4px;">' + (gr.score || '--') + '</span>';
+        out += '</div>';
+        out += '<p style="font-size:0.78rem; color:#475569; margin:0; line-height:1.45;">' + escapeHtml(gr.comment || 'Sentence variety and precision.') + '</p>';
+        out += '</div>';
+
+        out += '</div>';
+      }
+      out += '</div>';
+
+      // 2. Side-by-Side: Student Submission vs Mistakes & Corrections
+      out += '<div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">';
+
+      // Left Box: Student's Submitted Essay
+      out += '<div style="background:#ffffff; border:1.5px solid #cbd5e1; border-radius:12px; padding:16px 18px; display:flex; flex-direction:column;">';
+      out += '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #e2e8f0; padding-bottom:8px;">';
+      out += '<h4 style="margin:0; color:#0b2b52; font-size:0.92rem; font-weight:800; display:flex; align-items:center; gap:6px;"><span>📝</span> Your Submitted Response</h4>';
+      out += '<span style="background:#f1f5f9; color:#475569; font-size:0.75rem; font-weight:700; padding:2px 8px; border-radius:999px;">' + wordCount + ' words</span>';
+      out += '</div>';
+
+      if (studentEssay) {
+        out += '<div style="white-space:pre-line; line-height:1.75; font-size:0.88rem; color:#334155; max-height:420px; overflow-y:auto; padding-right:6px;">' + escapeHtml(studentEssay) + '</div>';
+      } else {
+        out += '<div style="text-align:center; padding:36px; color:#94a3b8; font-style:italic;">No essay was submitted for Task ' + taskNum + '.</div>';
+      }
+      out += '</div>';
+
+      // Right Box: Where You Made Mistakes & Detailed Corrections
+      out += '<div style="background:#ffffff; border:1.5px solid #cbd5e1; border-radius:12px; padding:16px 18px; display:flex; flex-direction:column;">';
+      out += '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #e2e8f0; padding-bottom:8px;">';
+      out += '<h4 style="margin:0; color:#991b1b; font-size:0.92rem; font-weight:800; display:flex; align-items:center; gap:6px;"><span>🔍</span> Where You Made Mistakes & Upgrades</h4>';
+      out += '<span style="background:#fee2e2; color:#991b1b; font-size:0.75rem; font-weight:700; padding:2px 8px; border-radius:999px;">IELTS Examiner Fixes</span>';
+      out += '</div>';
+
+      out += '<div style="max-height:420px; overflow-y:auto; padding-right:6px;">';
+      const corrections = (evalData && Array.isArray(evalData.corrections)) ? evalData.corrections : [];
+      if (corrections.length > 0) {
+        corrections.forEach(c => {
+          out += '<div class="writing-correction-card" style="background:#fffafa; border:1px solid #fecaca; border-left:4px solid #dc2626; border-radius:8px; padding:10px 14px; margin-bottom:10px; font-size:0.83rem; line-height:1.55;">';
+          if (c.original) {
+            out += '<div style="margin-bottom:4px;"><strong style="color:#b91c1c;">🔴 Original (Mistake/Slip):</strong> <span style="color:#7f1d1d; font-style:italic;">&ldquo;' + escapeHtml(c.original) + '&rdquo;</span></div>';
+          }
+          if (c.improved) {
+            out += '<div style="margin-bottom:4px;"><strong style="color:#15803d;">🟢 Band 8.5/9.0 Upgrade:</strong> <span style="color:#14532d; font-weight:700;">&ldquo;' + escapeHtml(c.improved) + '&rdquo;</span></div>';
+          }
+          if (c.reason) {
+            out += '<div style="font-size:0.78rem; color:#475569; margin-top:2px;"><strong>💡 Reason:</strong> ' + escapeHtml(c.reason) + '</div>';
+          }
+          out += '</div>';
+        });
+      } else {
+        out += '<div style="padding:24px; text-align:center; color:#64748b; font-size:0.85rem;">' + (studentEssay ? 'No specific grammatical errors detected. Strong accuracy!' : 'Submit an essay to view examiner corrections.') + '</div>';
+      }
+
+      // Key Improvements
+      const improvements = (evalData && Array.isArray(evalData.key_improvements)) ? evalData.key_improvements : [];
+      if (improvements.length > 0) {
+        out += '<div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:10px 14px; margin-top:8px;">';
+        out += '<strong style="color:#1d4ed8; font-size:0.82rem; display:block; margin-bottom:4px;">🎯 Key Actionable Improvement Steps:</strong>';
+        out += '<ul style="margin:0; padding-left:18px; font-size:0.80rem; color:#1e293b; line-height:1.5;">';
+        improvements.forEach(step => {
+          out += '<li>' + escapeHtml(step) + '</li>';
+        });
+        out += '</ul></div>';
+      }
+      out += '</div>';
+      out += '</div>';
+      out += '</div>';
+
+      // 3. Official Band 9 Model Sample Answer
+      out += '<div class="writing-sample-box" style="background:#f0fdf4; border:1.5px solid #86efac; border-radius:12px; padding:18px 22px; margin-bottom:24px;">';
+      out += '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid #bbf7d0; padding-bottom:8px;">';
+      out += '<div style="font-family:\'Sora\',sans-serif; color:#166534; font-size:0.98rem; font-weight:800; display:flex; align-items:center; gap:8px;">';
+      out += '<span>🏆</span> Official Band 9.0 Examiner Model Sample Answer (Task ' + taskNum + ')';
+      out += '</div>';
+      if (sampleAnswer) {
+        out += '<button type="button" onclick="navigator.clipboard.writeText(this.dataset.sample); alert(\'Sample answer copied to clipboard!\');" data-sample="' + escapeAttr(sampleAnswer) + '" style="background:#ffffff; color:#166534; border:1px solid #86efac; border-radius:6px; padding:4px 10px; font-size:0.75rem; font-weight:700; cursor:pointer;">📋 Copy Sample Answer</button>';
+      }
+      out += '</div>';
+
+      if (sampleAnswer) {
+        out += '<div style="white-space:pre-line; line-height:1.8; font-size:0.90rem; color:#14532d;">' + escapeHtml(sampleAnswer) + '</div>';
+      } else {
+        out += '<div style="color:#166534; font-size:0.86rem; font-style:italic;">Band 9 model answer will be provided upon formal publication.</div>';
+      }
+      out += '</div>';
+
+      return out;
+    }
+
+    function escapeAttr(str) {
+      if (!str) return '';
+      return String(str).replace(/"/g, '&quot;');
+    }
+
+    function getEvaluatedQuestionList(mod, rec) {
       const mistakesData = rec.mistakes || {};
       let list = [];
       if (Array.isArray(mistakesData[mod])) {
@@ -1937,171 +3332,27 @@
           isCorrect: false
         }));
       }
+      return list;
+    }
 
-      if (list.length === 0) {
-        if (badgesContainer) badgesContainer.innerHTML = '<span style="color:#64748b;">No answer data recorded</span>';
-        container.innerHTML = '<div style="text-align:center; padding:32px 14px; color:#64748b;"><p style="font-weight:700;">Detailed 1–40 breakdown saved for this module.</p><p style="font-size:0.84rem;">Official score: ' + (mod === 'listening' ? (rec.listeningScore || 0) : (rec.readingScore || 0)) + ' / 40</p></div>';
-        return;
-      }
-
-      const totalQ = list.length;
-      let countCorrect = 0, countWrong = 0, countUnanswered = 0;
-
-      list.forEach(item => {
-        const hasAns = item.yourAns && String(item.yourAns).trim() !== '' && String(item.yourAns).trim() !== '(Not Answered)';
-        if (item.isCorrect === true) {
-          countCorrect++;
-        } else if (!hasAns) {
-          countUnanswered++;
-        } else {
-          countWrong++;
-        }
-      });
-
-      if (badgesContainer) {
-        badgesContainer.innerHTML = `
-          <span style="color:#0b2b52;">Total: ${totalQ}</span>
-          <span style="color:#16a34a;">✅ Correct: ${countCorrect}</span>
-          <span style="color:#dc2626;">❌ Wrong: ${countWrong}</span>
-          ${countUnanswered > 0 ? `<span style="color:#d97706;">⚠️ Skipped: ${countUnanswered}</span>` : ''}
-          <span style="color:#1565c9;">Band: ${mod === 'listening' ? (rec.listeningBand ? rec.listeningBand.toFixed(1) : '--') : (rec.readingBand ? rec.readingBand.toFixed(1) : '--')}</span>
-        `;
-      }
-
-      const activeF = activeQuestionFilters[mod] || 'all';
-      let html = '';
-      let visibleCount = 0;
-
+    function renderStandardFallbackModule(mod, list, rec) {
+      let out = '<div style="padding:16px 20px; overflow-y:auto; height:100%;">';
       list.forEach((item, idx) => {
         const qNum = item.qNum || (idx + 1);
-        const isCorrect = item.isCorrect === true;
-        const hasAns = item.yourAns && String(item.yourAns).trim() !== '' && String(item.yourAns).trim() !== '(Not Answered)';
-        const isUnanswered = !hasAns;
-
-        if (activeF === 'correct' && !isCorrect) return;
-        if (activeF === 'mistakes' && isCorrect) return;
-        if (activeF === 'unanswered' && hasAns) return;
-
-        visibleCount++;
-        const yourAns = Array.isArray(item.yourAns) ? item.yourAns.join(', ') : (item.yourAns || '(Not Answered)');
-        const officialAns = Array.isArray(item.officialAns) ? item.officialAns.join(' / ') : (item.officialAns || '--');
-
-        const statusClass = isCorrect ? 'correct' : (isUnanswered ? 'unanswered' : 'incorrect');
-        const statusBadge = isCorrect
-          ? '<span style="color:#16a34a; font-weight:700;">✅ Correct</span>'
-          : (isUnanswered ? '<span style="color:#64748b; font-weight:600;">⚠️ Unanswered</span>' : '<span style="color:#dc2626; font-weight:700;">❌ Incorrect</span>');
-
-        html += '<div class="q-rev-item ' + statusClass + '">' +
-          '<div style="display:flex; align-items:center; gap:10px;">' +
-            '<span style="font-weight:800; color:#0b2b52; min-width:32px;">Q' + qNum + '</span>' +
-            '<div>' +
-              '<div><strong>Your Answer:</strong> <span style="color:' + (isCorrect ? '#16a34a' : (isUnanswered ? '#64748b' : '#dc2626')) + ';">' + escapeHtml(yourAns) + '</span></div>' +
-              (!isCorrect ? '<div style="font-size:0.80rem; color:#475569;"><strong>Correct Answer:</strong> <span style="color:#16a34a; font-weight:700;">' + escapeHtml(officialAns) + '</span></div>' : '') +
-            '</div>' +
-          '</div>' +
-          '<div>' + statusBadge + '</div>' +
-        '</div>';
+        const isOk = item.isCorrect === true;
+        const yourAns = item.yourAns || '(Not Answered)';
+        const officialAns = item.officialAns || '--';
+        out += '<div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:10px 14px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">';
+        out += '<div><strong>Q' + qNum + ':</strong> Your Answer: <span style="color:' + (isOk ? '#16a34a' : '#dc2626') + ';">' + escapeHtml(yourAns) + '</span></div>';
+        if (!isOk) out += '<div>Official: <strong style="color:#16a34a;">' + escapeHtml(officialAns) + '</strong></div>';
+        out += '<div>' + (isOk ? '✅ Correct' : '❌ Incorrect') + '</div>';
+        out += '</div>';
       });
-
-      if (visibleCount === 0) {
-        html = '<div style="text-align:center; padding:28px; color:#64748b;">No questions match this filter (' + activeF + ').</div>';
-      }
-
-      container.innerHTML = html;
+      out += '</div>';
+      return out;
     }
-
     
-    function renderSpeakingFeedback(rec) {
-      const container = document.getElementById('revSpeakingContent');
-      if (!container) return;
-
-      const fb = rec.feedback || {};
-      const fc = fb.fluency_coherence || {};
-      const lr = fb.lexical_resource || {};
-      const gra = fb.grammar || fb.grammatical_range || {};
-      const pr = fb.pronunciation || {};
-      const sBand = rec.speakingBand || fb.overallBand || fb.overall_band;
-
-      if (!sBand && !fb.summary_feedback && !fb.summary) {
-        container.innerHTML = `
-          <div style="text-align:center; padding:32px 14px; color:#64748b;">
-            <p style="font-weight:700;">No AI Speaking evaluation recorded for this session.</p>
-            <p style="font-size:0.84rem;">Take a Speaking practice test to see detailed fluency, vocabulary, grammar & pronunciation feedback here.</p>
-          </div>
-        `;
-        return;
-      }
-
-      let html = `
-        <div style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:18px; margin-bottom:14px; box-shadow:0 1px 3px rgba(0,0,0,0.03);">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
-            <div>
-              <span style="font-size:0.75rem; font-weight:800; color:#db2777; text-transform:uppercase; letter-spacing:0.5px;">AI Examiner Evaluation</span>
-              <h4 style="margin:2px 0 0; color:#0b2b52; font-size:1.05rem; font-weight:800;">IELTS Speaking Performance</h4>
-            </div>
-            <span class="score-badge-circle overall" style="background:#db2777;">Band ${Number(sBand).toFixed(1)}</span>
-          </div>
-          ${fb.summary_feedback || fb.summary ? `<p style="font-size:0.90rem; color:#334155; line-height:1.6; margin-bottom:14px; background:#f8fafc; padding:12px; border-radius:8px; border-left:4px solid #db2777;">${escapeHtml(fb.summary_feedback || fb.summary)}</p>` : ''}
-
-          <!-- 4 IELTS Speaking Criteria Grid -->
-          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-bottom:16px;">
-            <div style="background:#fdf2f8; border:1px solid #fbcfe8; border-radius:10px; padding:12px;">
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                <strong style="font-size:0.82rem; color:#9d174d;">Fluency &amp; Coherence</strong>
-                <span style="font-weight:800; font-size:0.85rem; color:#9d174d;">Band ${fc.score ? Number(fc.score).toFixed(1) : '--'}</span>
-              </div>
-              <p style="font-size:0.78rem; color:#475569; margin:0; line-height:1.4;">${escapeHtml(fc.comment || 'Good tempo, natural pauses and cohesive flow.')}</p>
-            </div>
-
-            <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:12px;">
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                <strong style="font-size:0.82rem; color:#166534;">Lexical Resource</strong>
-                <span style="font-weight:800; font-size:0.85rem; color:#166534;">Band ${lr.score ? Number(lr.score).toFixed(1) : '--'}</span>
-              </div>
-              <p style="font-size:0.78rem; color:#475569; margin:0; line-height:1.4;">${escapeHtml(lr.comment || 'Rich vocabulary and accurate topic-specific phrases.')}</p>
-            </div>
-
-            <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:12px;">
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                <strong style="font-size:0.82rem; color:#1e40af;">Grammatical Range</strong>
-                <span style="font-weight:800; font-size:0.85rem; color:#1e40af;">Band ${gra.score ? Number(gra.score).toFixed(1) : '--'}</span>
-              </div>
-              <p style="font-size:0.78rem; color:#475569; margin:0; line-height:1.4;">${escapeHtml(gra.comment || 'Variety of complex structures used accurately.')}</p>
-            </div>
-
-            <div style="background:#fefce8; border:1px solid #fef08a; border-radius:10px; padding:12px;">
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                <strong style="font-size:0.82rem; color:#854d0e;">Pronunciation</strong>
-                <span style="font-weight:800; font-size:0.85rem; color:#854d0e;">Band ${pr.score ? Number(pr.score).toFixed(1) : '--'}</span>
-              </div>
-              <p style="font-size:0.78rem; color:#475569; margin:0; line-height:1.4;">${escapeHtml(pr.comment || 'Intelligible, good rhythm and clear stress patterns.')}</p>
-            </div>
-          </div>
-        </div>
-      `;
-
-      // Corrections
-      if (Array.isArray(fb.corrections) && fb.corrections.length > 0) {
-        html += `
-          <div style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:16px; margin-bottom:14px;">
-            <h5 style="margin:0 0 10px; color:#0b2b52; font-size:0.92rem; font-weight:800;">Grammar &amp; Fluency Corrections</h5>
-            <div style="display:flex; flex-direction:column; gap:8px;">
-              ${fb.corrections.map(c => `
-                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px;">
-                  <div style="text-decoration:line-through; color:#dc2626; font-size:0.82rem; margin-bottom:2px;">${escapeHtml(c.original || '')}</div>
-                  <div style="font-weight:700; color:#16a34a; font-size:0.84rem; margin-bottom:4px;">${escapeHtml(c.improved || '')}</div>
-                  <div style="font-size:0.76rem; color:#64748b;"><strong>Note:</strong> ${escapeHtml(c.reason || '')}</div>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        `;
-      }
-
-      container.innerHTML = html;
-    }
-
-    function renderWritingFeedback(rec) {
+function renderWritingFeedback(rec) {
       const container = document.getElementById('revWritingContent');
       if (!container) return;
 
@@ -2169,6 +3420,112 @@
 
       container.innerHTML = html;
     }
+  
+    
+    // ==============================================================
+    // 4. SPEAKING FEEDBACK
+    // ==============================================================
+    function renderSpeakingFeedback(rec) {
+      const container = document.getElementById('tabContentSpeaking');
+      if (!container) return;
+      const fb = rec.speakingFeedback || rec.feedback || {};
+      const sBand = rec.speakingBand || fb.overall_band || fb.band || 0;
+
+      if (!sBand && !fb.summary_feedback && !fb.summary) {
+        container.innerHTML = '<div style="text-align:center; padding:32px 14px; color:#64748b;"><p style="font-weight:700; margin-bottom:4px;">No Speaking evaluation recorded for this attempt.</p><p style="font-size:0.82rem;">Speaking feedback is generated for IELTS Speaking simulator tests.</p></div>';
+        return;
+      }
+
+      const fc = fb.fluency_coherence || {};
+      const lr = fb.lexical_resource || {};
+      const gra = fb.grammatical_range || {};
+      const pr = fb.pronunciation || {};
+
+      let html = '<div style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:16px; margin-bottom:14px;">' +
+        '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">' +
+          '<div style="display:flex; align-items:center; gap:8px;">' +
+            '<span style="font-size:1.2rem;">🎙️</span>' +
+            '<h4 style="margin:2px 0 0; color:#0b2b52; font-size:1.05rem; font-weight:800;">IELTS Speaking Performance</h4>' +
+          '</div>' +
+          '<span class="score-badge-circle overall" style="background:#db2777;">Band ' + Number(sBand).toFixed(1) + '</span>' +
+        '</div>' +
+        (fb.summary_feedback || fb.summary ? ('<p style="font-size:0.90rem; color:#334155; line-height:1.6; margin-bottom:14px; background:#f8fafc; padding:12px; border-radius:8px; border-left:4px solid #db2777;">' + escapeHtml(fb.summary_feedback || fb.summary) + '</p>') : '') +
+
+        '<!-- 4 IELTS Speaking Criteria Grid -->' +
+        '<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-bottom:16px;">' +
+          '<div style="background:#fdf2f8; border:1px solid #fbcfe8; border-radius:10px; padding:12px;">' +
+            '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">' +
+              '<strong style="font-size:0.82rem; color:#9d174d;">Fluency &amp; Coherence</strong>' +
+              '<span style="font-weight:800; font-size:0.85rem; color:#9d174d;">Band ' + (fc.score ? Number(fc.score).toFixed(1) : '--') + '</span>' +
+            '</div>' +
+            '<p style="font-size:0.78rem; color:#475569; margin:0; line-height:1.4;">' + escapeHtml(fc.comment || 'Good tempo, natural pauses and cohesive flow.') + '</p>' +
+          '</div>' +
+
+          '<div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:12px;">' +
+            '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">' +
+              '<strong style="font-size:0.82rem; color:#166534;">Lexical Resource</strong>' +
+              '<span style="font-weight:800; font-size:0.85rem; color:#166534;">Band ' + (lr.score ? Number(lr.score).toFixed(1) : '--') + '</span>' +
+            '</div>' +
+            '<p style="font-size:0.78rem; color:#475569; margin:0; line-height:1.4;">' + escapeHtml(lr.comment || 'Rich vocabulary and accurate topic-specific phrases.') + '</p>' +
+          '</div>' +
+
+          '<div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:12px;">' +
+            '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">' +
+              '<strong style="font-size:0.82rem; color:#1e40af;">Grammatical Range</strong>' +
+              '<span style="font-weight:800; font-size:0.85rem; color:#1e40af;">Band ' + (gra.score ? Number(gra.score).toFixed(1) : '--') + '</span>' +
+            '</div>' +
+            '<p style="font-size:0.78rem; color:#475569; margin:0; line-height:1.4;">' + escapeHtml(gra.comment || 'Variety of complex structures used accurately.') + '</p>' +
+          '</div>' +
+
+          '<div style="background:#fefce8; border:1px solid #fef08a; border-radius:10px; padding:12px;">' +
+            '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">' +
+              '<strong style="font-size:0.82rem; color:#854d0e;">Pronunciation</strong>' +
+              '<span style="font-weight:800; font-size:0.85rem; color:#854d0e;">Band ' + (pr.score ? Number(pr.score).toFixed(1) : '--') + '</span>' +
+            '</div>' +
+            '<p style="font-size:0.78rem; color:#475569; margin:0; line-height:1.4;">' + escapeHtml(pr.comment || 'Intelligible, good rhythm and clear stress patterns.') + '</p>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+
+      // Corrections
+      if (Array.isArray(fb.corrections) && fb.corrections.length > 0) {
+        html += '<div style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:16px; margin-bottom:14px;">' +
+          '<h5 style="margin:0 0 10px; color:#0b2b52; font-size:0.92rem; font-weight:800;">Grammar &amp; Fluency Corrections</h5>' +
+          '<div style="display:flex; flex-direction:column; gap:8px;">';
+        fb.corrections.forEach(function(c) {
+          html += '<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px;">' +
+            '<div style="text-decoration:line-through; color:#dc2626; font-size:0.82rem; margin-bottom:2px;">' + escapeHtml(c.original || '') + '</div>' +
+            '<div style="font-weight:700; color:#16a34a; font-size:0.84rem; margin-bottom:4px;">' + escapeHtml(c.improved || '') + '</div>' +
+            '<div style="font-size:0.76rem; color:#64748b;"><strong>Note:</strong> ' + escapeHtml(c.reason || '') + '</div>' +
+          '</div>';
+        });
+        html += '</div></div>';
+      }
+
+      container.innerHTML = html;
+    }
+
+
+    // Explicit Window Scope Exposure for Inline HTML Onclick Handlers
+    window.openTestReviewModal = openTestReviewModal;
+    window.closeTestReviewModal = closeTestReviewModal;
+    window.switchReviewTab = switchReviewTab;
+    window.filterActivity = filterActivity;
+    window.filterCambridgeQuestions = filterCambridgeQuestions;
+    window.toggleAllCambridgeExpl = toggleAllCambridgeExpl;
+    window.toggleCambridgeExplBox = toggleCambridgeExplBox;
+    window.switchReadingPassageTab = switchReadingPassageTab;
+    window.locateInReadingPassage = locateInReadingPassage;
+    window.jumpToReadingQuestion = jumpToReadingQuestion;
+    window.filterListeningScriptPart = filterListeningScriptPart;
+    window.locateInScript = locateInScript;
+    window.jumpToListeningQuestion = jumpToListeningQuestion;
+    window.switchWritingTaskTab = switchWritingTaskTab;
+    window.renderSpeakingFeedback = renderSpeakingFeedback;
+    window.renderCambridgeReadingReview = renderCambridgeReadingReview;
+    window.renderCambridgeListeningReview = renderCambridgeListeningReview;
+    window.renderAuthenticCambridgeGroups = renderAuthenticCambridgeGroups;
+  
   </script>
   
 </body>

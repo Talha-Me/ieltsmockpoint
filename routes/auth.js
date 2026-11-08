@@ -41,7 +41,7 @@
 //       writing: mock.writing,
 //     };
 
-//     res.redirect("/mock-test");
+//     res.redirect(`/mock-test?mockID=${encodeURIComponent(mock.mockNumber)}`);
 //   } catch (err) {
 //     console.error("Mock load error:", err);
 //     res.status(500).send("Server Error");
@@ -66,7 +66,7 @@
 //       writing: mock.writing,
 //     };
 
-//     res.redirect("/mock-test");
+//     res.redirect(`/mock-test?mockID=${encodeURIComponent(mock.mockNumber)}`);
 //   } catch (err) {
 //     console.error("Select mock error:", err);
 //     res.status(500).send("Server Error");
@@ -102,7 +102,7 @@
 //     writing: mock.writing,
 //   };
 
-//   res.redirect("/mock-test");
+//   res.redirect(`/mock-test?mockID=${encodeURIComponent(mock.mockNumber)}`);
 // };
 // router.get("/passcodes", passcodes);
 
@@ -368,7 +368,7 @@
 //       writing: mock.writing,
 //     };
 
-//     res.redirect("/mock-test");
+//     res.redirect(`/mock-test?mockID=${encodeURIComponent(mock.mockNumber)}`);
 //   } catch (err) {
 //     console.error("Mock load error:", err);
 //     res.status(500).send("Server Error");
@@ -393,7 +393,7 @@
 //       writing: mock.writing,
 //     };
 
-//     res.redirect("/mock-test");
+//     res.redirect(`/mock-test?mockID=${encodeURIComponent(mock.mockNumber)}`);
 //   } catch (err) {
 //     console.error("Select mock error:", err);
 //     res.status(500).send("Server Error");
@@ -429,7 +429,7 @@
 //     writing: mock.writing,
 //   };
 
-//   res.redirect("/mock-test");
+//   res.redirect(`/mock-test?mockID=${encodeURIComponent(mock.mockNumber)}`);
 // };
 // router.get("/passcodes", passcodes);
 
@@ -675,7 +675,7 @@ router.get("/passcode-for-mock/mock", async (req, res) => {
       writing: mock.writing,
     };
 
-    res.redirect("/mock-test");
+    res.redirect(`/mock-test?mockID=${encodeURIComponent(mock.mockNumber)}`);
   } catch (err) {
     console.error("Mock load error:", err);
     res.status(500).send("Server Error");
@@ -700,7 +700,7 @@ router.get("/select-mock/mock", async (req, res) => {
       writing: mock.writing,
     };
 
-    res.redirect("/mock-test");
+    res.redirect(`/mock-test?mockID=${encodeURIComponent(mock.mockNumber)}`);
   } catch (err) {
     console.error("Select mock error:", err);
     res.status(500).send("Server Error");
@@ -736,7 +736,7 @@ const passcodes = async (req, res) => {
     writing: mock.writing,
   };
 
-  res.redirect("/mock-test");
+  res.redirect(`/mock-test?mockID=${encodeURIComponent(mock.mockNumber)}`);
 };
 router.get("/passcodes", passcodes);
 

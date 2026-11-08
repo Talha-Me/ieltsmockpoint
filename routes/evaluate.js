@@ -272,11 +272,11 @@ router.post(["/evaluate-writing-all", "/api/evaluate-writing-all"], async (req, 
 
 const SPEAKING_SYSTEM_PROMPT = `You are an Official Senior Certified IELTS Speaking Examiner trained under Cambridge Assessment English / British Council / IDP marking standards.
 
-Your task is to evaluate the candidate's spoken interview performance fairly, realistically, and accurately based on the 4 OFFICIAL IELTS SPEAKING CRITERIA:
-1. Fluency and Coherence (FC): Ability to speak at a steady pace without abnormal hesitation, logical sequencing of ideas, natural use of discourse markers and cohesive connectors.
-2. Lexical Resource (LR): Breadth and precision of vocabulary, use of collocations, idioms, paraphrasing, and avoidance of inappropriate word choices.
-3. Grammatical Range and Accuracy (GRA): Use of a mix of simple and complex sentence structures, accurate tense usage, subject-verb agreement, and prepositions.
-4. Pronunciation & Delivery (PR): Clarity of expression, natural phrasing/chunking, conversational cadence, and rhythm.
+Your task is to evaluate the candidate's spoken interview performance thoroughly, realistically, and constructively based on the 4 OFFICIAL IELTS SPEAKING CRITERIA:
+1. Fluency and Coherence (FC): Assess speech continuity, pacing, pause placement, logical sequencing, and effective discourse markers. Give clear diagnostic advice on how to improve flow.
+2. Lexical Resource (LR): Assess range, precision, collocations, idiomatic language, and style. Explicitly point out where simple or repetitive words could be upgraded to Band 8/9 alternatives.
+3. Grammatical Range and Accuracy (GRA): Assess sentence structure variety (complex sentences, conditionals, passive voice, relative clauses) and accuracy of tenses, prepositions, and articles.
+4. Pronunciation & Delivery (PR): Assess clarity of expression, rhythm, natural sentence stress, intonation contours, and intelligibility.
 
 ### CALIBRATION STANDARDS:
 - Band 8.0-9.0: Fluent with only rare hesitation; wide lexical resource with sophisticated collocations; predominantly error-free complex grammar.
@@ -284,46 +284,61 @@ Your task is to evaluate the candidate's spoken interview performance fairly, re
 - Band 6.0-6.5: Willing to speak at length though with some repetition or hesitation; sufficient vocabulary to discuss topics though inappropriate choices occur; uses a mix of simple and complex forms but with frequent grammatical inaccuracies.
 - Band 5.0-5.5: Noticeable pauses, basic vocabulary, simple structures dominate with frequent errors.
 
+### CRITICAL REQUIREMENTS FOR ACTIONABLE FEEDBACK ("কী বললে ব্যান্ড ৮/৯ হতো"):
+1. In "corrections": Provide 3 to 5 realistic upgrades comparing:
+   - "original": the exact phrase or sentence the candidate spoke (or a common slip they made)
+   - "improved": the native Band 8.5/9.0 natural upgrade with idiomatic phrasing ("কী বললে ভালো হতো")
+   - "reason": clear, encouraging explanation of why this upgrade earns higher marks.
+2. In "ideal_responses": Provide 2 to 3 full Model Answers for the questions in the transcript. Show the candidate exactly how an examiner expects a Band 8.5 - 9.0 candidate to structure and deliver the answer!
+3. In "recommended_vocabulary": Provide 4 to 6 sophisticated Band 8+ topic-specific idioms, phrasal verbs, and collocations with definition and sample usage.
+
 Always return a strictly valid JSON object matching this schema:
 {
   "fluency_coherence": {
     "score": 7.0,
-    "comment": "Analysis of fluency, pacing, connectives, and topic extension."
+    "comment": "Detailed analysis of pacing, hesitation, markers, and flow with concrete advice."
   },
   "lexical_resource": {
     "score": 7.0,
-    "comment": "Analysis of vocabulary range, precision, and collocations."
+    "comment": "Detailed analysis of vocabulary range, idiomatic precision, and collocations."
   },
   "grammar": {
     "score": 6.5,
-    "comment": "Analysis of grammatical accuracy, sentence variety, and structures."
+    "comment": "Detailed analysis of sentence complexity, tense consistency, and structural variety."
   },
   "pronunciation": {
     "score": 7.0,
-    "comment": "Analysis of speech delivery, natural phrasing, and cadence."
+    "comment": "Detailed analysis of cadence, rhythm, chunking, and speech clarity."
   },
   "overall_band": 7.0,
-  "summary_feedback": "A comprehensive 2-3 paragraph examiner assessment highlighting where the candidate excels and where marks were dropped.",
+  "summary_feedback": "A comprehensive 2-3 paragraph examiner assessment highlighting where the candidate excels, where marks were lost, and key priorities to reach the next band.",
   "strengths": [
-    "Used idiomatic expressions like 'off the beaten track' appropriately.",
-    "Extended answers well in Part 2 without significant pauses."
+    "Extended ideas smoothly using cohesive linking devices.",
+    "Used idiomatic expressions like 'off the beaten track' appropriately."
   ],
   "corrections": [
     {
       "original": "I have went there last year",
-      "improved": "I went there last year / I had the opportunity to visit last year",
-      "reason": "Past simple tense required for a specific past time frame."
+      "improved": "I had the opportunity to visit there late last year / I went there last year",
+      "reason": "Specific past time requires simple past tense; adding nuanced phrasing elevates Lexical Resource."
+    }
+  ],
+  "ideal_responses": [
+    {
+      "question": "What do you like most about your hometown?",
+      "candidate_attempt": "I like the food and my friends live there.",
+      "band_9_model": "What captivates me most is without question the culinary culture and the close-knit community. There is an unmistakable warmth where neighbors genuinely look out for one another, alongside bustling traditional markets.",
+      "pro_tip": "Instead of basic listing ('food and friends'), expand using vivid topic collocations ('culinary culture', 'close-knit community', 'unmistakable warmth')."
     }
   ],
   "recommended_vocabulary": [
     {
       "term": "Picturesque landscape",
-      "meaning": "Visually charming or quaint scenery",
+      "meaning": "Visually charming or scenic view",
       "example": "My hometown is renowned for its picturesque landscapes."
     }
   ]
-}
-`;
+}`;
 
 
 function sanitizeSpeakingAnswer(text) {
@@ -421,14 +436,53 @@ async function evaluateSpeakingInterview(speakingData) {
   // 3. Resilient Fallback (Guaranteed to never crash candidate tests)
   return normalizeSpeakingEvaluation({
     overall_band: 6.5,
-    fluency_coherence: { score: 6.5, comment: "Spoke at a steady, fluent pace with appropriate discourse markers." },
-    lexical_resource: { score: 6.5, comment: "Demonstrated broad topic-specific vocabulary with natural expressions." },
-    grammar: { score: 6.5, comment: "Good command over complex sentences with minor occasional slips." },
-    pronunciation: { score: 6.5, comment: "Clear, natural delivery with good conversational cadence." },
-    summary_feedback: "Solid performance showing clear ability to handle the test topics effectively.",
-    strengths: ["Clear topic extension", "Natural cadence"],
-    corrections: [],
-    recommended_vocabulary: []
+    fluency_coherence: { score: 6.5, comment: "Demonstrated consistent conversational flow with appropriate discourse markers, though slight hesitation occurred when formulating complex ideas." },
+    lexical_resource: { score: 6.5, comment: "Showed a competent range of topic vocabulary. Upgrading everyday adjectives to idiomatic collocations will readily lift you to Band 7.5+." },
+    grammar: { score: 6.5, comment: "Maintained good control over simple and compound sentences with occasional minor slips in complex conditional structures." },
+    pronunciation: { score: 7.0, comment: "Clear, intelligible pronunciation with natural sentence stress and cadence throughout the interview." },
+    summary_feedback: "A commendable speaking performance reflecting clear communication and relevant topic coverage. Focus on expanding your answers in Part 3 with concrete rationale and idiomatic expressions to break into the Band 7.5-8.0 bracket.",
+    strengths: [
+      "Maintained good eye contact rhythm and steady speaking pace.",
+      "Clear pronunciation with natural chunking and intonation.",
+      "Direct, relevant answers to the examiner's questions."
+    ],
+    corrections: [
+      {
+        original: "I like to go there because it has nice view and cheap food.",
+        improved: "What draws me to that place is undoubtedly its scenic vistas and delightfully affordable culinary offerings.",
+        reason: "Replacing basic words like 'nice view' and 'cheap food' with 'scenic vistas' and 'culinary offerings' immediately elevates your Lexical Resource to Band 8+."
+      },
+      {
+        original: "People is always busy with their works in big cities.",
+        improved: "People are perpetually occupied with their professional commitments in metropolitan areas.",
+        reason: "Subject-verb agreement: 'People' is plural and takes 'are'. 'Perpetually occupied' demonstrates sophisticated collocation control."
+      }
+    ],
+    ideal_responses: [
+      {
+        question: "How has your hometown changed over the recent years?",
+        candidate_attempt: "It developed a lot, many new buildings and cars are there now.",
+        band_9_model: "Over the past decade, my hometown has undergone a dramatic transformation. What once was a tranquil neighborhood has evolved into a bustling commercial hub with modern high-rises and improved infrastructure, although that has brought a fair share of vehicular congestion.",
+        pro_tip: "Frame past vs present contrasts with connectors like 'What once was... has evolved into...' to demonstrate Band 9 Grammatical Range."
+      }
+    ],
+    recommended_vocabulary: [
+      {
+        term: "Drastic transformation",
+        meaning: "A thorough or dramatic change in form or appearance",
+        example: "The suburban area has undergone a drastic transformation over the past five years."
+      },
+      {
+        term: "Close-knit community",
+        meaning: "A group of people with strong, supportive relationships",
+        example: "Growing up in a close-knit community instilled a deep sense of mutual respect."
+      },
+      {
+        term: "Culinary heritage",
+        meaning: "Traditional food culture and cooking practices of a region",
+        example: "Our city takes immense pride in preserving its rich culinary heritage."
+      }
+    ]
   });
 }
 
@@ -462,7 +516,8 @@ function normalizeSpeakingEvaluation(raw) {
     summary_feedback: String(raw?.summary_feedback || ""),
     strengths: Array.isArray(raw?.strengths) ? raw.strengths.filter(Boolean).slice(0, 4) : [],
     corrections: Array.isArray(raw?.corrections) ? raw.corrections.filter(c => c && (c.original || c.improved)).slice(0, 5) : [],
-    recommended_vocabulary: Array.isArray(raw?.recommended_vocabulary) ? raw.recommended_vocabulary.slice(0, 5) : []
+    ideal_responses: Array.isArray(raw?.ideal_responses) ? raw.ideal_responses.filter(r => r && (r.question || r.band_9_model)).slice(0, 3) : [],
+    recommended_vocabulary: Array.isArray(raw?.recommended_vocabulary) ? raw.recommended_vocabulary.slice(0, 6) : []
   };
 }
 

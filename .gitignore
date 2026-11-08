@@ -9,3 +9,15 @@ yarn-error.log*
 .DS_Store
 Thumbs.db
 .vscode/
+
+# Private Keys & Secrets
+*.key
+*.pem
+*.cert
+
+# Scratch & Temporary Testing
+scratch/
+ieltsmockpoint/scratch/
+views/lab/
+public/audio_lab/
+public/audio/premium/

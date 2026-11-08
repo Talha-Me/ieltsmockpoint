@@ -1,67 +1,84 @@
 const fs = require('fs');
-const path = require('path');
-const vm = require('vm');
 
-const apiPath = path.join(__dirname, '../routes/api.js');
-let content = fs.readFileSync(apiPath, 'utf8').replace(/\r\n/g, '\n');
+const apiPath = '../routes/api.js';
+let code = fs.readFileSync(apiPath, 'utf8');
 
-const oldRecordPush = `      seenIds.add(r.testId || r._id.toString());
-      combinedHistory.push({
-        id: r._id,
-        testId: r.testId,
-        title: r.title || 'IELTS Mock Test',
-        testType: r.testType || 'Full Mock',
-        module: r.module || null,
-        totalQuestions: r.totalQuestions || 40,
-        listeningScore: r.listeningScore || 0,
-        readingScore: r.readingScore || 0,
-        writingScore: r.writingScore || 0,
-        listeningBand: r.listeningBand || 0,
-        readingBand: r.readingBand || 0,
-        writingBand: r.writingBand || 0,
-        overallBand: r.overallBand || 0,
-        totalWords: r.totalWords || 0,
-        feedback: r.feedback || {},
-        mistakes: r.mistakes || [],
-        answers: r.answers || {},
-        completedAt: r.completedAt
-      });`;
+// 1. Line 1350: add record.speakingBand
+code = code.replace(
+  'const bands = [record.listeningBand, record.readingBand, record.writingBand].filter(b => typeof b === \'number\' && b > 0);',
+  'const bands = [record.listeningBand, record.readingBand, record.writingBand, record.speakingBand].filter(b => typeof b === \'number\' && b > 0);'
+);
 
-const newRecordPush = `      seenIds.add(r.testId || r._id.toString());
+// 2. Line 2097: add record.speakingBand
+code = code.replace(
+  'const bands = [record.listeningBand, record.readingBand, record.writingBand].filter(b => typeof b === \'number\' && b > 0);',
+  'const bands = [record.listeningBand, record.readingBand, record.writingBand, record.speakingBand].filter(b => typeof b === \'number\' && b > 0);'
+);
 
-      const validBands = [r.listeningBand, r.readingBand, r.writingBand].filter(b => typeof b === 'number' && b > 0);
-      let calculatedOverall = r.overallBand || 0;
-      if (!calculatedOverall && validBands.length > 0) {
-        const avg = validBands.reduce((a, b) => a + b, 0) / validBands.length;
-        calculatedOverall = Math.round(avg * 2) / 2;
-      }
+// 3. Improve records query in GET /student/dashboard-data
+const oldQuery = `    const records = await StudentTestRecord.find({
+      userEmail,
+      $or: [
+        { status: "completed" },
+        { listeningScore: { $ne: null } },
+        { readingScore: { $ne: null } },
+        { "answers.listening": { $exists: true } },
+        { "answers.reading": { $exists: true } }
+      ]
+    }).sort({ createdAt: -1 }).lean();`;
 
-      combinedHistory.push({
-        id: r._id,
-        testId: r.testId,
-        title: r.title || 'IELTS Mock Test',
-        testType: r.testType || 'Full Mock',
-        module: r.module || null,
-        totalQuestions: r.totalQuestions || 40,
-        listeningScore: r.listeningScore || 0,
-        readingScore: r.readingScore || 0,
-        writingScore: r.writingScore || 0,
-        listeningBand: r.listeningBand || 0,
-        readingBand: r.readingBand || 0,
-        writingBand: r.writingBand || 0,
-        overallBand: calculatedOverall,
-        totalWords: r.totalWords || 0,
-        feedback: r.feedback || {},
-        mistakes: r.mistakes || [],
-        answers: r.answers || {},
-        completedAt: r.completedAt || r.createdAt || new Date()
-      });`;
+const newQuery = `    const records = await StudentTestRecord.find({
+      userEmail,
+      $or: [
+        { status: "completed" },
+        { listeningScore: { $ne: null } },
+        { readingScore: { $ne: null } },
+        { writingBand: { $ne: null } },
+        { speakingBand: { $ne: null } },
+        { "answers.listening": { $exists: true } },
+        { "answers.reading": { $exists: true } },
+        { "answers.writing": { $exists: true } },
+        { "answers.speaking": { $exists: true } }
+      ]
+    }).sort({ createdAt: -1 }).lean();`;
 
-if (!content.includes(oldRecordPush)) {
-  throw new Error('oldRecordPush not found in routes/api.js');
+if (code.includes(oldQuery)) {
+  code = code.replace(oldQuery, newQuery);
+  console.log('Updated records query with speaking & writing conditions');
 }
 
-content = content.replace(oldRecordPush, newRecordPush);
-new vm.Script(content);
-fs.writeFileSync(apiPath, content, 'utf8');
-console.log('routes/api.js successfully updated & validated!');
+// 4. Improve categoryBreakdown counting
+const oldCatLogic = `      const typeLower = String(h.testType || '').toLowerCase();
+      if (typeLower.includes('full') || typeLower.includes('academic') || typeLower.includes('premium') || typeLower.includes('general')) {
+        categoryBreakdown.fullMock++;
+      } else if (typeLower.includes('hub') || typeLower.includes('question') || typeLower.includes('type')) {
+        categoryBreakdown.questionType++;
+      } else if (typeLower.includes('writing')) {
+        categoryBreakdown.writing++;
+      } else if (typeLower.includes('speaking')) {
+        categoryBreakdown.speaking++;
+      } else if (typeLower.includes('cambridge')) {
+        categoryBreakdown.cambridge++;
+      }`;
+
+const newCatLogic = `      const typeLower = String(h.testType || '').toLowerCase();
+      const modLower = String(h.module || '').toLowerCase();
+      if (typeLower.includes('cambridge')) {
+        categoryBreakdown.cambridge++;
+      } else if (typeLower.includes('speaking') || modLower === 'speaking' || (h.speakingBand > 0 && !h.listeningBand && !h.readingBand)) {
+        categoryBreakdown.speaking++;
+      } else if (typeLower.includes('writing') || modLower === 'writing' || (h.writingBand > 0 && !h.listeningBand && !h.readingBand)) {
+        categoryBreakdown.writing++;
+      } else if (typeLower.includes('hub') || typeLower.includes('question') || typeLower.includes('type') || modLower === 'practice') {
+        categoryBreakdown.questionType++;
+      } else {
+        categoryBreakdown.fullMock++;
+      }`;
+
+if (code.includes(oldCatLogic)) {
+  code = code.replace(oldCatLogic, newCatLogic);
+  console.log('Updated categoryBreakdown classification logic');
+}
+
+fs.writeFileSync(apiPath, code, 'utf8');
+console.log('Updated routes/api.js successfully');

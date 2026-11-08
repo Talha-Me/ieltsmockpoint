@@ -1,7 +1,7 @@
-const fs = require('fs');
-const content = fs.readFileSync('D:/personal websites/ieltsmockpoint/public/cambridge-writing.html', 'utf8');
+const fs = require("fs");
+const lines = fs.readFileSync("D:/personal websites/ieltsmockpoint/views/test_pages/writing/scripts-writing.js", "utf8").replace(/\r\n/g, "\n").split("\n");
 
-const renderIdx = content.indexOf('function render()');
-if (renderIdx !== -1) {
-  console.log(content.substring(renderIdx, renderIdx + 1500));
+console.log("Writing lines 3690-3720:");
+for (let i = 3690; i < 3720; i++) {
+  console.log(i + 1, lines[i]);
 }

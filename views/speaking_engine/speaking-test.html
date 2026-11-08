@@ -3,7 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>IELTS Speaking 3D Interactive Exam Engine | IELTS Mockpoint</title>
+  <title>IELTS Speaking Mock Test Online with 3D AI Examiner | IELTS Mockpoint</title>
+  <meta name="description" content="Practise IELTS Speaking mock tests online with live AI voice examiner, authentic Part 1, 2, 3 questions, 1-min cue card preparation, and instant band score.">
+  <link rel="canonical" href="https://ieltsmockpoint.com/speaking.html">
+  <script>
+    (function() {
+      try {
+        var u = new URLSearchParams(window.location.search);
+        var tId = u.get('id') || '1';
+        var pMode = u.get('part');
+        var pText = pMode ? ' (Part ' + pMode + ')' : '';
+        document.title = 'IELTS Speaking Mock Test ' + tId + pText + ' with AI Examiner | IELTS Mockpoint';
+      } catch(e) {}
+    })();
+  </script>
   <link rel="icon" type="image/png" href="/mpfavicon.png">
 
   <!-- Google Fonts & Bootstrap Icons -->
@@ -1310,6 +1323,127 @@
       transform: rotate(90deg);
     }
 
+  
+    /* Enhanced Speaking Evaluation & Result UI */
+    .st-crit-bar-track {
+      width: 100%;
+      height: 6px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+    .st-crit-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #1565c9, #2563eb);
+      transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .st-crit-bar-fill.fc { background: linear-gradient(90deg, #2563eb, #3b82f6); }
+    .st-crit-bar-fill.lr { background: linear-gradient(90deg, #9333ea, #c084fc); }
+    .st-crit-bar-fill.gra { background: linear-gradient(90deg, #059669, #34d399); }
+    .st-crit-bar-fill.pr { background: linear-gradient(90deg, #d97706, #fbbf24); }
+
+    .st-upgrade-card {
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 16px 18px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .st-upgrade-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    }
+    .st-upgrade-row {
+      margin-bottom: 8px;
+    }
+    .st-up-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin-bottom: 4px;
+    }
+    .orig-tag {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+    .band9-tag {
+      background: #dcfce7;
+      color: #15803d;
+    }
+    .st-up-text {
+      margin: 0;
+      font-size: 0.90rem;
+      line-height: 1.5;
+    }
+    .orig-text {
+      color: #64748b;
+      font-style: italic;
+    }
+    .band9-text {
+      color: #0f172a;
+      font-weight: 700;
+      font-size: 0.94rem;
+    }
+    .st-upgrade-why {
+      font-size: 0.82rem;
+      color: #475569;
+      background: #f8fafc;
+      border-left: 3px solid #f59e0b;
+      padding: 8px 12px;
+      border-radius: 0 8px 8px 0;
+      margin-top: 8px;
+      line-height: 1.45;
+    }
+
+    .st-model-ans-card {
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 14px rgba(11,43,82,0.04);
+    }
+    .st-model-q {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--navy);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .st-model-spoken {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 0.92rem;
+      color: #14532d;
+      line-height: 1.55;
+      margin-bottom: 8px;
+    }
+    .st-model-tip {
+      font-size: 0.80rem;
+      color: #64748b;
+    }
+    .st-examiner-connecting {
+      animation: pulseConnecting 1.2s infinite ease-in-out;
+    }
+    @keyframes pulseConnecting {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
   </style>
 </head>
 <body>
@@ -1364,14 +1498,57 @@
           <!-- Card 1: Dr. Sarah Jenkins (Female) -->
           <div class="ex-card active" id="cardExFemale" onclick="setExaminerGender('female', false)">
             <div class="ex-card-badge-top">
-              <span class="ex-flag">🇬🇧 UK</span>
+              <span class="ex-flag-badge" style="display:inline-flex; align-items:center; gap:5px; font-weight:700; font-size:0.80rem; color:var(--navy);">
+  <svg width="18" height="13" viewBox="0 0 60 40" style="border-radius:2px; vertical-align:middle; box-shadow:0 1px 3px rgba(0,0,0,0.15);">
+    <clipPath id="ukClip"><rect width="60" height="40" rx="2"/></clipPath>
+    <g clip-path="url(#ukClip)">
+      <path d="M0 0H60V40H0Z" fill="#012169"/>
+      <path d="M0 0L60 40M60 0L0 40" stroke="#fff" stroke-width="8"/>
+      <path d="M0 0L60 40M60 0L0 40" stroke="#C8102E" stroke-width="4"/>
+      <path d="M30 0V40M0 20H60" stroke="#fff" stroke-width="12"/>
+      <path d="M30 0V40M0 20H60" stroke="#C8102E" stroke-width="8"/>
+    </g>
+  </svg>
+  UK British Council
+</span>
               <span class="ex-status-pill">Certified Examiner</span>
             </div>
             
             <div style="display:flex; align-items:center; gap:14px; margin-bottom:10px;">
-              <div class="ex-card-avatar-wrap female">
-                👩‍💼
-              </div>
+              <div class="ex-card-avatar-wrap female"><svg width="54" height="54" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" class="examiner-vector-avatar" style="width:100%; height:100%; border-radius:50%;">
+  <defs>
+    <linearGradient id="sarahBg" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#fdf2f8"/>
+      <stop offset="100%" stop-color="#fce7f3"/>
+    </linearGradient>
+    <linearGradient id="sarahBlazer" x1="20" y1="50" x2="60" y2="80" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0b2b52"/>
+      <stop offset="100%" stop-color="#1e3a8a"/>
+    </linearGradient>
+    <linearGradient id="sarahHair" x1="25" y1="15" x2="55" y2="50" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#831843"/>
+      <stop offset="100%" stop-color="#be185d"/>
+    </linearGradient>
+  </defs>
+  <circle cx="40" cy="40" r="38" fill="url(#sarahBg)" stroke="#f472b6" stroke-width="2"/>
+  <path d="M22 36C22 22 30 14 40 14C50 14 58 22 58 36C58 46 56 54 54 58C50 56 46 54 40 54C34 54 30 56 26 58C24 54 22 46 22 36Z" fill="#9d174d"/>
+  <path d="M36 44H44V52H36V44Z" fill="#fed7aa"/>
+  <path d="M16 76C16 63 26 53 36 52L40 56L44 52C54 53 64 63 64 76H16Z" fill="url(#sarahBlazer)"/>
+  <path d="M36 52L40 60L44 52L40 50L36 52Z" fill="#ffffff"/>
+  <path d="M30 54L38 66L40 60L36 52H30Z" fill="#172554"/>
+  <path d="M50 54L42 66L40 60L44 52H50Z" fill="#172554"/>
+  <ellipse cx="40" cy="35" rx="14" ry="16" fill="#fde68a"/>
+  <path d="M26 30C26 22 32 16 40 16C48 16 54 22 54 30C52 26 47 22 40 22C33 22 28 26 26 30Z" fill="url(#sarahHair)"/>
+  <path d="M25 32C27 25 33 22 38 23C32 25 29 29 28 36C26 34 25 33 25 32Z" fill="#be185d"/>
+  <rect x="29" y="32" width="9" height="7" rx="2.5" fill="none" stroke="#db2777" stroke-width="1.8"/>
+  <rect x="42" y="32" width="9" height="7" rx="2.5" fill="none" stroke="#db2777" stroke-width="1.8"/>
+  <path d="M38 35H42" stroke="#db2777" stroke-width="1.8"/>
+  <circle cx="33.5" cy="35.5" r="1.3" fill="#1e293b"/>
+  <circle cx="46.5" cy="35.5" r="1.3" fill="#1e293b"/>
+  <path d="M37 43C38.5 45 41.5 45 43 43" stroke="#be185d" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="25.5" cy="36" r="1.8" fill="#ffffff" stroke="#cbd5e1" stroke-width="0.8"/>
+  <circle cx="54.5" cy="36" r="1.8" fill="#ffffff" stroke="#cbd5e1" stroke-width="0.8"/>
+</svg></div>
               <div style="flex:1;">
                 <div class="ex-card-header">
                   <h3 class="ex-name">Dr. Sarah Jenkins</h3>
@@ -1388,7 +1565,7 @@
             </div>
 
             <div class="ex-tags">
-              <span class="ex-tag">⭐ Clear Articulation</span>
+              <span class="ex-tag"><i class="bi bi-patch-check-fill" style="color:#d946ef; margin-right:4px;"></i> Clear Articulation</span>
               <span class="ex-tag">Warm &amp; Encouraging</span>
             </div>
 
@@ -1400,14 +1577,52 @@
           <!-- Card 2: Dr. Oliver Bennett (Male) -->
           <div class="ex-card" id="cardExMale" onclick="setExaminerGender('male', false)">
             <div class="ex-card-badge-top">
-              <span class="ex-flag">🇬🇧 UK</span>
+              <span class="ex-flag-badge" style="display:inline-flex; align-items:center; gap:5px; font-weight:700; font-size:0.80rem; color:var(--navy);">
+  <svg width="18" height="13" viewBox="0 0 60 40" style="border-radius:2px; vertical-align:middle; box-shadow:0 1px 3px rgba(0,0,0,0.15);">
+    <clipPath id="ukClip"><rect width="60" height="40" rx="2"/></clipPath>
+    <g clip-path="url(#ukClip)">
+      <path d="M0 0H60V40H0Z" fill="#012169"/>
+      <path d="M0 0L60 40M60 0L0 40" stroke="#fff" stroke-width="8"/>
+      <path d="M0 0L60 40M60 0L0 40" stroke="#C8102E" stroke-width="4"/>
+      <path d="M30 0V40M0 20H60" stroke="#fff" stroke-width="12"/>
+      <path d="M30 0V40M0 20H60" stroke="#C8102E" stroke-width="8"/>
+    </g>
+  </svg>
+  UK British Council
+</span>
               <span class="ex-status-pill">Certified Examiner</span>
             </div>
             
             <div style="display:flex; align-items:center; gap:14px; margin-bottom:10px;">
-              <div class="ex-card-avatar-wrap male">
-                👨‍💼
-              </div>
+              <div class="ex-card-avatar-wrap male"><svg width="54" height="54" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" class="examiner-vector-avatar" style="width:100%; height:100%; border-radius:50%;">
+  <defs>
+    <linearGradient id="oliverBg" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#eff6ff"/>
+      <stop offset="100%" stop-color="#dbeafe"/>
+    </linearGradient>
+    <linearGradient id="oliverSuit" x1="20" y1="50" x2="60" y2="80" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+  </defs>
+  <circle cx="40" cy="40" r="38" fill="url(#oliverBg)" stroke="#60a5fa" stroke-width="2"/>
+  <path d="M26 28C26 18 32 14 40 14C48 14 54 18 54 28V36H26V28Z" fill="#334155"/>
+  <path d="M35 44H45V53H35V44Z" fill="#fcd34d"/>
+  <path d="M15 76C15 62 25 52 35 52L40 56L45 52C55 52 65 62 65 76H15Z" fill="url(#oliverSuit)"/>
+  <path d="M35 52L40 58L45 52L40 48L35 52Z" fill="#ffffff"/>
+  <path d="M33 52L38 58L40 54L37 50L33 52Z" fill="#ffffff"/>
+  <path d="M47 52L42 58L40 54L43 50L47 52Z" fill="#ffffff"/>
+  <path d="M39 55H41L42.5 68L40 73L37.5 68L39 55Z" fill="#2563eb"/>
+  <path d="M38.5 54H41.5L42 57H38L38.5 54Z" fill="#1d4ed8"/>
+  <path d="M27 31C27 22 32 18 40 18C48 18 53 22 53 31C53 41 48 47 40 47C32 47 27 41 27 31Z" fill="#fde68a"/>
+  <path d="M26 26C28 17 35 15 42 15C49 15 54 18 54 24C50 20 44 20 38 21C32 22 28 24 26 26Z" fill="#1e293b"/>
+  <rect x="29" y="28" width="9.5" height="6.5" rx="1.8" fill="none" stroke="#0f172a" stroke-width="1.8"/>
+  <rect x="41.5" y="28" width="9.5" height="6.5" rx="1.8" fill="none" stroke="#0f172a" stroke-width="1.8"/>
+  <path d="M38.5 31H41.5" stroke="#0f172a" stroke-width="1.8"/>
+  <circle cx="33.8" cy="31.2" r="1.3" fill="#0f172a"/>
+  <circle cx="46.2" cy="31.2" r="1.3" fill="#0f172a"/>
+  <path d="M37 40C38.5 41.8 41.5 41.8 43 40" stroke="#b45309" stroke-width="1.8" stroke-linecap="round"/>
+</svg></div>
               <div style="flex:1;">
                 <div class="ex-card-header">
                   <h3 class="ex-name">Dr. Oliver Bennett</h3>
@@ -1424,7 +1639,7 @@
             </div>
 
             <div class="ex-tags">
-              <span class="ex-tag">⭐ Precise &amp; Steady</span>
+              <span class="ex-tag"><i class="bi bi-patch-check-fill" style="color:#2563eb; margin-right:4px;"></i> Precise &amp; Steady</span>
               <span class="ex-tag">Standard IELTS Pacing</span>
             </div>
 
@@ -1445,9 +1660,14 @@
         </div>
       </div>
 
-      <div style="display:flex; align-items:center; justify-content:center; gap:10px; padding:12px 18px; background:#f1f5f9; border-radius:10px; margin:0 auto 28px; max-width:540px; font-size:0.86rem; color:var(--navy); font-weight:600;">
-        <i class="bi bi-mic-fill" style="color:var(--red);"></i>
-        <span>Microphone Required: Click below to allow microphone access.</span>
+      <div class="st-premium-mic-notice" style="display:flex; align-items:center; justify-content:center; gap:12px; padding:12px 20px; background:linear-gradient(135deg, #f8fafc 0%, #edf2f9 100%); border:1px solid #cbd5e1; border-radius:12px; margin:0 auto 28px; max-width:560px; box-shadow:0 2px 8px rgba(11,43,82,0.04);">
+        <div style="width:34px; height:34px; border-radius:10px; background:#fee2e2; color:#dc2626; display:inline-flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">
+          <i class="bi bi-mic-fill"></i>
+        </div>
+        <div style="text-align:left; font-size:0.84rem; line-height:1.4;">
+          <strong style="color:var(--navy); display:block;">Microphone Check &amp; Live Evaluation</strong>
+          <span style="color:#64748b;">Speak naturally into your device. The AI evaluates real speech cadence, grammar, and fluency.</span>
+        </div>
       </div>
 
       <button type="button" class="st-btn-next" onclick="startSpeakingExam()" style="padding:14px 40px; font-size:1.05rem; background:var(--red);">
@@ -1681,13 +1901,28 @@
         <ul id="resStrengthsList" style="padding-left:20px; color:#334155; font-size:0.92rem; line-height:1.6;"></ul>
       </div>
 
-      <!-- Sentence Upgrades -->
+      <!-- Sentence Upgrades (কী বললে ভালো হতো) -->
       <div class="st-feedback-block">
         <h3>
-          <i class="bi bi-lightbulb-fill" style="color:#eab308;"></i>
-          <span>Sentence-Level Upgrades (Target Band 8.0+)</span>
+          <i class="bi bi-stars" style="color:#10b981;"></i>
+          <span>Sentence-Level Upgrades (কী বললে ব্যান্ড ৮.৫/৯ হতো)</span>
         </h3>
+        <p style="font-size:0.84rem; color:#64748b; margin-top:-4px; margin-bottom:14px;">
+          Compare what you spoke with native Band 8.5+ phrasings and examiner explanations to refine your fluency.
+        </p>
         <div id="resCorrectionsList"></div>
+      </div>
+
+      <!-- Band 9.0 Model Spoken Answers -->
+      <div class="st-feedback-block" id="resModelAnswersBlock" style="display:none;">
+        <h3>
+          <i class="bi bi-award-fill" style="color:var(--red);"></i>
+          <span>Band 9.0 Model Spoken Answers (কীভাবে উত্তর দিলে ফুল ব্যান্ড হতো)</span>
+        </h3>
+        <p style="font-size:0.84rem; color:#64748b; margin-top:-4px; margin-bottom:14px;">
+          Official examiner recommended delivery, topic collocations and high-band structures.
+        </p>
+        <div id="resModelAnswersList"></div>
       </div>
 
       <!-- Recommended Vocabulary -->
@@ -1838,8 +2073,8 @@
       if (appPhase === 2 && user.isLoggedIn) return false;
       if (appPhase === 3 && user.isPremium) return false;
 
-      const freeTestsAllowed = appSettings.freeFullMocksCount !== undefined ? Number(appSettings.freeFullMocksCount) : 1;
-      const freePartsAllowed = appSettings.freePartsPerTest !== undefined ? Number(appSettings.freePartsPerTest) : 1;
+      const freeTestsAllowed = appSettings.freeSpeakingTestsCount !== undefined ? Number(appSettings.freeSpeakingTestsCount) : (appSettings.freeFullMocksCount !== undefined ? Number(appSettings.freeFullMocksCount) : 1);
+      const freePartsAllowed = appSettings.freeSpeakingPartsCount !== undefined ? Number(appSettings.freeSpeakingPartsCount) : (appSettings.freePartsPerTest !== undefined ? Number(appSettings.freePartsPerTest) : 1);
 
       const tNum = Number(tNo) || 1;
       if (tNum > freeTestsAllowed) return true;
@@ -2019,8 +2254,23 @@
       }
 
       setPracticeMode(selectedMode);
-      document.getElementById('stTopTestTitle').textContent = currentTest ? currentTest.title : `Speaking Test ${testId}`;
-      document.getElementById('introTitle').textContent = currentTest ? currentTest.title : `Speaking Test ${testId}`;
+      const testTitle = currentTest ? currentTest.title : `IELTS Speaking Mock Test ${testId}`;
+      document.getElementById('stTopTestTitle').textContent = testTitle;
+      document.getElementById('introTitle').textContent = testTitle;
+
+      // Dynamic SEO Title, Description and Canonical
+      const cueTopic = currentTest && currentTest.part2 && currentTest.part2.topic ? ` – ${currentTest.part2.topic}` : '';
+      const modeSuffix = selectedMode && selectedMode !== 'all' ? ` (Part ${selectedMode.replace('part', '')})` : '';
+      document.title = `${testTitle}${cueTopic}${modeSuffix} | AI Examiner Simulation | IELTS Mockpoint`;
+
+      let metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) {
+        metaDesc.content = `Take ${testTitle} online with live AI voice examiner. Complete Part 1 interview, Part 2 cue card${cueTopic}, and Part 3 discussion with instant band score & pronunciation feedback.`;
+      }
+      let canonical = document.querySelector('link[rel="canonical"]');
+      if (canonical) {
+        canonical.href = `https://ieltsmockpoint.com/speaking-test?id=${testId}${selectedMode && selectedMode !== 'all' ? '&part=' + selectedMode.replace('part', '') : ''}`;
+      }
 
       if (isSpeakingSessionLocked(testId, selectedMode)) {
         updateIntroLockNotice();
@@ -2313,13 +2563,24 @@
       document.getElementById('examScreen').style.display = 'flex';
       initSpeechRecognition();
 
-      if (selectedMode === '2') {
-        setupPart2();
-      } else if (selectedMode === '3') {
-        setupPart3();
-      } else {
-        setupPart1();
+      // Smooth 1.8s delay before examiner begins speaking
+      const exName = (selectedGender === 'female') ? 'Dr. Sarah Jenkins' : 'Dr. Oliver Bennett';
+      const qTextElem = document.getElementById('examinerQuestionText');
+      if (qTextElem) {
+        qTextElem.innerHTML = '<span class="st-examiner-connecting"><i class="bi bi-person-video3" style="margin-right:8px; color:var(--blue);"></i>' + exName + ' is connecting to your exam session...</span>';
       }
+      setExaminerVisualState('speaking');
+
+      setTimeout(() => {
+        setExaminerVisualState('idle');
+        if (selectedMode === '2') {
+          setupPart2();
+        } else if (selectedMode === '3') {
+          setupPart3();
+        } else {
+          setupPart1();
+        }
+      }, 1800);
     }
 
     // Part 1 Flow
@@ -2535,32 +2796,71 @@
       document.getElementById('resOverallBand').textContent = Number(ev.overall_band).toFixed(1);
       document.getElementById('resSummaryFeedback').textContent = ev.summary_feedback;
 
-      // Scores
-      document.getElementById('resScoreFC').textContent = Number(ev.fluency_coherence.score).toFixed(1);
-      document.getElementById('resCommentFC').textContent = ev.fluency_coherence.comment;
+      // Scores & Progress Bars
+      const fcScore = Number(ev.fluency_coherence.score);
+      const lrScore = Number(ev.lexical_resource.score);
+      const graScore = Number(ev.grammar.score);
+      const prScore = Number(ev.pronunciation.score);
 
-      document.getElementById('resScoreLR').textContent = Number(ev.lexical_resource.score).toFixed(1);
-      document.getElementById('resCommentLR').textContent = ev.lexical_resource.comment;
+      document.getElementById('resScoreFC').textContent = fcScore.toFixed(1);
+      document.getElementById('resCommentFC').innerHTML = `${ev.fluency_coherence.comment}
+        <div class="st-crit-bar-track"><div class="st-crit-bar-fill fc" style="width:${Math.min(100, (fcScore/9)*100)}%;"></div></div>`;
 
-      document.getElementById('resScoreGRA').textContent = Number(ev.grammar.score).toFixed(1);
-      document.getElementById('resCommentGRA').textContent = ev.grammar.comment;
+      document.getElementById('resScoreLR').textContent = lrScore.toFixed(1);
+      document.getElementById('resCommentLR').innerHTML = `${ev.lexical_resource.comment}
+        <div class="st-crit-bar-track"><div class="st-crit-bar-fill lr" style="width:${Math.min(100, (lrScore/9)*100)}%;"></div></div>`;
 
-      document.getElementById('resScorePR').textContent = Number(ev.pronunciation.score).toFixed(1);
-      document.getElementById('resCommentPR').textContent = ev.pronunciation.comment;
+      document.getElementById('resScoreGRA').textContent = graScore.toFixed(1);
+      document.getElementById('resCommentGRA').innerHTML = `${ev.grammar.comment}
+        <div class="st-crit-bar-track"><div class="st-crit-bar-fill gra" style="width:${Math.min(100, (graScore/9)*100)}%;"></div></div>`;
+
+      document.getElementById('resScorePR').textContent = prScore.toFixed(1);
+      document.getElementById('resCommentPR').innerHTML = `${ev.pronunciation.comment}
+        <div class="st-crit-bar-track"><div class="st-crit-bar-fill pr" style="width:${Math.min(100, (prScore/9)*100)}%;"></div></div>`;
 
       // Strengths
       const sList = document.getElementById('resStrengthsList');
       sList.innerHTML = (ev.strengths || []).map(s => `<li>${s}</li>`).join('');
 
-      // Corrections
+      // Enhanced Sentence-Level Upgrades (কী বললে ব্যান্ড ৮/৯ হতো)
       const cList = document.getElementById('resCorrectionsList');
-      cList.innerHTML = (ev.corrections || []).map(c => `
-        <div class="st-correction-item">
-          <div class="st-correction-orig">${c.original}</div>
-          <div class="st-correction-imp">${c.improved}</div>
-          <div class="st-correction-why"><strong>Reason:</strong> ${c.reason}</div>
-        </div>
-      `).join('');
+      if (cList) {
+        cList.innerHTML = (ev.corrections || []).map(c => `
+          <div class="st-upgrade-card">
+            <div class="st-upgrade-row">
+              <span class="st-up-tag orig-tag"><i class="bi bi-x-circle-fill"></i> What You Spoke</span>
+              <p class="st-up-text orig-text">"${c.original}"</p>
+            </div>
+            <div class="st-upgrade-row" style="margin-top:8px;">
+              <span class="st-up-tag band9-tag"><i class="bi bi-stars"></i> Band 8.5+ Native Upgrade (কী বললে ভালো হতো)</span>
+              <p class="st-up-text band9-text">"${c.improved}"</p>
+            </div>
+            <div class="st-upgrade-why">
+              <i class="bi bi-lightbulb-fill" style="color:#f59e0b; margin-right:4px;"></i>
+              <strong>Examiner Insight:</strong> ${c.reason}
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Render Model Spoken Answers if present
+      const mWrap = document.getElementById('resModelAnswersList');
+      const mBlock = document.getElementById('resModelAnswersBlock');
+      if (mWrap && mBlock) {
+        if (ev.ideal_responses && ev.ideal_responses.length > 0) {
+          mBlock.style.display = 'block';
+          mWrap.innerHTML = ev.ideal_responses.map(m => `
+            <div class="st-model-ans-card">
+              <div class="st-model-q"><i class="bi bi-chat-quote-fill" style="color:var(--blue);"></i> <span>Question: "${m.question}"</span></div>
+              ${m.candidate_attempt ? '<div style="font-size:0.82rem; color:#64748b; margin-bottom:8px;"><strong>Your summary:</strong> ' + m.candidate_attempt + '</div>' : ''}
+              <div class="st-model-spoken"><strong>Band 9.0 Spoken Response:</strong> "${m.band_9_model}"</div>
+              ${m.pro_tip ? '<div class="st-model-tip"><i class="bi bi-info-circle-fill" style="color:var(--blue); margin-right:4px;"></i><strong>Examiner Tip:</strong> ' + m.pro_tip + '</div>' : ''}
+            </div>
+          `).join('');
+        } else {
+          mBlock.style.display = 'none';
+        }
+      }
 
       // Vocab
       const vList = document.getElementById('resVocabList');

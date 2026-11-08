@@ -415,17 +415,21 @@
       testBookBadge.textContent = `Cambridge ${bookParam}`;
     }
 
+    let seoTitle = `Cambridge IELTS ${bookParam} Listening Test ${testParam}`;
     if (testTitleBadge) {
       if (practiceMode === "section") {
         const qRange = `Questions ${targetQIds[0]}–${targetQIds[targetQIds.length - 1]}`;
         const friendlyType = getFriendlyGroupType(targetGroup.type);
         testTitleBadge.textContent = `Test ${testParam} • ${qRange} (${friendlyType})`;
+        seoTitle += ` • ${qRange}`;
       } else if (practiceMode === "part") {
         testTitleBadge.textContent = `Listening Test ${testParam} • Part ${targetPart}`;
+        seoTitle += ` Part ${targetPart}`;
       } else {
         testTitleBadge.textContent = `Academic Listening Test ${testParam}`;
       }
     }
+    document.title = `${seoTitle} Online with Audio & Answers | IELTS Mockpoint`;
   }
 
   // -------------------------------------------------------------

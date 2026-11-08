@@ -535,6 +535,13 @@
         if (readingModeText) readingModeText.textContent = `Full Reading Mock Test (60 Mins)`;
       }
     }
+    let seoTitle = `Cambridge IELTS ${bookParam} Academic Reading Test ${testParam}`;
+    if (practiceMode === "passage") {
+      seoTitle += ` Passage ${targetPassage}`;
+    } else if (practiceMode === "section" && targetQIds && targetQIds.length) {
+      seoTitle += ` (${targetQIds[0]}–${targetQIds[targetQIds.length - 1]})`;
+    }
+    document.title = `${seoTitle} Online Free (Passages & Answers) | IELTS Mockpoint`;
   }
 
   function getFriendlyGroupType(type) {

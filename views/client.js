@@ -226,9 +226,9 @@
 
 
 // document.addEventListener("DOMContentLoaded", function() {
-//   listeningIscompleted = sessionStorage.getItem("listeningIscompleted") === "true";
-//   readingIscompleted = sessionStorage.getItem("readingIsCompleted") === "true";
-//   writingIscompleted = sessionStorage.getItem("writingIsCompleted") === "true";
+//   listeningIscompleted = sessionStorage.getItem("listeningIscompleted") === "true" || sessionStorage.getItem("listeningIsCompleted") === "true";
+//   readingIscompleted = sessionStorage.getItem("readingIsCompleted") === "true" || sessionStorage.getItem("readingIscompleted") === "true";
+//   writingIscompleted = sessionStorage.getItem("writingIsCompleted") === "true" || sessionStorage.getItem("writingIscompleted") === "true";
 //   //console.log(listeningIscompleted);
 //   updateModuleBox();
   
@@ -261,7 +261,10 @@ const R2_VIDEOS = {
 
 const dataRetriever = async function () {
   try {
-    const res = await fetch("/api/mockTest");
+    const urlParams = new URLSearchParams(window.location.search);
+    const mockID = urlParams.get("mockID") || sessionStorage.getItem("currentMockId") || localStorage.getItem("currentMockId");
+    const apiUrl = mockID ? `/api/mockTest?mockID=${encodeURIComponent(mockID)}` : "/api/mockTest";
+    const res = await fetch(apiUrl);
 
     if (!res.ok) {
       throw new Error(`HTTP ${res.status}`);
@@ -270,7 +273,7 @@ const dataRetriever = async function () {
     const data = await res.json();
     return data;
   } catch (err) {
-    alert(err);
+    console.warn("dataRetriever notice:", err);
   }
 };
 
@@ -280,9 +283,15 @@ let data;
 async function main() {
   data = await dataRetriever();
 
-  localStorage.setItem("data", JSON.stringify(data));
+  if (data) {
+    localStorage.setItem("data", JSON.stringify(data));
+    if (data.mockNumber) {
+      sessionStorage.setItem("currentMockId", data.mockNumber);
+      localStorage.setItem("currentMockId", data.mockNumber);
+    }
+  }
 
-  console.log(data);
+  console.log("Mock data loaded:", data?.mockNumber);
 }
 
 main();
@@ -345,18 +354,24 @@ function closePopupModal() {
 // NAVIGATION FUNCTIONS
 // ============================================================
 
+function getActiveMockParam() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const m = urlParams.get("mockID") || (data && data.mockNumber) || sessionStorage.getItem("currentMockId") || localStorage.getItem("currentMockId") || "";
+  return m ? `?mockID=${encodeURIComponent(m)}` : "";
+}
+
 function navigateToRouteListening() {
-  window.location.href = "/listening-test";
+  window.location.href = `/listening-test${getActiveMockParam()}`;
 }
 
 
 function navigateToRouteReading() {
-  window.location.href = "/reading-test";
+  window.location.href = `/reading-test${getActiveMockParam()}`;
 }
 
 
 function navigateToRouteWriting() {
-  window.location.href = "/writing-test";
+  window.location.href = `/writing-test${getActiveMockParam()}`;
 }
 
 
