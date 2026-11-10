@@ -558,6 +558,11 @@
       background: var(--blue-light);
       color: var(--blue);
     }
+    .card .pill.pill-recent {
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+    }
     .card .pill.pill-bank {
       background: #ecfdf5;
       color: #047857;
@@ -906,6 +911,7 @@
 
 .card.is-locked .pill,
 .card.is-locked .pill.pill-cambridge,
+.card.is-locked .pill.pill-recent,
 .card.is-locked .pill.pill-bank {
   background: #e0edfe !important;
   color: #1e40af !important;
@@ -1447,7 +1453,7 @@
     <div class="page-header">
       <h1 class="page-title" id="pageTitle">IELTS Academic Listening Note Completion Practice Exercises</h1>
       <p class="page-subtitle" id="pageSubtitle">
-        Practice official IELTS Academic Listening <strong id="typeBoldText">Note Completion</strong> questions with these <strong id="totalCountSpan">83</strong> exercises from Cambridge IELTS 12–21 and curated practice tests. Experience authentic audio recordings, real exam-style questions, instant audio playback and full answer keys.
+        Practice official IELTS Academic Listening <strong id="typeBoldText">Note Completion</strong> questions with these <strong id="totalCountSpan">132</strong> exercises from Cambridge IELTS 12–21, Recent Actual Tests 1–20, and curated practice bank sets. Experience authentic audio recordings, real exam-style questions, instant audio playback and full answer keys.
       </p>
     </div>
 
@@ -1505,6 +1511,7 @@
         <div class="source-filter-tabs" id="sourceFilterTabs">
           <button type="button" class="source-tab active" data-src="all">All Exercises (<span id="countAll">100</span>)</button>
           <button type="button" class="source-tab" data-src="cambridge">Cambridge Official (<span id="countCambridge">60</span>)</button>
+          <button type="button" class="source-tab" data-src="recent_actual">Recent Actual (<span id="countRecent">0</span>)</button>
           <button type="button" class="source-tab" data-src="practice_bank">Practice Bank (<span id="countBank">40</span>)</button>
         </div>
       </div>
@@ -1618,6 +1625,7 @@
     const sourceFilterTabs = document.getElementById('sourceFilterTabs');
     const countAll = document.getElementById('countAll');
     const countCambridge = document.getElementById('countCambridge');
+    const countRecent = document.getElementById('countRecent');
     const countBank = document.getElementById('countBank');
 
     // Mobile Menu
@@ -1653,6 +1661,7 @@
           
           if (countAll) countAll.textContent = data.totalExercises || allExercises.length;
           if (countCambridge) countCambridge.textContent = data.cambridgeCount || 0;
+          if (countRecent) countRecent.textContent = data.recentCount || 0;
           if (countBank) countBank.textContent = data.bankCount || 0;
 
           applyFilterAndSearch();
@@ -1800,13 +1809,14 @@
 
       grid.innerHTML = items.map((ex, idx) => {
         const isBank = ex.sourceType === 'practice_bank';
+        const isRecent = ex.sourceType === 'recent_actual';
         const storageKey = isBank ? `pb_l|${ex.pracType || currentType}|${ex.setNumber}` : `cl_v2|${ex.book}|${ex.testNo}|${ex.qRange}`;
         const isDone = !!doneStore[storageKey];
         const numStr = String(ex.setNumber || ex.exerciseNumber || idx + 1).padStart(2, '0');
-        const pillClass = isBank ? 'pill pill-bank' : 'pill pill-cambridge';
-        const pillText = ex.badgeText || (isBank ? `PRACTICE BANK • SET ${ex.setNumber}` : `CAMBRIDGE ${ex.book} • TEST ${ex.testNo}`);
+        const pillClass = isBank ? 'pill pill-bank' : (isRecent ? 'pill pill-recent' : 'pill pill-cambridge');
+        const pillText = ex.badgeText || (isBank ? `PRACTICE BANK • SET ${ex.setNumber}` : (isRecent ? `RECENT ACTUAL • TEST ${ex.testNo}` : `CAMBRIDGE ${ex.book} • TEST ${ex.testNo}`));
         const titleText = isBank ? (ex.title || `Practice Set ${ex.setNumber}`) : (ex.title || `Exercise ${idx + 1}`);
-        const sourceText = ex.source || (isBank ? `from IELTS Mockpoint Practice Bank` : `from Cambridge IELTS ${ex.book} Academic Listening Test ${ex.testNo}`);
+        const sourceText = ex.source || (isBank ? `from IELTS Mockpoint Practice Bank` : (isRecent ? `from Recent Actual Listening Test ${ex.testNo}` : `from Cambridge IELTS ${ex.book} Academic Listening Test ${ex.testNo}`));
         const partLabel = ex.partTitle || (`Listening Part ${ex.part || 1}`);
 
         const isLocked = isExerciseLocked(idx);
@@ -1892,8 +1902,10 @@
           ex.source.toLowerCase().includes(q) ||
           ex.partTitle.toLowerCase().includes(q) ||
           ex.qRange.toLowerCase().includes(q) ||
+          (ex.sourceLabel && ex.sourceLabel.toLowerCase().includes(q)) ||
           (ex.badgeText && ex.badgeText.toLowerCase().includes(q)) ||
           String(ex.book || '').toLowerCase() === q ||
+          String(ex.testNo || '') === q ||
           String(ex.exerciseNumber || '') === q ||
           String(ex.setNumber || '') === q
         );

@@ -49,24 +49,11 @@
   function isSectionLocked(gIdx) {
     if (appPhase === 1) return false;
     const user = getUserAccessState();
-    const testNum = Number(testParam) || 1;
-    const freeTestQuota = appSettings.freeFullMocksCount !== undefined ? Number(appSettings.freeFullMocksCount) : 1;
-
-    if (appPhase === 2) {
-      if (user.isLoggedIn) return false;
-      if (testNum > freeTestQuota) return true;
-      const allowed = appSettings.freeQuestionTypesPerTest !== undefined ? Number(appSettings.freeQuestionTypesPerTest) : 0;
-      return gIdx >= allowed;
-    }
-
-    if (appPhase === 3) {
-      if (user.isPremium) return false;
-      if (testNum > freeTestQuota) return true;
-      const allowed = appSettings.freeQuestionTypesPerTest !== undefined ? Number(appSettings.freeQuestionTypesPerTest) : 0;
-      return gIdx >= allowed;
-    }
-
-    return false;
+    if (appPhase === 2 && user.isLoggedIn) return false;
+    if (appPhase === 3 && user.isPremium) return false;
+    if (practiceMode === 'full') return false;
+    const allowed = appSettings.freeQuestionTypesPerTest !== undefined ? Number(appSettings.freeQuestionTypesPerTest) : 0;
+    return gIdx >= allowed;
   }
 
   function isCurrentSessionLocked() {
@@ -75,10 +62,7 @@
     if (appPhase === 2 && user.isLoggedIn) return false;
     if (appPhase === 3 && user.isPremium) return false;
 
-    const testNum = Number(testParam) || 1;
-    const freeTestsAllowed = appSettings.freeFullMocksCount !== undefined ? Number(appSettings.freeFullMocksCount) : 1;
-    if (testNum > freeTestsAllowed) return true;
-
+    // Cambridge Reading Full Test is ALWAYS FREE; only Passage & Question-Type practice are gated
     if (practiceMode === 'part') {
       const partIdx = (targetPart || 1) - 1;
       const freePartsAllowed = appSettings.freePartsPerTest !== undefined ? Number(appSettings.freePartsPerTest) : 1;

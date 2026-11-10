@@ -8,11 +8,237 @@
 
   var NAV_CACHE_KEY = 'mp_shared_nav_v10';
   
+  function syncUserSessionFromServer() {
+    fetch('/auth/me', { credentials: 'same-origin' })
+      .then(function(r) {
+        if (!r.ok) return null;
+        return r.json();
+      })
+      .then(function(d) {
+        if (d && d.success && d.user) {
+          var nextStr = JSON.stringify(d.user);
+          try {
+            var prevStr = localStorage.getItem('user');
+            if (prevStr !== nextStr) {
+              localStorage.setItem('user', nextStr);
+              window.dispatchEvent(new CustomEvent('mp:user-synced', { detail: d.user }));
+            }
+          } catch (e) {}
+        }
+      })
+      .catch(function() {});
+  }
+
+  var mpSystemSettingsCache = null;
+
+  function isGuestUserForReminder() {
+    try {
+      var u = JSON.parse(localStorage.getItem('user') || 'null');
+      return !(u && (u.email || u.name));
+    } catch (e) {
+      return true;
+    }
+  }
+
+  function isTargetTestOrPracticeHref(href) {
+    if (!href) return false;
+    try {
+      var u = new URL(href, window.location.origin);
+      if (u.origin !== window.location.origin) return false;
+      var p = u.pathname;
+      return (
+        p.indexOf('/cambridge-listening-v2') === 0 ||
+        p.indexOf('/cambridge-reading-v2') === 0 ||
+        p.indexOf('/cambridge-reading-test') === 0 ||
+        p.indexOf('/cambridge/writing/') === 0 ||
+        p.indexOf('/cambridge-writing-test') === 0 ||
+        p.indexOf('/speaking-test') === 0 ||
+        p.indexOf('/listening-practice') === 0 ||
+        p.indexOf('/reading-practice') === 0 ||
+        p.indexOf('/writing-practice') === 0 ||
+        p.indexOf('/passcodes') === 0 ||
+        p.indexOf('/mock-test') === 0
+      );
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function ensureLoginReminderModal() {
+    if (document.getElementById('mp-login-reminder-modal')) return;
+    if (!document.getElementById('mp-login-reminder-styles')) {
+      var st = document.createElement('style');
+      st.id = 'mp-login-reminder-styles';
+      st.textContent = [
+        '#mp-login-reminder-modal{position:fixed;inset:0;z-index:250000;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(11,43,82,.56);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;transition:opacity .24s ease}',
+        '#mp-login-reminder-modal.open{display:flex;opacity:1}',
+        '#mp-login-reminder-modal .mp-lr-card{position:relative;width:100%;max-width:455px;background:#fff;border-radius:22px;padding:34px 28px 28px;text-align:center;border:1.5px solid #dbeafe;box-shadow:0 28px 65px rgba(11,43,82,.26);overflow:hidden;transform:translateY(16px) scale(.96);opacity:0;transition:transform .28s cubic-bezier(.16,1,.3,1),opacity .24s ease}',
+        '#mp-login-reminder-modal.open .mp-lr-card{transform:translateY(0) scale(1);opacity:1}',
+        '#mp-login-reminder-modal .mp-lr-top-bar{position:absolute;top:0;left:0;width:100%;height:4px;background:linear-gradient(90deg,#0b2b52 0%,#1565c9 52%,#e0202d 100%)}',
+        '#mp-login-reminder-modal .mp-lr-close{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;border:1px solid #e2e8f0;background:#f8fafc;color:#0b2b52;font-size:19px;font-weight:700;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s ease}',
+        '#mp-login-reminder-modal .mp-lr-close:hover{background:#fee2e2;color:#e0202d;border-color:#fecaca}',
+        '#mp-login-reminder-modal .mp-lr-icon{width:60px;height:60px;border-radius:16px;margin:0 auto 14px;background:#eaf2fd;border:1.5px solid #cfe2fe;color:#1565c9;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(21,101,201,.12)}',
+        '#mp-login-reminder-modal .mp-lr-badge{display:inline-block;font-family:"Inter",sans-serif;font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:4px 12px;border-radius:999px;background:#eaf2fd;color:#1565c9;border:1px solid #cfe2fe;margin-bottom:10px}',
+        '#mp-login-reminder-modal .mp-lr-title{font-family:"Sora",system-ui,sans-serif;font-size:1.32rem;font-weight:800;color:#0b2b52;margin:0 0 9px;line-height:1.28}',
+        '#mp-login-reminder-modal .mp-lr-desc{font-family:"Inter",sans-serif;font-size:.9rem;color:#5d708c;line-height:1.6;margin:0 0 16px}',
+        '#mp-login-reminder-modal .mp-lr-perks{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;margin-bottom:22px}',
+        '#mp-login-reminder-modal .mp-lr-perk{font-family:"Inter",sans-serif;font-size:.77rem;font-weight:700;color:#0b2b52;background:#f4f7fb;border:1px solid #e3e9f3;padding:5px 10px;border-radius:999px;display:inline-flex;align-items:center;gap:5px}',
+        '#mp-login-reminder-modal .mp-lr-perk i{color:#16a34a;font-style:normal;font-weight:900}',
+        '#mp-login-reminder-modal .mp-lr-actions{display:flex;flex-direction:column;gap:10px}',
+        '#mp-login-reminder-modal .mp-lr-btn-primary{padding:13px 20px;border-radius:11px;background:#e0202d;color:#fff;text-decoration:none;font-family:"Sora",sans-serif;font-weight:700;font-size:.94rem;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 8px 20px rgba(224,32,45,.28);transition:background .18s ease,transform .18s ease}',
+        '#mp-login-reminder-modal .mp-lr-btn-primary:hover{background:#b5121d;transform:translateY(-1px)}',
+        '#mp-login-reminder-modal .mp-lr-btn-skip{padding:11px 18px;border-radius:11px;background:#f8fafc;border:1.5px solid #dbeafe;color:#0b2b52;font-family:"Sora",sans-serif;font-weight:700;font-size:.87rem;cursor:pointer;transition:all .18s ease}',
+        '#mp-login-reminder-modal .mp-lr-btn-skip:hover{background:#eaf2fd;border-color:#93c5fd;color:#1565c9}'
+      ].join('');
+      document.head.appendChild(st);
+    }
+
+    var wrap = document.createElement('div');
+    wrap.id = 'mp-login-reminder-modal';
+    wrap.setAttribute('role', 'dialog');
+    wrap.setAttribute('aria-modal', 'true');
+    wrap.setAttribute('aria-labelledby', 'mpLrTitle');
+    wrap.innerHTML = [
+      '<div class="mp-lr-card">',
+      '  <div class="mp-lr-top-bar"></div>',
+      '  <button type="button" class="mp-lr-close" id="mpLrCloseBtn" aria-label="Close">&times;</button>',
+      '  <div class="mp-lr-icon">',
+      '    <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">',
+      '      <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>',
+      '      <polyline points="17 21 17 13 7 13 7 21"></polyline>',
+      '      <polyline points="7 3 7 8 15 8"></polyline>',
+      '    </svg>',
+      '  </div>',
+      '  <div class="mp-lr-badge">Save Your Band Score &amp; Progress</div>',
+      '  <h3 class="mp-lr-title" id="mpLrTitle">Sign In to Save Your Test Results</h3>',
+      '  <p class="mp-lr-desc">You can take this test free right away, or sign in with a free candidate account so your band scores, answers, and progress stay saved on your Dashboard.</p>',
+      '  <div class="mp-lr-perks">',
+      '    <span class="mp-lr-perk"><i>&#10003;</i> Saved Band Scores</span>',
+      '    <span class="mp-lr-perk"><i>&#10003;</i> Review Past Mistakes</span>',
+      '    <span class="mp-lr-perk"><i>&#10003;</i> 100% Free Account</span>',
+      '  </div>',
+      '  <div class="mp-lr-actions">',
+      '    <a href="/login" id="mpLrSignInBtn" class="mp-lr-btn-primary"><span>Sign In / Register Free</span> &rarr;</a>',
+      '    <button type="button" id="mpLrSkipBtn" class="mp-lr-btn-skip">Skip for now &amp; Start Test &rarr;</button>',
+      '  </div>',
+      '</div>'
+    ].join('');
+    document.body.appendChild(wrap);
+  }
+
+  var pendingReminderNav = null;
+
+  function closeLoginReminderModal() {
+    var modal = document.getElementById('mp-login-reminder-modal');
+    if (!modal) return;
+    modal.classList.remove('open');
+    setTimeout(function() {
+      if (!modal.classList.contains('open')) {
+        modal.style.display = 'none';
+      }
+    }, 220);
+  }
+
+  function openLoginReminderModal(href, target) {
+    ensureLoginReminderModal();
+    pendingReminderNav = { href: href, target: target || '' };
+    var modal = document.getElementById('mp-login-reminder-modal');
+    var signInBtn = document.getElementById('mpLrSignInBtn');
+    var skipBtn = document.getElementById('mpLrSkipBtn');
+    var closeBtn = document.getElementById('mpLrCloseBtn');
+
+    try {
+      var u = new URL(href, window.location.origin);
+      var redir = encodeURIComponent(u.pathname + u.search);
+      if (signInBtn) signInBtn.href = '/login?redirect=' + redir;
+    } catch (e) {
+      if (signInBtn) signInBtn.href = '/login';
+    }
+
+    if (skipBtn && !skipBtn.__bound) {
+      skipBtn.__bound = true;
+      skipBtn.addEventListener('click', function() {
+        var mode = (mpSystemSettingsCache && mpSystemSettingsCache.loginReminderMode) || 'every_time';
+        if (mode === 'once_per_session') {
+          try { sessionStorage.setItem('mp_p1_login_reminder_skipped', '1'); } catch (e) {}
+        }
+        var dest = pendingReminderNav;
+        pendingReminderNav = null;
+        closeLoginReminderModal();
+        if (dest && dest.href) {
+          if (dest.target === '_blank') {
+            window.open(dest.href, '_blank', 'noopener,noreferrer');
+          } else {
+            window.location.href = dest.href;
+          }
+        }
+      });
+    }
+
+    if (closeBtn && !closeBtn.__bound) {
+      closeBtn.__bound = true;
+      closeBtn.addEventListener('click', function() {
+        pendingReminderNav = null;
+        closeLoginReminderModal();
+      });
+    }
+
+    if (modal && !modal.__bgBound) {
+      modal.__bgBound = true;
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+          pendingReminderNav = null;
+          closeLoginReminderModal();
+        }
+      });
+      window.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.classList.contains('open')) {
+          pendingReminderNav = null;
+          closeLoginReminderModal();
+        }
+      });
+    }
+
+    modal.style.display = 'flex';
+    void modal.offsetWidth;
+    modal.classList.add('open');
+  }
+
+  function bindPhase1LoginReminderInterceptor() {
+    if (window.__mpLoginReminderBound) return;
+    window.__mpLoginReminderBound = true;
+    document.addEventListener('click', function(e) {
+      var link = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+      if (!link) return;
+      if (link.id === 'mpLrSignInBtn' || link.id === 'fmc-confirm-btn') return;
+      if (link.closest('.is-locked') || link.closest('.locked')) return;
+      // On mocks.html, clicking /passcodes already opens #fmc-modal with a guest banner
+      if (link.getAttribute('href') && link.getAttribute('href').indexOf('/passcodes') !== -1 && document.getElementById('fmc-modal')) return;
+      if (!isTargetTestOrPracticeHref(link.href)) return;
+      if (!mpSystemSettingsCache) return;
+      if (Number(mpSystemSettingsCache.currentPhase) !== 1) return;
+      if (mpSystemSettingsCache.loginReminderEnabled === false) return;
+      if (!isGuestUserForReminder()) return;
+      var reminderMode = mpSystemSettingsCache.loginReminderMode || 'every_time';
+      if (reminderMode === 'once_per_session') {
+        try {
+          if (sessionStorage.getItem('mp_p1_login_reminder_skipped') === '1') return;
+        } catch (err) {}
+      }
+
+      e.preventDefault();
+      e.stopPropagation();
+      openLoginReminderModal(link.href, link.getAttribute('target') || '');
+    }, true);
+  }
+
   function syncFooterPricingLinkShared() {
     fetch('/api/system-settings')
       .then(function(r) { return r.json(); })
       .then(function(d) {
         if (d && d.success && d.settings) {
+          mpSystemSettingsCache = d.settings;
+          window.__mpSystemSettings = d.settings;
           var isPhase3 = Number(d.settings.currentPhase) === 3;
           var els = document.querySelectorAll('.footer-pricing-link, #footer-pricing-link');
           els.forEach(function(el) {
@@ -127,6 +353,7 @@
     if (!rawPath) rawPath = '/home';
 
     var navAliases = {
+      '/recent-listening-tests': '/cambridge-listening',
       '/reading-exercises': '/cambridge-reading',
       '/listening-exercises': '/cambridge-listening',
       '/reading-practice': '/cambridge-reading',
@@ -428,6 +655,9 @@
 
   function loadPartials() {
     ensureSharedStyles();
+    syncUserSessionFromServer();
+    bindPhase1LoginReminderInterceptor();
+    syncFooterPricingLinkShared();
 
     // Apply cached partials synchronously if not already applied
     try {

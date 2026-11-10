@@ -19,18 +19,405 @@
   let targetGroup = null;
   let targetQIds = [];
   let sectionStartTime = 0;
+  let sectionEndTime = 0;
 
-  // Calibrated Audio Start Timestamps (in seconds) for Section Practice (starts ~15s before question points)
-  const sectionAudioStartTimes = {
+  // Calibrated Audio Start & End Timestamps (in seconds) for Section Practice
+  const sectionAudioRanges = {
     "21_1": {
-      "1-6": 146,   // Dialogue begins at ~161s -> starts at 146s (2:26)
-      "7-10": 317,  // Dialogue begins at ~332s -> starts at 317s (5:17)
-      "11-16": 100, // Dialogue begins at ~116s -> starts at 100s (1:40)
-      "17-20": 313, // Dialogue begins at ~328s -> starts at 313s (5:13)
-      "21-22": 39,  // Dialogue begins at ~54s -> starts at 39s (0:39)
-      "23-24": 151, // Dialogue begins at ~167s -> starts at 151s (2:31)
-      "25-30": 241, // Dialogue begins at ~256s -> starts at 241s (4:01)
-      "31-40": 57   // Lecture begins at ~72s -> starts at 57s (0:57)
+      "1-6":   { start: 146, end: 310 },
+      "7-10":  { start: 317, end: 400 },
+      "11-16": { start: 100, end: 305 },
+      "17-20": { start: 313, end: 410 },
+      "21-22": { start: 39,  end: 148 },
+      "23-24": { start: 151, end: 238 },
+      "25-30": { start: 241, end: 360 },
+      "31-40": { start: 57,  end: 390 }
+    },
+    "2026_1": {
+      "1-6":   { start: 78,   end: 281 },  // Part 1: Note Completion (Itinerary - starts at 1:18 where instructions finish & actual questions begin)
+      "7-10":  { start: 280,  end: 395 },  // Part 1: Table Completion (Demographics - prompt starts at 4:40)
+      "1-10":  { start: 0,    end: 395 },  // Part 1 Full (0:00 to 6:35)
+      "11-15": { start: 412,  end: 576 },  // Part 2: Multiple Choice (EasyTravel Services - prompt starts at 6:52)
+      "16-20": { start: 576,  end: 705 },  // Part 2: Office Floor Plan Map (prompt starts at 9:36)
+      "21-24": { start: 720,  end: 880 },  // Part 3: Timetable Matching (prompt starts at 12:00)
+      "25-30": { start: 880,  end: 1045 }, // Part 3: Diagram Labels Completion (prompt starts at 14:40)
+      "31-34": { start: 1055, end: 1167 }, // Part 4: Sentence Completion (prompt starts at 17:35)
+      "35-40": { start: 1167, end: 1342 }, // Part 4: Lecture Note Completion (prompt starts at 19:27)
+      "31-40": { start: 1045, end: 1342 }  // Part 4 Full (17:25 to 22:22)
+    },
+    "2026_2": {
+      "1-5":   { start: 30,   end: 240 },  // Part 1: Sentence Completion (Diet Plan)
+      "6-10":  { start: 240,  end: 388 },  // Part 1: Matching Snack Choices
+      "1-10":  { start: 0,    end: 388 },  // Part 1 Full
+      "11-16": { start: 388,  end: 570 },  // Part 2: Table Completion (Stanfield Childcare)
+      "17-20": { start: 570,  end: 701 },  // Part 2: Matching Childcare Workers
+      "11-20": { start: 388,  end: 701 },  // Part 2 Full
+      "21-25": { start: 701,  end: 900 },  // Part 3: Flowchart Completion (Essay Foundation)
+      "26-30": { start: 900,  end: 1054 }, // Part 3: Summary Completion (Essay Standards)
+      "21-30": { start: 701,  end: 1054 }, // Part 3 Full
+      "31-33": { start: 1054, end: 1270 }, // Part 4: Multiple Choice (Geocentrism & Heliocentrism)
+      "34-40": { start: 1270, end: 1428 }, // Part 4: Notes Completion (Copernicus & Science)
+      "31-40": { start: 1054, end: 1428 }  // Part 4 Full
+    },
+    "2026_3": {
+      "1-7":   { start: 30,   end: 300 },  // Part 1: Form Completion (Client Registration)
+      "8-10":  { start: 300,  end: 435 },  // Part 1: Multiple Choice (Valued Qualities)
+      "1-10":  { start: 0,    end: 435 },  // Part 1 Full
+      "11-15": { start: 435,  end: 600 },  // Part 2: Short Answer (Fitness Centre Consultation)
+      "16-20": { start: 600,  end: 763 },  // Part 2: Matching Facilities
+      "11-20": { start: 435,  end: 763 },  // Part 2 Full
+      "21-25": { start: 763,  end: 935 },  // Part 3: Multiple Choice (Faculty Coordinator)
+      "26-30": { start: 935,  end: 1120 }, // Part 3: Table Completion (Candidates Evaluation)
+      "21-30": { start: 763,  end: 1120 }, // Part 3 Full
+      "31-33": { start: 1120, end: 1300 }, // Part 4: Multiple Choice (Speleology & Caves)
+      "34-40": { start: 1300, end: 1530 }, // Part 4: Table & Notes Completion (Cave Formation)
+      "31-40": { start: 1120, end: 1530 }  // Part 4 Full
+    },
+    "2026_4": {
+      "1-5":   { start: 104,  end: 248 },  // Part 1: Form Completion (Survey Form - prompt at 104s)
+      "6-10":  { start: 262,  end: 395 },  // Part 1: Sentence Completion (Exercise Summary - prompt at 262s)
+      "1-10":  { start: 0,    end: 395 },  // Part 1 Full
+      "11-16": { start: 420,  end: 600 },  // Part 2: Matching / Floor Plan (Section 2 begins at 420s)
+      "17-20": { start: 601,  end: 765 },  // Part 2: Timetable Matching (prompt at 601s)
+      "11-20": { start: 418,  end: 765 },  // Part 2 Full
+      "21-24": { start: 784,  end: 935 },  // Part 3: Sentence Completion (Section 3 begins at 784s)
+      "25-30": { start: 936,  end: 1118 }, // Part 3: Table Completion (prompt at 936s)
+      "21-30": { start: 782,  end: 1118 }, // Part 3 Full
+      "31-35": { start: 1139, end: 1320 }, // Part 4: Note Completion (Section 4 begins at 1139s)
+      "36-40": { start: 1321, end: 1475 }, // Part 4: Note Completion (prompt at 1321s)
+      "31-40": { start: 1138, end: 1475 }  // Part 4 Full
+    },
+    "2026_5": {
+      "1-5":   { start: 100,  end: 236 },  // Part 1: Note Completion (prompt at 100s)
+      "6-10":  { start: 236,  end: 380 },  // Part 1: Multiple Choice (prompt at 236s)
+      "1-10":  { start: 0,    end: 380 },  // Part 1 Full
+      "11-15": { start: 396,  end: 550 },  // Part 2: Matching (Section 2 begins at 396s)
+      "16-20": { start: 552,  end: 693 },  // Part 2: Sentence Completion (prompt at 552s)
+      "11-20": { start: 395,  end: 693 },  // Part 2 Full
+      "21-26": { start: 707,  end: 878 },  // Part 3: Table Completion (Section 3 begins at 707s)
+      "27-30": { start: 878,  end: 1006 }, // Part 3: Matching (prompt at 878s)
+      "21-30": { start: 707,  end: 1006 }, // Part 3 Full
+      "31-32": { start: 1028, end: 1143 }, // Part 4: Multiple Choice (Section 4 begins at 1028s)
+      "33-35": { start: 1143, end: 1245 }, // Part 4: Checkbox Multiple Choice (prompt at 1143s)
+      "36-40": { start: 1245, end: 1405 }, // Part 4: Table Completion (prompt at 1245s)
+      "31-40": { start: 1028, end: 1405 }  // Part 4 Full
+    },
+    "2026_6": {
+      "1-6":   { start: 68,   end: 194 },
+      "7-10":  { start: 208,  end: 342 },
+      "1-10":  { start: 0,    end: 358 },
+      "11-17": { start: 387,  end: 562 },
+      "18-20": { start: 578,  end: 666 },
+      "11-20": { start: 358,  end: 687 },
+      "21-25": { start: 714,  end: 867 },
+      "26-30": { start: 884,  end: 1013 },
+      "21-30": { start: 687,  end: 1030 },
+      "31-33": { start: 1054, end: 1192 },
+      "34-40": { start: 1212, end: 1400 },
+      "31-40": { start: 1030, end: 1415 }
+    },
+    "2026_7": {
+      "1-10":  { start: 86,   end: 335 },
+      "1-5":   { start: 86,   end: 195 },
+      "6-10":  { start: 203,  end: 335 },
+      "11-15": { start: 444,  end: 522 },
+      "16-20": { start: 553,  end: 715 },
+      "11-20": { start: 373,  end: 754 },
+      "21-23": { start: 802,  end: 914 },
+      "24-30": { start: 944,  end: 1067 },
+      "21-30": { start: 754,  end: 1109 },
+      "31-40": { start: 1155, end: 1520 }
+    },
+    "2026_8": {
+      "1-10":  { start: 84,   end: 335 },
+      "1-5":   { start: 84,   end: 194 },
+      "6-10":  { start: 204,  end: 335 },
+      "11-14": { start: 372,  end: 517 },
+      "15-20": { start: 525,  end: 746 },
+      "11-20": { start: 369,  end: 781 },
+      "21-23": { start: 778,  end: 901 },
+      "24-30": { start: 910,  end: 1099 },
+      "21-30": { start: 781,  end: 1132 },
+      "31-40": { start: 1132, end: 1468 }
+    },
+    "2026_9": {
+      "1-10":  { start: 65,   end: 330 },
+      "1-4":   { start: 65,   end: 154 },
+      "5-10":  { start: 154,  end: 330 },
+      "11-14": { start: 362,  end: 512 },
+      "15-20": { start: 520,  end: 713 },
+      "11-20": { start: 363,  end: 746 },
+      "21-26": { start: 745,  end: 935 },
+      "27-30": { start: 940,  end: 1044 },
+      "21-30": { start: 746,  end: 1076 },
+      "31-35": { start: 1075, end: 1195 },
+      "36-40": { start: 1195, end: 1396 },
+      "31-40": { start: 1076, end: 1428 }
+    },
+    "2026_10": {
+      "1-10":  { start: 71,   end: 340 },
+      "1-4":   { start: 71,   end: 201 },
+      "5-10":  { start: 201,  end: 340 },
+      "11-12": { start: 370,  end: 440 },
+      "13-16": { start: 440,  end: 585 },
+      "17-20": { start: 585,  end: 710 },
+      "11-20": { start: 372,  end: 736 },
+      "21-30": { start: 736,  end: 1170 },
+      "31-40": { start: 1170, end: 1580 }
+    },
+    "2026_11": {
+      "1-6":   { start: 84,   end: 220 },
+      "7-10":  { start: 252,  end: 368 },
+      "1-10":  { start: 0,    end: 408 },
+      "11-14": { start: 454,  end: 565 },
+      "15-20": { start: 626,  end: 780 },
+      "11-20": { start: 408,  end: 820 },
+      "21-25": { start: 868,  end: 1025 },
+      "26-30": { start: 1064, end: 1188 },
+      "21-30": { start: 820,  end: 1228 },
+      "31-40": { start: 1228, end: 1686 }
+    },
+    "2026_12": {
+      "1-6":   { start: 112,  end: 235 },
+      "7-10":  { start: 291,  end: 360 },
+      "1-10":  { start: 0,    end: 400 },
+      "11-16": { start: 445,  end: 560 },
+      "17-20": { start: 612,  end: 735 },
+      "11-20": { start: 400,  end: 772 },
+      "21-23": { start: 805,  end: 885 },
+      "24-27": { start: 973,  end: 1040 },
+      "28-30": { start: 1045, end: 1145 },
+      "24-30": { start: 973,  end: 1145 },
+      "21-30": { start: 772,  end: 1185 },
+      "31-40": { start: 1185, end: 1592 }
+    },
+    "2026_13": {
+      "1-5":   { start: 86,   end: 220 },
+      "6-10":  { start: 254,  end: 395 },
+      "1-10":  { start: 0,    end: 410 },
+      "11-16": { start: 457,  end: 665 },
+      "17-20": { start: 694,  end: 845 },
+      "11-20": { start: 410,  end: 884 },
+      "21-24": { start: 933,  end: 1125 },
+      "25-30": { start: 1159, end: 1280 },
+      "21-30": { start: 884,  end: 1317 },
+      "31-40": { start: 1317, end: 1695 }
+    },
+    "2026_14": {
+      "1-10":  { start: 85,   end: 378 },
+      "11-16": { start: 441,  end: 659 },
+      "17-20": { start: 668,  end: 804 },
+      "11-20": { start: 411,  end: 824 },
+      "21-23": { start: 854,  end: 1007 },
+      "24-25": { start: 1016, end: 1119 },
+      "26-30": { start: 1118, end: 1268 },
+      "21-30": { start: 824,  end: 1304 },
+      "31-40": { start: 1334, end: 1735 }
+    },
+    "2026_15": {
+      "1-10":  { start: 77,   end: 348 },
+      "11-16": { start: 410,  end: 599 },
+      "17-20": { start: 628,  end: 807 },
+      "11-20": { start: 380,  end: 843 },
+      "21-26": { start: 873,  end: 1077 },
+      "27-30": { start: 1093, end: 1243 },
+      "21-30": { start: 843,  end: 1244 },
+      "31-35": { start: 1274, end: 1471 },
+      "36-40": { start: 1471, end: 1629 },
+      "31-40": { start: 1274, end: 1629 }
+    },
+    "2026_16": {
+      "1-5":   { start: 58,   end: 184 },
+      "6-10":  { start: 198,  end: 309 },
+      "1-10":  { start: 58,   end: 309 },
+      "11-16": { start: 377,  end: 521 },
+      "17-20": { start: 539,  end: 647 },
+      "11-20": { start: 346,  end: 683 },
+      "21-24": { start: 694,  end: 826 },
+      "25-27": { start: 826,  end: 887 },
+      "28-30": { start: 906,  end: 994 },
+      "21-30": { start: 683,  end: 1029 },
+      "31-33": { start: 1038, end: 1301 },
+      "34-35": { start: 1301, end: 1330 },
+      "36-40": { start: 1329, end: 1461 },
+      "31-40": { start: 1038, end: 1461 }
+    },
+    "2026_17": {
+      "1-5":   { start: 76,   end: 217 },
+      "6-8":   { start: 231,  end: 281 },
+      "9-10":  { start: 281,  end: 327 },
+      "1-10":  { start: 76,   end: 327 },
+      "11-14": { start: 389,  end: 500 },
+      "15-20": { start: 508,  end: 707 },
+      "11-20": { start: 358,  end: 743 },
+      "21-27": { start: 773,  end: 953 },
+      "28-30": { start: 962,  end: 1039 },
+      "21-30": { start: 743,  end: 1074 },
+      "31-35": { start: 1104, end: 1328 },
+      "36-40": { start: 1328, end: 1464 },
+      "31-40": { start: 1104, end: 1464 }
+    },
+    "2026_18": {
+      "1-4":   { start: 81,   end: 254 },
+      "5-10":  { start: 264,  end: 382 },
+      "1-10":  { start: 81,   end: 382 },
+      "11-14": { start: 451,  end: 611 },
+      "15-16": { start: 636,  end: 656 },
+      "17-20": { start: 656,  end: 780 },
+      "11-20": { start: 421,  end: 811 },
+      "21-26": { start: 841,  end: 1067 },
+      "27-30": { start: 1074, end: 1196 },
+      "21-30": { start: 811,  end: 1234 },
+      "31-38": { start: 1294, end: 1572 },
+      "39-40": { start: 1572, end: 1606 },
+      "31-40": { start: 1294, end: 1606 }
+    },
+    "2026_19": {
+      "1-10":  { start: 85,   end: 430 },
+      "11-15": { start: 497,  end: 699 },
+      "16-20": { start: 708,  end: 860 },
+      "11-20": { start: 467,  end: 897 },
+      "21-25": { start: 927,  end: 1157 },
+      "26-30": { start: 1187, end: 1292 },
+      "21-30": { start: 897,  end: 1325 },
+      "31-40": { start: 1355, end: 1768 }
+    },
+    "2026_20": {
+      "1-4":   { start: 84,   end: 227 },
+      "5-10":  { start: 227,  end: 425 },
+      "1-10":  { start: 84,   end: 425 },
+      "11-14": { start: 492,  end: 712 },
+      "15-20": { start: 721,  end: 895 },
+      "11-20": { start: 462,  end: 931 },
+      "21-26": { start: 961,  end: 1239 },
+      "27-30": { start: 1268, end: 1352 },
+      "21-30": { start: 931,  end: 1389 },
+      "31-36": { start: 1447, end: 1683 },
+      "37-40": { start: 1683, end: 1805 },
+      "31-40": { start: 1447, end: 1805 }
+    }
+  };
+
+  const recentRealTestPartRanges = {
+    "2026_1": {
+      1: { start: 0,    end: 395 },  // Part 1 starts at 0:00 (user specified)
+      2: { start: 398,  end: 705 },  // Part 2 starts at 6:38 ("Now turn to section 2. Section 2...")
+      3: { start: 708,  end: 1045 }, // Part 3 starts at 11:48 ("Now turn to section 3. Section 3...")
+      4: { start: 1045, end: 1342 }  // Part 4 starts at 17:25 ("Now turn to section 4. Section 4...")
+    },
+    "2026_2": {
+      1: { start: 0,    end: 388 },  // Part 1 starts at 0:00 (dialogue at 0:32)
+      2: { start: 388,  end: 701 },  // Part 2 starts at 6:28 ("Now turn to section 2. Section 2...")
+      3: { start: 701,  end: 1054 }, // Part 3 starts at 11:41 ("Now turn to section 3. Section 3...")
+      4: { start: 1054, end: 1428 }  // Part 4 starts at 17:34 ("Now turn to section 4. Section 4...")
+    },
+    "2026_3": {
+      1: { start: 0,    end: 435 },  // Part 1 starts at 0:00 (dialogue at 0:32)
+      2: { start: 435,  end: 763 },  // Part 2 starts at 7:15 ("Now turn to section 2. Section 2...")
+      3: { start: 763,  end: 1120 }, // Part 3 starts at 12:43 ("Now turn to section 3. Section 3...")
+      4: { start: 1120, end: 1530 }  // Part 4 starts at 18:40 ("Now turn to section 4. Section 4...")
+    },
+    "2026_4": {
+      1: { start: 0,    end: 395 },  // Part 1 starts at 0:00 (dialogue at 1:44)
+      2: { start: 418,  end: 765 },  // Part 2 starts at 6:58 / 418s ("Section 2...")
+      3: { start: 782,  end: 1118 }, // Part 3 starts at 13:02 / 782s ("Section 3...")
+      4: { start: 1138, end: 1475 }  // Part 4 starts at 18:58 / 1138s ("Section 4...")
+    },
+    "2026_5": {
+      1: { start: 0,    end: 380 },  // Part 1 starts at 0:00 (dialogue at 1:40)
+      2: { start: 395,  end: 693 },  // Part 2 starts at 6:35 / 395s ("Section 2...")
+      3: { start: 707,  end: 1006 }, // Part 3 starts at 11:47 / 707s ("Section 3...")
+      4: { start: 1028, end: 1405 }  // Part 4 starts at 17:08 / 1028s ("Section 4...")
+    },
+    "2026_6": {
+      1: { start: 0,    end: 358 },
+      2: { start: 358,  end: 687 },
+      3: { start: 687,  end: 1030 },
+      4: { start: 1030, end: 1415 }
+    },
+    "2026_7": {
+      1: { start: 0,    end: 373 },
+      2: { start: 373,  end: 754 },
+      3: { start: 754,  end: 1109 },
+      4: { start: 1109, end: 1571 }
+    },
+    "2026_8": {
+      1: { start: 0,    end: 369 },
+      2: { start: 369,  end: 781 },
+      3: { start: 781,  end: 1132 },
+      4: { start: 1132, end: 1468 }
+    },
+    "2026_9": {
+      1: { start: 0,    end: 363 },
+      2: { start: 363,  end: 746 },
+      3: { start: 746,  end: 1076 },
+      4: { start: 1076, end: 1428 }
+    },
+    "2026_10": {
+      1: { start: 0,    end: 372 },
+      2: { start: 372,  end: 736 },
+      3: { start: 736,  end: 1170 },
+      4: { start: 1170, end: 1580 }
+    },
+    "2026_11": {
+      1: { start: 0,    end: 408 },
+      2: { start: 408,  end: 820 },
+      3: { start: 820,  end: 1228 },
+      4: { start: 1228, end: 1686 }
+    },
+    "2026_12": {
+      1: { start: 0,    end: 400 },
+      2: { start: 400,  end: 772 },
+      3: { start: 772,  end: 1185 },
+      4: { start: 1185, end: 1592 }
+    },
+    "2026_13": {
+      1: { start: 0,    end: 410 },
+      2: { start: 410,  end: 884 },
+      3: { start: 884,  end: 1317 },
+      4: { start: 1317, end: 1695 }
+    },
+    "2026_14": {
+      1: { start: 0,    end: 411 },
+      2: { start: 411,  end: 824 },
+      3: { start: 824,  end: 1304 },
+      4: { start: 1304, end: 1771 }
+    },
+    "2026_15": {
+      1: { start: 0,    end: 380 },
+      2: { start: 380,  end: 843 },
+      3: { start: 843,  end: 1244 },
+      4: { start: 1244, end: 1666 }
+    },
+    "2026_16": {
+      1: { start: 0,    end: 346 },
+      2: { start: 346,  end: 683 },
+      3: { start: 683,  end: 1029 },
+      4: { start: 1029, end: 1493 }
+    },
+    "2026_17": {
+      1: { start: 0,    end: 358 },
+      2: { start: 358,  end: 743 },
+      3: { start: 743,  end: 1074 },
+      4: { start: 1074, end: 1494 }
+    },
+    "2026_18": {
+      1: { start: 0,    end: 421 },
+      2: { start: 421,  end: 811 },
+      3: { start: 811,  end: 1234 },
+      4: { start: 1234, end: 1643 }
+    },
+    "2026_19": {
+      1: { start: 0,    end: 467 },
+      2: { start: 467,  end: 897 },
+      3: { start: 897,  end: 1325 },
+      4: { start: 1325, end: 1808 }
+    },
+    "2026_20": {
+      1: { start: 0,    end: 462 },
+      2: { start: 462,  end: 931 },
+      3: { start: 931,  end: 1389 },
+      4: { start: 1389, end: 1841 }
     }
   };
 
@@ -89,24 +476,19 @@
   function isSectionLocked(gIdx) {
     if (appPhase === 1) return false;
     const user = getUserAccessState();
+    if (appPhase === 2 && user.isLoggedIn) return false;
+    if (appPhase === 3 && user.isPremium) return false;
+
     const testNum = Number(testParam) || 1;
-    const freeTestQuota = appSettings.freeFullMocksCount !== undefined ? Number(appSettings.freeFullMocksCount) : 1;
-
-    if (appPhase === 2) {
-      if (user.isLoggedIn) return false;
-      if (testNum > freeTestQuota) return true;
-      const allowed = appSettings.freeQuestionTypesPerTest !== undefined ? Number(appSettings.freeQuestionTypesPerTest) : 0;
-      return gIdx >= allowed;
+    if (bookParam >= 2000) {
+      const freeRecent = appSettings.freeRecentTestsCount !== undefined ? Number(appSettings.freeRecentTestsCount) : 2;
+      return testNum > freeRecent;
     }
 
-    if (appPhase === 3) {
-      if (user.isPremium) return false;
-      if (testNum > freeTestQuota) return true;
-      const allowed = appSettings.freeQuestionTypesPerTest !== undefined ? Number(appSettings.freeQuestionTypesPerTest) : 0;
-      return gIdx >= allowed;
-    }
-
-    return false;
+    // Cambridge Full Test is always free; only section/question-type drills are gated
+    if (practiceMode === 'full') return false;
+    const allowed = appSettings.freeQuestionTypesPerTest !== undefined ? Number(appSettings.freeQuestionTypesPerTest) : 0;
+    return gIdx >= allowed;
   }
 
   function isCurrentSessionLocked() {
@@ -116,9 +498,13 @@
     if (appPhase === 3 && user.isPremium) return false;
 
     const testNum = Number(testParam) || 1;
-    const freeTestsAllowed = appSettings.freeFullMocksCount !== undefined ? Number(appSettings.freeFullMocksCount) : 1;
-    if (testNum > freeTestsAllowed) return true;
+    if (bookParam >= 2000) {
+      // Recent Actual Tests (1-20): first N tests (full + part + question type) are free; remaining are locked
+      const freeRecent = appSettings.freeRecentTestsCount !== undefined ? Number(appSettings.freeRecentTestsCount) : 2;
+      return testNum > freeRecent;
+    }
 
+    // Cambridge Academic Tests: Full Test is ALWAYS FREE; only Part & Question-Type practice are gated
     if (practiceMode === 'part') {
       const partIdx = (targetPart || 1) - 1;
       const freePartsAllowed = appSettings.freePartsPerTest !== undefined ? Number(appSettings.freePartsPerTest) : 1;
@@ -150,8 +536,8 @@
 
     if (backBtn) {
       if (isSessionBlocked) {
-        backBtn.textContent = 'Back to Cambridge Tests';
-        backBtn.onclick = () => { window.location.href = window.location.pathname.includes('reading') ? '/cambridge-reading.html' : '/cambridge-listening.html'; };
+        backBtn.textContent = bookParam >= 2000 ? 'Back to Recent Tests' : 'Back to Cambridge Tests';
+        backBtn.onclick = () => { window.location.href = bookParam >= 2000 ? '/recent-listening-tests' : (window.location.pathname.includes('reading') ? '/cambridge-reading.html' : '/cambridge-listening.html'); };
       } else {
         backBtn.textContent = 'Cancel / Keep Practicing';
         backBtn.onclick = () => { closeTestUnlockModal(); };
@@ -321,9 +707,18 @@
     }
   }
 
-    function computeCalibratedSectionTime(part, qIds, audioDuration) {
+    function getPartTranscript(transcripts, partNum) {
+    if (!transcripts) return "";
+    const p = Number(partNum) || 1;
+    if (Array.isArray(transcripts)) {
+      return (transcripts[p - 1] !== undefined ? transcripts[p - 1] : (transcripts[p] || "")) || "";
+    }
+    return (transcripts[String(p)] !== undefined ? transcripts[String(p)] : (transcripts[p] || transcripts[p - 1] || "")) || "";
+  }
+
+  function computeCalibratedSectionTime(part, qIds, audioDuration) {
     const isFirstGroupInPart = (qIds[0] === 1 || qIds[0] === 11 || qIds[0] === 21 || qIds[0] === 31);
-    const rawPText = testData.transcripts && (testData.transcripts[String(part)] || testData.transcripts[part] || "");
+    const rawPText = getPartTranscript(testData.transcripts, part);
     const rawEv = testData.evidencePhrases && (testData.evidencePhrases[String(qIds[0])] || "");
 
     const normText = (rawPText || '').toLowerCase().replace(/[’‘`]/g, "'").replace(/[“”]/g, '"').replace(/\s+/g, ' ').trim();
@@ -382,13 +777,18 @@
         targetQIds = targetGroup.questionIds || targetGroup.ids || [];
         activePart = targetPart;
 
-        // Resolve Audio Start Time
+        // Resolve Audio Start & End Time
         const testKey = `${bookParam}_${testParam}`;
         const rangeKey = `${targetQIds[0]}-${targetQIds[targetQIds.length - 1]}`;
-        if (sectionAudioStartTimes[testKey] && sectionAudioStartTimes[testKey][rangeKey] !== undefined) {
-          sectionStartTime = sectionAudioStartTimes[testKey][rangeKey];
+        if (sectionAudioRanges[testKey] && sectionAudioRanges[testKey][rangeKey]) {
+          sectionStartTime = sectionAudioRanges[testKey][rangeKey].start;
+          sectionEndTime = sectionAudioRanges[testKey][rangeKey].end || 0;
+        } else if (targetGroup.startTime !== undefined) {
+          sectionStartTime = targetGroup.startTime;
+          sectionEndTime = targetGroup.endTime || 0;
         } else {
           sectionStartTime = computeCalibratedSectionTime(targetPart, targetQIds, 360);
+          sectionEndTime = 0;
         }
       } else {
         practiceMode = "full";
@@ -403,6 +803,14 @@
       const endQ = targetPart * 10;
       targetQIds = [];
       for (let q = startQ; q <= endQ; q++) targetQIds.push(q);
+
+      // Calibrate audio start & end time for Part practice if single master audio / recent test
+      if (bookParam >= 2000) {
+        const testKey = `${bookParam}_${testParam}`;
+        const pRange = recentRealTestPartRanges[testKey]?.[targetPart] || { start: 0, end: 0 };
+        sectionStartTime = pRange.start || 0;
+        sectionEndTime = pRange.end || 0;
+      }
     } else {
       practiceMode = "full";
       activePart = 1;
@@ -411,22 +819,23 @@
   }
 
   function setupHeaderTitle() {
+    const isRecent = (bookParam >= 2000);
     if (testBookBadge) {
-      testBookBadge.textContent = `Cambridge ${bookParam}`;
+      testBookBadge.textContent = isRecent ? "Recent Real Test" : `Cambridge ${bookParam}`;
     }
 
-    let seoTitle = `Cambridge IELTS ${bookParam} Listening Test ${testParam}`;
+    let seoTitle = isRecent ? `IELTS Listening Recent Actual Test ${testParam} (2026 Edition)` : `Cambridge IELTS ${bookParam} Listening Test ${testParam}`;
     if (testTitleBadge) {
       if (practiceMode === "section") {
         const qRange = `Questions ${targetQIds[0]}–${targetQIds[targetQIds.length - 1]}`;
         const friendlyType = getFriendlyGroupType(targetGroup.type);
-        testTitleBadge.textContent = `Test ${testParam} • ${qRange} (${friendlyType})`;
+        testTitleBadge.textContent = isRecent ? `Recent Test ${testParam} • ${qRange} (${friendlyType})` : `Test ${testParam} • ${qRange} (${friendlyType})`;
         seoTitle += ` • ${qRange}`;
       } else if (practiceMode === "part") {
-        testTitleBadge.textContent = `Listening Test ${testParam} • Part ${targetPart}`;
+        testTitleBadge.textContent = isRecent ? `Recent Actual Test ${testParam} • Part ${targetPart}` : `Listening Test ${testParam} • Part ${targetPart}`;
         seoTitle += ` Part ${targetPart}`;
       } else {
-        testTitleBadge.textContent = `Academic Listening Test ${testParam}`;
+        testTitleBadge.textContent = isRecent ? `Recent Listening Real Test ${testParam}` : `Academic Listening Test ${testParam}`;
       }
     }
     document.title = `${seoTitle} Online with Audio & Answers | IELTS Mockpoint`;
@@ -467,7 +876,7 @@
     if (testData.partAudios && testData.partAudios[String(partNum)]) {
       return testData.partAudios[String(partNum)];
     }
-    return testData.audioUrl || "";
+    return testData.audioUrl || testData.audioSrc || "";
   }
 
   function initPartAudio(partNum) {
@@ -496,48 +905,70 @@
       if (practiceMode === "section" && targetGroup) {
         const testKey = `${bookParam}_${testParam}`;
         const rangeKey = `${targetQIds[0]}-${targetQIds[targetQIds.length - 1]}`;
-        if (!sectionAudioStartTimes[testKey] || sectionAudioStartTimes[testKey][rangeKey] === undefined) {
-          if (isFinite(audio.duration) && audio.duration > 100) {
-            sectionStartTime = computeCalibratedSectionTime(targetPart, targetQIds, audio.duration);
-          }
+        if (sectionAudioRanges[testKey] && sectionAudioRanges[testKey][rangeKey]) {
+          sectionStartTime = sectionAudioRanges[testKey][rangeKey].start;
+          sectionEndTime = sectionAudioRanges[testKey][rangeKey].end || 0;
+        } else if (targetGroup.startTime !== undefined) {
+          sectionStartTime = targetGroup.startTime;
+          sectionEndTime = targetGroup.endTime || 0;
+        } else if (isFinite(audio.duration) && audio.duration > 100 && bookParam < 2000) {
+          sectionStartTime = computeCalibratedSectionTime(targetPart, targetQIds, audio.duration);
+        }
+      } else if (practiceMode === "part" && bookParam >= 2000) {
+        const testKey = `${bookParam}_${testParam}`;
+        const pRange = recentRealTestPartRanges[testKey]?.[targetPart];
+        if (pRange) {
+          sectionStartTime = pRange.start || 0;
+          sectionEndTime = pRange.end || 0;
+        }
+      } else if (practiceMode === "full" && bookParam >= 2000 && partNum > 1) {
+        const testKey = `${bookParam}_${testParam}`;
+        const pRange = recentRealTestPartRanges[testKey]?.[partNum];
+        if (pRange && pRange.start > 0 && audio.currentTime < 1) {
+          try { audio.currentTime = pRange.start; } catch (e) {}
         }
       }
-      if (practiceMode === "section" && sectionStartTime > 0 && audio.currentTime < sectionStartTime) {
-        audio.currentTime = sectionStartTime;
+      if ((practiceMode === "section" || practiceMode === "part") && sectionStartTime > 0) {
+        if (Math.abs(audio.currentTime - sectionStartTime) > 0.5) {
+          try { audio.currentTime = sectionStartTime; } catch (e) {}
+        }
       }
-      if (seekSlider && isFinite(audio.duration)) {
-        seekSlider.max = Math.floor(audio.duration);
-        seekSlider.value = Math.floor(audio.currentTime || 0);
-      }
-      if (timeLabel) timeLabel.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
+      syncAudioUI();
     });
 
     audio.addEventListener("canplay", () => {
       if (audio !== currentAudio) return;
-      if (practiceMode === "section" && targetGroup) {
+      if ((practiceMode === "section" || practiceMode === "part") && sectionStartTime > 0) {
+        if (Math.abs(audio.currentTime - sectionStartTime) > 0.5) {
+          try { audio.currentTime = sectionStartTime; } catch (e) {}
+        }
+      } else if (practiceMode === "full" && bookParam >= 2000 && partNum > 1) {
         const testKey = `${bookParam}_${testParam}`;
-        const rangeKey = `${targetQIds[0]}-${targetQIds[targetQIds.length - 1]}`;
-        if (!sectionAudioStartTimes[testKey] || sectionAudioStartTimes[testKey][rangeKey] === undefined) {
-          if (isFinite(audio.duration) && audio.duration > 100) {
-            sectionStartTime = computeCalibratedSectionTime(targetPart, targetQIds, audio.duration);
-          }
+        const pRange = recentRealTestPartRanges[testKey]?.[partNum];
+        if (pRange && pRange.start > 0 && audio.currentTime < 1) {
+          try { audio.currentTime = pRange.start; } catch (e) {}
         }
       }
-      if (practiceMode === "section" && sectionStartTime > 0 && audio.currentTime < sectionStartTime) {
-        audio.currentTime = sectionStartTime;
-      }
-      if (seekSlider && isFinite(audio.duration)) {
-        seekSlider.max = Math.floor(audio.duration);
-        seekSlider.value = Math.floor(audio.currentTime || 0);
-      }
-      if (timeLabel) timeLabel.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
+      syncAudioUI();
     }, { once: true });
 
     audio.addEventListener("timeupdate", () => {
       if (audio !== currentAudio) return;
+      // Guard: Ensure section or part practice with a positive start time snaps to start position if browser started from 0
+      if ((practiceMode === "section" || practiceMode === "part") && sectionStartTime > 0) {
+        if (audio.currentTime < sectionStartTime - 2 && !audio.paused && !audio.seeking) {
+          try { audio.currentTime = sectionStartTime; } catch (e) {}
+          return;
+        }
+      }
       if (!isSeeking && seekSlider && timeLabel) {
         seekSlider.value = Math.floor(audio.currentTime);
         timeLabel.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
+      }
+      // Auto-stop at end of section / part in practice mode
+      if ((practiceMode === "section" || practiceMode === "part") && sectionEndTime > 0 && audio.currentTime >= sectionEndTime) {
+        audio.pause();
+        updatePlayPauseIcon(false);
       }
     });
 
@@ -548,7 +979,22 @@
           audioCache[k].pause();
         }
       });
+      if ((practiceMode === "section" || practiceMode === "part") && sectionStartTime > 0) {
+        if (audio.currentTime < sectionStartTime - 1 || (sectionEndTime > 0 && audio.currentTime >= sectionEndTime)) {
+          try { audio.currentTime = sectionStartTime; } catch(e) {}
+        }
+      }
       if (audio === currentAudio) updatePlayPauseIcon(true);
+    });
+
+    audio.addEventListener("playing", () => {
+      if (audio === currentAudio) {
+        if ((practiceMode === "section" || practiceMode === "part") && sectionStartTime > 0) {
+          if (audio.currentTime < sectionStartTime - 1 || (sectionEndTime > 0 && audio.currentTime >= sectionEndTime)) {
+            try { audio.currentTime = sectionStartTime; } catch(e) {}
+          }
+        }
+      }
     });
 
     audio.addEventListener("pause", () => {
@@ -575,23 +1021,34 @@
   function syncAudioUI() {
     if (!currentAudio) return;
     updatePlayPauseIcon(!currentAudio.paused && !currentAudio.ended);
+    const displayTime = ((practiceMode === "section" || practiceMode === "part") && sectionStartTime > 0 && currentAudio.currentTime < sectionStartTime)
+      ? sectionStartTime
+      : currentAudio.currentTime;
     if (seekSlider && isFinite(currentAudio.duration)) {
       seekSlider.max = Math.floor(currentAudio.duration);
-      seekSlider.value = Math.floor(currentAudio.currentTime || 0);
+      seekSlider.value = Math.floor(displayTime || 0);
     }
     if (timeLabel) {
-      timeLabel.textContent = `${formatTime(currentAudio.currentTime)} / ${formatTime(currentAudio.duration)}`;
+      timeLabel.textContent = `${formatTime(displayTime)} / ${formatTime(currentAudio.duration)}`;
     }
   }
 
   if (playPauseBtn) {
     playPauseBtn.addEventListener("click", () => {
       if (!currentAudio) return;
-      if (practiceMode === "section" && sectionStartTime > 0 && currentAudio.currentTime < sectionStartTime) {
-        currentAudio.currentTime = sectionStartTime;
-      }
       if (currentAudio.paused) {
-        currentAudio.play().catch(e => console.warn("Audio play prevented:", e));
+        if ((practiceMode === "section" || practiceMode === "part") && sectionStartTime > 0) {
+          if (currentAudio.currentTime < sectionStartTime - 0.5 || (sectionEndTime > 0 && currentAudio.currentTime >= sectionEndTime)) {
+            try { currentAudio.currentTime = sectionStartTime; } catch (e) {}
+          }
+        }
+        currentAudio.play().then(() => {
+          if ((practiceMode === "section" || practiceMode === "part") && sectionStartTime > 0) {
+            if (currentAudio.currentTime < sectionStartTime - 1 || (sectionEndTime > 0 && currentAudio.currentTime >= sectionEndTime)) {
+              currentAudio.currentTime = sectionStartTime;
+            }
+          }
+        }).catch(e => console.warn("Audio play prevented:", e));
       } else {
         currentAudio.pause();
       }
@@ -600,13 +1057,21 @@
 
   if (rewindBtn) {
     rewindBtn.addEventListener("click", () => {
-      if (currentAudio) currentAudio.currentTime = Math.max(0, currentAudio.currentTime - 10);
+      if (currentAudio) {
+        const minBound = (practiceMode === "section" || practiceMode === "part") ? (sectionStartTime || 0) : 0;
+        currentAudio.currentTime = Math.max(minBound, currentAudio.currentTime - 10);
+      }
     });
   }
 
   if (forwardBtn) {
     forwardBtn.addEventListener("click", () => {
-      if (currentAudio) currentAudio.currentTime = Math.min(currentAudio.duration || 0, currentAudio.currentTime + 10);
+      if (currentAudio) {
+        const maxBound = ((practiceMode === "section" || practiceMode === "part") && sectionEndTime > 0)
+          ? sectionEndTime
+          : (currentAudio.duration || 0);
+        currentAudio.currentTime = Math.min(maxBound, currentAudio.currentTime + 10);
+      }
     });
   }
 
@@ -659,7 +1124,7 @@
             <h2>${bannerTitle}</h2>
             <p>${bannerSubtitle}</p>
           </div>
-          <div id="partTranscriptToggleBtn-${p}" style="display:none;">
+          <div id="partTranscriptToggleBtn-${p}" style="${(practiceMode !== 'full' || isSubmitted) ? 'display:block;' : 'display:none;'}">
             <button type="button" class="cl-btn-outline-sm" onclick="window.clV2.toggleTranscriptView(${p})">
               <i class="bi bi-file-text"></i> Show Audio Script
             </button>
@@ -769,29 +1234,73 @@
         html += renderTableCompletion(group);
         break;
       case "note-completion":
+      case "notes-completion":
         html += renderNoteCompletion(group);
         break;
+      case "sentence-completion":
+      case "summary-completion":
+        html += renderSentenceCompletion(group);
+        break;
+      case "form-completion":
+        html += renderFormCompletion(group);
+        break;
+      case "short-answer":
+      case "short-answer-questions":
+        html += renderShortAnswer(group);
+        break;
       case "mcq-one-choice":
+      case "multiple-choice":
+      case "mcq":
+      case "one-choice":
         html += renderMcqOneChoice(group);
         break;
       case "two-choice-checkbox":
+      case "multiple-choice-multiple":
+      case "multiple-choice-three":
         html += renderTwoChoiceCheckbox(group);
         break;
+      case "matching":
       case "matching-drag-drop":
         html += renderMatchingDragDrop(group);
         break;
       case "flow-chart-matching":
+      case "flowchart-matching":
         html += renderFlowChartMatching(group);
         break;
       case "flow-chart-completion":
+      case "flowchart-completion":
         html += renderFlowChartCompletion(group);
         break;
       case "map-labelling":
         html += renderMapLabelling(group);
         break;
+      case "table-and-notes-completion":
+        html += renderTableAndNotesCompletion(group);
+        break;
       default:
         console.warn("Unknown question type:", group.type);
-        html += `<div>${JSON.stringify(group)}</div>`;
+        if (group.fields) {
+          html += renderFormCompletion(group);
+        } else if (group.sentences || group.summaryText) {
+          html += renderSentenceCompletion(group);
+        } else if (group.sections || group.notes) {
+          html += renderNoteCompletion(group);
+        } else if (group.items && group.options) {
+          html += renderMatchingDragDrop(group);
+        } else if (group.items || group.questions) {
+          html += renderMcqOneChoice(group);
+        } else if (group.tableData || group.rows) {
+          html += renderTableCompletion(group);
+        } else if (group.steps) {
+          html += renderFlowChartCompletion(group);
+        } else {
+          const ids = group.ids || group.questionIds || [];
+          html += `<div class="cl-sentence-wrap" style="display:flex; flex-direction:column; gap:12px; margin-top:14px;">`;
+          ids.forEach(id => {
+            html += `<div class="cl-sentence-item" style="line-height:2.3; font-size:15.5px; padding:8px 0; border-bottom:1px dashed var(--line);"><span class="cl-q-badge" id="badge-${id}">${id}</span> <input type="text" class="cl-text-input" data-qid="${id}" value="${escapeAttr(userAnswers[id] || "")}"></div>`;
+          });
+          html += `</div>`;
+        }
     }
 
     card.innerHTML = html;
@@ -800,20 +1309,28 @@
 
   // Type 1: Table Completion
   function renderTableCompletion(group) {
-    if (!group.tableData) return "";
-    const { headers = [], rows = [] } = group.tableData;
+    let headers = [];
+    let rows = [];
+    if (group.tableData) {
+      headers = group.tableData.headers || [];
+      rows = group.tableData.rows || [];
+    } else if (group.rows && Array.isArray(group.rows)) {
+      headers = group.headers || [];
+      rows = group.rows.map(r => Array.isArray(r) ? r : Object.values(r));
+    }
+    if (!rows.length) return "";
 
     let out = `<div class="cl-table-wrap"><table class="cl-table">`;
     if (headers.length) {
       out += `<thead><tr>`;
-      headers.forEach(h => { out += `<th>${replaceBlanks(h)}</th>`; });
+      headers.forEach(h => { out += `<th>${replaceBlanks(String(h || ""))}</th>`; });
       out += `</tr></thead>`;
     }
     out += `<tbody>`;
     rows.forEach(row => {
       out += `<tr>`;
       row.forEach(cell => {
-        out += `<td>${replaceBlanks(cell)}</td>`;
+        out += `<td>${replaceBlanks(String(cell || "")).replace(/\n/g, "<br>")}</td>`;
       });
       out += `</tr>`;
     });
@@ -824,27 +1341,117 @@
   // Type 2: Note Completion
   function renderNoteCompletion(group) {
     let out = `<div class="cl-note-wrap">`;
-    const sections = group.sections || [];
-    sections.forEach(sec => {
-      const heading = sec.title || sec.subheading || "";
-      if (heading) {
-        out += `<div class="cl-group-subheading">${escapeHtml(heading)}</div>`;
-      }
-      if (sec.points && sec.points.length) {
-        out += `<ul class="cl-note-list">`;
-        sec.points.forEach(pt => {
-          out += `<li class="cl-note-item">${replaceBlanks(pt)}</li>`;
+    const sections = group.sections || group.notes || [];
+
+    // Check if sections is directly an array of strings (e.g. ["note 1", "note 2"])
+    if (sections.length && typeof sections[0] === "string") {
+      out += `<ul class="cl-note-list" style="list-style:none; padding:0; display:flex; flex-direction:column; gap:10px; margin-top:10px;">`;
+      sections.forEach(pt => {
+        out += `<li class="cl-note-item" style="line-height:2.3; font-size:15.5px; padding:6px 0; border-bottom:1px dashed var(--line);">${replaceBlanks(pt)}</li>`;
+      });
+      out += `</ul>`;
+    } else {
+      sections.forEach(sec => {
+        if (typeof sec === "string") {
+          out += `<div class="cl-note-item" style="line-height:2.3; font-size:15.5px; padding:6px 0; border-bottom:1px dashed var(--line);">${replaceBlanks(sec)}</div>`;
+          return;
+        }
+        const heading = sec.title || sec.subheading || "";
+        if (heading) {
+          out += `<div class="cl-group-subheading">${escapeHtml(heading)}</div>`;
+        }
+        if (sec.points && sec.points.length) {
+          out += `<ul class="cl-note-list">`;
+          sec.points.forEach(pt => {
+            out += `<li class="cl-note-item">${replaceBlanks(pt)}</li>`;
+          });
+          out += `</ul>`;
+        }
+      });
+    }
+    out += `</div>`;
+    return out;
+  }
+
+  // Type 2b: Sentence & Summary Completion
+  function renderSentenceCompletion(group) {
+    let out = `<div class="cl-sentence-wrap" style="display:flex; flex-direction:column; gap:12px; margin-top:14px;">`;
+    if (group.summaryText) {
+      out += `<div class="cl-summary-text" style="line-height:2.5; font-size:16px; color:var(--navy); padding:10px 0;">${replaceBlanks(group.summaryText)}</div>`;
+    }
+    const sentences = group.sentences || [];
+    if (sentences && sentences.length) {
+      sentences.forEach(sent => {
+        out += `<div class="cl-sentence-item" style="line-height:2.3; font-size:15.5px; color:var(--navy); padding:8px 0; border-bottom:1px dashed var(--line);">${replaceBlanks(sent)}</div>`;
+      });
+    } else if (group.sections && group.sections.length) {
+      group.sections.forEach(sec => {
+        if (sec.subheading || sec.title) {
+          out += `<div class="cl-group-subheading" style="font-weight:700; margin-top:10px;">${escapeHtml(sec.subheading || sec.title)}</div>`;
+        }
+        (sec.points || []).forEach(pt => {
+          out += `<div class="cl-sentence-item" style="line-height:2.3; font-size:15.5px; padding:8px 0; border-bottom:1px dashed var(--line);">${replaceBlanks(pt)}</div>`;
         });
-        out += `</ul>`;
-      }
+      });
+    }
+    out += `</div>`;
+    return out;
+  }
+
+  // Type 2c: Form Completion
+  function renderFormCompletion(group) {
+    if (group.tableData || group.rows) {
+      return renderTableCompletion(group);
+    }
+    const fields = group.fields || [];
+    let out = `<div class="cl-form-wrap" style="display:flex; flex-direction:column; gap:12px; margin-top:14px;">`;
+    fields.forEach(f => {
+      const label = f.label || "";
+      const val = f.value || f.text || "";
+      out += `
+        <div class="cl-form-row" style="display:flex; align-items:center; gap:14px; padding:8px 0; border-bottom:1px dashed var(--line); font-size:15.5px; line-height:2.2;">
+          <span style="font-weight:700; color:var(--navy); min-width:180px;">${escapeHtml(label)}:</span>
+          <span style="flex:1;">${replaceBlanks(val)}</span>
+        </div>
+      `;
     });
     out += `</div>`;
     return out;
   }
 
+  // Type 2d: Short Answer Questions
+  function renderShortAnswer(group) {
+    const questions = group.questions || group.items || [];
+    let out = `<div class="cl-sentence-wrap" style="display:flex; flex-direction:column; gap:14px; margin-top:14px;">`;
+    questions.forEach(q => {
+      const txt = q.text || q.question || "";
+      const hasBlank = /\[(?:blank|drop)\s*:\s*\d+\]/i.test(txt);
+      const content = hasBlank ? replaceBlanks(txt) : `<span class="cl-q-badge" id="badge-${q.id}">${q.id}</span> <span>${escapeHtml(txt)}</span> <input type="text" class="cl-text-input" data-qid="${q.id}" value="${escapeAttr(userAnswers[q.id] || "")}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="margin-left:8px;">`;
+      out += `<div class="cl-sentence-item" style="line-height:2.3; font-size:15.5px; padding:8px 0; border-bottom:1px dashed var(--line);">${content}</div>`;
+    });
+    out += `</div>`;
+    return out;
+  }
+
+  // Type 2e: Table and Notes Completion
+  function renderTableAndNotesCompletion(group) {
+    let out = "";
+    if (group.processes && group.processes.length) {
+      out += `<div class="cl-table-wrap" style="margin-bottom:18px;"><table class="cl-table"><thead><tr><th>Mechanism / Reason</th><th>Description</th></tr></thead><tbody>`;
+      group.processes.forEach(p => {
+        out += `<tr><td><strong>${escapeHtml(p.name)}</strong></td><td>${replaceBlanks(p.detail)}</td></tr>`;
+      });
+      out += `</tbody></table></div>`;
+    }
+    if (group.notes && group.notes.length) {
+      out += renderNoteCompletion({ sections: group.notes });
+    }
+    return out;
+  }
+
   // Type 3: MCQ One Choice
   function renderMcqOneChoice(group) {
-    const items = group.items || [];
+    const items = group.items || group.questions || [];
     let out = `<div class="cl-mcq-group">`;
 
     items.forEach(it => {
@@ -924,7 +1531,7 @@
 
   // Type 5: Matching Drag & Drop
   function renderMatchingDragDrop(group) {
-    const items = group.items || [];
+    const items = group.items || group.questions || [];
     const options = group.options || [];
 
     let out = `
@@ -933,8 +1540,8 @@
     `;
 
     items.forEach(it => {
-      const qid = it.id;
-      const label = it.task || it.statement || it.text || it.label || "";
+      const qid = it.id || it.qid;
+      const label = it.task || it.statement || it.text || it.label || it.question || "";
       const val = userAnswers[qid] || "";
       const displayVal = val ? (getFullOptionForQuestion(qid, val) || val) : "";
 
@@ -1037,29 +1644,37 @@
 
   // Type 8: Map Labelling
   function renderMapLabelling(group) {
-    const mapImg = group.mapImageUrl || group.imageUrl || "";
-    const options = group.options || ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
-    const items = group.items || [];
+    const rawMapImg = group.mapImageUrl || group.imageUrl || group.localMapImageUrl || "/Image/premium-map-1.png";
+    const mapImgSrc = (rawMapImg.startsWith("http") && !rawMapImg.includes("r2.dev")) ? `/api/proxy-image?url=${encodeURIComponent(rawMapImg)}` : rawMapImg;
+    const items = group.items || group.questions || [];
+    let rawOptions = group.options || [];
+    if ((!rawOptions || !rawOptions.length) && items.length && items[0].options) {
+      rawOptions = items[0].options;
+    }
+    if (!rawOptions || !rawOptions.length) {
+      rawOptions = ["A", "B", "C", "D", "E"];
+    }
+    const options = rawOptions.map(op => typeof op === "string" ? op : (op.letter || op.value || String(op)));
 
     let out = `
       <div class="cl-map-grid">
         <div class="cl-map-image-box">
-          <img src="/api/proxy-image?url=${encodeURIComponent(mapImg)}" alt="Map diagram" loading="lazy">
+          <img src="${mapImgSrc}" alt="Map diagram" loading="lazy" onerror="if(this.src!=='/Image/premium-map-1.png')this.src='/Image/premium-map-1.png';">
         </div>
         <div class="cl-map-matrix-box">
           <table class="cl-matrix-table">
             <thead>
               <tr>
                 <th>Location / Item</th>
-                ${options.map(op => `<th>${op}</th>`).join("")}
+                ${options.map(op => `<th>${escapeHtml(op)}</th>`).join("")}
               </tr>
             </thead>
             <tbody>
     `;
 
     items.forEach(it => {
-      const qid = it.id;
-      const label = it.label || it.text || "";
+      const qid = it.id || it.qid;
+      const label = it.label || it.text || it.statement || it.question || "";
       const val = userAnswers[qid] || "";
 
       out += `
@@ -1433,6 +2048,22 @@
     // Switch or init audio for this part
     initPartAudio(partNum);
 
+    // If master audio and full mode, seek to part start
+    if (practiceMode === "full" && bookParam >= 2000) {
+      const testKey = `${bookParam}_${testParam}`;
+      const pRange = recentRealTestPartRanges[testKey]?.[partNum];
+      if (pRange && currentAudio) {
+        const pStart = pRange.start || 0;
+        if (Math.abs(currentAudio.currentTime - pStart) > 10) {
+          try { currentAudio.currentTime = pStart; } catch(e) {}
+        }
+      }
+    } else if ((practiceMode === "part" || practiceMode === "section") && currentAudio) {
+      if (Math.abs(currentAudio.currentTime - sectionStartTime) > 1) {
+        try { currentAudio.currentTime = sectionStartTime; } catch(e) {}
+      }
+    }
+
     if (scrollToTop) {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -1583,12 +2214,13 @@
     // Automatically record student practice in dashboard
     try {
       const u = JSON.parse(localStorage.getItem('user') || 'null');
-      let testTitle = `Cambridge ${bookParam} Listening Test ${testParam}`;
+      const seriesPrefix = (bookParam >= 2000) ? 'Recent Actual' : `Cambridge ${bookParam}`;
+      let testTitle = `${seriesPrefix} Listening Test ${testParam}`;
       if (practiceMode === "part") {
-        testTitle = `Cambridge ${bookParam} Listening Test ${testParam} (Part ${targetPart})`;
+        testTitle = `${seriesPrefix} Listening Test ${testParam} (Part ${targetPart})`;
       } else if (practiceMode === "section" && targetGroup) {
         const qIds = targetGroup.questionIds || targetGroup.ids || [];
-        testTitle = `Cambridge ${bookParam} Listening Test ${testParam} (Q${qIds[0]}-${qIds[qIds.length - 1]})`;
+        testTitle = `${seriesPrefix} Listening Test ${testParam} (Q${qIds[0]}-${qIds[qIds.length - 1]})`;
       }
 
       fetch('/api/student/record-test', {
@@ -1596,7 +2228,7 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: u ? u.email : '',
-          testType: practiceMode === 'full' ? 'Cambridge Listening' : 'Cambridge Listening Practice',
+          testType: (bookParam >= 2000) ? 'Recent Listening Actual Test' : (practiceMode === 'full' ? 'Cambridge Listening' : 'Cambridge Listening Practice'),
           module: 'listening',
           testId: `cambridge-listening-${bookParam}-${testParam}-${practiceMode}`,
           title: testTitle,
@@ -1621,9 +2253,48 @@
   // 8. Review Mode: Inline Highlighting, Explanations & Traps
   // -------------------------------------------------------------
   function applyReviewOnQuestions(officialAnswers, qIdsToReview) {
-    const explanations = testData.explanations || {};
-    const traps = testData.traps || {};
+    const rawExplanations = testData.explanations || {};
+    const rawTraps = testData.traps || {};
     const evidencePhrases = testData.evidencePhrases || {};
+
+    const explanations = {};
+    const traps = {};
+
+    if (Array.isArray(rawExplanations)) {
+      rawExplanations.forEach((item, idx) => {
+        if (!item) return;
+        const qId = item.qNum || item.questionNumber || (idx + 1);
+        if (typeof item === 'string') {
+          explanations[String(qId)] = item;
+        } else {
+          explanations[String(qId)] = item.explanation || item.text || item.expl || "";
+          if (item.trap) traps[String(qId)] = item.trap;
+        }
+      });
+    } else if (typeof rawExplanations === 'object') {
+      Object.keys(rawExplanations).forEach(k => {
+        const item = rawExplanations[k];
+        if (typeof item === 'string') {
+          explanations[k] = item;
+        } else if (item && typeof item === 'object') {
+          explanations[k] = item.explanation || item.text || item.expl || "";
+          if (item.trap) traps[k] = item.trap;
+        }
+      });
+    }
+
+    if (Array.isArray(rawTraps)) {
+      rawTraps.forEach((item, idx) => {
+        if (!item) return;
+        const qId = item.qNum || item.questionNumber || (idx + 1);
+        traps[String(qId)] = typeof item === 'string' ? item : (item.trap || item.text || "");
+      });
+    } else if (typeof rawTraps === 'object') {
+      Object.keys(rawTraps).forEach(k => {
+        const item = rawTraps[k];
+        traps[k] = typeof item === 'string' ? item : (item?.trap || item?.text || "");
+      });
+    }
 
     const qList = qIdsToReview || ((practiceMode === "full") ? Array.from({ length: 40 }, (_, i) => i + 1) : targetQIds);
 
@@ -1877,7 +2548,7 @@
   };
 
   function extractSectionSnippet(part, qIds) {
-    const fullText = (testData.transcripts && (testData.transcripts[String(part)] || testData.transcripts[part])) || "";
+    const fullText = getPartTranscript(testData.transcripts, part);
     if (!fullText) return "";
     if (qIds.length >= 10) return fullText; // Full part
 
@@ -1885,44 +2556,48 @@
     const testCustomEv = customTwoChoiceEvidence[testKey] || {};
     const evidencePhrases = testData.evidencePhrases || {};
 
-    const firstQ = qIds[0];
-    const lastQ = qIds[qIds.length - 1];
+    let earliestFound = Infinity;
+    let latestEvEnd = -1;
 
-    let firstEv = (testCustomEv[String(firstQ)] && testCustomEv[String(firstQ)].text) || evidencePhrases[String(firstQ)] || "";
-    let lastEv = (testCustomEv[String(lastQ)] && testCustomEv[String(lastQ)].text) || evidencePhrases[String(lastQ)] || "";
+    qIds.forEach(q => {
+      const ev = (testCustomEv[String(q)] && testCustomEv[String(q)].text) || evidencePhrases[String(q)] || "";
+      if (!ev) return;
+      const searchKey = String(ev).slice(0, 25).trim();
+      if (!searchKey) return;
+      const firstPos = fullText.indexOf(searchKey);
+      if (firstPos !== -1 && firstPos < earliestFound) {
+        earliestFound = firstPos;
+      }
+      const lastPos = fullText.lastIndexOf(searchKey);
+      if (lastPos !== -1) {
+        const evEnd = lastPos + String(ev).length;
+        if (evEnd > latestEvEnd) latestEvEnd = evEnd;
+      }
+    });
 
     let startIdx = 0;
     let endIdx = fullText.length;
 
-    if (firstEv) {
-      const searchKey = firstEv.slice(0, 25).trim();
-      const found = fullText.indexOf(searchKey);
-      if (found !== -1) {
-        // Look backwards for speaker marker (e.g. WOMAN: or MAN:)
-        const before = fullText.slice(Math.max(0, found - 200), found);
-        const speakerMatch = [...before.matchAll(/([A-Z]{2,}\s*:)/g)];
-        if (speakerMatch.length) {
-          const lastSpeaker = speakerMatch[speakerMatch.length - 1];
-          startIdx = Math.max(0, found - 200 + lastSpeaker.index);
-        } else {
-          startIdx = Math.max(0, found - 50);
-        }
+    if (earliestFound < Infinity) {
+      // Look backwards for speaker marker (e.g. WOMAN: or MAN:)
+      const before = fullText.slice(Math.max(0, earliestFound - 200), earliestFound);
+      const speakerMatch = [...before.matchAll(/([A-Z]{2,}\s*:)/g)];
+      if (speakerMatch.length) {
+        const lastSpeaker = speakerMatch[speakerMatch.length - 1];
+        startIdx = Math.max(0, earliestFound - 200 + lastSpeaker.index);
+      } else {
+        startIdx = Math.max(0, earliestFound - 50);
       }
     }
 
-    if (lastEv) {
-      const searchKey = lastEv.slice(0, 25).trim();
-      const found = fullText.lastIndexOf(searchKey);
-      if (found !== -1) {
-        const evEnd = found + lastEv.length;
-        // Look forward for next sentence ending or speaker marker
-        const after = fullText.slice(evEnd, Math.min(fullText.length, evEnd + 200));
-        const nextSentence = after.match(/\.\s+[A-Z]/);
-        if (nextSentence) {
-          endIdx = evEnd + nextSentence.index + 1;
-        } else {
-          endIdx = Math.min(fullText.length, evEnd + 80);
-        }
+    if (latestEvEnd > -1 && latestEvEnd > startIdx) {
+      // Look forward for next sentence ending or speaker marker
+      const after = fullText.slice(latestEvEnd, Math.min(fullText.length, latestEvEnd + 200));
+      const nextSentence = after.match(/\.\s+[A-Z]/);
+      if (nextSentence) {
+        endIdx = latestEvEnd + nextSentence.index + 1;
+      } else {
+        endIdx = Math.min(fullText.length, latestEvEnd + 80);
       }
     }
 
@@ -1946,7 +2621,7 @@
       if (practiceMode === "section") {
         rawText = extractSectionSnippet(p, targetQIds);
       } else {
-        rawText = transcripts[String(p)] || transcripts[p] || "";
+        rawText = getPartTranscript(transcripts, p);
       }
 
       if (!rawText) {
@@ -2022,8 +2697,26 @@
     const transcriptCol = document.getElementById(`part-transcript-col-${partNum}`);
     if (!transcriptCol) return;
 
+    if (!transcriptCol.innerHTML.trim() || transcriptCol.innerHTML.includes("No audio script")) {
+      buildTranscriptsWithEvidence();
+      initSplitResizers();
+    }
+
+    const grid = document.getElementById(`part-content-grid-${partNum}`);
+    const resizer = document.getElementById(`split-resizer-${partNum}`);
     const isVisible = (transcriptCol.style.display !== "none");
-    transcriptCol.style.display = isVisible ? "none" : "block";
+
+    if (isVisible) {
+      transcriptCol.style.display = "none";
+      if (resizer) resizer.style.display = "none";
+      if (grid) grid.classList.remove("cl-script-open");
+      document.body.classList.remove("has-script-open");
+    } else {
+      transcriptCol.style.display = "block";
+      if (resizer) resizer.style.display = "flex";
+      if (grid) grid.classList.add("cl-script-open");
+      document.body.classList.add("has-script-open");
+    }
 
     const btn = document.querySelector(`#partTranscriptToggleBtn-${partNum} button`);
     if (btn) {

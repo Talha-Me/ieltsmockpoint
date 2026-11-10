@@ -710,24 +710,41 @@ body {
 /* MAP LABELLING RADIO MATRIX */
 .cl-map-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(320px, 1.2fr) minmax(280px, 1fr);
   gap: 24px;
   align-items: start;
   margin-top: 16px;
 }
 
+@media (max-width: 900px) {
+  .cl-map-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+}
+
 .cl-map-image-box {
   background: #fff;
   border: 1.5px solid #cbd5e1;
-  border-radius: 6px;
-  padding: 10px;
+  border-radius: 8px;
+  padding: 12px;
   text-align: center;
+  box-shadow: 0 4px 14px rgba(11,43,82,0.05);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 }
 
 .cl-map-image-box img {
   max-width: 100%;
+  max-height: 380px;
+  width: auto;
   height: auto;
-  border-radius: 4px;
+  object-fit: contain;
+  border-radius: 6px;
+  margin: 0 auto;
+  display: block;
 }
 
 .cl-matrix-table {
@@ -950,17 +967,20 @@ body {
  * POST-SUBMIT REVIEW & AUDIO SCRIPT SPLIT-SCREEN LAYOUT
  * (SCRIPT ON THE LEFT, QUESTIONS ON THE RIGHT)
  * ======================================================== */
-.cl-review-mode .cl-main-wrap {
+.cl-review-mode .cl-main-wrap,
+body.has-script-open .cl-main-wrap {
   width: 100%;
   max-width: 100%;
   padding: 16px 36px 120px 36px;
 }
 
-.cl-review-mode .cl-bottom-bar {
+.cl-review-mode .cl-bottom-bar,
+body.has-script-open .cl-bottom-bar {
   padding: 8px 36px;
 }
 
-.cl-review-mode .cl-part-content-grid {
+.cl-review-mode .cl-part-content-grid,
+.cl-part-content-grid.cl-script-open {
   display: flex !important;
   align-items: stretch;
   width: 100%;
@@ -969,7 +989,8 @@ body {
 }
 
 /* LEFT COLUMN: AUDIO TRANSCRIPT */
-.cl-review-mode .cl-transcript-col {
+.cl-review-mode .cl-transcript-col,
+.cl-part-content-grid.cl-script-open .cl-transcript-col {
   display: block !important;
   width: calc(50% - 10px);
   flex: none;
@@ -1000,7 +1021,8 @@ body {
   margin: 0 2px;
 }
 
-.cl-review-mode .cl-split-resizer {
+.cl-review-mode .cl-split-resizer,
+.cl-part-content-grid.cl-script-open .cl-split-resizer {
   display: flex !important;
 }
 
@@ -1055,7 +1077,8 @@ body.cl-is-resizing * {
 }
 
 /* RIGHT COLUMN: QUESTIONS WITH ANSWERS & EXPLANATIONS */
-.cl-review-mode .cl-questions-col {
+.cl-review-mode .cl-questions-col,
+.cl-part-content-grid.cl-script-open .cl-questions-col {
   width: calc(50% - 10px);
   flex: none;
   min-width: 20%;

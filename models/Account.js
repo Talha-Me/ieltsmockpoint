@@ -11,7 +11,14 @@ const accountSchema = new mongoose.Schema(
     provider: { type: String, enum: ["local", "google"], default: "local" },
     // Forgot password: token er sudhu hash save hoy, asol token shudhu email e jay
     resetTokenHash: { type: String, default: null, index: true },
-    resetTokenExpires: { type: Date, default: null }
+    resetTokenExpires: { type: Date, default: null },
+    // Subscription & Payment Readiness (Phase 3 / Aamarpay & Paddle)
+    role: { type: String, enum: ["student", "admin"], default: "student" },
+    isPremium: { type: Boolean, default: false },
+    plan: { type: String, enum: ["free", "1m", "3m", "6m", "premium"], default: "free" },
+    premiumExpiresAt: { type: Date, default: null },
+    paymentProvider: { type: String, default: null },
+    lastTransactionId: { type: String, default: null }
   },
   { timestamps: true }
 );

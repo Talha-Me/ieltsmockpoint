@@ -46,17 +46,13 @@ function isCurrentSessionLocked(bookNum, testNum, taskMode) {
   if (appPhase === 2 && user.isLoggedIn) return false;
   if (appPhase === 3 && user.isPremium) return false;
 
-  const freeTestsAllowed = appSettings.freeFullMocksCount !== undefined ? Number(appSettings.freeFullMocksCount) : 1;
   const freePartsAllowed = appSettings.freePartsPerTest !== undefined ? Number(appSettings.freePartsPerTest) : 1;
 
   if (taskMode === 1 || taskMode === 2) {
-    // Single task practice mode
+    // Single task (Part) practice mode is gated in Phase 2/3
     if (Number(taskMode) > freePartsAllowed) return true;
-  } else {
-    // Full test mode
-    if (Number(testNum) > freeTestsAllowed) return true;
   }
-
+  // Full Cambridge Writing Test mode stays free across Phase 1/2/3
   return false;
 }
 

@@ -1730,6 +1730,100 @@ router.get("/pracDataWriting", async (req, res) => {
 // ==========================================
 // SYSTEM SETTINGS & ACCESS CONTROL PHASES
 // ==========================================
+function requireAdminAuth(req, res, next) {
+  if (req.session && req.session.isAdmin === true) {
+    return next();
+  }
+  return res.status(401).json({ success: false, message: "Unauthorized admin session. Please log in again." });
+}
+
+router.post("/admin/login", (req, res) => {
+  const username = String(req.body.username || "").trim();
+  const password = String(req.body.password || "");
+  const primaryUser = process.env.ADMIN_USER || "Talha";
+  const primaryPass = process.env.ADMIN_PASS || "Talha123@#";
+  const secondaryUser = process.env.UKA_ADMIN_USER || "UKA";
+  const secondaryPass = process.env.UKA_ADMIN_PASS || "@abcxyz634#";
+
+  if ((username === primaryUser && password === primaryPass) || (username === secondaryUser && password === secondaryPass)) {
+    req.session.isAdmin = true;
+    req.session.adminUser = username;
+    return req.session.save((err) => {
+      if (err) return res.status(500).json({ success: false, message: "Failed to create admin session" });
+      return res.json({ success: true, adminUser: username });
+    });
+  }
+  return res.status(401).json({ success: false, message: "Invalid username or password!" });
+});
+
+router.post("/admin/logout", (req, res) => {
+  if (req.session) {
+    delete req.session.isAdmin;
+    delete req.session.adminUser;
+    return req.session.save(() => res.json({ success: true }));
+  }
+  return res.json({ success: true });
+});
+
+router.get("/admin/session", (req, res) => {
+  const authenticated = Boolean(req.session && req.session.isAdmin === true);
+  return res.json({
+    success: true,
+    authenticated,
+    adminUser: authenticated ? (req.session.adminUser || "admin") : null
+  });
+});
+
+router.get("/admin/accounts", requireAdminAuth, async (req, res) => {
+  try {
+    const q = String(req.query.search || "").trim();
+    const filter = q
+      ? {
+          $or: [
+            { name: { $regex: q, $options: "i" } },
+            { email: { $regex: q, $options: "i" } }
+          ]
+        }
+      : {};
+    const accounts = await Account.find(filter)
+      .select("name email provider role isPremium plan premiumExpiresAt paymentProvider lastTransactionId createdAt")
+      .sort({ createdAt: -1 })
+      .limit(100)
+      .lean();
+    return res.json({ success: true, accounts });
+  } catch (err) {
+    console.error("Error fetching admin accounts:", err);
+    return res.status(500).json({ success: false, message: "Failed to fetch accounts" });
+  }
+});
+
+router.post("/admin/accounts/:id/premium", requireAdminAuth, async (req, res) => {
+  try {
+    const { isPremium, plan, days } = req.body;
+    const enable = Boolean(isPremium);
+    let expiresAt = null;
+    if (enable && Number(days) > 0) {
+      expiresAt = new Date(Date.now() + Number(days) * 24 * 60 * 60 * 1000);
+    }
+    const update = {
+      isPremium: enable,
+      plan: enable ? (plan || "premium") : "free",
+      premiumExpiresAt: enable ? expiresAt : null,
+      paymentProvider: enable ? "admin_manual" : null
+    };
+    const updated = await Account.findByIdAndUpdate(
+      req.params.id,
+      { $set: update },
+      { new: true }
+    ).select("name email provider role isPremium plan premiumExpiresAt paymentProvider createdAt");
+    if (!updated) return res.status(404).json({ success: false, message: "Account not found" });
+    return res.json({ success: true, account: updated });
+  } catch (err) {
+    console.error("Error updating account premium status:", err);
+    return res.status(500).json({ success: false, message: "Failed to update account premium status" });
+  }
+});
+
 router.get("/system-settings", async (req, res) => {
   try {
     let settings = await SystemSettings.findOne({ key: "global_config" });
@@ -1740,13 +1834,28 @@ router.get("/system-settings", async (req, res) => {
         freeAcademicMocksCount: 1,
         freePremiumMocksCount: 1,
         freeFullMocksCount: 1,
+        freeSpeakingTestsCount: 1,
+        freeSpeakingPartsCount: 1,
+        freeRecentTestsCount: 2,
         freePartsPerTest: 1,
         freeQuestionTypesPerTest: 0,
         freePracticeHubSets: 2,
         freeAiWritingPerDay: 1,
         loginReminderEnabled: true,
+        loginReminderMode: "every_time",
         cambridgeAlwaysFree: true
       });
+    } else {
+      let dirty = false;
+      if (settings.freeRecentTestsCount === undefined) {
+        settings.freeRecentTestsCount = 2;
+        dirty = true;
+      }
+      if (!settings.loginReminderMode) {
+        settings.loginReminderMode = "every_time";
+        dirty = true;
+      }
+      if (dirty) await settings.save();
     }
     return res.json({ success: true, settings });
   } catch (err) {
@@ -1755,18 +1864,23 @@ router.get("/system-settings", async (req, res) => {
   }
 });
 
-router.post("/admin/system-settings", async (req, res) => {
+router.post("/admin/system-settings", requireAdminAuth, async (req, res) => {
   try {
     const {
       currentPhase,
       freeAcademicMocksCount,
       freePremiumMocksCount,
       freeFullMocksCount,
+      freeSpeakingTestsCount,
+      freeSpeakingPartsCount,
+      freeRecentTestsCount,
       freePartsPerTest,
       freeQuestionTypesPerTest,
       freePracticeHubSets,
       freeAiWritingPerDay,
-      loginReminderEnabled
+      loginReminderEnabled,
+      loginReminderMode,
+      cambridgeAlwaysFree
     } = req.body;
 
     const parseNum = (val, fallback) => {
@@ -1776,7 +1890,8 @@ router.post("/admin/system-settings", async (req, res) => {
 
     const updateFields = {
       updatedAt: new Date(),
-      cambridgeAlwaysFree: true
+      updatedBy: req.session?.adminUser || "admin",
+      cambridgeAlwaysFree: cambridgeAlwaysFree === undefined ? true : Boolean(cambridgeAlwaysFree)
     };
 
     if (currentPhase !== undefined) updateFields.currentPhase = parseNum(currentPhase, 1);
@@ -1786,11 +1901,17 @@ router.post("/admin/system-settings", async (req, res) => {
       updateFields.freeFullMocksCount = parseNum(freeFullMocksCount, 1);
       if (freeAcademicMocksCount === undefined) updateFields.freeAcademicMocksCount = parseNum(freeFullMocksCount, 1);
     }
+    if (freeSpeakingTestsCount !== undefined) updateFields.freeSpeakingTestsCount = parseNum(freeSpeakingTestsCount, 1);
+    if (freeSpeakingPartsCount !== undefined) updateFields.freeSpeakingPartsCount = parseNum(freeSpeakingPartsCount, 1);
+    if (freeRecentTestsCount !== undefined) updateFields.freeRecentTestsCount = parseNum(freeRecentTestsCount, 2);
     if (freePartsPerTest !== undefined) updateFields.freePartsPerTest = parseNum(freePartsPerTest, 1);
     if (freeQuestionTypesPerTest !== undefined) updateFields.freeQuestionTypesPerTest = parseNum(freeQuestionTypesPerTest, 0);
     if (freePracticeHubSets !== undefined) updateFields.freePracticeHubSets = parseNum(freePracticeHubSets, 2);
     if (freeAiWritingPerDay !== undefined) updateFields.freeAiWritingPerDay = parseNum(freeAiWritingPerDay, 1);
     if (loginReminderEnabled !== undefined) updateFields.loginReminderEnabled = !!loginReminderEnabled;
+    if (loginReminderMode !== undefined && ["every_time", "once_per_session"].includes(loginReminderMode)) {
+      updateFields.loginReminderMode = loginReminderMode;
+    }
 
     const updated = await SystemSettings.findOneAndUpdate(
       { key: "global_config" },

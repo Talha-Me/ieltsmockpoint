@@ -434,7 +434,7 @@ h1, h2, h3, h4, .brand-font {
       </div>
       <div>
         <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill fw-bold">
-          <i class="fa fa-circle-check me-1"></i> Cambridge Tests: Always 100% Free
+          <i class="fa fa-circle-check me-1"></i> Cambridge Full Tests: Always 100% Free (Parts/Q-Types follow quotas)
         </span>
       </div>
     </div>
@@ -518,8 +518,28 @@ h1, h2, h3, h4, .brand-font {
           <input type="number" id="cfgHubSets" class="form-control form-control-sm" min="0" max="20" value="2">
         </div>
         <div class="col-sm-6 col-md-4 col-xl-2">
+          <label class="form-label small fw-bold text-muted">Recent Listening Tests</label>
+          <input type="number" id="cfgRecentTests" class="form-control form-control-sm" min="0" max="20" value="2">
+        </div>
+        <div class="col-sm-6 col-md-4 col-xl-2">
+          <label class="form-label small fw-bold text-muted">Speaking Free Tests</label>
+          <input type="number" id="cfgSpeakingTests" class="form-control form-control-sm" min="0" max="20" value="1">
+        </div>
+        <div class="col-sm-6 col-md-4 col-xl-2">
+          <label class="form-label small fw-bold text-muted">Speaking Free Parts</label>
+          <input type="number" id="cfgSpeakingParts" class="form-control form-control-sm" min="0" max="3" value="1">
+        </div>
+        <div class="col-sm-6 col-md-4 col-xl-2">
           <label class="form-label small fw-bold text-muted">Daily AI Writing Eval</label>
           <input type="number" id="cfgAiWriting" class="form-control form-control-sm" min="0" max="10" value="1">
+        </div>
+        <div class="col-sm-6 col-md-4 col-xl-2">
+          <label class="form-label small fw-bold text-muted">Phase 1 Sign-In Popup</label>
+          <select id="cfgLoginReminderBehavior" class="form-select form-select-sm">
+            <option value="every_time">On: Every Click</option>
+            <option value="once_per_session">On: Once / Session</option>
+            <option value="off">Off (Disabled)</option>
+          </select>
         </div>
         <div class="col-sm-6 col-md-4 col-xl-2 d-flex align-items-end">
           <button type="button" class="btn btn-primary btn-sm w-100 py-2 fw-bold rounded-pill" onclick="saveSystemSettings()" id="saveSettingsBtn">
@@ -624,45 +644,156 @@ h1, h2, h3, h4, .brand-font {
     </div>
 
   </div>
+
+  <!-- Candidate Accounts & Premium Subscription Manager -->
+  <div class="phase-control-panel mt-4" id="candidatesSection">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+      <div>
+        <h4 class="fw-bold mb-1" style="color: var(--navy);"><i class="fa fa-users-gear text-primary me-2"></i> Candidate Accounts &amp; Premium Passes</h4>
+        <p class="text-muted mb-0 small">Monitor registered candidates and manually grant or revoke Premium access before/after payment gateway activation.</p>
+      </div>
+      <div class="d-flex gap-2">
+        <input type="text" id="accSearchInput" class="form-control form-control-sm" style="width: 240px;" placeholder="Search name or email...">
+        <button type="button" class="btn btn-outline-primary btn-sm fw-bold rounded-pill px-3" onclick="loadCandidateAccounts()">
+          <i class="fa fa-rotate-right me-1"></i> Refresh
+        </button>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0" style="font-size: 0.88rem;">
+        <thead class="table-light">
+          <tr>
+            <th>Candidate</th>
+            <th>Email</th>
+            <th>Provider</th>
+            <th>Status / Plan</th>
+            <th>Expires</th>
+            <th class="text-end">Manual Pass Control</th>
+          </tr>
+        </thead>
+        <tbody id="candidatesTableBody">
+          <tr><td colspan="6" class="text-muted text-center py-3">Authenticate to load candidate accounts...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-// --- Authentication Logic ---
-const AUTH_KEY = 'ielts_admin_authenticated';
-const CORRECT_USER = 'Talha';
-const CORRECT_PASS = 'Talha123@#';
-
-function checkAuthStatus() {
-  const isAuth = sessionStorage.getItem(AUTH_KEY);
+// --- Server-Side Session Authentication Logic ---
+async function checkAuthStatus() {
   const overlay = document.getElementById('authOverlay');
-  if (isAuth === 'true') {
-    overlay.style.display = 'none';
-    loadMetrics();
-  } else {
-    overlay.style.display = 'flex';
-  }
+  try {
+    const res = await fetch('/api/admin/session', { credentials: 'same-origin' });
+    const data = await res.json();
+    if (data && data.authenticated) {
+      overlay.style.display = 'none';
+      loadMetrics();
+      loadSystemSettings();
+      loadCandidateAccounts();
+      return;
+    }
+  } catch (e) {}
+  overlay.style.display = 'flex';
 }
 
-function handleAdminLogin(e) {
+async function handleAdminLogin(e) {
   e.preventDefault();
-  const user = document.getElementById('loginUsername').value.trim();
-  const pass = document.getElementById('loginPassword').value;
+  const username = document.getElementById('loginUsername').value.trim();
+  const password = document.getElementById('loginPassword').value;
   const alertBox = document.getElementById('authAlert');
 
-  if ((user === CORRECT_USER && pass === CORRECT_PASS) || (user === "UKA" && pass === "@abcxyz634#")) {
-    sessionStorage.setItem(AUTH_KEY, 'true');
-    document.getElementById('authOverlay').style.display = 'none';
-    alertBox.classList.add('d-none');
-    loadMetrics();
-  } else {
+  try {
+    const res = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify({ username, password })
+    });
+    const data = await res.json();
+    if (res.ok && data && data.success) {
+      document.getElementById('authOverlay').style.display = 'none';
+      alertBox.classList.add('d-none');
+      loadMetrics();
+      loadSystemSettings();
+      loadCandidateAccounts();
+    } else {
+      alertBox.classList.remove('d-none');
+    }
+  } catch (err) {
     alertBox.classList.remove('d-none');
   }
 }
 
-function adminLogout() {
-  sessionStorage.removeItem(AUTH_KEY);
+async function adminLogout() {
+  try {
+    await fetch('/api/admin/logout', { method: 'POST', credentials: 'same-origin' });
+  } catch (e) {}
   location.reload();
+}
+
+async function loadCandidateAccounts() {
+  const tbody = document.getElementById('candidatesTableBody');
+  if (!tbody) return;
+  const search = document.getElementById('accSearchInput')?.value?.trim() || '';
+  try {
+    const url = search ? '/api/admin/accounts?search=' + encodeURIComponent(search) : '/api/admin/accounts';
+    const res = await fetch(url, { credentials: 'same-origin' });
+    if (res.status === 401) {
+      tbody.innerHTML = '<tr><td colspan="6" class="text-muted text-center py-3">Please sign in to view candidate accounts.</td></tr>';
+      return;
+    }
+    const data = await res.json();
+    const accounts = (data && data.accounts) || [];
+    if (!accounts.length) {
+      tbody.innerHTML = '<tr><td colspan="6" class="text-muted text-center py-3">No registered candidates found.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = accounts.map(acc => {
+      const now = new Date();
+      const activePrem = acc.isPremium && (!acc.premiumExpiresAt || new Date(acc.premiumExpiresAt) > now);
+      const badge = activePrem
+        ? '<span class="badge bg-success-subtle text-success fw-bold">Premium (' + (acc.plan || 'premium') + ')</span>'
+        : '<span class="badge bg-secondary-subtle text-secondary">Free</span>';
+      const expText = acc.premiumExpiresAt ? new Date(acc.premiumExpiresAt).toLocaleDateString() : (activePrem ? 'Lifetime / Manual' : '—');
+      return `<tr>
+        <td class="fw-bold">${String(acc.name || '').replace(/[<>&]/g, '')}</td>
+        <td>${String(acc.email || '').replace(/[<>&]/g, '')}</td>
+        <td><span class="badge bg-light text-dark border">${acc.provider || 'local'}</span></td>
+        <td>${badge}</td>
+        <td>${expText}</td>
+        <td class="text-end">
+          <div class="btn-group btn-group-sm">
+            <button type="button" class="btn btn-outline-success" onclick="setAccountPremium('${acc._id}', true, '1m', 30)">+1M</button>
+            <button type="button" class="btn btn-outline-primary" onclick="setAccountPremium('${acc._id}', true, '3m', 90)">+3M</button>
+            <button type="button" class="btn btn-outline-danger" onclick="setAccountPremium('${acc._id}', false, 'free', 0)">Revoke</button>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+  } catch (err) {
+    tbody.innerHTML = '<tr><td colspan="6" class="text-danger text-center py-3">Failed to load accounts.</td></tr>';
+  }
+}
+
+async function setAccountPremium(id, isPremium, plan, days) {
+  try {
+    const res = await fetch('/api/admin/accounts/' + encodeURIComponent(id) + '/premium', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify({ isPremium, plan, days })
+    });
+    const data = await res.json();
+    if (data && data.success) {
+      loadCandidateAccounts();
+    } else {
+      alert(data.message || 'Could not update account');
+    }
+  } catch (err) {
+    alert('Error: ' + err.message);
+  }
 }
 
 async function loadMetrics() {
@@ -708,7 +839,15 @@ async function loadSystemSettings() {
       if (document.getElementById('cfgPartsPerTest')) document.getElementById('cfgPartsPerTest').value = s.freePartsPerTest ?? 1;
       if (document.getElementById('cfgQuestionTypes')) document.getElementById('cfgQuestionTypes').value = s.freeQuestionTypesPerTest ?? 0;
       if (document.getElementById('cfgHubSets')) document.getElementById('cfgHubSets').value = s.freePracticeHubSets ?? 2;
+      if (document.getElementById('cfgRecentTests')) document.getElementById('cfgRecentTests').value = s.freeRecentTestsCount ?? 2;
+      if (document.getElementById('cfgSpeakingTests')) document.getElementById('cfgSpeakingTests').value = s.freeSpeakingTestsCount ?? 1;
+      if (document.getElementById('cfgSpeakingParts')) document.getElementById('cfgSpeakingParts').value = s.freeSpeakingPartsCount ?? 1;
       if (document.getElementById('cfgAiWriting')) document.getElementById('cfgAiWriting').value = s.freeAiWritingPerDay ?? 1;
+      const reminderSelect = document.getElementById('cfgLoginReminderBehavior');
+      if (reminderSelect) {
+        if (s.loginReminderEnabled === false) reminderSelect.value = 'off';
+        else reminderSelect.value = s.loginReminderMode === 'once_per_session' ? 'once_per_session' : 'every_time';
+      }
     }
   } catch(e) {
     console.error('Failed to load system settings:', e);
@@ -722,13 +861,18 @@ async function saveSystemSettings() {
 
   const payload = {
     currentPhase: selectedPhase,
-    freeAcademicMocksCount: Number(document.getElementById('cfgAcademicMocks')?.value || 1),
-    freePremiumMocksCount: Number(document.getElementById('cfgPremiumMocks')?.value || 1),
-    freeFullMocksCount: Number(document.getElementById('cfgAcademicMocks')?.value || 1),
-    freePartsPerTest: Number(document.getElementById('cfgPartsPerTest')?.value || 1),
-    freeQuestionTypesPerTest: Number(document.getElementById('cfgQuestionTypes')?.value || 0),
-    freePracticeHubSets: Number(document.getElementById('cfgHubSets')?.value || 2),
-    freeAiWritingPerDay: Number(document.getElementById('cfgAiWriting')?.value || 1),
+    freeAcademicMocksCount: Number(document.getElementById('cfgAcademicMocks')?.value ?? 1),
+    freePremiumMocksCount: Number(document.getElementById('cfgPremiumMocks')?.value ?? 1),
+    freeFullMocksCount: Number(document.getElementById('cfgAcademicMocks')?.value ?? 1),
+    freePartsPerTest: Number(document.getElementById('cfgPartsPerTest')?.value ?? 1),
+    freeQuestionTypesPerTest: Number(document.getElementById('cfgQuestionTypes')?.value ?? 0),
+    freePracticeHubSets: Number(document.getElementById('cfgHubSets')?.value ?? 2),
+    freeRecentTestsCount: Number(document.getElementById('cfgRecentTests')?.value ?? 2),
+    freeSpeakingTestsCount: Number(document.getElementById('cfgSpeakingTests')?.value ?? 1),
+    freeSpeakingPartsCount: Number(document.getElementById('cfgSpeakingParts')?.value ?? 1),
+    freeAiWritingPerDay: Number(document.getElementById('cfgAiWriting')?.value ?? 1),
+    loginReminderEnabled: (document.getElementById('cfgLoginReminderBehavior')?.value || 'every_time') !== 'off',
+    loginReminderMode: (document.getElementById('cfgLoginReminderBehavior')?.value === 'once_per_session') ? 'once_per_session' : 'every_time',
     cambridgeAlwaysFree: true
   };
 
@@ -736,8 +880,14 @@ async function saveSystemSettings() {
     const res = await fetch('/api/admin/system-settings', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
       body: JSON.stringify(payload)
     });
+    if (res.status === 401) {
+      alert('Admin session expired. Please sign in again.');
+      location.reload();
+      return;
+    }
     const data = await res.json();
     if (data && data.success) {
       if (alertBox) {
@@ -753,8 +903,13 @@ async function saveSystemSettings() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', checkAuthStatus);
-document.addEventListener("DOMContentLoaded", loadSystemSettings);
+document.addEventListener('DOMContentLoaded', () => {
+  checkAuthStatus();
+  document.getElementById('accSearchInput')?.addEventListener('input', () => {
+    clearTimeout(window.__accSearchTimer);
+    window.__accSearchTimer = setTimeout(loadCandidateAccounts, 300);
+  });
+});
 </script>
 </body>
 </html>

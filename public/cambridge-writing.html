@@ -1447,6 +1447,8 @@ function getUserAccessState() {
 }
 
 function isTestLocked(testNo) {
+  // Cambridge Full Writing Tests are always free; individual Part practice is controlled by isPartLocked()
+  if (appSettings.cambridgeAlwaysFree !== false) return false;
   if (appPhase === 1) return false;
   const user = getUserAccessState();
   if (appPhase === 2 && user.isLoggedIn) return false;

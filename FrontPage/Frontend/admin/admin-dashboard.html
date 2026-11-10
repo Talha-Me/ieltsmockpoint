@@ -353,8 +353,14 @@ async function saveUkaSettings() {
     const res = await fetch('/api/admin/system-settings', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
       body: JSON.stringify(payload)
     });
+    if (res.status === 401) {
+      sessionStorage.removeItem('isAdmin');
+      window.location.href = 'admin-login.html';
+      return;
+    }
     const data = await res.json();
     if (data && data.success) {
       if (alertEl) {
@@ -421,7 +427,8 @@ function logout(){
     </div>`;
   document.body.appendChild(box);
 
-  document.getElementById("yesLogout").onclick = () => {
+  document.getElementById("yesLogout").onclick = async () => {
+    try { await fetch('/api/admin/logout', { method: 'POST', credentials: 'same-origin' }); } catch(e) {}
     sessionStorage.removeItem("isAdmin");
     window.location.href="admin-login.html";
   };

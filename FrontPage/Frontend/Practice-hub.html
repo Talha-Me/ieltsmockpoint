@@ -1370,7 +1370,14 @@ async function loadCounts(){
 }
 async function fetchFresh(){
   try{
-    const r=await fetch(API_URL,{cache:'no-store',headers:{Accept:'application/json'}});
+    const [r, rList] = await Promise.all([
+      fetch(API_URL,{cache:'no-store',headers:{Accept:'application/json'}}),
+      fetch('/api/listening-exercises?type=Note-Completion',{cache:'no-store',headers:{Accept:'application/json'}}).catch(()=>null)
+    ]);
+    if(rList && rList.ok){
+      const lj = await rList.json().catch(()=>null);
+      if(lj && lj.categoryCounts) window.__listeningCategoryCounts = lj.categoryCounts;
+    }
     if(!r.ok)throw new Error(r.status);
     const raw=await r.json();
     try{sessionStorage.setItem('mp_counts',JSON.stringify(raw));}catch(e){}
@@ -1399,7 +1406,7 @@ function build(){
     const items=[...m.items];
     const extras=Object.keys(DATA[m.id]||{}).filter(t=>!known.has(t));
     if(extras.length){items.push({g:'More question types'});extras.forEach(t=>items.push({t,n:prettify(t),i:'',d:'More free IELTS practice for this question type.'}));}
-    let g=`<div class="mod-h reveal"><div><h2>${m.title}</h2><p>${m.d}</p></div><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">${m.id==='reading'?'<a class="btn btn-red" href="/reading-exercises">Practice by Question Type →</a>':''}${m.id==='listening'?'<a class="btn btn-red" href="/listening-exercises">Practice by Question Type →</a>':''}${m.id==='writing'?'<a class="btn btn-red" href="/writing-exercises">Practice by Question Type →</a>':''}${m.id==='speaking'?'<a class="btn btn-red" href="/speaking.html#speaking-tests">Practice by Part →</a>':''}<a class="btn btn-outline" href="${m.all}">Only ${m.name} tests →</a></div></div>`;
+    let g=`<div class="mod-h reveal"><div><h2>${m.title}</h2><p>${m.d}</p></div><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">${m.id==='reading'?'<a class="btn btn-red" href="/reading-exercises">Practice by Question Type →</a>':''}${m.id==='listening'?'<a class="btn btn-red" href="/listening-exercises">Practice by Question Type →</a><a class="btn btn-outline" href="/recent-listening-tests">Recent Actual Tests (20) →</a>':''}${m.id==='writing'?'<a class="btn btn-red" href="/writing-exercises">Practice by Question Type →</a>':''}${m.id==='speaking'?'<a class="btn btn-red" href="/speaking.html#speaking-tests">Practice by Part →</a>':''}<a class="btn btn-outline" href="${m.all}">Only ${m.name} tests →</a></div></div>`;
     if(m.id==='reading'){
       g+=`
         <div class="reading-feature-banner reveal">
@@ -1426,7 +1433,7 @@ function build(){
           <div class="rf-content">
             <span class="rf-badge">NEW • EXAM MODE</span>
             <h3>Practice IELTS Listening by Question Type</h3>
-            <p>Master every listening question type with authentic audio tracks from Cambridge 12-21 & Practice Bank, featuring interactive player, smart options placement, instant evidence locators, and detailed explanations.</p>
+            <p>Master every listening question type with authentic audio tracks from Cambridge 12–21, Recent Actual Tests 1–20 & Practice Bank, featuring interactive player, smart options placement, instant evidence locators, and detailed explanations.</p>
             <div class="rf-chips">
               <span>✓ Note & Form Completion</span>
               <span>✓ Table Completion</span>
@@ -1500,9 +1507,10 @@ function build(){
         : isWriting
           ? `/writing-exercises?type=${encodeURIComponent(o.t)}`
           : `${exercisesBaseUrl}?type=${encodeURIComponent(o.t)}`;
-      const setsCount = isReading ? '100+ exercises' : (isListening ? '70+ exercises' : (isSpeaking ? '5 tests' : (isWriting ? `${list.length} set${list.length===1?'':'s'}` : `${list.length} set${list.length===1?'':'s'}`)));
+      const listeningCount = window.__listeningCategoryCounts && (window.__listeningCategoryCounts[o.t] ?? window.__listeningCategoryCounts[o.t.replace('Multiple-Choice', 'Multiple Choice')]);
+      const setsCount = isReading ? '100+ exercises' : (isListening ? `${listeningCount || 85}+ exercises` : (isSpeaking ? '5 tests' : (isWriting ? `${list.length} set${list.length===1?'':'s'}` : `${list.length} set${list.length===1?'':'s'}`)));
       totalTypes += 1;
-      totalSets += (isReading ? 100 : (isListening ? 70 : list.length));
+      totalSets += (isReading ? 100 : (isListening ? (listeningCount || 85) : list.length));
       const body = isExercisesMode
         ? `<div class="reading-card-cta">
             <a href="${exercisesHref}" class="btn-card-reading">

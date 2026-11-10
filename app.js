@@ -1906,6 +1906,8 @@ app.post(["/api/save-cambridge-reading", "/admin/api/cambridge-reading/save"], a
               "questionGroups.instruction": 1,
               "questionGroups.heading": 1,
               "questionGroups.title": 1,
+              "questionGroups.imageUrl": 1,
+              "questionGroups.mapImageUrl": 1,
               "questionGroups.questionIds": 1,
               "questionGroups.ids": 1,
               "questionGroups.questions": 1
@@ -1920,16 +1922,26 @@ app.post(["/api/save-cambridge-reading", "/admin/api/cambridge-reading/save"], a
           }).sort({ pracNumber: 1 }).toArray()
         ]);
 
-        function getCategory(t, inst, title) {
-          const s = ((t || '') + ' ' + (inst || '') + ' ' + (title || '')).toLowerCase();
-          if (s.includes('form') || s.includes('form-completion')) return 'Form-Completion';
-          if (s.includes('table') || s.includes('table-completion')) return 'Table-Completion';
-          if (s.includes('flow-chart') || s.includes('flowchart')) return 'Flow-chart Completion';
-          if (s.includes('note') || s.includes('note-completion')) return 'Note-Completion';
-          if (s.includes('two-choice') || s.includes('two choices') || s.includes('choose two')) return 'Multiple Choice (Two Choices)';
-          if (s.includes('map') || s.includes('plan') || s.includes('diagram') || s.includes('label')) return 'Map-Labelling';
-          if (s.includes('matching') || s.includes('match')) return 'Matching';
-          if (s.includes('mcq') || s.includes('choice') || s.includes('choose')) return 'Multiple Choice';
+        function getCategory(g) {
+          const t = String(g.type || '').toLowerCase();
+          const inst = String(g.instruction || '').toLowerCase();
+          const title = String(g.title || '').toLowerCase();
+          const heading = String(g.heading || '').toLowerCase();
+          const hasImg = !!(g.imageUrl || g.mapImageUrl);
+
+          if ((hasImg || t.includes('map') || /\b(map|diagram|floor plan)\b/i.test(inst + ' ' + title + ' ' + heading) || inst.includes('complete the labels')) && !t.includes('table')) {
+            return 'Map-Labelling';
+          }
+          if (t.includes('flow-chart') || t.includes('flowchart') || inst.includes('flow-chart') || inst.includes('flowchart')) {
+            return 'Flow-chart Completion';
+          }
+          if (t.includes('two-choice') || t.includes('multiple-choice-multiple') || t.includes('multiple-choice-three') || /\bchoose (two|three)\b/i.test(inst)) {
+            return 'Multiple Choice (Two Choices)';
+          }
+          if (t.includes('form') || /\bform\b/i.test(inst)) return 'Form-Completion';
+          if (t.includes('table')) return 'Table-Completion';
+          if (t.includes('matching')) return 'Matching';
+          if (t.includes('mcq') || t.includes('multiple-choice') || t.includes('one-choice')) return 'Multiple Choice';
           return 'Note-Completion';
         }
 
@@ -1945,8 +1957,9 @@ app.post(["/api/save-cambridge-reading", "/admin/api/cambridge-reading/save"], a
         };
 
         allCambridgeTests.forEach(test => {
+          const isRecentActual = Number(test.book) >= 2000;
           (test.questionGroups || []).forEach(g => {
-            const cat = getCategory(g.type, g.instruction, g.title);
+            const cat = getCategory(g);
             if (!categoryMap[cat]) categoryMap[cat] = [];
             const rawIds = g.questionIds || g.ids || (g.questions ? g.questions.map(q => q.id) : []);
             const qIds = rawIds.map(Number).filter(n => !isNaN(n)).sort((a,b)=>a-b);
@@ -1959,15 +1972,17 @@ app.post(["/api/save-cambridge-reading", "/admin/api/cambridge-reading/save"], a
 
             categoryMap[cat].push({
               exerciseNumber: exNum,
-              sourceType: 'cambridge',
-              sourceLabel: 'Cambridge Official',
-              badgeText: `CAMBRIDGE ${test.book} • TEST ${test.testNo}`,
+              sourceType: isRecentActual ? 'recent_actual' : 'cambridge',
+              sourceLabel: isRecentActual ? 'Recent Actual' : 'Cambridge Official',
+              badgeText: isRecentActual ? `RECENT ACTUAL • TEST ${test.testNo}` : `CAMBRIDGE ${test.book} • TEST ${test.testNo}`,
               title: `Exercise ${exNum}`,
               book: test.book,
               testNo: test.testNo,
               part: pNum,
               partTitle: `Listening Part ${pNum}`,
-              source: `from Cambridge IELTS ${test.book} Academic Listening Test ${test.testNo}`,
+              source: isRecentActual
+                ? `from Recent Actual Listening Test ${test.testNo}${g.heading ? ` — ${g.heading}` : ''}`
+                : `from Cambridge IELTS ${test.book} Academic Listening Test ${test.testNo}`,
               qRange: range,
               questionsCount: qIds.length,
               link: `/cambridge-listening-v2?book=${test.book}&test=${test.testNo}&part=${pNum}&section=${qStart}-${qEnd}`
@@ -1976,7 +1991,7 @@ app.post(["/api/save-cambridge-reading", "/admin/api/cambridge-reading/save"], a
         });
 
         allBankDocs.forEach(doc => {
-          const cat = getCategory(doc.type, '', '');
+          const cat = getCategory({ type: doc.type, instruction: '', title: '', heading: '' });
           if (!categoryMap[cat]) categoryMap[cat] = [];
           const num = parseInt(String(doc.pracNumber).replace(/\D/g, ''), 10) || 1;
           const qCount = (doc.listening && Array.isArray(doc.listening.questions)) ? doc.listening.questions.length : 10;
@@ -2019,10 +2034,13 @@ app.post(["/api/save-cambridge-reading", "/admin/api/cambridge-reading/save"], a
 
       let exercises = categoryMap[matchedCat] || [];
       const cambridgeCount = exercises.filter(x => x.sourceType === 'cambridge').length;
+      const recentCount = exercises.filter(x => x.sourceType === 'recent_actual').length;
       const bankCount = exercises.filter(x => x.sourceType === 'practice_bank').length;
 
       if (sourceFilter === 'cambridge') {
         exercises = exercises.filter(x => x.sourceType === 'cambridge');
+      } else if (sourceFilter === 'recent_actual') {
+        exercises = exercises.filter(x => x.sourceType === 'recent_actual');
       } else if (sourceFilter === 'practice_bank') {
         exercises = exercises.filter(x => x.sourceType === 'practice_bank');
       }
@@ -2033,6 +2051,7 @@ app.post(["/api/save-cambridge-reading", "/admin/api/cambridge-reading/save"], a
         typeName: matchedCat,
         totalExercises: exercises.length,
         cambridgeCount,
+        recentCount,
         bankCount,
         categoryCounts: allCounts,
         exercises
@@ -2045,6 +2064,11 @@ app.post(["/api/save-cambridge-reading", "/admin/api/cambridge-reading/save"], a
 
   app.get(["/listening-exercises", "/listening-exercises.html"], (req, res) => {
     res.sendFile(path.join(__dirname, "public", "listening-exercises.html"));
+  });
+
+  // Recent IELTS Listening Real Tests
+  app.get(["/recent-listening-tests", "/recent-listening-tests.html", "/recent-listening-real-tests"], (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "recent-listening-tests.html"));
   });
 
   // ==========================================

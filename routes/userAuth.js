@@ -9,12 +9,21 @@ const router = express.Router();
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-const publicUser = (a) => ({
-  id: a._id,
-  name: a.name,
-  email: a.email,
-  avatar: a.avatar || ""
-});
+const publicUser = (a) => {
+  const now = new Date();
+  const notExpired = !a.premiumExpiresAt || new Date(a.premiumExpiresAt) > now;
+  const activePremium = Boolean(a.isPremium && notExpired);
+  return {
+    id: a._id,
+    name: a.name,
+    email: a.email,
+    avatar: a.avatar || "",
+    role: a.role || "student",
+    plan: activePremium ? (a.plan || "premium") : "free",
+    isPremium: activePremium,
+    premiumExpiresAt: a.premiumExpiresAt || null
+  };
+};
 
 // session e user rekhe dei (app.js e express-session already ache)
 function startSession(req, account) {
@@ -260,9 +269,19 @@ router.post("/logout", (req, res) => {
   req.session.destroy(() => res.json({ success: true }));
 });
 
-router.get("/auth/me", (req, res) => {
-  if (req.session && req.session.user) return res.json({ success: true, user: req.session.user });
-  return res.status(401).json({ success: false });
+router.get("/auth/me", async (req, res) => {
+  try {
+    if (!req.session || !req.session.user) return res.status(401).json({ success: false });
+    const uid = req.session.user.id || req.session.user._id;
+    if (uid) {
+      const account = await Account.findById(uid).select("-password -resetTokenHash -resetTokenExpires");
+      if (!account) return res.status(401).json({ success: false });
+      req.session.user = publicUser(account);
+    }
+    return res.json({ success: true, user: req.session.user });
+  } catch (err) {
+    return res.json({ success: true, user: req.session.user });
+  }
 });
 
 module.exports = router;
