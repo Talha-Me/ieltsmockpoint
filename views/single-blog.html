@@ -867,24 +867,24 @@ function updateSEO(b, slug) {
 function renderAutoSEOHub(b) {
   var cat = String(b.category || '').toLowerCase();
   var moduleText = 'Academic & General Training Exam';
-  var targetLink = '/mock-test';
+  var targetLink = '/mocks.html';
   var targetLinkText = 'Take Full Free Mock Test';
 
   if (cat.indexOf('reading') !== -1) {
     moduleText = 'IELTS Reading (Academic & General)';
-    targetLink = '/cambridge-reading-test';
+    targetLink = '/cambridge-reading.html';
     targetLinkText = 'Start Free IELTS Reading Practice';
   } else if (cat.indexOf('listening') !== -1) {
     moduleText = 'IELTS Listening Module';
-    targetLink = '/cambridge-listening-test';
+    targetLink = '/cambridge-listening.html';
     targetLinkText = 'Practice Cambridge Listening Audio';
   } else if (cat.indexOf('writing') !== -1) {
     moduleText = 'IELTS Writing Task 1 & Task 2';
-    targetLink = '/cambridge-writing-test';
+    targetLink = '/cambridge-writing.html';
     targetLinkText = 'Practice Writing Tests Online';
   } else if (cat.indexOf('speaking') !== -1) {
     moduleText = 'IELTS Speaking Fluency';
-    targetLink = '/speaking';
+    targetLink = '/speaking.html';
     targetLinkText = 'Practice IELTS Speaking Mocks';
   }
 

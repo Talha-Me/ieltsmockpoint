@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 440" width="760" height="440" role="img" aria-label="Two pie charts comparing electricity generation sources in Germany in 2005 and 2025">
+  <rect width="760" height="440" fill="#ffffff" rx="10"/>
+  <text x="380" y="34" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#0b2b52">Primary Sources of Electricity Generation in Germany (2005 vs. 2025)</text>
+  <text x="380" y="54" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#64748b">Percentage of total national electricity output</text>
+
+  <!-- Pie 1: 2005 (center 200,210, r=105) -->
+  <!-- Coal 48%, Nuclear 26%, Gas 12%, Wind/Solar 10%, Hydro 4% -->
+  <text x="200" y="90" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#0b2b52">2005</text>
+  <g transform="translate(200,210)">
+    <!-- Coal 48% (0 to 172.8 deg) -->
+    <path d="M0,0 L0,-105 A105,105 0 0,1 13.16,104.17 Z" fill="#1e293b"/>
+    <!-- Nuclear 26% (172.8 to 266.4 deg) -->
+    <path d="M0,0 L13.16,104.17 A105,105 0 0,1 -104.79,6.59 Z" fill="#e0202d"/>
+    <!-- Gas 12% (266.4 to 309.6 deg) -->
+    <path d="M0,0 L-104.79,6.59 A105,105 0 0,1 -80.90,-66.93 Z" fill="#f59e0b"/>
+    <!-- Wind &amp; Solar 10% (309.6 to 345.6 deg) -->
+    <path d="M0,0 L-80.90,-66.93 A105,105 0 0,1 -26.11,-101.70 Z" fill="#0d9488"/>
+    <!-- Hydro 4% (345.6 to 360 deg) -->
+    <path d="M0,0 L-26.11,-101.70 A105,105 0 0,1 0,-105 Z" fill="#2563eb"/>
+    <text x="54" y="-8" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" font-weight="700" fill="#ffffff">48%</text>
+    <text x="-48" y="48" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" font-weight="700" fill="#ffffff">26%</text>
+    <text x="-66" y="-22" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="700" fill="#ffffff">12%</text>
+    <text x="-42" y="-68" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="700" fill="#ffffff">10%</text>
+    <text x="-12" y="-86" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="10" font-weight="700" fill="#ffffff">4%</text>
+  </g>
+
+  <!-- Pie 2: 2025 (center 560,210, r=105) -->
+  <!-- Wind &amp; Solar 52%, Gas 20%, Coal 22%, Hydro 6%, Nuclear 0% -->
+  <text x="560" y="90" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#0b2b52">2025</text>
+  <g transform="translate(560,210)">
+    <!-- Wind &amp; Solar 52% (0 to 187.2 deg) -->
+    <path d="M0,0 L0,-105 A105,105 0 1,1 -13.16,104.17 Z" fill="#0d9488"/>
+    <!-- Coal 22% (187.2 to 266.4 deg) -->
+    <path d="M0,0 L-13.16,104.17 A105,105 0 0,1 -104.79,6.59 Z" fill="#1e293b"/>
+    <!-- Gas 20% (266.4 to 338.4 deg) -->
+    <path d="M0,0 L-104.79,6.59 A105,105 0 0,1 -38.66,-97.62 Z" fill="#f59e0b"/>
+    <!-- Hydro 6% (338.4 to 360 deg) -->
+    <path d="M0,0 L-38.66,-97.62 A105,105 0 0,1 0,-105 Z" fill="#2563eb"/>
+    <text x="56" y="4" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" font-weight="700" fill="#ffffff">52%</text>
+    <text x="-48" y="48" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" font-weight="700" fill="#ffffff">22%</text>
+    <text x="-58" y="-34" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" font-weight="700" fill="#ffffff">20%</text>
+    <text x="-16" y="-82" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="10" font-weight="700" fill="#ffffff">6%</text>
+  </g>
+
+  <!-- Legend -->
+  <g transform="translate(85, 368)" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="600" fill="#0f172a">
+    <rect x="0" y="0" width="14" height="14" fill="#1e293b" rx="2"/><text x="20" y="12">Coal</text>
+    <rect x="95" y="0" width="14" height="14" fill="#e0202d" rx="2"/><text x="115" y="12">Nuclear (0% in 2025)</text>
+    <rect x="275" y="0" width="14" height="14" fill="#f59e0b" rx="2"/><text x="295" y="12">Natural Gas</text>
+    <rect x="405" y="0" width="14" height="14" fill="#0d9488" rx="2"/><text x="425" y="12">Wind &amp; Solar</text>
+    <rect x="540" y="0" width="14" height="14" fill="#2563eb" rx="2"/><text x="560" y="12">Hydro</text>
+  </g>
+</svg>

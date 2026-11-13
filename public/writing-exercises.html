@@ -5,7 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>IELTS Academic Writing Practice Exercises | IELTS Mockpoint</title>
   <meta name="description" content="Practice IELTS Academic Writing questions by task type with authentic tasks taken from Cambridge IELTS tests in the modern exam interface.">
-  <link rel="canonical" href="https://www.ieltsmockpoint.com/writing-exercises">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+  <link rel="canonical" href="https://ieltsmockpoint.com/writing-exercises">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ieltsmockpoint.com/writing-exercises">
+  <meta property="og:title" content="IELTS Academic Writing Practice Exercises | IELTS Mockpoint">
+  <meta property="og:description" content="Practice IELTS Academic Writing Task 1 charts, maps &amp; process diagrams plus Task 2 essays in a real computer-delivered interface with timer and word count.">
+  <meta property="og:image" content="https://ieltsmockpoint.com/Brandlogo.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="IELTS Academic Writing Practice Exercises | IELTS Mockpoint">
+  <meta name="twitter:description" content="Practice IELTS Academic Writing Task 1 &amp; Task 2 by question type with exam timer and live word counter.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "IELTS Academic Writing Practice Exercises",
+    "url": "https://ieltsmockpoint.com/writing-exercises",
+    "description": "Practice IELTS Academic Writing Task 1 and Task 2 questions by task type with exam timer and live word count.",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "IELTS Mockpoint",
+      "url": "https://ieltsmockpoint.com/"
+    }
+  }
+  </script>
   <link rel="icon" type="image/png" href="/mpfavicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -254,9 +277,11 @@
     .sb-actions { margin-top: auto; display: grid; gap: 10px; }
 
     /* Main Content */
-    main {
+    main,
+    main.wrap {
       flex: 1;
-      padding: 34px 0 80px;
+      padding-top: 34px;
+      padding-bottom: 80px;
       position: relative;
       z-index: 1;
     }
@@ -722,8 +747,10 @@
     }
 
     @media (max-width: 768px) {
-      main {
-        padding: 24px 0 60px;
+      main,
+      main.wrap {
+        padding-top: 24px;
+        padding-bottom: 60px;
       }
       .wrap {
         padding: 0 18px;
@@ -1879,7 +1906,6 @@
             ` : ''}
             <span class="bignum">${numStr}</span>
             <span class="${pillClass}">${escapeHtml(pillText)}</span>
-            ${ex.image ? `<img class="card-thumb" src="${ex.image}" alt="Task 1 Visual" loading="lazy" onerror="this.style.display='none'">` : ''}
             <h3>${escapeHtml(titleText)}</h3>
             <div class="sub-source">${escapeHtml(sourceText)}</div>
             <div class="chips">

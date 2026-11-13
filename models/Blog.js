@@ -17,7 +17,7 @@ const blogSchema = new mongoose.Schema(
     category: {
       type: String,
       required: true,
-      enum: ["Tips & Tricks", "Vocabulary", "Writing Band 8", "Listening Strategy", "Speaking Secrets", "Exam Updates"],
+      enum: ["Tips & Tricks", "Reading Strategy", "Listening Strategy", "Writing Band 8", "Speaking Secrets", "Vocabulary", "Exam Updates"],
       default: "Tips & Tricks",
     },
     thumbnail: {
@@ -27,7 +27,7 @@ const blogSchema = new mongoose.Schema(
     excerpt: {
       type: String,
       trim: true,
-      maxlength: 220,
+      maxlength: 350,
     },
     content: {
       type: String, // Rich HTML containing structured <h2>, <h3>, <p>, <blockquote>, <img>, etc.

@@ -374,10 +374,19 @@ button.btn:disabled {
 
 /* ===== RESPONSIVE FIX ===== */
 @media (max-width: 720px) {
-  header { height: 80px; padding: 12px; }
-  .container { padding: 12px; }
-  .controls { flex-direction: column; align-items: stretch; }
+  header { height: 68px; padding: 8px 12px; gap: 8px; }
+  header .left { gap: 8px; min-width: 0; }
+  header img { width: 112px; height: 42px; flex-shrink: 0; }
+  header h1 { font-size: 14px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  header .timer { padding: 6px 8px; font-size: 12px; white-space: nowrap; flex-shrink: 0; }
+  .spacer { height: 78px; }
+  .container { padding: 10px; margin: 10px auto; }
+  .card { padding: 14px; overflow-x: auto; }
+  .card img, .card table, .card svg { max-width: 100%; }
+  .card table { display: block; overflow-x: auto; }
+  .controls { flex-direction: column; align-items: stretch; gap: 10px; }
   .progress-row { flex-direction: column; align-items: flex-start; gap: 8px; }
-  header h1 { font-size: 16px; }
+  .certainty label { margin-bottom: 6px; }
+  textarea, input[type="text"], select { max-width: 100%; box-sizing: border-box; }
   .result-area { justify-content: center; }
 }

@@ -599,34 +599,120 @@ body {
   color: #ffffff;
 }
 
-/* Drop Blank Box in Summary */
+/* Drop Blank Box in Summary (Authentic CD-IELTS Inline Slot) */
 .cr-drop-blank {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  border: 1.5px dashed #94a3b8;
-  background: #ffffff;
-  padding: 3px 8px;
-  border-radius: 6px;
-  min-width: 140px;
-  min-height: 32px;
-  margin: 0 4px;
-  cursor: pointer;
-  transition: all 0.15s;
   vertical-align: middle;
+  height: 27px;
+  background: #f8fafc;
+  border: 1.5px dashed #3b82f6;
+  border-radius: 5px;
+  margin: 1px 3px;
+  padding: 0;
+  box-sizing: border-box;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  position: relative;
+  font-size: 0.86rem;
+  overflow: hidden;
+}
+
+.cr-drop-blank:hover {
+  border-color: #1d4ed8;
+  background: #eff6ff;
+}
+
+.cr-drop-blank.dragover {
+  border-color: #2563eb;
+  background: #dbeafe;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.22);
+  transform: scale(1.02);
+}
+
+.cr-drop-badge,
+.cr-drop-blank .cr-qnum-badge {
+  background: #eff6ff;
+  color: #2563eb;
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+  padding: 0 6px;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px dashed #93c5fd;
+  border-top-left-radius: 3.5px;
+  border-bottom-left-radius: 3.5px;
+  user-select: none;
+  flex: none;
+}
+
+.cr-drop-slot,
+.cr-drop-blank .cr-blank-text {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.cr-drop-placeholder {
+  color: #64748b;
+  font-size: 0.8rem;
+  font-style: italic;
+  font-weight: 500;
+  user-select: none;
 }
 
 .cr-drop-blank.filled {
   border-style: solid;
-  border-color: var(--blue);
+  border-color: #2563eb;
   background: #eff6ff;
-  color: var(--navy);
-  font-weight: 700;
+  color: #1e3a8a;
+  box-shadow: 0 1px 2px rgba(37, 99, 235, 0.1);
 }
 
-.cr-drop-blank.dragover {
-  border-color: var(--blue);
-  background: #dbeafe;
+.cr-drop-blank.filled .cr-drop-badge,
+.cr-drop-blank.filled .cr-qnum-badge {
+  background: #2563eb;
+  color: #ffffff;
+  border-right-style: solid;
+  border-right-color: #1d4ed8;
+}
+
+.cr-drop-letter {
+  color: #1d4ed8;
+  margin-right: 3px;
+  font-weight: 800;
+}
+
+.cr-drop-val {
+  max-width: 170px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cr-clear-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 11px;
+  padding: 0 5px;
+  height: 100%;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s;
+}
+
+.cr-clear-btn:hover {
+  color: #ef4444;
 }
 
 /* ==========================================================================
@@ -891,11 +977,62 @@ body {
   font-weight: 700;
 }
 
+/* Review Box, Status Row & Tags */
+.cr-q-review-box {
+  margin-top: 10px;
+  width: 100%;
+}
+
+.cr-review-status-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 0.88rem;
+  margin-bottom: 8px;
+}
+
+.cr-status-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 0.75rem;
+  padding: 3px 9px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.cr-status-tag.correct {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+.cr-status-tag.wrong {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+.cr-official-ans {
+  color: #15803d;
+  font-size: 0.86rem;
+}
+
+.cr-user-ans {
+  color: #b91c1c;
+  font-size: 0.86rem;
+}
+
 /* Review Action Buttons: Explain More & Trap */
 .cr-review-btn-group {
   display: flex;
   gap: 8px;
   margin-top: 8px;
+  flex-wrap: wrap;
 }
 
 .cr-explain-btn {
@@ -1126,6 +1263,18 @@ body {
   .cr-main-wrap {
     flex-direction: column;
     height: calc(100vh - 128px);
+    height: calc(100dvh - 128px);
+  }
+  .cr-passage-col table,
+  .cr-questions-col table {
+    display: block;
+    overflow-x: auto;
+    max-width: 100%;
+  }
+  .cr-passage-col img,
+  .cr-questions-col img {
+    max-width: 100%;
+    height: auto;
   }
   .cr-passage-col {
     width: 100% !important;
@@ -1199,47 +1348,157 @@ body {
 .cr-inline-q {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
   vertical-align: middle;
-  margin: 2px 4px;
+  height: 27px;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 5px;
+  margin: 1px 3px;
+  padding: 0;
+  box-sizing: border-box;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.cr-inline-q:focus-within {
+  border-color: #2563eb;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+}
+
+.cr-inline-badge,
+.cr-inline-q .cr-qnum-badge {
+  background: #f1f5f9;
+  color: #334155;
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+  padding: 0 6px;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid #cbd5e1;
+  border-top-left-radius: 3.5px;
+  border-bottom-left-radius: 3.5px;
+  user-select: none;
+  flex: none;
+  transition: all 0.15s ease;
+}
+
+.cr-inline-q:focus-within .cr-inline-badge,
+.cr-inline-q:focus-within .cr-qnum-badge {
+  background: #eff6ff;
+  color: #2563eb;
+  border-right-color: #bfdbfe;
 }
 
 .cr-blank-input,
-.cr-input-blank {
-  height: 30px;
-  border: 1.5px solid #94a3b8;
-  border-radius: 4px;
-  padding: 2px 8px;
-  font-size: 0.92rem;
-  outline: none;
-  min-width: 120px;
-  max-width: 220px;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  background: #ffffff;
-  color: var(--navy);
+.cr-input-blank,
+.cr-inline-q .cr-blank-input {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  height: 100% !important;
+  padding: 0 6px !important;
+  font-family: inherit;
+  font-size: 0.88rem !important;
   font-weight: 600;
+  color: #0f172a !important;
+  width: 90px !important;
+  min-width: 60px !important;
+  max-width: 130px !important;
+  border-top-right-radius: 3.5px;
+  border-bottom-right-radius: 3.5px;
+  margin: 0 !important;
 }
 
-.cr-blank-input:focus,
-.cr-input-blank:focus {
-  border-color: var(--blue);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+/* Post-submission Highlight States */
+.cr-inline-q.rv-correct,
+.cr-drop-blank.rv-correct {
+  border-color: #16a34a !important;
+  background: #f0fdf4 !important;
+}
+.cr-inline-q.rv-correct .cr-inline-badge,
+.cr-inline-q.rv-correct .cr-qnum-badge,
+.cr-drop-blank.rv-correct .cr-drop-badge,
+.cr-drop-blank.rv-correct .cr-qnum-badge {
+  background: #16a34a !important;
+  color: #ffffff !important;
+  border-right-color: #15803d !important;
+}
+
+.cr-inline-q.rv-wrong,
+.cr-drop-blank.rv-wrong {
+  border-color: #dc2626 !important;
+  background: #fef2f2 !important;
+}
+.cr-inline-q.rv-wrong .cr-inline-badge,
+.cr-inline-q.rv-wrong .cr-qnum-badge,
+.cr-drop-blank.rv-wrong .cr-drop-badge,
+.cr-drop-blank.rv-wrong .cr-qnum-badge {
+  background: #dc2626 !important;
+  color: #ffffff !important;
+  border-right-color: #b91c1c !important;
+}
+
+/* Dedicated Group Review Deck below passage summaries / notes / tables */
+.cr-group-review-deck {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.cr-review-q-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.cr-review-q-pill {
+  font-family: 'Sora', sans-serif;
+  font-weight: 800;
+  font-size: 0.8rem;
+  background: #0f172a;
+  color: #ffffff;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+/* Summary & Notes typography and line heights */
+.cr-summary-wrap,
+.cr-notes-wrap {
+  line-height: 2.3 !important;
+  font-size: 0.95rem;
+}
+
+.cr-summary-wrap p {
+  line-height: 2.3 !important;
+  margin-bottom: 14px;
 }
 
 /* Heading Drag & Drop in Left Passage Column */
 .cr-heading-dropzone {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 10px;
   background: #f8fafc;
   border: 1.5px dashed #94a3b8;
-  border-radius: 6px;
-  padding: 8px 12px;
+  border-radius: 8px;
+  padding: 10px 14px;
   margin-top: 14px;
-  margin-bottom: 8px;
-  min-height: 42px;
+  margin-bottom: 12px;
+  min-height: 44px;
   transition: all 0.2s ease;
   cursor: pointer;
+}
+
+.cr-heading-dropzone .cr-q-review-box {
+  width: 100%;
 }
 
 .cr-heading-dropzone:hover {
@@ -1567,3 +1826,55 @@ body {
   color: #e0202d;
 }
 
+
+
+/* Mobile Bottom Question Number Bar Fix (max-width: 768px) */
+@media (max-width: 768px) {
+  .cl-bottom-bar,
+  .cr-bottom-bar {
+    min-height: auto !important;
+    padding: 6px 8px !important;
+  }
+  .cl-bottom-nav-container,
+  .cr-bottom-nav-container {
+    gap: 8px !important;
+  }
+  .cl-part-cards-row,
+  .cr-passage-cards-row {
+    gap: 8px !important;
+    justify-content: flex-start !important;
+    overflow-x: auto !important;
+    padding: 2px 0 !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  .cl-part-card,
+  .cr-passage-card {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    min-width: max-content !important;
+    padding: 5px 8px !important;
+  }
+  .cl-part-card-title,
+  .cr-passage-card-title {
+    font-size: 11px !important;
+    margin-bottom: 4px !important;
+    text-align: left !important;
+    white-space: nowrap !important;
+  }
+  .cl-part-card-nums,
+  .cr-passage-card-nums {
+    gap: 3px !important;
+    justify-content: flex-start !important;
+    flex-wrap: nowrap !important;
+  }
+  .cl-q-btn,
+  .cr-q-dot {
+    flex: 0 0 auto !important;
+    width: 24px !important;
+    min-width: 24px !important;
+    max-width: 24px !important;
+    height: 24px !important;
+    font-size: 11px !important;
+    padding: 0 !important;
+  }
+}

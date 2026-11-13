@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 360" width="760" height="360" role="img" aria-label="Table showing percentage of consumer spending across five categories in four countries in 2024">
+  <rect width="760" height="360" fill="#ffffff" rx="10"/>
+  <text x="380" y="34" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#0b2b52">Household Consumer Spending by Category in Four Countries (2024)</text>
+  <text x="380" y="54" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#64748b">Percentage (%) of total annual household expenditure</text>
+
+  <!-- Table header -->
+  <rect x="40" y="76" width="680" height="44" fill="#0b2b52" rx="6"/>
+  <g font-family="Inter,Arial,sans-serif" font-size="13" font-weight="700" fill="#ffffff">
+    <text x="62" y="103">Country</text>
+    <text x="235" y="103" text-anchor="middle">Food &amp; Drink</text>
+    <text x="355" y="103" text-anchor="middle">Housing</text>
+    <text x="465" y="103" text-anchor="middle">Transport</text>
+    <text x="570" y="103" text-anchor="middle">Education</text>
+    <text x="670" y="103" text-anchor="middle">Leisure</text>
+  </g>
+
+  <!-- Rows -->
+  <g font-family="Inter,Arial,sans-serif" font-size="13.5" fill="#0f172a">
+    <rect x="40" y="122" width="680" height="48" fill="#f8fafc"/>
+    <text x="62" y="151" font-weight="700">Japan</text>
+    <text x="235" y="151" text-anchor="middle">24.2%</text>
+    <text x="355" y="151" text-anchor="middle">26.5%</text>
+    <text x="465" y="151" text-anchor="middle">14.8%</text>
+    <text x="570" y="151" text-anchor="middle">12.0%</text>
+    <text x="670" y="151" text-anchor="middle">22.5%</text>
+
+    <rect x="40" y="170" width="680" height="48" fill="#ffffff"/>
+    <text x="62" y="199" font-weight="700">United Kingdom</text>
+    <text x="235" y="199" text-anchor="middle">16.4%</text>
+    <text x="355" y="199" text-anchor="middle">34.0%</text>
+    <text x="465" y="199" text-anchor="middle">18.2%</text>
+    <text x="570" y="199" text-anchor="middle">9.4%</text>
+    <text x="670" y="199" text-anchor="middle">22.0%</text>
+
+    <rect x="40" y="218" width="680" height="48" fill="#f8fafc"/>
+    <text x="62" y="247" font-weight="700">Brazil</text>
+    <text x="235" y="247" text-anchor="middle">31.5%</text>
+    <text x="355" y="247" text-anchor="middle">22.0%</text>
+    <text x="465" y="247" text-anchor="middle">19.5%</text>
+    <text x="570" y="247" text-anchor="middle">15.0%</text>
+    <text x="670" y="247" text-anchor="middle">12.0%</text>
+
+    <rect x="40" y="266" width="680" height="48" fill="#ffffff"/>
+    <text x="62" y="295" font-weight="700">Malaysia</text>
+    <text x="235" y="295" text-anchor="middle">28.0%</text>
+    <text x="355" y="295" text-anchor="middle">21.5%</text>
+    <text x="465" y="295" text-anchor="middle">17.5%</text>
+    <text x="570" y="295" text-anchor="middle">18.5%</text>
+    <text x="670" y="295" text-anchor="middle">14.5%</text>
+  </g>
+
+  <rect x="40" y="76" width="680" height="238" fill="none" stroke="#cbd5e1" stroke-width="1.2" rx="6"/>
+</svg>

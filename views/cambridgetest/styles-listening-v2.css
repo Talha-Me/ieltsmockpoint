@@ -1388,7 +1388,17 @@ body.cl-is-resizing * {
 
 @media (max-width: 960px) {
   .cl-main-wrap {
-    padding: 16px 16px 120px 16px;
+    padding: 16px 14px 120px 14px;
+    overflow-x: hidden;
+  }
+  .cl-main-wrap table {
+    display: block;
+    overflow-x: auto;
+    max-width: 100%;
+  }
+  .cl-main-wrap img {
+    max-width: 100%;
+    height: auto;
   }
   .cl-bottom-bar {
     padding: 8px 12px;
@@ -1489,3 +1499,48 @@ body.cl-is-resizing * {
   color: #e0202d;
 }
 
+
+
+/* Mobile Bottom Question Number Bar Fix (max-width: 768px) */
+@media (max-width: 768px) {
+  .cl-bottom-bar {
+    min-height: auto !important;
+    padding: 6px 8px !important;
+  }
+  .cl-bottom-nav-container {
+    gap: 8px !important;
+  }
+  .cl-part-cards-row {
+    gap: 8px !important;
+    justify-content: flex-start !important;
+    overflow-x: auto !important;
+    padding: 2px 0 !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  .cl-part-card {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    min-width: max-content !important;
+    padding: 5px 8px !important;
+  }
+  .cl-part-card-title {
+    font-size: 11px !important;
+    margin-bottom: 4px !important;
+    text-align: left !important;
+    white-space: nowrap !important;
+  }
+  .cl-part-card-nums {
+    gap: 3px !important;
+    justify-content: flex-start !important;
+    flex-wrap: nowrap !important;
+  }
+  .cl-q-btn {
+    flex: 0 0 auto !important;
+    width: 24px !important;
+    min-width: 24px !important;
+    max-width: 24px !important;
+    height: 24px !important;
+    font-size: 11px !important;
+    padding: 0 !important;
+  }
+}

@@ -51,6 +51,10 @@
     const user = getUserAccessState();
     if (appPhase === 2 && user.isLoggedIn) return false;
     if (appPhase === 3 && user.isPremium) return false;
+    if (bookParam >= 2000) {
+      const freeRecent = appSettings.freeRecentTestsCount !== undefined ? Number(appSettings.freeRecentTestsCount) : 2;
+      return testParam > freeRecent;
+    }
     if (practiceMode === 'full') return false;
     const allowed = appSettings.freeQuestionTypesPerTest !== undefined ? Number(appSettings.freeQuestionTypesPerTest) : 0;
     return gIdx >= allowed;
@@ -61,6 +65,12 @@
     const user = getUserAccessState();
     if (appPhase === 2 && user.isLoggedIn) return false;
     if (appPhase === 3 && user.isPremium) return false;
+
+    if (bookParam >= 2000) {
+      // Recent Actual Tests (1-5+): first N tests (full + passage + question type) are free; remaining are locked
+      const freeRecent = appSettings.freeRecentTestsCount !== undefined ? Number(appSettings.freeRecentTestsCount) : 2;
+      return testParam > freeRecent;
+    }
 
     // Cambridge Reading Full Test is ALWAYS FREE; only Passage & Question-Type practice are gated
     if (practiceMode === 'part') {
@@ -94,8 +104,8 @@
 
     if (backBtn) {
       if (isSessionBlocked) {
-        backBtn.textContent = 'Back to Cambridge Tests';
-        backBtn.onclick = () => { window.location.href = window.location.pathname.includes('reading') ? '/cambridge-reading.html' : '/cambridge-listening.html'; };
+        backBtn.textContent = bookParam >= 2000 ? 'Back to Recent Tests' : 'Back to Cambridge Tests';
+        backBtn.onclick = () => { window.location.href = bookParam >= 2000 ? '/recent-reading-tests' : (window.location.pathname.includes('reading') ? '/cambridge-reading.html' : '/cambridge-listening.html'); };
       } else {
         backBtn.textContent = 'Cancel / Keep Practicing';
         backBtn.onclick = () => { closeTestUnlockModal(); };
@@ -165,7 +175,7 @@
 
   function closeTestUnlockModal() {
     if (isCurrentSessionLocked()) {
-      window.location.href = window.location.pathname.includes('reading') ? '/cambridge-reading.html' : '/cambridge-listening.html';
+      window.location.href = bookParam >= 2000 ? '/recent-reading-tests' : (window.location.pathname.includes('reading') ? '/cambridge-reading.html' : '/cambridge-listening.html');
       return;
     }
     const m = document.getElementById('psUnlockModal');
@@ -186,7 +196,7 @@
   const passageParam = (urlParams.get("passage") || urlParams.get("part"))
     ? Number(urlParams.get("passage") || urlParams.get("part"))
     : null;
-  const sectionParam = urlParams.get("section") || urlParams.get("group") || urlParams.get("q") || null;
+  const sectionParam = urlParams.get("section") || urlParams.get("sec") || urlParams.get("group") || urlParams.get("q") || null;
 
   let practiceMode = "full"; // "full", "passage", or "section"
   let targetPassage = 1;
@@ -422,13 +432,15 @@
     if (g.ids && g.ids.length) return g.ids.map(Number);
 
     const ids = [];
-    if (g.items) {
-      g.items.forEach(it => {
+    const sourceList = g.items || g.questions || [];
+    if (Array.isArray(sourceList) && sourceList.length) {
+      sourceList.forEach(it => {
         if (Array.isArray(it.ids)) {
           it.ids.forEach(id => ids.push(Number(id)));
         } else {
           const val = it.id || it.questionNumber || it.qNo;
           if (val) ids.push(Number(val));
+          if (it.pairId) ids.push(Number(it.pairId));
         }
       });
     }
@@ -501,25 +513,35 @@
       return;
     }
 
+    const isRecent = (bookParam >= 2000);
+
     if (testBookBadge) {
-      testBookBadge.textContent = `Cambridge ${bookParam}`;
+      testBookBadge.textContent = isRecent ? "Recent Real Test" : `Cambridge ${bookParam}`;
     }
 
     if (testTitleBadge) {
       if (practiceMode === "section" && targetGroup) {
         const qRange = `Questions ${targetQIds[0]}–${targetQIds[targetQIds.length - 1]}`;
         const typeName = getFriendlyGroupType(targetGroup.type);
-        testTitleBadge.textContent = `Test ${testParam} • ${qRange} (${typeName})`;
+        testTitleBadge.textContent = isRecent
+          ? `Recent Test ${testParam} • ${qRange} (${typeName})`
+          : `Test ${testParam} • ${qRange} (${typeName})`;
         if (readingModeText) readingModeText.textContent = `Section Practice (${typeName})`;
       } else if (practiceMode === "passage") {
-        testTitleBadge.textContent = `Test ${testParam} • Passage ${targetPassage} (Q${targetQIds[0]}–${targetQIds[targetQIds.length - 1]})`;
+        testTitleBadge.textContent = isRecent
+          ? `Recent Test ${testParam} • Passage ${targetPassage} (Q${targetQIds[0]}–${targetQIds[targetQIds.length - 1]})`
+          : `Test ${testParam} • Passage ${targetPassage} (Q${targetQIds[0]}–${targetQIds[targetQIds.length - 1]})`;
         if (readingModeText) readingModeText.textContent = `Passage ${targetPassage} Practice`;
       } else {
-        testTitleBadge.textContent = `Academic Reading Test ${testParam}`;
+        testTitleBadge.textContent = isRecent
+          ? `Recent Reading Real Test ${testParam}`
+          : `Academic Reading Test ${testParam}`;
         if (readingModeText) readingModeText.textContent = `Full Reading Mock Test (60 Mins)`;
       }
     }
-    let seoTitle = `Cambridge IELTS ${bookParam} Academic Reading Test ${testParam}`;
+    let seoTitle = isRecent
+      ? `IELTS Reading Recent Actual Test ${testParam} (2026 Edition)`
+      : `Cambridge IELTS ${bookParam} Academic Reading Test ${testParam}`;
     if (practiceMode === "passage") {
       seoTitle += ` Passage ${targetPassage}`;
     } else if (practiceMode === "section" && targetQIds && targetQIds.length) {
@@ -602,16 +624,51 @@
     return s;
   }
 
+  function normalizeHeadingOptions(rawHeadings) {
+    if (!Array.isArray(rawHeadings)) return [];
+    return rawHeadings.map((h, hIdx) => {
+      if (typeof h === 'object' && h !== null) {
+        const id = String(h.id || h.letter || h.roman || h.key || (hIdx + 1)).trim().toLowerCase();
+        const text = String(h.text || h.label || h.title || '').trim();
+        return { id, text };
+      }
+      const str = String(h || '').trim();
+      const m = str.match(/^([ivxlcdmIVXLCDM\d]+)[\.\:\s]+(.*)$/);
+      if (m) {
+        return { id: m[1].toLowerCase(), text: m[2].trim() };
+      }
+      return { id: String(hIdx + 1), text: str };
+    }).filter(h => h.text || h.id);
+  }
+
+  function normalizeMcqOptions(rawOptions) {
+    if (!Array.isArray(rawOptions)) return [];
+    return rawOptions.map((opt, optIdx) => {
+      if (typeof opt === 'object' && opt !== null) {
+        const letter = String(opt.letter || opt.id || opt.key || String.fromCharCode(65 + optIdx)).trim().toUpperCase();
+        const text = String(opt.text || opt.label || opt.value || '').trim();
+        return { letter, text };
+      }
+      const str = String(opt || '').trim();
+      const m = str.match(/^([A-Za-z])[\.\:\s]+(.*)$/);
+      if (m) {
+        return { letter: m[1].toUpperCase(), text: m[2].trim() };
+      }
+      return { letter: String.fromCharCode(65 + optIdx), text: str };
+    }).filter(opt => opt.text || opt.letter);
+  }
+
   function getHeadingQuestionForParagraph(headingGroup, paraLetter, paraIndex, startQ) {
     if (!headingGroup) return null;
     const pLetterUpper = String(paraLetter).toUpperCase();
-    if (Array.isArray(headingGroup.items) && headingGroup.items.length) {
-      const item = headingGroup.items.find(it => {
-        const txt = String(it.text || it.name || '').toUpperCase();
-        return txt.endsWith(' ' + pLetterUpper) || txt.endsWith(pLetterUpper) || txt === pLetterUpper;
+    const allItems = headingGroup.items || headingGroup.questions || [];
+    if (Array.isArray(allItems) && allItems.length) {
+      const item = allItems.find(it => {
+        const txt = String(it.text || it.name || it.statement || '').toUpperCase();
+        return txt.endsWith(' ' + pLetterUpper) || txt.endsWith(pLetterUpper) || txt === pLetterUpper || (it.paragraph && String(it.paragraph).toUpperCase() === pLetterUpper);
       });
       if (item) return Number(item.id || item.questionNumber || item.qNo);
-      if (headingGroup.items[paraIndex]) return Number(headingGroup.items[paraIndex].id || headingGroup.items[paraIndex].questionNumber || headingGroup.items[paraIndex].qNo);
+      if (allItems[paraIndex]) return Number(allItems[paraIndex].id || allItems[paraIndex].questionNumber || allItems[paraIndex].qNo);
     }
     if (Array.isArray(headingGroup.paragraphsMap) && headingGroup.paragraphsMap.length) {
       const pm = headingGroup.paragraphsMap.find(m => {
@@ -704,6 +761,21 @@
     targetQIds.forEach(q => {
       const evObj = highlights[String(q)] || highlights[q];
       if (!evObj) return;
+
+      // 1. Direct metadata match by para letter (e.g. { part: 1, para: 'D', text: '...' })
+      if (typeof evObj === "object" && evObj !== null && evObj.para) {
+        const pLetter = String(evObj.para).trim().toUpperCase();
+        const pIdx = paragraphs.findIndex((pObj, i) => {
+          const l = String(pObj.label || String.fromCharCode(65 + i)).trim().toUpperCase();
+          return l === pLetter;
+        });
+        if (pIdx !== -1) {
+          relevantIndices.add(pIdx);
+          return;
+        }
+      }
+
+      // 2. Text-based heuristic search
       const rawText = typeof evObj === "object" ? evObj.text : evObj;
       if (!rawText || rawText.length < 5) return;
       const normEv = normalizeForSearch(rawText);
@@ -721,6 +793,10 @@
         relevantIndices.add(bestIdx);
       }
     });
+
+    if (relevantIndices.size === 0) {
+      return paragraphs.map((_, i) => i);
+    }
 
     return Array.from(relevantIndices).sort((a, b) => a - b);
   }
@@ -743,6 +819,7 @@
         You should spend about 20 minutes on Questions ${startQ}–${endQ}, which are based on ${passage.title ? escapeHtml(passage.title) : `Reading Passage ${passageNum}`} below.
       </div>
       <h2 class="cr-passage-title">${escapeHtml(passage.title || `Reading Passage ${passageNum}`)}</h2>
+      ${passage.subtitle ? `<div class="cr-passage-subtitle" style="font-size:0.95rem; font-style:italic; color:#475569; margin-top:-6px; margin-bottom:16px;">${escapeHtml(passage.subtitle)}</div>` : ''}
     `;
 
     const paragraphs = getPassageParagraphs(passage);
@@ -791,8 +868,8 @@
         const qId = getHeadingQuestionForParagraph(headingGroup, paraLetter, origIndex, startQ);
         if (qId) {
           const val = userAnswers[qId] || '';
-          const headings = headingGroup.headings || [];
-          const matchedHeading = headings.find(h => String(h.id || h.letter).toUpperCase() === String(val).toUpperCase());
+          const headings = normalizeHeadingOptions(headingGroup.headings || headingGroup.options || []);
+          const matchedHeading = headings.find(h => String(h.id).toLowerCase() === String(val).toLowerCase());
           const matchedText = matchedHeading ? matchedHeading.text : '';
 
           html += `
@@ -802,14 +879,14 @@
                 ${val ? `<strong class="cr-heading-val">${escapeHtml(val)}.</strong> ${escapeHtml(matchedText)}` : 'Drop heading here'}
               </span>
               ${val ? `<button type="button" class="cr-heading-remove-btn" onclick="window.crV2.clearHeadingChoice(${qId}, event)" title="Remove heading">✕</button>` : ''}
-              <span class="cr-q-review-box" id="reviewBox-${qId}"></span>
+              <div class="cr-q-review-box" id="reviewBox-${qId}"></div>
             </div>
           `;
         }
       }
 
       let letterHtml = `<strong class="cr-para-letter">${paraLetter}.</strong> `;
-      html += `<p id="${paraId}">${letterHtml}${escapeHtml(pObj.text)}</p>`;
+      html += `<p id="${paraId}" data-para="${paraLetter}">${letterHtml}${escapeHtml(pObj.text)}</p>`;
     });
 
     html += `</div>`;
@@ -821,9 +898,10 @@
       initHeadingDragAndDrop();
     }
 
-    // If already submitted, apply evidence highlights
+    // If already submitted, apply evidence highlights and review boxes
     if (isSubmitted) {
       applyEvidenceHighlightsOnPassage(passageNum);
+      renderReviewBoxesForPassage(passageNum);
     }
   }
 
@@ -938,7 +1016,7 @@
 
   // 1. Note Completion (Supporting both sections and flat sentences)
   function renderNoteCompletionGroup(g) {
-    let out = '<div class="cr-notes-wrap" style="line-height:2.0; font-size:0.95rem;">';
+    let out = '<div class="cr-notes-wrap" style="line-height:2.3; font-size:0.95rem;">';
 
     if (g.heading) {
       out += `<div style="font-family:'Sora',sans-serif; font-weight:800; color:var(--navy); margin-bottom:12px; font-size:1.05rem;">${sanitizeAllowedHtml(g.heading)}</div>`;
@@ -953,15 +1031,9 @@
         (sec.points || []).forEach(pt => {
           let parsedLine = sanitizeAllowedHtml(pt).replace(/\[(?:blank|drop):(\d+)\]/g, (match, qId) => {
             const val = userAnswers[qId] || '';
-            return `
-              <span class="cr-inline-q" id="qItem-${qId}">
-                <span class="cr-qnum-badge" id="badge-q-${qId}">${qId}</span>
-                <input type="text" class="cr-blank-input" data-qid="${qId}" value="${escapeAttr(val)}" autocomplete="off" spellcheck="false" placeholder="">
-                <span class="cr-q-review-box" id="reviewBox-${qId}"></span>
-              </span>
-            `;
+            return `<span class="cr-inline-q" id="qItem-${qId}"><span class="cr-inline-badge" id="badge-q-${qId}">${qId}</span><input type="text" class="cr-blank-input" data-qid="${qId}" value="${escapeAttr(val)}" autocomplete="off" spellcheck="false" placeholder=""></span>`;
           });
-          out += `<div class="cr-note-line" style="margin-bottom:8px; line-height:1.9;">• ${parsedLine}</div>`;
+          out += `<div class="cr-note-line" style="margin-bottom:8px; line-height:2.1;">• ${parsedLine}</div>`;
         });
       });
     }
@@ -980,17 +1052,20 @@
 
         let parsedLine = sanitizeAllowedHtml(text).replace(/\[(?:blank|drop):(\d+)\]/g, (match, qId) => {
           const val = userAnswers[qId] || '';
-          return `
-            <span class="cr-inline-q" id="qItem-${qId}">
-              <span class="cr-qnum-badge" id="badge-q-${qId}">${qId}</span>
-              <input type="text" class="cr-blank-input" data-qid="${qId}" value="${escapeAttr(val)}" autocomplete="off" spellcheck="false" placeholder="">
-              <span class="cr-q-review-box" id="reviewBox-${qId}"></span>
-            </span>
-          `;
+          return `<span class="cr-inline-q" id="qItem-${qId}"><span class="cr-inline-badge" id="badge-q-${qId}">${qId}</span><input type="text" class="cr-blank-input" data-qid="${qId}" value="${escapeAttr(val)}" autocomplete="off" spellcheck="false" placeholder=""></span>`;
         });
 
-        out += `<div class="cr-note-line" style="margin-bottom:8px; line-height:1.9;">• ${parsedLine}</div>`;
+        out += `<div class="cr-note-line" style="margin-bottom:8px; line-height:2.1;">• ${parsedLine}</div>`;
       });
+    }
+
+    const groupQIds = getGroupQuestionIds(g);
+    if (groupQIds && groupQIds.length > 0) {
+      out += `<div class="cr-group-review-deck" id="groupReview-${g.groupNumber || g.part || 1}">`;
+      groupQIds.forEach(qId => {
+        out += `<div class="cr-q-review-box" id="reviewBox-${qId}"></div>`;
+      });
+      out += `</div>`;
     }
 
     out += '</div>';
@@ -1019,20 +1094,25 @@
         let cellHtml = sanitizeAllowedHtml(String(cell || ''));
         cellHtml = cellHtml.replace(/\[(?:blank|drop):(\d+)\]/g, (match, qId) => {
           const val = userAnswers[qId] || '';
-          return `
-            <span class="cr-inline-q" id="qItem-${qId}">
-              <span class="cr-qnum-badge" id="badge-q-${qId}">${qId}</span>
-              <input type="text" class="cr-blank-input" data-qid="${qId}" value="${escapeAttr(val)}" autocomplete="off" spellcheck="false" placeholder="">
-              <span class="cr-q-review-box" id="reviewBox-${qId}"></span>
-            </span>
-          `;
+          return `<span class="cr-inline-q" id="qItem-${qId}"><span class="cr-inline-badge" id="badge-q-${qId}">${qId}</span><input type="text" class="cr-blank-input" data-qid="${qId}" value="${escapeAttr(val)}" autocomplete="off" spellcheck="false" placeholder=""></span>`;
         });
-        out += `<td style="padding:12px 14px; font-size:14px; vertical-align:top; line-height:1.9;">${cellHtml}</td>`;
+        out += `<td style="padding:12px 14px; font-size:14px; vertical-align:top; line-height:2.1;">${cellHtml}</td>`;
       });
       out += '</tr>';
     });
 
-    out += '</tbody></table></div></div>';
+    out += '</tbody></table></div>';
+
+    const groupQIds = getGroupQuestionIds(g);
+    if (groupQIds && groupQIds.length > 0) {
+      out += `<div class="cr-group-review-deck" id="groupReview-${g.groupNumber || g.part || 1}">`;
+      groupQIds.forEach(qId => {
+        out += `<div class="cr-q-review-box" id="reviewBox-${qId}"></div>`;
+      });
+      out += `</div>`;
+    }
+
+    out += '</div>';
     return out;
   }
 
@@ -1046,19 +1126,13 @@
     (g.steps || []).forEach((st, idx) => {
       let stepHtml = sanitizeAllowedHtml(String(st || '')).replace(/\[(?:blank|drop):(\d+)\]/g, (match, qId) => {
         const val = userAnswers[qId] || '';
-        return `
-          <span class="cr-inline-q" id="qItem-${qId}">
-            <span class="cr-qnum-badge" id="badge-q-${qId}">${qId}</span>
-            <input type="text" class="cr-blank-input" data-qid="${qId}" value="${escapeAttr(val)}" autocomplete="off" spellcheck="false" placeholder="">
-            <span class="cr-q-review-box" id="reviewBox-${qId}"></span>
-          </span>
-        `;
+        return `<span class="cr-inline-q" id="qItem-${qId}"><span class="cr-inline-badge" id="badge-q-${qId}">${qId}</span><input type="text" class="cr-blank-input" data-qid="${qId}" value="${escapeAttr(val)}" autocomplete="off" spellcheck="false" placeholder=""></span>`;
       });
 
       out += `
         <div class="cr-flowchart-step">
           <strong style="color:var(--blue); margin-right:8px; font-family:'Sora',sans-serif;">Step ${idx + 1}:</strong>
-          <span style="line-height:1.9;">${stepHtml}</span>
+          <span style="line-height:2.1;">${stepHtml}</span>
         </div>
       `;
 
@@ -1067,33 +1141,46 @@
       }
     });
 
+    const groupQIds = getGroupQuestionIds(g);
+    if (groupQIds && groupQIds.length > 0) {
+      out += `<div class="cr-group-review-deck" id="groupReview-${g.groupNumber || g.part || 1}">`;
+      groupQIds.forEach(qId => {
+        out += `<div class="cr-q-review-box" id="reviewBox-${qId}"></div>`;
+      });
+      out += `</div>`;
+    }
+
     out += '</div>';
     return out;
   }
 
-  // 4. Summary Completion with Word Bank or Drag-Drop (matching Summary completation.jpg)
+  // 4. Summary Completion with Word Bank or Fill-in-the-Blank Inputs
   function renderSummaryWithWordListGroup(g, qStart, qEnd) {
-    let out = '<div class="cr-summary-wrap" style="line-height:2.1; font-size:0.96rem;">';
+    let out = '<div class="cr-summary-wrap" style="line-height:2.3; font-size:0.96rem;">';
 
     if (g.summaryTitle) {
       out += `<h4 style="font-family:'Sora',sans-serif; font-weight:800; color:var(--navy); margin-bottom:12px; font-size:1.05rem;">${sanitizeAllowedHtml(g.summaryTitle)}</h4>`;
     }
 
-    // Build wordOptions from g.wordList OR g.options
+    // Build wordOptions from g.wordList OR g.options (support object or string)
     let wordOptions = [];
-    if (Array.isArray(g.wordList) && g.wordList.length) {
-      wordOptions = g.wordList.map(item => {
-        const str = String(item).trim();
+    let hasWordBank = false;
+    const rawOptions = (Array.isArray(g.wordList) && g.wordList.length) ? g.wordList : ((Array.isArray(g.options) && g.options.length) ? g.options : null);
+    if (rawOptions && rawOptions.length > 0) {
+      hasWordBank = true;
+      wordOptions = rawOptions.map((item, idx) => {
+        if (typeof item === 'object' && item !== null) {
+          const letter = String(item.letter || item.key || item.id || String.fromCharCode(65 + idx)).trim().toUpperCase();
+          const text = String(item.text || item.word || item.name || item.label || '').trim();
+          return { letter, text };
+        }
+        const str = String(item || '').trim();
         const m = str.match(/^([A-Z])[\.\s]+(.*)$/);
         if (m) {
-          return { letter: m[1], text: m[2].trim() };
+          return { letter: m[1].toUpperCase(), text: m[2].trim() };
         }
-        return { letter: str.charAt(0), text: str.slice(1).trim() };
-      });
-    } else if (Array.isArray(g.options) && g.options.length) {
-      wordOptions = g.options;
-    } else {
-      wordOptions = c21Test1SummaryOptions;
+        return { letter: String.fromCharCode(65 + idx), text: str };
+      }).filter(o => o.letter && o.text);
     }
 
     const sentences = g.paragraphs || g.sentences || [];
@@ -1109,37 +1196,44 @@
       }
 
       let parsedLine = sanitizeAllowedHtml(text);
-      parsedLine = parsedLine.replace(/\[(?:blank|drop):(\d+)\]/g, (match, qId) => {
-        const uLetter = (userAnswers[qId] || '').toUpperCase();
-        const matchedOpt = wordOptions.find(o => o.letter === uLetter);
-        const optText = matchedOpt ? `${matchedOpt.letter}. ${matchedOpt.text}` : '';
 
-        return `
-          <span class="cr-inline-q" id="qItem-${qId}">
-            <div class="cr-drop-blank ${uLetter ? 'filled' : ''}" id="dropBlank-${qId}" data-qid="${qId}" onclick="window.crV2.clearWordChoice(${qId})">
-              <span class="cr-qnum-badge" id="badge-q-${qId}">${qId}</span>
-              <span class="cr-blank-text" id="blankText-${qId}">${optText || 'Drop answer here'}</span>
-              ${uLetter ? `<button type="button" class="cr-clear-btn" onclick="window.crV2.clearWordChoice(${qId}, event)">✕</button>` : ''}
-            </div>
-            <span class="cr-q-review-box" id="reviewBox-${qId}"></span>
-          </span>
-        `;
-      });
+      if (!hasWordBank) {
+        // Standard summary completion without word bank (type words from passage)
+        parsedLine = parsedLine.replace(/\[(?:blank|drop):(\d+)\]/g, (match, qId) => {
+          const val = userAnswers[qId] || '';
+          return `<span class="cr-inline-q" id="qItem-${qId}"><span class="cr-inline-badge" id="badge-q-${qId}">${qId}</span><input type="text" class="cr-blank-input" data-qid="${qId}" value="${escapeAttr(val)}" autocomplete="off" spellcheck="false" placeholder=""></span>`;
+        });
+      } else {
+        // Summary completion with Word Bank (Drag & Drop or Click-to-Select)
+        parsedLine = parsedLine.replace(/\[(?:blank|drop):(\d+)\]/g, (match, qId) => {
+          const uLetter = (userAnswers[qId] || '').toUpperCase();
+          const matchedOpt = wordOptions.find(o => o.letter === uLetter);
+          const hasVal = Boolean(matchedOpt);
+          const slotHtml = hasVal
+            ? `<strong class="cr-drop-letter">${matchedOpt.letter}.</strong> <span class="cr-drop-val">${escapeHtml(matchedOpt.text)}</span>`
+            : '<span class="cr-drop-placeholder">drop here</span>';
+          const clearBtn = hasVal
+            ? `<button type="button" class="cr-clear-btn" onclick="window.crV2.clearWordChoice(${qId}, event)" title="Remove answer">✕</button>`
+            : '';
 
-      out += `<p style="margin-bottom:12px;">${parsedLine}</p>`;
+          return `<span class="cr-drop-blank ${hasVal ? 'filled' : ''}" id="dropBlank-${qId}" data-qid="${qId}" onclick="window.crV2.clearWordChoice(${qId})" role="button" tabindex="0"><span class="cr-drop-badge" id="badge-q-${qId}">${qId}</span><span class="cr-drop-slot" id="blankText-${qId}">${slotHtml}</span>${clearBtn}</span>`;
+        });
+      }
+
+      out += `<p style="margin-bottom:14px; line-height:2.3;">${parsedLine}</p>`;
     });
 
-    // Word Bank Card (matching Summary completation.jpg)
-    if (wordOptions.length > 0) {
+    // Word Bank Card (only rendered when word list is present)
+    if (hasWordBank && wordOptions.length > 0) {
       out += `
         <div class="cr-word-bank-card">
-          <div class="cr-word-bank-title" style="font-style:italic; font-size:13px; color:#64748b; margin-bottom:10px;">Drag and drop an option to fill in each blank.</div>
+          <div class="cr-word-bank-title" style="font-style:italic; font-size:13px; color:#64748b; margin-bottom:10px;">Drag and drop an option to fill in each blank (or click an option and then click the blank).</div>
           <div class="cr-word-chips-grid">
       `;
 
       wordOptions.forEach(opt => {
-        const letter = opt.letter || opt.key || opt.id || '';
-        const labelText = opt.text || opt.name || opt.label || opt;
+        const letter = opt.letter;
+        const labelText = opt.text;
         out += `
           <div class="cr-word-chip" draggable="true" data-letter="${letter}" data-text="${escapeAttr(labelText)}" onclick="window.crV2.selectWordChip('${letter}', this)">
             <strong style="color:var(--blue);">${letter}.</strong> ${escapeHtml(labelText)}
@@ -1150,13 +1244,22 @@
       out += '</div></div>';
     }
 
+    const groupQIds = getGroupQuestionIds(g);
+    if (groupQIds && groupQIds.length > 0) {
+      out += `<div class="cr-group-review-deck" id="groupReview-${g.groupNumber || g.part || 1}">`;
+      groupQIds.forEach(qId => {
+        out += `<div class="cr-q-review-box" id="reviewBox-${qId}"></div>`;
+      });
+      out += `</div>`;
+    }
+
     out += '</div>';
     return out;
   }
 
   // 5. List of Headings in Right Column (matching Heading matching drag and drop.jpg)
   function renderListOfHeadingsQuestionsGroup(g) {
-    const headings = g.headings || [];
+    const headings = normalizeHeadingOptions(g.headings || g.options || []);
     const hasDragTextInInstruction = (g.instruction || '').toLowerCase().includes('drag and drop');
     let out = `
       <div class="cr-headings-group-wrap">
@@ -1170,8 +1273,8 @@
     `;
 
     headings.forEach(h => {
-      const hid = h.id || h.letter || '';
-      const isUsed = Object.values(userAnswers).includes(hid);
+      const hid = h.id || '';
+      const isUsed = Object.values(userAnswers).some(v => String(v).toLowerCase() === String(hid).toLowerCase());
       out += `
         <div class="cr-heading-card ${isUsed ? 'used' : ''}" draggable="true" data-heading-id="${escapeAttr(hid)}" data-heading-text="${escapeAttr(h.text || '')}" id="headingCard-${hid}" onclick="window.crV2.selectHeadingCard('${hid}', this)">
           <span class="cr-heading-card-roman">${escapeHtml(hid)}.</span>
@@ -1190,7 +1293,7 @@
 
   function renderTfngGroup(g, isYesNo) {
     let out = '<div class="cr-tfng-wrap">';
-    const items = g.items || [];
+    const items = g.items || g.questions || [];
     const optLabels = isYesNo
       ? [ { letter: "A", val: "YES", label: "YES" }, { letter: "B", val: "NO", label: "NO" }, { letter: "C", val: "NOT GIVEN", label: "NOT GIVEN" } ]
       : [ { letter: "A", val: "TRUE", label: "TRUE" }, { letter: "B", val: "FALSE", label: "FALSE" }, { letter: "C", val: "NOT GIVEN", label: "NOT GIVEN" } ];
@@ -1203,7 +1306,7 @@
         <div class="cr-q-item" id="qItem-${qId}">
           <div class="cr-q-prompt-row">
             <span class="cr-qnum-badge" id="badge-q-${qId}">${qId}</span>
-            <div class="cr-q-text">${escapeHtml(it.text || "")}</div>
+            <div class="cr-q-text">${escapeHtml(it.text || it.question || it.statement || "")}</div>
           </div>
           <div class="cr-options-col">
       `;
@@ -1233,18 +1336,18 @@
   // 4. MCQ One Choice
   function renderMcqOneChoiceGroup(g) {
     let out = '<div class="cr-mcq-wrap">';
-    const items = g.items || [];
+    const items = g.items || g.questions || [];
 
     items.forEach(it => {
       const qId = it.id || it.questionNumber || it.qNo;
       const uVal = (userAnswers[qId] || "").toUpperCase();
-      const options = it.options || [];
+      const options = normalizeMcqOptions(it.options || g.options || []);
 
       out += `
         <div class="cr-q-item" id="qItem-${qId}">
           <div class="cr-q-prompt-row">
             <span class="cr-qnum-badge" id="badge-q-${qId}">${qId}</span>
-            <div class="cr-q-text">${escapeHtml(it.text || "")}</div>
+            <div class="cr-q-text">${escapeHtml(it.text || it.question || "")}</div>
           </div>
           <div class="cr-options-col">
       `;
@@ -1276,13 +1379,15 @@
   function renderMcqTwoChoicesGroup(g) {
     let out = '<div class="cr-mcq-wrap">';
 
-    // If g has an array of items (e.g. Book 14 Test 1 where items have ids: [19, 20])
-    if (Array.isArray(g.items) && g.items.length > 0 && g.items.some(it => Array.isArray(it.ids))) {
-      g.items.forEach(it => {
-        const qIds = it.ids || [it.id];
+    const rawItems = g.items || g.questions || [];
+    const hasItemPairs = Array.isArray(rawItems) && rawItems.length > 0 && rawItems.some(it => Array.isArray(it.ids) || it.pairId);
+
+    if (hasItemPairs) {
+      rawItems.forEach(it => {
+        const qIds = it.ids || (it.pairId ? [it.id, it.pairId] : [it.id]);
         const q1 = qIds[0];
         const q2 = qIds[1] || (q1 + 1);
-        const options = it.options || [];
+        const options = normalizeMcqOptions(it.options || g.options || []);
         const promptText = it.text || it.question || g.prompt || 'Choose TWO letters.';
 
         out += `
@@ -1322,7 +1427,7 @@
       const qIds = g.ids || g.questionIds || getGroupQuestionIds(g);
       const q1 = qIds[0];
       const q2 = qIds[1] || (q1 + 1);
-      const options = g.options || [];
+      const options = normalizeMcqOptions(g.options || []);
       const promptText = g.prompt || g.question || g.title || 'Choose TWO letters.';
 
       out += `
@@ -1501,7 +1606,7 @@
       options = ["A", "B", "C", "D", "E", "F", "G"];
     }
 
-    const items = g.items || g.statements || [];
+    const items = g.items || g.questions || g.statements || [];
 
     // If we have categories with descriptions, show the overview box
     if (categories.length > 0 && categories.some(c => c.name)) {
@@ -1642,6 +1747,11 @@
 
   let selectedWordLetter = null;
   function selectWordChip(letter, el) {
+    if (selectedWordLetter === letter) {
+      selectedWordLetter = null;
+      if (el) el.classList.remove("selected");
+      return;
+    }
     selectedWordLetter = letter;
     document.querySelectorAll(".cr-word-chip").forEach(c => c.classList.remove("selected"));
     if (el) el.classList.add("selected");
@@ -1650,16 +1760,25 @@
   function clearWordChoice(qId, e) {
     if (e) e.stopPropagation();
     if (isSubmitted) return;
+    const blankEl = document.getElementById(`dropBlank-${qId}`);
+    const blankTextEl = document.getElementById(`blankText-${qId}`);
+
     if (selectedWordLetter) {
       userAnswers[qId] = selectedWordLetter;
-      const blankEl = document.getElementById(`dropBlank-${qId}`);
-      const blankTextEl = document.getElementById(`blankText-${qId}`);
       if (blankEl) blankEl.classList.add('filled');
       if (blankTextEl) {
         const chip = questionsCol ? questionsCol.querySelector(`.cr-word-chip[data-letter="${selectedWordLetter}"]`) : null;
-        const chipText = chip ? chip.textContent.trim() : '';
-        const fallbackOpt = c21Test1SummaryOptions.find(o => o.letter === selectedWordLetter);
-        blankTextEl.textContent = chipText || (fallbackOpt ? `${fallbackOpt.letter}. ${fallbackOpt.text}` : selectedWordLetter);
+        const chipText = chip ? (chip.dataset.text || chip.textContent.replace(/^[A-Z]\.\s*/, '').trim()) : '';
+        blankTextEl.innerHTML = `<strong class="cr-drop-letter">${selectedWordLetter}.</strong> <span class="cr-drop-val">${escapeHtml(chipText)}</span>`;
+        if (blankEl && !blankEl.querySelector('.cr-clear-btn')) {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'cr-clear-btn';
+          btn.title = 'Remove answer';
+          btn.textContent = '✕';
+          btn.onclick = function(ev) { window.crV2.clearWordChoice(qId, ev); };
+          blankEl.appendChild(btn);
+        }
       }
       updateButtonStatus(qId);
       setFocusedQuestion(qId);
@@ -1667,10 +1786,12 @@
       if (questionsCol) questionsCol.querySelectorAll('.cr-word-chip').forEach(c => c.classList.remove('selected'));
     } else {
       delete userAnswers[qId];
-      const blankEl = document.getElementById(`dropBlank-${qId}`);
-      const blankTextEl = document.getElementById(`blankText-${qId}`);
-      if (blankEl) blankEl.classList.remove('filled');
-      if (blankTextEl) blankTextEl.textContent = 'Drop answer here';
+      if (blankEl) {
+        blankEl.classList.remove('filled');
+        const clearBtn = blankEl.querySelector('.cr-clear-btn');
+        if (clearBtn) clearBtn.remove();
+      }
+      if (blankTextEl) blankTextEl.innerHTML = '<span class="cr-drop-placeholder">drop here</span>';
       updateButtonStatus(qId);
     }
   }
@@ -1697,19 +1818,27 @@
       blank.addEventListener('drop', e => {
         e.preventDefault();
         blank.classList.remove('dragover');
-        const letter = e.dataTransfer.getData('text/plain');
+        const letter = (e.dataTransfer.getData('text/plain') || '').toUpperCase();
         if (!letter) return;
 
         const qId = Number(blank.dataset.qid);
-        userAnswers[qId] = letter.toUpperCase();
+        userAnswers[qId] = letter;
         blank.classList.add('filled');
 
         const textEl = document.getElementById(`blankText-${qId}`);
         if (textEl) {
           const chip = questionsCol.querySelector(`.cr-word-chip[data-letter="${letter}"]`);
-          const chipText = chip ? chip.textContent.trim() : '';
-          const fallbackOpt = c21Test1SummaryOptions.find(o => o.letter === letter);
-          textEl.textContent = chipText || (fallbackOpt ? `${fallbackOpt.letter}. ${fallbackOpt.text}` : letter);
+          const chipText = chip ? (chip.dataset.text || chip.textContent.replace(/^[A-Z]\.\s*/, '').trim()) : '';
+          textEl.innerHTML = `<strong class="cr-drop-letter">${letter}.</strong> <span class="cr-drop-val">${escapeHtml(chipText)}</span>`;
+          if (!blank.querySelector('.cr-clear-btn')) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'cr-clear-btn';
+            btn.title = 'Remove answer';
+            btn.textContent = '✕';
+            btn.onclick = function(ev) { window.crV2.clearWordChoice(qId, ev); };
+            blank.appendChild(btn);
+          }
         }
 
         updateButtonStatus(qId);
@@ -2016,7 +2145,11 @@
   }
 
   function goToQuestion(qId) {
-    const p = (qId <= 13) ? 1 : (qId <= 26 ? 2 : 3);
+    let p = (qId <= 13) ? 1 : (qId <= 26 ? 2 : 3);
+    const grp = (testData.questionGroups || []).find(g => getGroupQuestionIds(g).includes(qId));
+    if (grp && (grp.part || grp.passage)) {
+      p = Number(grp.part || grp.passage);
+    }
     if (activePassage !== p) {
       switchPassage(p);
     }
@@ -2345,13 +2478,14 @@
       const pType = urlParams.get("type") || urlParams.get("pracType") || "Question Type Practice";
       const pSet = (urlParams.get("set") || urlParams.get("pracNumber") || "1").replace(/\D/g, "") || "1";
       
-      let testTitle = `Cambridge ${bookParam} Academic Reading Test ${testParam}`;
+      const isRecent = (bookParam >= 2000);
+      let testTitle = isRecent ? `Recent Reading Real Test ${testParam}` : `Cambridge ${bookParam} Academic Reading Test ${testParam}`;
       if (isPracticeBank) {
         testTitle = `${pType} Practice (Set ${pSet})`;
       } else if (practiceMode === "section") {
-        testTitle = `Cambridge ${bookParam} Reading Test ${testParam} (Q${sectionStart}-${sectionEnd})`;
+        testTitle = isRecent ? `Recent Test ${testParam} (Q${sectionStart}-${sectionEnd})` : `Cambridge ${bookParam} Reading Test ${testParam} (Q${sectionStart}-${sectionEnd})`;
       } else if (practiceMode === "passage") {
-        testTitle = `Cambridge ${bookParam} Reading Test ${testParam} (Passage ${targetPassage})`;
+        testTitle = isRecent ? `Recent Test ${testParam} (Passage ${targetPassage})` : `Cambridge ${bookParam} Reading Test ${testParam} (Passage ${targetPassage})`;
       }
 
       fetch('/api/student/record-test', {
@@ -2359,9 +2493,9 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: u ? u.email : '',
-          testType: isPracticeBank ? 'Practice Hub' : (practiceMode === 'full' ? 'Cambridge Reading' : 'Cambridge Reading Practice'),
+          testType: isPracticeBank ? 'Practice Hub' : (isRecent ? 'Recent Reading Actual Test' : (practiceMode === 'full' ? 'Cambridge Reading' : 'Cambridge Reading Practice')),
           module: 'reading',
-          testId: isPracticeBank ? `practice-reading-${encodeURIComponent(pType)}-set-${pSet}` : `cambridge-reading-${bookParam}-${testParam}-${practiceMode}`,
+          testId: isPracticeBank ? `practice-reading-${encodeURIComponent(pType)}-set-${pSet}` : `reading-${isRecent ? 'recent' : 'cambridge'}-${bookParam}-${testParam}-${practiceMode}`,
           title: testTitle,
           totalQuestions: totalCount,
           readingScore: correctCount,
@@ -2466,8 +2600,19 @@
   // 11. Review Box Rendering for Right Column Questions
   // -------------------------------------------------------------
   function renderReviewBoxesForPassage(passageNum) {
-    const startQ = (passageNum === 1) ? 1 : (passageNum === 2 ? 14 : 27);
-    const endQ = (passageNum === 1) ? 13 : (passageNum === 2 ? 26 : 40);
+    let startQ = (passageNum === 1) ? 1 : (passageNum === 2 ? 14 : 27);
+    let endQ = (passageNum === 1) ? 13 : (passageNum === 2 ? 26 : 40);
+
+    const passageGroups = (testData.questionGroups || []).filter(g => (Number(g.part) || Number(g.passage) || 1) === passageNum);
+    const pQIds = [];
+    passageGroups.forEach(g => {
+      const gIds = getGroupQuestionIds(g);
+      if (Array.isArray(gIds)) pQIds.push(...gIds);
+    });
+    if (pQIds.length > 0) {
+      startQ = Math.min(...pQIds);
+      endQ = Math.max(...pQIds);
+    }
 
     const questionsInPassage = targetQIds.filter(q => q >= startQ && q <= endQ);
 
@@ -2489,6 +2634,26 @@
         }
       }
 
+      // Summary drop blank border color styling after submit
+      const dropBlank = document.getElementById(`dropBlank-${q}`);
+      if (dropBlank) {
+        dropBlank.classList.remove('rv-correct', 'rv-wrong');
+        dropBlank.classList.add(isCorrect ? 'rv-correct' : 'rv-wrong');
+        const clearBtn = dropBlank.querySelector('.cr-clear-btn');
+        if (clearBtn) clearBtn.style.display = 'none';
+      }
+
+      // Input blank styling after submit
+      const inputBlank = questionsCol ? questionsCol.querySelector(`input.cr-blank-input[data-qid="${q}"]`) : null;
+      if (inputBlank) {
+        inputBlank.readOnly = true;
+        const inlineQ = inputBlank.closest('.cr-inline-q');
+        if (inlineQ) {
+          inlineQ.classList.remove('rv-correct', 'rv-wrong');
+          inlineQ.classList.add(isCorrect ? 'rv-correct' : 'rv-wrong');
+        }
+      }
+
       const box = document.getElementById(`reviewBox-${q}`);
       if (!box) return;
 
@@ -2503,6 +2668,9 @@
 
       box.style.display = 'block';
       box.innerHTML = `
+        <div class="cr-review-q-header">
+          <span class="cr-review-q-pill">Question ${q}</span>
+        </div>
         <div class="cr-review-status-row">
           <span class="cr-status-tag ${isCorrect ? 'correct' : 'wrong'}">
             <i class="bi ${isCorrect ? 'bi-check-circle-fill' : 'bi-x-circle-fill'}"></i>
@@ -2634,8 +2802,19 @@
     const passageBody = document.getElementById(`passageBody-${passageNum}`);
     if (!passageBody || !testData.evidenceHighlights) return;
 
-    const startQ = (passageNum === 1) ? 1 : (passageNum === 2 ? 14 : 27);
-    const endQ = (passageNum === 1) ? 13 : (passageNum === 2 ? 26 : 40);
+    let startQ = (passageNum === 1) ? 1 : (passageNum === 2 ? 14 : 27);
+    let endQ = (passageNum === 1) ? 13 : (passageNum === 2 ? 26 : 40);
+
+    const passageGroups = (testData.questionGroups || []).filter(g => (Number(g.part) || Number(g.passage) || 1) === passageNum);
+    const pQIds = [];
+    passageGroups.forEach(g => {
+      const gIds = getGroupQuestionIds(g);
+      if (Array.isArray(gIds)) pQIds.push(...gIds);
+    });
+    if (pQIds.length > 0) {
+      startQ = Math.min(...pQIds);
+      endQ = Math.max(...pQIds);
+    }
 
     const highlights = testData.evidenceHighlights || {};
 
@@ -2655,39 +2834,67 @@
 
     const paragraphs = passageBody.querySelectorAll("p");
     const normParas = [];
-    paragraphs.forEach((p) => {
+    const paraLetters = [];
+    paragraphs.forEach((p, idx) => {
       let pureText = p.textContent || "";
+      let letter = p.dataset.para || "";
       const letterEl = p.querySelector(".cr-para-letter");
       if (letterEl) {
-        pureText = pureText.replace(/^\s*[A-Z]\.?\s*/, '');
+        if (!letter) {
+          letter = letterEl.textContent.replace(/[^A-Za-z]/g, '').trim();
+        }
+        pureText = pureText.replace(/^\s*[A-Za-z]\.?\s*/, '');
       }
+      if (!letter) letter = String.fromCharCode(65 + idx);
+      paraLetters.push(letter);
       normParas.push(normalizeForSearch(pureText));
     });
 
     // Best paragraph assignment for each question to avoid duplicate or weak matches
     const bestParaForQ = {};
     passageHls.forEach(({ qId, text }) => {
-      const normEv = normalizeForSearch(text);
-      let bestScore = 0;
-      let bestIdx = -1;
-      let bestMatch = null;
+      const evObj = highlights[String(qId)] || highlights[qId];
+      let assignedIdx = -1;
 
-      normParas.forEach((normPara, pIdx) => {
-        const match = findBestMatchInPara(normPara, normEv);
-        if (match && match.score > bestScore) {
-          bestScore = match.score;
-          bestIdx = pIdx;
-          bestMatch = match;
+      // 1. Direct metadata match by para letter (e.g. { part: 1, para: 'F', text: '...' })
+      if (typeof evObj === "object" && evObj !== null && evObj.para) {
+        const targetLetter = String(evObj.para).trim().toUpperCase();
+        const foundIdx = paraLetters.findIndex(l => l.toUpperCase() === targetLetter);
+        if (foundIdx !== -1) {
+          const normPara = normParas[foundIdx];
+          const normEv = normalizeForSearch(text);
+          const match = findBestMatchInPara(normPara, normEv);
+          if (match) {
+            bestParaForQ[qId] = { pIndex: foundIdx, match, text };
+            assignedIdx = foundIdx;
+          }
         }
-      });
+      }
 
-      if (bestIdx !== -1 && bestMatch) {
-        bestParaForQ[qId] = { pIndex: bestIdx, match: bestMatch, text };
+      // 2. Fallback to scoring across visible paragraphs
+      if (assignedIdx === -1) {
+        const normEv = normalizeForSearch(text);
+        let bestScore = 0;
+        let bestIdx = -1;
+        let bestMatch = null;
+
+        normParas.forEach((normPara, pIdx) => {
+          const match = findBestMatchInPara(normPara, normEv);
+          if (match && match.score > bestScore) {
+            bestScore = match.score;
+            bestIdx = pIdx;
+            bestMatch = match;
+          }
+        });
+
+        if (bestIdx !== -1 && bestMatch) {
+          bestParaForQ[qId] = { pIndex: bestIdx, match: bestMatch, text };
+        }
       }
     });
 
     paragraphs.forEach((p, pIndex) => {
-      const paraLetter = String.fromCharCode(65 + pIndex);
+      const paraLetter = paraLetters[pIndex] || p.dataset.para || String.fromCharCode(65 + pIndex);
       const normPara = normParas[pIndex];
       const matchedSpans = [];
 
@@ -2765,7 +2972,11 @@
   }
 
   function locateEvidence(qId) {
-    const p = (qId <= 13) ? 1 : (qId <= 26 ? 2 : 3);
+    let p = (qId <= 13) ? 1 : (qId <= 26 ? 2 : 3);
+    const grp = (testData.questionGroups || []).find(g => getGroupQuestionIds(g).includes(qId));
+    if (grp && (grp.part || grp.passage)) {
+      p = Number(grp.part || grp.passage);
+    }
     if (activePassage !== p) {
       switchPassage(p);
     }
@@ -2774,6 +2985,11 @@
       let el = document.getElementById(`evHighlight-${qId}`);
       if (!el) {
         el = document.querySelector(`.cr-evidence-hl[data-qids*="${qId}"]`);
+      }
+      if (!el && !showAllPassageParas) {
+        showAllPassageParas = true;
+        renderPassage(activePassage);
+        el = document.getElementById(`evHighlight-${qId}`) || document.querySelector(`.cr-evidence-hl[data-qids*="${qId}"]`);
       }
       if (el) {
         const targetEl = el.closest('.cr-evidence-hl') || el;

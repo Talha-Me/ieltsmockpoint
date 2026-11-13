@@ -17,12 +17,13 @@
 <meta name="keywords" content="free IELTS mock test, IELTS mock test, IELTS practice, free IELTS practice, IELTS question types, IELTS practice by question type, Cambridge IELTS practice, IELTS reading practice, IELTS listening practice, IELTS writing practice, true false not given, matching headings, map labelling, IELTS practice hub, IELTS mock practice online">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <meta name="theme-color" content="#0b2b52">
-<link rel="canonical" href="https://www.ieltsmockpoint.com/practice-hub">
+<link rel="canonical" href="https://ieltsmockpoint.com/practice-hub">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="IELTS Mockpoint">
 <meta property="og:title" content="Free IELTS Practice by Question Type Online | IELTS Mockpoint">
 <meta property="og:description" content="Free IELTS practice by question type for Reading, Listening & Writing. Master True/False/NG, Headings, Maps & Essays with authentic tests & instant band scores!">
-<meta property="og:url" content="https://www.ieltsmockpoint.com/practice-hub">
+<meta property="og:url" content="https://ieltsmockpoint.com/practice-hub">
+<meta property="og:image" content="https://ieltsmockpoint.com/Brandlogo.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Free IELTS Practice by Question Type Online | IELTS Mockpoint">
 <meta name="twitter:description" content="Free IELTS practice by question type for Reading, Listening & Writing. Master True/False/NG, Headings, Maps & Essays with authentic tests & instant band scores!">
@@ -1022,8 +1023,8 @@ footer {
       <div class="cta-row"><a href="#hub" class="btn btn-red">Start free practice</a><a href="/mocks.html" class="btn btn-outline">Try free full mock test</a></div>
       <div class="stats">
         <div><strong id="stS">4</strong><span>Skills</span></div>
-        <div><strong id="stT">0</strong><span>Question types</span></div>
-        <div><strong id="stP">0</strong><span>Practice sets</span></div>
+        <div><strong id="stT">32</strong><span>Question types</span></div>
+        <div><strong id="stP">1459</strong><span>Practice sets</span></div>
       </div>
     </div>
     <div class="fwrap reveal">
@@ -1406,7 +1407,7 @@ function build(){
     const items=[...m.items];
     const extras=Object.keys(DATA[m.id]||{}).filter(t=>!known.has(t));
     if(extras.length){items.push({g:'More question types'});extras.forEach(t=>items.push({t,n:prettify(t),i:'',d:'More free IELTS practice for this question type.'}));}
-    let g=`<div class="mod-h reveal"><div><h2>${m.title}</h2><p>${m.d}</p></div><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">${m.id==='reading'?'<a class="btn btn-red" href="/reading-exercises">Practice by Question Type →</a>':''}${m.id==='listening'?'<a class="btn btn-red" href="/listening-exercises">Practice by Question Type →</a><a class="btn btn-outline" href="/recent-listening-tests">Recent Actual Tests (20) →</a>':''}${m.id==='writing'?'<a class="btn btn-red" href="/writing-exercises">Practice by Question Type →</a>':''}${m.id==='speaking'?'<a class="btn btn-red" href="/speaking.html#speaking-tests">Practice by Part →</a>':''}<a class="btn btn-outline" href="${m.all}">Only ${m.name} tests →</a></div></div>`;
+    let g=`<div class="mod-h reveal"><div><h2>${m.title}</h2><p>${m.d}</p></div><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">${m.id==='reading'?'<a class="btn btn-red" href="/reading-exercises">Practice by Question Type →</a>':''}${m.id==='listening'?'<a class="btn btn-red" href="/listening-exercises">Practice by Question Type →</a><a class="btn btn-outline" href="/recent-listening-tests">Recent Actual Tests (20) →</a>':''}${m.id==='writing'?'<a class="btn btn-red" href="/writing-exercises">Practice by Question Type →</a><a class="btn btn-outline" href="/recent-writing-tests">Recent Actual Tests (20) →</a>':''}${m.id==='speaking'?'<a class="btn btn-red" href="/speaking.html#speaking-tests">Practice by Part →</a>':''}<a class="btn btn-outline" href="${m.all}">Only ${m.name} tests →</a></div></div>`;
     if(m.id==='reading'){
       g+=`
         <div class="reading-feature-banner reveal">

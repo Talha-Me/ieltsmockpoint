@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 440" width="760" height="440" role="img" aria-label="Line graph showing overseas visitors to France, Spain, and Japan from 2000 to 2020">
+  <rect width="760" height="440" fill="#ffffff" rx="10"/>
+  <text x="380" y="34" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#0b2b52">Overseas Visitors to France, Spain, and Japan (2000–2020)</text>
+  <text x="380" y="54" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#64748b">Annual international arrivals in millions</text>
+
+  <!-- Gridlines &amp; Y-axis labels -->
+  <g stroke="#e2e8f0" stroke-width="1">
+    <line x1="90" y1="350" x2="690" y2="350"/>
+    <line x1="90" y1="296" x2="690" y2="296"/>
+    <line x1="90" y1="242" x2="690" y2="242"/>
+    <line x1="90" y1="188" x2="690" y2="188"/>
+    <line x1="90" y1="134" x2="690" y2="134"/>
+    <line x1="90" y1="80" x2="690" y2="80"/>
+  </g>
+  <g font-family="Inter,Arial,sans-serif" font-size="12" fill="#475569" text-anchor="end">
+    <text x="80" y="354">0</text>
+    <text x="80" y="300">20</text>
+    <text x="80" y="246">40</text>
+    <text x="80" y="192">60</text>
+    <text x="80" y="138">80</text>
+    <text x="80" y="84">100</text>
+  </g>
+  <text x="26" y="215" transform="rotate(-90 26 215)" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" font-weight="600" fill="#334155">Visitors (millions)</text>
+
+  <!-- X-axis labels -->
+  <g font-family="Inter,Arial,sans-serif" font-size="12" fill="#475569" text-anchor="middle">
+    <text x="90" y="374">2000</text>
+    <text x="240" y="374">2005</text>
+    <text x="390" y="374">2010</text>
+    <text x="540" y="374">2015</text>
+    <text x="690" y="374">2020</text>
+  </g>
+  <line x1="90" y1="80" x2="90" y2="350" stroke="#94a3b8" stroke-width="1.5"/>
+  <line x1="90" y1="350" x2="690" y2="350" stroke="#94a3b8" stroke-width="1.5"/>
+
+  <!-- France: 2000:75 (y=147.5), 2005:78 (y=139.4), 2010:80 (y=134), 2015:85 (y=120.5), 2020:42 (y=236.6) -->
+  <polyline fill="none" stroke="#0b2b52" stroke-width="3" points="90,147.5 240,139.4 390,134 540,120.5 690,236.6"/>
+  <g fill="#0b2b52">
+    <circle cx="90" cy="147.5" r="4.5"/><circle cx="240" cy="139.4" r="4.5"/><circle cx="390" cy="134" r="4.5"/><circle cx="540" cy="120.5" r="4.5"/><circle cx="690" cy="236.6" r="4.5"/>
+  </g>
+
+  <!-- Spain: 2000:48 (y=220.4), 2005:56 (y=198.8), 2010:53 (y=206.9), 2015:68 (y=166.4), 2020:19 (y=298.7) -->
+  <polyline fill="none" stroke="#e0202d" stroke-width="3" stroke-dasharray="8 4" points="90,220.4 240,198.8 390,206.9 540,166.4 690,298.7"/>
+  <g fill="#e0202d">
+    <rect x="86" y="216.4" width="8" height="8"/><rect x="236" y="194.8" width="8" height="8"/><rect x="386" y="202.9" width="8" height="8"/><rect x="536" y="162.4" width="8" height="8"/><rect x="686" y="294.7" width="8" height="8"/>
+  </g>
+
+  <!-- Japan: 2000:5 (y=336.5), 2005:7 (y=331.1), 2010:9 (y=325.7), 2015:20 (y=296), 2020:4 (y=339.2) -->
+  <polyline fill="none" stroke="#0d9488" stroke-width="3" points="90,336.5 240,331.1 390,325.7 540,296 690,339.2"/>
+  <g fill="#0d9488">
+    <polygon points="90,331.5 95,340.5 85,340.5"/>
+    <polygon points="240,326.1 245,335.1 235,335.1"/>
+    <polygon points="390,320.7 395,329.7 385,329.7"/>
+    <polygon points="540,291 545,300 535,300"/>
+    <polygon points="690,334.2 695,343.2 685,343.2"/>
+  </g>
+
+  <!-- Legend -->
+  <g transform="translate(215, 398)" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="600" fill="#0f172a">
+    <line x1="0" y1="8" x2="24" y2="8" stroke="#0b2b52" stroke-width="3"/><circle cx="12" cy="8" r="4" fill="#0b2b52"/><text x="32" y="12">France</text>
+    <line x1="115" y1="8" x2="139" y2="8" stroke="#e0202d" stroke-width="3" stroke-dasharray="6 3"/><rect x="123" y="4" width="8" height="8" fill="#e0202d"/><text x="147" y="12">Spain</text>
+    <line x1="225" y1="8" x2="249" y2="8" stroke="#0d9488" stroke-width="3"/><polygon points="237,3 242,12 232,12" fill="#0d9488"/><text x="257" y="12">Japan</text>
+  </g>
+</svg>

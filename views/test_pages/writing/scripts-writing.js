@@ -306,12 +306,29 @@ function injectBcStyles() {
     }
 
     @media (max-width: 700px) {
-      .bc-score-grid { grid-template-columns: 1fr; }
-      .bc-review-body { grid-template-columns: 1fr; }
+      .bc-result-header { padding: 22px 14px 76px; }
       .bc-result-header h1 { font-size: 22px; }
+      .bc-result-wrap { padding: 0 10px; margin: -56px auto 24px; }
+      .bc-hero-card { padding: 14px; border-radius: 16px; gap: 14px; }
+      .bc-hero-top { flex-direction: column; gap: 12px; }
+      .bc-overall-box { width: 100%; min-width: 0; padding: 16px; box-sizing: border-box; }
+      .bc-module-grid { grid-template-columns: 1fr; min-width: 0; width: 100%; gap: 10px; }
+      .bc-mod-mini-card { padding: 12px 14px; }
+      .bc-score-grid { grid-template-columns: 1fr; }
+      .bc-score-card { padding: 16px; gap: 14px; }
+      .bc-score-info { width: 100%; min-width: 0; }
+      .bc-writing-card { padding: 16px; flex-direction: column; align-items: stretch; }
+      .bc-wc-left { width: 100%; }
+      .bc-writing-card > div:last-child { width: 100%; flex-direction: column; align-items: stretch !important; gap: 10px !important; }
+      .bc-writing-card .bc-total-pill { width: 100%; text-align: center; box-sizing: border-box; }
+      .bc-writing-card .bc-btn { width: 100%; min-width: 0 !important; }
+      .bc-module-tabs { flex-direction: column; }
+      .bc-module-tab { font-size: 13.5px; padding: 11px 10px; border-bottom: 1px solid #e2e8f0; }
+      .bc-module-tab:last-child { border-bottom: none; }
+      .bc-review-body { grid-template-columns: 1fr; }
       .bc-steps { grid-template-columns: 1fr; }
-      .bc-module-tab { font-size: 13px; padding: 12px 6px; }
-      .bc-writing-card .bc-btn { width: 100%; }
+      .bc-ai-criteria { grid-template-columns: 1fr; }
+      .bc-result-footer .bc-btn { width: 100%; min-width: 0; }
     }
   `;
   document.head.appendChild(style);

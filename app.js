@@ -1052,12 +1052,68 @@ app.use((req, res, next) => {
     }
     return authRoutes.cambridge_reading_test(req, res, next);
   });
-  app.get("/cambridge-writing-test", authRoutes.cambridge_writing_test);
-   app.get("/cambridge/writing/:book/:testNo", (req, res) => {
-    res.sendFile(
-      path.join(__dirname, "views", "cambridgetest", "cambridge-writing-test.html"),
-      (err) => {
+  const _testHtmlCache = new Map();
+  function escapeHtmlAttr(str) {
+    return String(str || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+  function sendTestHtmlWithSeo(res, filePath, { title, description, canonical }) {
+    try {
+      const nodeFs = require("fs");
+      let html = _testHtmlCache.get(filePath);
+      if (!html) {
+        html = nodeFs.readFileSync(filePath, "utf8");
+        _testHtmlCache.set(filePath, html);
+      }
+      let out = html;
+      if (title) {
+        const safeTitle = escapeHtmlAttr(title);
+        out = out.replace(/<title[^>]*>[\s\S]*?<\/title>/i, `<title>${safeTitle}</title>`);
+        out = out.replace(/(<meta[^>]+property=["']og:title["'][^>]+content=["'])[^"']*(["'][^>]*>)/i, `$1${safeTitle}$2`);
+      }
+      if (description) {
+        const safeDesc = escapeHtmlAttr(description);
+        out = out.replace(/(<meta[^>]+name=["']description["'][^>]+content=["'])[^"']*(["'][^>]*>)/i, `$1${safeDesc}$2`);
+        out = out.replace(/(<meta[^>]+content=["'])[^"']*(['"][^>]+name=["']description["'][^>]*>)/i, `$1${safeDesc}$2`);
+        out = out.replace(/(<meta[^>]+property=["']og:description["'][^>]+content=["'])[^"']*(["'][^>]*>)/i, `$1${safeDesc}$2`);
+      }
+      if (canonical) {
+        const safeCanon = escapeHtmlAttr(canonical);
+        if (/<link[^>]+rel=["']canonical["'][^>]*>/i.test(out)) {
+          out = out.replace(/<link[^>]+rel=["']canonical["'][^>]*>/i, `<link rel="canonical" href="${safeCanon}">`);
+        } else {
+          out = out.replace(/<\/head>/i, `  <link rel="canonical" href="${safeCanon}">\n</head>`);
+        }
+        out = out.replace(/(<meta[^>]+property=["']og:url["'][^>]+content=["'])[^"']*(["'][^>]*>)/i, `$1${safeCanon}$2`);
+      }
+      res.set("Content-Type", "text/html; charset=utf-8");
+      return res.status(200).send(out);
+    } catch (e) {
+      return res.sendFile(filePath, (err) => {
         if (err && !res.headersSent) res.status(err.status || 500).send(err.message);
+      });
+    }
+  }
+
+  app.get("/cambridge-writing-test", authRoutes.cambridge_writing_test);
+  app.get("/cambridge/writing/:book/:testNo", (req, res) => {
+    const book = String(req.params.book || "").trim();
+    const testNo = String(req.params.testNo || "").trim();
+    const is2026 = book === "2026";
+    return sendTestHtmlWithSeo(
+      res,
+      path.join(__dirname, "views", "cambridgetest", "cambridge-writing-test.html"),
+      {
+        title: is2026
+          ? `2026 Recent IELTS Writing Test ${testNo} (Actual Exam Mock) | IELTS Mockpoint`
+          : `Cambridge IELTS ${book} Writing Test ${testNo} (Task 1 & Task 2) | IELTS Mockpoint`,
+        description: is2026
+          ? `Practise 2026 Recent Actual IELTS Writing Test ${testNo} (Task 1 & Task 2) free online with a 60-minute exam timer and live word counter on IELTS Mockpoint.`
+          : `Practise Cambridge IELTS ${book} Writing Test ${testNo} (Task 1 & Task 2) online free with a 60-minute timer, live word counter & Band 8+ model answers on IELTS Mockpoint.`,
+        canonical: `https://ieltsmockpoint.com/cambridge/writing/${encodeURIComponent(book)}/${encodeURIComponent(testNo)}`
       }
     );
   });
@@ -1077,11 +1133,24 @@ app.use((req, res, next) => {
   // CAMBRIDGE LISTENING V2 (WITH TRANSCRIPTS & EXPLANATIONS)
   // ==========================================
   app.get(["/cambridge-listening-v2", "/cambridge-listening-test-v2"], (req, res) => {
-    res.sendFile(
+    const book = String(req.query.book || "").trim();
+    const testNo = String(req.query.test || "").trim();
+    const is2026 = book === "2026";
+    const seo = (book && testNo) ? {
+      title: is2026
+        ? `2026 Recent IELTS Listening Test ${testNo} (Audio & Answers) | IELTS Mockpoint`
+        : `Cambridge IELTS ${book} Listening Test ${testNo} (Audio & Answers) | IELTS Mockpoint`,
+      description: is2026
+        ? `Practise 2026 Recent Actual IELTS Listening Test ${testNo} free online with studio audio, 40 questions, transcripts & instant band score on IELTS Mockpoint.`
+        : `Take Cambridge IELTS ${book} Listening Test ${testNo} free online with authentic audio, 40-question timer, transcripts & instant band score on IELTS Mockpoint.`,
+      canonical: `https://ieltsmockpoint.com/cambridge-listening-v2?book=${encodeURIComponent(book)}&test=${encodeURIComponent(testNo)}`
+    } : {
+      canonical: "https://ieltsmockpoint.com/cambridge-listening"
+    };
+    return sendTestHtmlWithSeo(
+      res,
       path.join(__dirname, "views", "cambridgetest", "listening-practice-v2.html"),
-      (err) => {
-        if (err && !res.headersSent) res.status(err.status || 500).send(err.message);
-      }
+      seo
     );
   });
 
@@ -1112,11 +1181,24 @@ app.use((req, res, next) => {
   // CAMBRIDGE READING V2 (WITH EVIDENCE HIGHLIGHTS & EXPLANATIONS)
   // ==========================================
   app.get(["/cambridge-reading-v2", "/cambridge-reading-test-v2"], (req, res) => {
-    res.sendFile(
+    const book = String(req.query.book || "").trim();
+    const testNo = String(req.query.test || "").trim();
+    const is2026 = book === "2026";
+    const seo = (book && testNo) ? {
+      title: is2026
+        ? `2026 Recent IELTS Reading Test ${testNo} (Actual Exam Mock) | IELTS Mockpoint`
+        : `Cambridge IELTS ${book} Academic Reading Test ${testNo} Free Online | IELTS Mockpoint`,
+      description: is2026
+        ? `Practise 2026 Recent Actual IELTS Reading Test ${testNo} free online with split-screen passages, 60-minute timer, Verbatim Evidence Highlights & instant band score.`
+        : `Take Cambridge IELTS ${book} Academic Reading Test ${testNo} free online with authentic split-screen interface, 60-minute timer & instant band score on IELTS Mockpoint.`,
+      canonical: `https://ieltsmockpoint.com/cambridge-reading-v2?book=${encodeURIComponent(book)}&test=${encodeURIComponent(testNo)}`
+    } : {
+      canonical: "https://ieltsmockpoint.com/cambridge-reading"
+    };
+    return sendTestHtmlWithSeo(
+      res,
       path.join(__dirname, "views", "cambridgetest", "reading-practice-v2.html"),
-      (err) => {
-        if (err && !res.headersSent) res.status(err.status || 500).send(err.message);
-      }
+      seo
     );
   });
 
@@ -2071,6 +2153,16 @@ app.post(["/api/save-cambridge-reading", "/admin/api/cambridge-reading/save"], a
     res.sendFile(path.join(__dirname, "public", "recent-listening-tests.html"));
   });
 
+  // Recent IELTS Reading Real Tests
+  app.get(["/recent-reading-tests", "/recent-reading-tests.html", "/recent-reading-real-tests"], (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "recent-reading-tests.html"));
+  });
+
+  // Recent IELTS Writing Real Tests
+  app.get(["/recent-writing-tests", "/recent-writing-tests.html", "/recent-writing-real-tests"], (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "recent-writing-tests.html"));
+  });
+
   // ==========================================
   // WRITING EXERCISES BY QUESTION TYPE
   // ==========================================
@@ -2396,56 +2488,77 @@ app.get('/sitemap.xml', async (req, res) => {
     let lessons = [];
     let cambridgeListeningDocs = [];
     let cambridgeReadingDocs = [];
+    let cambridgeListeningV2Docs = [];
+    let cambridgeReadingV2Docs = [];
+    let cambridgeWritingDocs = [];
+    let fullMockDocs = [];
 
     try { blogs = await Blog.find({ isPublished: true }, 'slug updatedAt createdAt').lean(); } catch(e){}
     try { lessons = await Lesson.find({ isPublished: true }, 'module slug updatedAt createdAt').lean(); } catch(e){}
     try { cambridgeListeningDocs = await CambridgeListening.find({}, 'book testNo bookNumber testNumber updatedAt').lean(); } catch(e){}
     try { cambridgeReadingDocs = await CambridgeReading.find({}, 'book testNo bookNumber testNumber updatedAt').lean(); } catch(e){}
+    try {
+      const db = mongoose.connection.db;
+      cambridgeListeningV2Docs = await db.collection('cambridge_listening_v2').find({}, { projection: { book: 1, testNo: 1, bookNumber: 1, testNumber: 1, updatedAt: 1 } }).lean ? await db.collection('cambridge_listening_v2').find({}, { projection: { book: 1, testNo: 1, bookNumber: 1, testNumber: 1, updatedAt: 1 } }).toArray() : await db.collection('cambridge_listening_v2').find({}, { projection: { book: 1, testNo: 1, bookNumber: 1, testNumber: 1, updatedAt: 1 } }).toArray();
+      cambridgeReadingV2Docs = await db.collection('cambridge_reading_v2').find({}, { projection: { book: 1, testNo: 1, bookNumber: 1, testNumber: 1, updatedAt: 1 } }).toArray();
+      cambridgeWritingDocs = await db.collection('cambridgewritings').find({}, { projection: { book: 1, testNo: 1, bookNumber: 1, testNumber: 1, updatedAt: 1 } }).toArray();
+      fullMockDocs = await db.collection('test-questions').find({}, { projection: { mockNumber: 1, updatedAt: 1 } }).toArray();
+    } catch(e){}
 
     // 2. High-value Core Landing Pages
     const staticPages = [
       { url: '', priority: '1.0', changefreq: 'daily' },
       { url: '/mocks', priority: '0.95', changefreq: 'daily' },
+      { url: '/cambridge-reading', priority: '0.95', changefreq: 'daily' },
+      { url: '/cambridge-listening', priority: '0.95', changefreq: 'daily' },
+      { url: '/cambridge-writing', priority: '0.95', changefreq: 'daily' },
+      { url: '/recent-reading-tests', priority: '0.95', changefreq: 'daily' },
+      { url: '/recent-listening-tests', priority: '0.95', changefreq: 'daily' },
+      { url: '/recent-writing-tests', priority: '0.95', changefreq: 'daily' },
       { url: '/speaking', priority: '0.95', changefreq: 'daily' },
       { url: '/practice-hub', priority: '0.95', changefreq: 'daily' },
-      { url: '/band-calculator.html', priority: '0.90', changefreq: 'weekly' },
+      { url: '/band-calculator', priority: '0.90', changefreq: 'weekly' },
       { url: '/reading-exercises', priority: '0.85', changefreq: 'weekly' },
       { url: '/listening-exercises', priority: '0.85', changefreq: 'weekly' },
       { url: '/writing-exercises', priority: '0.85', changefreq: 'weekly' },
       { url: '/pricing', priority: '0.80', changefreq: 'weekly' },
-      { url: '/blog', priority: '0.85', changefreq: 'daily' },
+      { url: '/blog', priority: '0.90', changefreq: 'daily' },
       { url: '/learn', priority: '0.85', changefreq: 'daily' },
       { url: '/faq', priority: '0.70', changefreq: 'monthly' }
     ];
 
     let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
     xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+    const seenLocs = new Set();
+    const pushUrl = (loc, { lastmod, changefreq = 'weekly', priority = '0.85' } = {}) => {
+      if (!loc || seenLocs.has(loc)) return;
+      seenLocs.add(loc);
+      xml += '  <url>\n';
+      xml += '    <loc>' + loc + '</loc>\n';
+      if (lastmod) xml += '    <lastmod>' + lastmod + '</lastmod>\n';
+      xml += '    <changefreq>' + changefreq + '</changefreq>\n';
+      xml += '    <priority>' + priority + '</priority>\n';
+      xml += '  </url>\n';
+    };
 
     // (A) Static Landing Pages
     staticPages.forEach(page => {
-      xml += '  <url>\n';
-      xml += '    <loc>https://ieltsmockpoint.com' + page.url + '</loc>\n';
-      xml += '    <changefreq>' + page.changefreq + '</changefreq>\n';
-      xml += '    <priority>' + page.priority + '</priority>\n';
-      xml += '  </url>\n';
+      pushUrl('https://ieltsmockpoint.com' + page.url, { changefreq: page.changefreq, priority: page.priority });
     });
 
     // (B) 20 Authentic IELTS Speaking Mock Tests
     for (let sId = 1; sId <= 20; sId++) {
-      xml += '  <url>\n';
-      xml += '    <loc>https://ieltsmockpoint.com/speaking-test?id=' + sId + '</loc>\n';
-      xml += '    <changefreq>weekly</changefreq>\n';
-      xml += '    <priority>0.90</priority>\n';
-      xml += '  </url>\n';
+      pushUrl('https://ieltsmockpoint.com/speaking-test?id=' + sId, { changefreq: 'weekly', priority: '0.90' });
     }
 
-    // (C) Academic & Premium Full Mock Tests (1 to 12)
+    // (C) Full Mock Tests (All DB test-questions + 1..12 fallback)
+    fullMockDocs.forEach(item => {
+      if (item.mockNumber) {
+        pushUrl('https://ieltsmockpoint.com/test3?mockNumber=' + escapeXml(encodeURIComponent(String(item.mockNumber))), { changefreq: 'weekly', priority: '0.90' });
+      }
+    });
     for (let mId = 1; mId <= 12; mId++) {
-      xml += '  <url>\n';
-      xml += '    <loc>https://ieltsmockpoint.com/test3?mockNumber=' + mId + '</loc>\n';
-      xml += '    <changefreq>weekly</changefreq>\n';
-      xml += '    <priority>0.90</priority>\n';
-      xml += '  </url>\n';
+      pushUrl('https://ieltsmockpoint.com/test3?mockNumber=' + mId, { changefreq: 'weekly', priority: '0.90' });
     }
 
     // (D) Blog Posts
@@ -2453,12 +2566,7 @@ app.get('/sitemap.xml', async (req, res) => {
       if (post.slug) {
         const dateObj = post.updatedAt || post.createdAt || new Date();
         const lastMod = new Date(dateObj).toISOString().split('T')[0];
-        xml += '  <url>\n';
-        xml += '    <loc>https://ieltsmockpoint.com/blog/' + encodeURIComponent(post.slug) + '</loc>\n';
-        xml += '    <lastmod>' + lastMod + '</lastmod>\n';
-        xml += '    <changefreq>weekly</changefreq>\n';
-        xml += '    <priority>0.80</priority>\n';
-        xml += '  </url>\n';
+        pushUrl('https://ieltsmockpoint.com/blog/' + encodeURIComponent(post.slug), { lastmod: lastMod, changefreq: 'weekly', priority: '0.80' });
       }
     });
 
@@ -2467,38 +2575,54 @@ app.get('/sitemap.xml', async (req, res) => {
       if (lesson.module && lesson.slug) {
         const dateObj = lesson.updatedAt || lesson.createdAt || new Date();
         const lastMod = new Date(dateObj).toISOString().split('T')[0];
-        xml += '  <url>\n';
-        xml += '    <loc>https://ieltsmockpoint.com/learn/' + encodeURIComponent(lesson.module) + '/' + encodeURIComponent(lesson.slug) + '</loc>\n';
-        xml += '    <lastmod>' + lastMod + '</lastmod>\n';
-        xml += '    <changefreq>weekly</changefreq>\n';
-        xml += '    <priority>0.75</priority>\n';
-        xml += '  </url>\n';
+        pushUrl('https://ieltsmockpoint.com/learn/' + encodeURIComponent(lesson.module) + '/' + encodeURIComponent(lesson.slug), { lastmod: lastMod, changefreq: 'weekly', priority: '0.75' });
       }
     });
 
-    // (F) Cambridge Listening Tests
+    // (F) Cambridge Listening Tests (V2 canonical + non-redirecting V1)
+    const listeningV2Keys = new Set();
+    cambridgeListeningV2Docs.forEach(item => {
+      const b = item.book || item.bookNumber;
+      const t = item.testNo || item.testNumber;
+      if (b && t) {
+        listeningV2Keys.add(`${b}:${t}`);
+        pushUrl('https://ieltsmockpoint.com/cambridge-listening-v2?book=' + escapeXml(b) + '&amp;test=' + escapeXml(t), { changefreq: 'monthly', priority: '0.88' });
+      }
+    });
     cambridgeListeningDocs.forEach(item => {
       const b = item.book || item.bookNumber;
       const t = item.testNo || item.testNumber;
-      if (b && t) {
-        xml += '  <url>\n';
-        xml += '    <loc>https://ieltsmockpoint.com/cambridge-listening-test?book=' + escapeXml(b) + '&amp;test=' + escapeXml(t) + '</loc>\n';
-        xml += '    <changefreq>monthly</changefreq>\n';
-        xml += '    <priority>0.85</priority>\n';
-        xml += '  </url>\n';
+      const bn = Number(b);
+      if (b && t && !(bn >= 12 && bn <= 21) && !listeningV2Keys.has(`${b}:${t}`)) {
+        pushUrl('https://ieltsmockpoint.com/cambridge-listening-test?book=' + escapeXml(b) + '&amp;test=' + escapeXml(t), { changefreq: 'monthly', priority: '0.85' });
       }
     });
 
-    // (G) Cambridge Reading Tests
-    cambridgeReadingDocs.forEach(item => {
+    // (G) Cambridge Reading Tests (V2 canonical + non-redirecting V1)
+    const readingV2Keys = new Set();
+    cambridgeReadingV2Docs.forEach(item => {
       const b = item.book || item.bookNumber;
       const t = item.testNo || item.testNumber;
       if (b && t) {
-        xml += '  <url>\n';
-        xml += '    <loc>https://ieltsmockpoint.com/cambridge-reading-test?book=' + escapeXml(b) + '&amp;test=' + escapeXml(t) + '</loc>\n';
-        xml += '    <changefreq>monthly</changefreq>\n';
-        xml += '    <priority>0.85</priority>\n';
-        xml += '  </url>\n';
+        readingV2Keys.add(`${b}:${t}`);
+        pushUrl('https://ieltsmockpoint.com/cambridge-reading-v2?book=' + escapeXml(b) + '&amp;test=' + escapeXml(t), { changefreq: 'monthly', priority: '0.88' });
+      }
+    });
+    cambridgeReadingDocs.forEach(item => {
+      const b = item.book || item.bookNumber;
+      const t = item.testNo || item.testNumber;
+      const bn = Number(b);
+      if (b && t && !(bn >= 12 && bn <= 21) && !readingV2Keys.has(`${b}:${t}`)) {
+        pushUrl('https://ieltsmockpoint.com/cambridge-reading-test?book=' + escapeXml(b) + '&amp;test=' + escapeXml(t), { changefreq: 'monthly', priority: '0.85' });
+      }
+    });
+
+    // (H) Cambridge Writing Tests
+    cambridgeWritingDocs.forEach(item => {
+      const b = item.book || item.bookNumber;
+      const t = item.testNo || item.testNumber;
+      if (b && t) {
+        pushUrl('https://ieltsmockpoint.com/cambridge/writing/' + escapeXml(b) + '/' + escapeXml(t), { changefreq: 'monthly', priority: '0.85' });
       }
     });
 
@@ -2529,7 +2653,43 @@ app.get(["/speaking", "/speaking.html"], (req, res) => {
 });
 
 app.get(["/speaking-test", "/speaking-practice"], (req, res) => {
-  res.sendFile(path.join(__dirname, "views", "speaking_engine", "speaking-test.html"));
+  const sId = String(req.query.id || "").trim();
+  const seo = sId ? {
+    title: `IELTS Speaking Mock Test ${sId} With 3D AI Examiner | IELTS Mockpoint`,
+    description: `Practise IELTS Speaking Mock Test ${sId} free online with our 3D AI Voice Examiner covering Part 1 interview, Part 2 cue card & Part 3 discussion on IELTS Mockpoint.`,
+    canonical: `https://ieltsmockpoint.com/speaking-test?id=${encodeURIComponent(sId)}`
+  } : {
+    canonical: "https://ieltsmockpoint.com/speaking"
+  };
+  return sendTestHtmlWithSeo(
+    res,
+    path.join(__dirname, "views", "speaking_engine", "speaking-test.html"),
+    seo
+  );
+});
+
+app.get(["/test3", "/test3.html"], (req, res) => {
+  const m = String(req.query.mockNumber || "").trim();
+  let label = "IELTS Full Mock Test";
+  if (m) {
+    if (/^Academic-UKA-FINAL-/i.test(m)) label = `Academic IELTS Full Mock Test ${m.replace(/^Academic-UKA-FINAL-/i, "")}`;
+    else if (/^Premium-UKA-FINAL-/i.test(m)) label = `Premium Academic IELTS Mock Test ${m.replace(/^Premium-UKA-FINAL-/i, "")}`;
+    else if (/^General-UKA-FINAL-/i.test(m)) label = `General Training IELTS Full Mock Test ${m.replace(/^General-UKA-FINAL-/i, "")}`;
+    else if (/^cambridge-/i.test(m)) label = `Cambridge IELTS Full Mock Test ${m.replace(/^cambridge-/i, "")}`;
+    else label = `IELTS Full Mock Test ${m}`;
+  }
+  const seo = m ? {
+    title: `${label} Free Online (4-Skills CD IELTS) | IELTS Mockpoint`,
+    description: `Take ${label} free online in authentic Computer-Delivered IELTS format: Listening, Reading & Writing with real exam timer and instant band score.`,
+    canonical: `https://ieltsmockpoint.com/test3?mockNumber=${encodeURIComponent(m)}`
+  } : {
+    canonical: "https://ieltsmockpoint.com/mocks"
+  };
+  return sendTestHtmlWithSeo(
+    res,
+    path.join(__dirname, "FrontPage", "Frontend", "test3.html"),
+    seo
+  );
 });
 
 
