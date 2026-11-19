@@ -23,3 +23,19 @@ public/audio_lab/
 public/audio/premium/
 public/audio/cambridge/
 public/images/cambridge/
+
+# GT Reading Reference PDFs
+GT Reading Question PDF/
+
+# Archive & Office Document Backups
+*.rar
+*.zip
+*.docx
+*.doc
+
+# Unused Heavy Assets & Drafts
+FrontPage/Frontend/email-icon.png
+FrontPage/Frontend/call-icon.png
+FrontPage/Frontend/reading-icon.png
+FrontPage/Frontend/writing-icon.png
+mocks/ChatGPT Image*.png
