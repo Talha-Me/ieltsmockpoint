@@ -623,10 +623,15 @@ body.listening-popup-active {
     overflow-x: auto !important;
     flex-wrap: nowrap !important;
     justify-content: flex-start !important;
-    padding: 6px 8px !important;
+    padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px)) !important;
     gap: 6px !important;
     -webkit-overflow-scrolling: touch;
     z-index: 1000 !important;
+  }
+  textarea,
+  input[type="text"],
+  select {
+    font-size: 16px !important;
   }
 
   .nav-button {

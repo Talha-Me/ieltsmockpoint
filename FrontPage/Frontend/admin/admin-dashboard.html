@@ -148,20 +148,24 @@ table td,table th{ vertical-align:middle; }
           <input type="number" id="ukaPremiumMocks" class="form-control form-control-sm" min="0" max="20" value="1">
         </div>
         <div class="col-sm-4 col-md-2">
-          <label class="form-label small fw-semibold text-muted mb-1">Cambridge Parts</label>
-          <input type="number" id="ukaPartsPerTest" class="form-control form-control-sm" min="0" max="4" value="1">
+          <label class="form-label small fw-semibold text-muted mb-1">GT Full Mocks</label>
+          <input type="number" id="ukaGeneralMocks" class="form-control form-control-sm" min="0" max="20" value="1">
         </div>
         <div class="col-sm-4 col-md-2">
-          <label class="form-label small fw-semibold text-muted mb-1">Cambridge Q-Types</label>
-          <input type="number" id="ukaQuestionTypes" class="form-control form-control-sm" min="0" max="10" value="0">
+          <label class="form-label small fw-semibold text-muted mb-1">Recent Tests</label>
+          <input type="number" id="ukaRecentTests" class="form-control form-control-sm" min="0" max="20" value="2">
+        </div>
+        <div class="col-sm-4 col-md-2">
+          <label class="form-label small fw-semibold text-muted mb-1">Cambridge Parts</label>
+          <input type="number" id="ukaPartsPerTest" class="form-control form-control-sm" min="0" max="4" value="1">
         </div>
         <div class="col-sm-4 col-md-2">
           <label class="form-label small fw-semibold text-muted mb-1">Practice Hub Sets</label>
           <input type="number" id="ukaHubSets" class="form-control form-control-sm" min="0" max="20" value="2">
         </div>
         <div class="col-sm-4 col-md-2">
-          <label class="form-label small fw-semibold text-muted mb-1">Daily AI Writing</label>
-          <input type="number" id="ukaAiWriting" class="form-control form-control-sm" min="0" max="10" value="1">
+          <label class="form-label small fw-semibold text-muted mb-1">Daily Free AI (Reviews)</label>
+          <input type="number" id="ukaAiWriting" class="form-control form-control-sm" min="0" max="20" value="3">
         </div>
         <div class="col-12 mt-3 d-flex align-items-center justify-content-between">
           <div id="ukaSaveAlert" class="small fw-bold text-success d-none">
@@ -322,10 +326,11 @@ async function loadUkaSettings() {
       selectUkaPhase(s.currentPhase || 1);
       if (document.getElementById('ukaAcademicMocks')) document.getElementById('ukaAcademicMocks').value = s.freeAcademicMocksCount ?? 1;
       if (document.getElementById('ukaPremiumMocks')) document.getElementById('ukaPremiumMocks').value = s.freePremiumMocksCount ?? 1;
+      if (document.getElementById('ukaGeneralMocks')) document.getElementById('ukaGeneralMocks').value = s.freeGeneralMocksCount ?? 1;
+      if (document.getElementById('ukaRecentTests')) document.getElementById('ukaRecentTests').value = s.freeRecentTestsCount ?? 2;
       if (document.getElementById('ukaPartsPerTest')) document.getElementById('ukaPartsPerTest').value = s.freePartsPerTest ?? 1;
-      if (document.getElementById('ukaQuestionTypes')) document.getElementById('ukaQuestionTypes').value = s.freeQuestionTypesPerTest ?? 0;
       if (document.getElementById('ukaHubSets')) document.getElementById('ukaHubSets').value = s.freePracticeHubSets ?? 2;
-      if (document.getElementById('ukaAiWriting')) document.getElementById('ukaAiWriting').value = s.freeAiWritingPerDay ?? 1;
+      if (document.getElementById('ukaAiWriting')) document.getElementById('ukaAiWriting').value = s.freeAiWritingPerDay ?? 3;
     }
   } catch(e) {
     console.error('Failed to load system settings:', e);
@@ -341,11 +346,13 @@ async function saveUkaSettings() {
     currentPhase: ukaSelectedPhase,
     freeAcademicMocksCount: Number(document.getElementById('ukaAcademicMocks')?.value || 1),
     freePremiumMocksCount: Number(document.getElementById('ukaPremiumMocks')?.value || 1),
+    freeGeneralMocksCount: Number(document.getElementById('ukaGeneralMocks')?.value || 1),
     freeFullMocksCount: Number(document.getElementById('ukaAcademicMocks')?.value || 1),
+    freeRecentTestsCount: Number(document.getElementById('ukaRecentTests')?.value || 2),
     freePartsPerTest: Number(document.getElementById('ukaPartsPerTest')?.value || 1),
-    freeQuestionTypesPerTest: Number(document.getElementById('ukaQuestionTypes')?.value || 0),
+    freeQuestionTypesPerTest: 0,
     freePracticeHubSets: Number(document.getElementById('ukaHubSets')?.value || 2),
-    freeAiWritingPerDay: Number(document.getElementById('ukaAiWriting')?.value || 1),
+    freeAiWritingPerDay: Number(document.getElementById('ukaAiWriting')?.value || 3),
     cambridgeAlwaysFree: true
   };
 

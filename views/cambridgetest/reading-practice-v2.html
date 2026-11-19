@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Cambridge IELTS Academic Reading Practice Test Online Free | IELTS Mockpoint</title>
+  <title>Cambridge IELTS Reading Practice Online Free (Passages, Answers & Explanations) | IELTS Mockpoint</title>
   <meta name="description" content="Practise authentic Cambridge IELTS Reading tests online with original passages, authentic split-screen interface, time controls and instant score converter.">
   <link rel="canonical" href="https://ieltsmockpoint.com/cambridge-reading-test">
   <script>
@@ -12,7 +12,11 @@
         var u = new URLSearchParams(window.location.search);
         var b = u.get('book') || '21';
         var t = u.get('test') || '1';
-        document.title = 'Cambridge IELTS ' + b + ' Academic Reading Test ' + t + ' Online Free | IELTS Mockpoint';
+        var isGT = u.get('type') === 'gt' || u.get('mode') === 'gt' || b.toLowerCase().includes('gt');
+        var cleanBook = b.replace(/\D/g, '') || b;
+        document.title = isGT
+          ? 'Cambridge IELTS ' + cleanBook + ' General Training Reading Test ' + t + ' Online Free | IELTS Mockpoint'
+          : 'Cambridge IELTS ' + b + ' Academic Reading Test ' + t + ' Online Free | IELTS Mockpoint';
       } catch(e) {}
     })();
   </script>
@@ -26,6 +30,80 @@
 
   <!-- Custom Styles V2 -->
   <link rel="stylesheet" href="/cambridgetest/styles-reading-v2.css">
+
+  <!-- Structured Data: EducationalOrganization, LearningResource & FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "EducationalOrganization",
+        "name": "IELTS Mockpoint",
+        "url": "https://ieltsmockpoint.com/",
+        "logo": "https://ieltsmockpoint.com/Brandlogo.png"
+      },
+      {
+        "@type": "LearningResource",
+        "name": "Cambridge IELTS Reading Practice Test Online",
+        "learningResourceType": "Practice Test",
+        "educationalLevel": "Intermediate to Advanced",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "provider": {
+          "@type": "Organization",
+          "name": "IELTS Mockpoint",
+          "url": "https://ieltsmockpoint.com/"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How does this IELTS Reading practice test work?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "This practice test provides authentic Cambridge IELTS reading passages with a 60-minute countdown timer, split-screen question navigation, text highlighting, auto-marking, and instant band score conversion."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How is the IELTS Reading band score calculated?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Your raw score (out of 40) is automatically converted to the official IELTS 9-band scale immediately upon test submission, tailored for both Academic and General Training benchmarks."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I practise one passage or section at a time?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes! You can choose between full 60-minute timed mock mode or individual passage-by-passage practice (Passage 1, 2, or 3) to focus on specific question types."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Are full answer explanations and passage highlights included?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Upon completing the test, you can review all 40 questions with color-coded passage evidence highlights, detailed Cambridge explanations, and trap alerts."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does this test save my score and answers in my profile?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. When logged in, your test results, overall and module band scores, and question-type accuracy are automatically saved to your Candidate Dashboard."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
 </head>
 <body>
 
@@ -48,13 +126,27 @@
     <!-- Center: Section Badge or Status -->
     <div class="cr-nav-center">
       <div class="cr-reading-badge" id="readingModeBadge">
-        <i class="bi bi-book"></i> <span id="readingModeText">Full Reading Mock Test</span>
+        <i class="bi bi-book"></i> <span id="readingModeText">Full Reading Mock Test (60 Mins)</span>
       </div>
     </div>
 
     <!-- Right: Timer, Notes, Fullscreen & Finish Test -->
     <div class="cr-nav-right">
-      <div class="cr-timer-pill">
+      <!-- Completed Score & Band Badges (Hidden during test, displayed on completion) -->
+      <div class="cr-completed-badges" id="crCompletedBadges" style="display:none;" title="Click to view detailed scorecard">
+        <div class="cr-score-pill" id="topbarScorePill" title="Earned Marks (Click for Review Breakdown)">
+          <i class="bi bi-check-circle-fill"></i>
+          <span class="cr-pill-label">Score:</span>
+          <strong id="topbarScoreVal">0/40</strong>
+        </div>
+        <div class="cr-band-pill" id="topbarBandPill" title="IELTS Band Score (Click for Review Breakdown)">
+          <i class="bi bi-award-fill"></i>
+          <span class="cr-pill-label">Band</span>
+          <strong id="topbarBandVal">0.0</strong>
+        </div>
+      </div>
+
+      <div class="cr-timer-pill" id="timerPill">
         <i class="bi bi-clock"></i> <span id="minutes">00</span>:<span id="seconds">00</span>
       </div>
       <button type="button" class="cr-icon-btn" id="fullscreenBtn" title="Toggle Fullscreen" onclick="toggleFullScreen()">
@@ -69,8 +161,21 @@
     </div>
   </header>
 
+  <!-- Mobile View Segmented Switcher (Visible on mobile <= 860px) -->
+  <div class="cr-mobile-view-tabs" id="crMobileViewTabs">
+    <button type="button" class="cr-mobile-tab-btn active" id="crMobileTabSplit" onclick="window.crV2 && window.crV2.setMobileView('split')">
+      <i class="bi bi-layout-split"></i> Split
+    </button>
+    <button type="button" class="cr-mobile-tab-btn" id="crMobileTabQuestions" onclick="window.crV2 && window.crV2.setMobileView('questions')">
+      <i class="bi bi-pencil-square"></i> Questions
+    </button>
+    <button type="button" class="cr-mobile-tab-btn" id="crMobileTabPassage" onclick="window.crV2 && window.crV2.setMobileView('passage')">
+      <i class="bi bi-book"></i> Passage
+    </button>
+  </div>
+
   <!-- Main Split-Screen Workspace -->
-  <main class="cr-main-wrap">
+  <main class="cr-main-wrap mobile-view-split">
     <!-- Left Column: Reading Passage Text -->
     <div class="cr-passage-col" id="passageCol">
       <div style="text-align:center; padding: 60px 20px;">
@@ -81,7 +186,7 @@
 
     <!-- Draggable Middle Split Resizer -->
     <div class="cr-split-resizer" id="splitResizer" title="Drag to resize passage and questions">
-      <div class="cr-split-handle">⬌</div>
+      <div class="cr-split-handle"><i class="bi bi-grip-vertical" style="font-size:12px; color:#64748b;"></i></div>
     </div>
 
     <!-- Right Column: Reading Questions & Answer Controls -->
@@ -138,23 +243,104 @@
     </div>
   </div>
 
-  <!-- Scorecard Result Modal -->
-  <div id="scorecardModal" class="cr-modal-overlay" style="display:none;">
-    <div class="cr-result-modal">
-      <div class="cr-score-badge-circle">
-        <span class="cr-score-band-num" id="resBandScore">8.0</span>
-        <span class="cr-score-band-lbl">BAND SCORE</span>
+  <!-- Advanced IELTS Mockpoint Result Scorecard Modal -->
+  <div id="scorecardModal" class="cr-modal-overlay mp-advanced-scorecard-overlay" style="display:none;" onclick="if(event.target === this) closeScorecardModal()">
+    <div class="mp-scorecard-modal">
+      <div class="mp-scorecard-bar"></div>
+      
+      <!-- Header -->
+      <div class="mp-scorecard-header">
+        <div class="mp-scorecard-header-info">
+          <div class="mp-scorecard-badge">
+            <span class="mp-badge-dot"></span> Test Review &amp; Analytics
+          </div>
+          <h2 id="mpScorecardTitle" class="mp-scorecard-title">IELTS Reading Test Result</h2>
+          <p id="mpScorecardSubtitle" class="mp-scorecard-subtitle">Official Performance Breakdown · 40 Questions</p>
+        </div>
+        <button type="button" class="mp-scorecard-close" onclick="closeScorecardModal()" aria-label="Close and review in passage" title="Close and review in passage">&times;</button>
       </div>
-      <h3 style="font-family:'Sora',sans-serif; color:var(--navy); font-weight:800; font-size:1.3rem; margin-bottom:8px;">
-        Test Review & Analytics
-      </h3>
-      <p style="color:var(--muted); font-size:0.90rem; margin-bottom:18px;">
-        Score: <strong style="color:var(--navy);"><span id="resCorrectNum">0</span> / <span id="resTotalNum">40</span></strong> · Time: <strong id="resTimeTaken" style="color:var(--blue);">0m</strong>
-      </p>
-      <div style="display:flex; gap:10px; justify-content:center;">
-        <button type="button" class="cr-btn-finish" onclick="document.getElementById('scorecardModal').style.display='none'" style="background:var(--blue); padding:10px 24px;">
-          Review Explanations & Passage
-        </button>
+
+      <!-- Hero Score Summary -->
+      <div class="mp-scorecard-hero">
+        <!-- Clean Band Score Circle (Only number inside) -->
+        <div class="mp-scorecard-band-box">
+          <div class="mp-scorecard-band-circle" id="resBandScore">0.0</div>
+          <div class="mp-band-info">
+            <span class="mp-band-kicker">BAND SCORE</span>
+            <strong class="mp-band-desc" id="mpBandDescriptor">Non User</strong>
+          </div>
+        </div>
+
+        <!-- 4 Stat Cards without 3rd party icons -->
+        <div class="mp-scorecard-stats-grid">
+          <div class="mp-stat-card">
+            <div class="mp-stat-label">Raw Score</div>
+            <div class="mp-stat-val"><span id="resCorrectNum">0</span> <small>/ <span id="resTotalNum">40</span></small></div>
+            <div class="mp-stat-sub" id="mpAccuracyPct">0% Accuracy</div>
+          </div>
+          <div class="mp-stat-card">
+            <div class="mp-stat-label">Time Taken</div>
+            <div class="mp-stat-val" id="resTimeTaken">00:00:00</div>
+            <div class="mp-stat-sub">Official Timer</div>
+          </div>
+          <div class="mp-stat-card mp-stat-card-green">
+            <div class="mp-stat-label">Correct</div>
+            <div class="mp-stat-val text-green" id="mpCorrectCount">0</div>
+            <div class="mp-stat-sub">Earned Marks</div>
+          </div>
+          <div class="mp-stat-card mp-stat-card-red">
+            <div class="mp-stat-label">Incorrect / Skipped</div>
+            <div class="mp-stat-val text-red" id="mpIncorrectCount">40</div>
+            <div class="mp-stat-sub">Review Needed</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters Toolbar -->
+      <div class="mp-scorecard-toolbar">
+        <div class="mp-filter-pills" id="mpSectionFilterPills">
+          <button type="button" class="mp-pill-btn active" data-filter="all">All Questions (40)</button>
+       <button type="button" class="mp-pill-btn" data-filter="p1">Passage 1 (1–13)</button>
+       <button type="button" class="mp-pill-btn" data-filter="p2">Passage 2 (14–26)</button>
+       <button type="button" class="mp-pill-btn" data-filter="p3">Passage 3 (27–40)</button>
+        </div>
+        <div class="mp-status-pills">
+          <button type="button" class="mp-status-btn active" data-status="all">Show All</button>
+          <button type="button" class="mp-status-btn status-wrong" data-status="wrong">✕ Incorrect Only</button>
+          <button type="button" class="mp-status-btn status-correct" data-status="correct">✓ Correct Only</button>
+        </div>
+      </div>
+
+      <!-- Scrollable Table -->
+      <div class="mp-scorecard-table-wrap">
+        <table class="mp-scorecard-table">
+          <thead>
+            <tr>
+              <th style="width: 58px; text-align: center;">#</th>
+              <th style="width: 38%;">Your Answer</th>
+              <th style="width: 38%;">Correct Answer</th>
+              <th style="width: 120px; text-align: center;">Status</th>
+            </tr>
+          </thead>
+          <tbody id="mpScorecardTableBody">
+            <!-- Dynamic rows -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Footer Buttons without 3rd party icons -->
+      <div class="mp-scorecard-footer">
+        <div class="mp-footer-hint">
+          <span>Close this popup to inspect verbatim evidence highlights &amp; explanations in the test text.</span>
+        </div>
+        <div class="mp-footer-buttons">
+          <button type="button" class="mp-btn-secondary" onclick="window.location.reload()">
+            Retake Test
+          </button>
+          <button type="button" class="mp-btn-primary" onclick="closeScorecardModal()">
+            Review Explanations &amp; Passage
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -223,5 +409,7 @@
     </div>
   </div>
 
+  <!-- Guest Recommendation Modal -->
+  <script src="/js/guest-test-modal.js"></script>
 </body>
 </html>

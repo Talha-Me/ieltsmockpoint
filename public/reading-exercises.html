@@ -254,9 +254,11 @@
     .sb-actions { margin-top: auto; display: grid; gap: 10px; }
 
     /* Main Content */
-    main {
+    main,
+    main.wrap {
       flex: 1;
-      padding: 34px 0 80px;
+      padding-top: 34px !important;
+      padding-bottom: 80px !important;
       position: relative;
       z-index: 1;
     }
@@ -563,6 +565,11 @@
       color: #047857;
       border: 1px solid #a7f3d0;
     }
+    .card .pill.pill-gt {
+      background: #ecfdf5;
+      color: #059669;
+      border: 1px solid #a7f3d0;
+    }
 
     .card h3 {
       position: relative;
@@ -723,8 +730,10 @@
     }
 
     @media (max-width: 768px) {
-      main {
-        padding: 24px 0 60px;
+      main,
+      main.wrap {
+        padding-top: 22px !important;
+        padding-bottom: 60px !important;
       }
       .wrap {
         padding: 0 18px;
@@ -1136,9 +1145,264 @@
   font-size: 0.8rem !important;
 }
 
+
+  /* SEO Educational Guide & FAQ Accordion */
+  .seo-guide-wrap {
+    margin-top: 54px;
+    padding-top: 40px;
+    border-top: 1px solid var(--line);
+  }
+  .seo-guide-head {
+    margin-bottom: 24px;
+  }
+  .seo-guide-head h2 {
+    font-family: 'Sora', sans-serif;
+    font-size: clamp(1.4rem, 2.6vw, 1.85rem);
+    color: var(--navy);
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+  .seo-guide-head p {
+    color: var(--muted);
+    font-size: 0.98rem;
+    max-width: 72ch;
+    line-height: 1.65;
+  }
+  .guide-pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin-bottom: 34px;
+  }
+  .guide-pillar-card {
+    background: #ffffff;
+    border: 1.5px solid var(--line);
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 8px 24px rgba(11, 43, 82, 0.04);
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .guide-pillar-card:hover {
+    transform: translateY(-3px);
+    border-color: #bfdbfe;
+  }
+  .pillar-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: var(--blue-light);
+    color: var(--blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    margin-bottom: 12px;
+  }
+  .guide-pillar-card h3 {
+    font-family: 'Sora', sans-serif;
+    font-size: 1.05rem;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  .guide-pillar-card p {
+    font-size: 0.9rem;
+    color: #475569;
+    line-height: 1.6;
+  }
+  .seo-cta-banner {
+    background: linear-gradient(135deg, #0b2b52 0%, #103a6b 60%, #1565c9 100%);
+    border-radius: 20px;
+    padding: 30px;
+    color: #ffffff;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 40px;
+    box-shadow: 0 16px 36px rgba(11, 43, 82, 0.16);
+  }
+  .seo-cta-banner h3 {
+    color: #ffffff;
+    font-family: 'Sora', sans-serif;
+    font-size: 1.35rem;
+    margin-bottom: 6px;
+  }
+  .seo-cta-banner p {
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 0.94rem;
+    max-width: 540px;
+    line-height: 1.55;
+  }
+  .seo-cta-btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .seo-cta-btn {
+    padding: 11px 20px;
+    border-radius: 11px;
+    font-family: 'Sora', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 0.16s ease;
+  }
+  .seo-cta-btn:hover {
+    transform: translateY(-2px);
+  }
+  .seo-cta-btn.red {
+    background: var(--red);
+    color: #ffffff;
+  }
+  .seo-cta-btn.white {
+    background: #ffffff;
+    color: var(--navy);
+  }
+  .guide-faq-wrap {
+    margin-bottom: 44px;
+  }
+  .guide-faq-wrap h2 {
+    font-family: 'Sora', sans-serif;
+    font-size: 1.45rem;
+    color: var(--navy);
+    margin-bottom: 18px;
+  }
+  .guide-faq-wrap details {
+    background: #ffffff;
+    border: 1.5px solid var(--line);
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    transition: border-color 0.2s;
+  }
+  .guide-faq-wrap details:hover {
+    border-color: #bfdbfe;
+  }
+  .guide-faq-wrap summary {
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    font-size: 0.98rem;
+    color: var(--navy);
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .guide-faq-wrap summary::after {
+    content: "+";
+    color: var(--red);
+    font-size: 1.25rem;
+    font-weight: 800;
+  }
+  .guide-faq-wrap details[open] summary::after {
+    content: "−";
+  }
+  .guide-faq-wrap details p {
+    margin-top: 10px;
+    font-size: 0.94rem;
+    color: #475569;
+    line-height: 1.7;
+  }
+  @media (max-width: 640px) {
+    .seo-cta-banner { padding: 22px 18px; }
+    .seo-cta-btns, .seo-cta-btn { width: 100%; text-align: center; justify-content: center; }
+  }
+
 </style>
 <script src="/shared-layout.js"></script>
 <script src="/auth-nav.js"></script>
+  <script type="application/ld+json" id="seoExerciseSchema">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "CollectionPage",
+      "name": "How to Master IELTS Reading by Question Type (Band 8+ Guide)",
+      "description": "Practice authentic Cambridge Academic passages broken down by question type with instant evidence locators and timing strategies.",
+      "url": "https://ieltsmockpoint.com/reading-exercises"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://ieltsmockpoint.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Practice Hub",
+          "item": "https://ieltsmockpoint.com/practice-hub"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Reading Exercises",
+          "item": "https://ieltsmockpoint.com/reading-exercises"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is the difference between FALSE and NOT GIVEN in IELTS Reading?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "FALSE means the information in the question directly contradicts what the author states. NOT GIVEN means the passage neither confirms nor disproves the statement, even if the topic is mentioned."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which IELTS Reading question types follow the chronological order of the text?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Multiple Choice, True/False/Not Given, Yes/No/Not Given, Sentence Completion, and Short Answer questions follow chronological text order. Matching Headings and Matching Information do NOT follow text order."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Should I read the entire passage before looking at the questions?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Reading every word of all three passages consumes 25+ minutes of your 60-minute limit. Spend 60 seconds skimming the heading and first paragraph, then read question stems and scan for target answers."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How many correct answers are required for Band 7.0 and 8.0 in Academic Reading?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "In Academic Reading, 30 out of 40 correct answers corresponds to Band 7.0, 33 correct is Band 7.5, and 35 correct corresponds to Band 8.0."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I write T, F, or NG instead of TRUE, FALSE, or NOT GIVEN on the answer sheet?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, official IELTS guidelines accept 'T', 'F', and 'NG', but writing the full words is always safest to prevent any handwriting ambiguity."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <meta property="og:title" content="IELTS Academic Reading Practice Exercises | IELTS Mockpoint">
+  <meta property="og:description" content="Practice IELTS Academic Reading questions by question type with authentic passages and verbatim evidence on IELTS Mockpoint.">
+  <meta property="og:image" content="https://ieltsmockpoint.com/Brandlogo.png">
+  <meta property="og:url" content="https://ieltsmockpoint.com/reading-exercises">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="IELTS Academic Reading Practice Exercises | IELTS Mockpoint">
+  <meta name="twitter:description" content="Practice IELTS Academic Reading questions by question type with authentic passages and verbatim evidence on IELTS Mockpoint.">
+  <meta name="twitter:image" content="https://ieltsmockpoint.com/Brandlogo.png">
 </head>
 <body>
   <div id="prog"></div>
@@ -1152,20 +1416,20 @@
     </a>
     <div class="nav-links">
       <div class="nav-dd">
-        <a href="/mocks.html" class="nav-dd-trigger">Full Tests<svg class="nav-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
+        <a href="/mocks.html" class="nav-dd-trigger">Full Mock Tests<svg class="nav-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
         <div class="nav-dd-menu">
           <div class="nav-dd-card">
-            <a href="/mocks.html#premium" class="nav-dd-item">
+            <a href="/premium-academic-full-mock.html" class="nav-dd-item">
               <span class="nav-dd-ico ico-gold" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
-              <span>Premium Tests</span>
+              <span>Premium Academic Full Mock</span>
             </a>
-            <a href="/mocks.html#academic" class="nav-dd-item">
+            <a href="/regular-academic-full-mock.html" class="nav-dd-item">
               <span class="nav-dd-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5"/></svg></span>
-              <span>Academic Tests</span>
+              <span>Regular Academic Full Mock</span>
             </a>
-            <a href="/mocks.html#general" class="nav-dd-item">
+            <a href="/general-academic-full-mock.html" class="nav-dd-item">
               <span class="nav-dd-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
-              <span>General Tests</span>
+              <span>General Academic Full Mock</span>
             </a>
           </div>
         </div>
@@ -1174,6 +1438,14 @@
         <a href="/cambridge-listening.html" class="nav-dd-trigger">Listening<svg class="nav-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
         <div class="nav-dd-menu">
           <div class="nav-dd-card">
+            <a href="/recent-listening-tests.html" class="nav-dd-item" style="background:#fef2f2; border:1px solid #fee2e2; margin-bottom:4px;">
+              <span class="nav-dd-ico" aria-hidden="true" style="color:#e0202d;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></span>
+              <span>Recent Listening Real Tests <span style="background:#e0202d; color:#fff; font-size:9.5px; font-weight:800; padding:1.5px 6px; border-radius:10px; margin-left:6px; letter-spacing:0.4px;">NEW</span></span>
+            </a>
+            <a href="/cambridge-listening.html" class="nav-dd-item">
+              <span class="nav-dd-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg></span>
+              <span>Cambridge Listening Test</span>
+            </a>
             <a href="/listening-exercises" class="nav-dd-item">
               <span class="nav-dd-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
               <span>Practice by Question Type</span>
@@ -1182,9 +1454,9 @@
               <span class="nav-dd-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></span>
               <span>Practice by Part</span>
             </a>
-            <a href="/cambridge-listening.html" class="nav-dd-item">
-              <span class="nav-dd-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg></span>
-              <span>Practice Full Test</span>
+            <a href="/listening-spelling-game" class="nav-dd-item" style="background:#f0f6ff; border:1px solid #dbeafe; margin-top:4px;">
+              <span class="nav-dd-ico" aria-hidden="true" style="color:#1565c9;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span>
+              <span>Spelling Practice Game <span style="background:#1565c9; color:#fff; font-size:9.5px; font-weight:800; padding:1.5px 6px; border-radius:10px; margin-left:6px; letter-spacing:0.4px;">GAME</span></span>
             </a>
           </div>
         </div>
@@ -1193,6 +1465,14 @@
         <a href="/cambridge-reading.html" class="nav-dd-trigger">Reading<svg class="nav-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
         <div class="nav-dd-menu">
           <div class="nav-dd-card">
+            <a href="/recent-reading-tests.html" class="nav-dd-item" style="background:#f0f9ff; border:1px solid #e0f2fe; margin-bottom:4px;">
+              <span class="nav-dd-ico" aria-hidden="true" style="color:#0284c7;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></span>
+              <span>Recent Reading Real Tests <span style="font-size:0.65rem; background:#0284c7; color:#fff; padding:2px 6px; border-radius:10px; font-weight:700; margin-left:4px;">NEW</span></span>
+            </a>
+            <a href="/cambridge-reading.html" class="nav-dd-item">
+              <span class="nav-dd-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>
+              <span>Cambridge Reading Test</span>
+            </a>
             <a href="/reading-exercises" class="nav-dd-item">
               <span class="nav-dd-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
               <span>Practice by Question Type</span>
@@ -1201,10 +1481,6 @@
               <span class="nav-dd-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></span>
               <span>Practice by Part</span>
             </a>
-            <a href="/cambridge-reading.html" class="nav-dd-item">
-              <span class="nav-dd-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>
-              <span>Practice Full Test</span>
-            </a>
           </div>
         </div>
       </div>
@@ -1212,17 +1488,21 @@
         <a href="/cambridge-writing.html" class="nav-dd-trigger">Writing<svg class="nav-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
         <div class="nav-dd-menu">
           <div class="nav-dd-card">
-            <a href="/practice-hub?skill=writing#hub" class="nav-dd-item">
+            <a href="/recent-writing-tests" class="nav-dd-item" style="background:#fef2f2; border:1px solid #fee2e2; margin-bottom:4px;">
+              <span class="nav-dd-ico" aria-hidden="true" style="color:#e0202d;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></span>
+              <span>Recent Writing Real Tests <span style="background:#e0202d; color:#fff; font-size:9.5px; font-weight:800; padding:1.5px 6px; border-radius:10px; margin-left:6px; letter-spacing:0.4px;">NEW</span></span>
+            </a>
+            <a href="/cambridge-writing.html" class="nav-dd-item">
+              <span class="nav-dd-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span>
+              <span>Cambridge Writing Test</span>
+            </a>
+            <a href="/writing-exercises" class="nav-dd-item">
               <span class="nav-dd-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
               <span>Practice by Question Type</span>
             </a>
             <a href="/cambridge-writing.html#part" class="nav-dd-item">
               <span class="nav-dd-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></span>
               <span>Practice by Part</span>
-            </a>
-            <a href="/cambridge-writing.html" class="nav-dd-item">
-              <span class="nav-dd-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span>
-              <span>Practice Full Test</span>
             </a>
           </div>
         </div>
@@ -1330,15 +1610,15 @@
   <nav class="sb-links" aria-label="Mobile navigation">
     <div class="sb-dd">
       <div class="sb-dd-head">
-        <a href="/mocks.html" class="sb-dd-link">Full Tests</a>
-        <button type="button" class="sb-dd-btn" aria-expanded="false" aria-label="Toggle Full Tests options">
+        <a href="/mocks.html" class="sb-dd-link">Full Mock Tests</a>
+        <button type="button" class="sb-dd-btn" aria-expanded="false" aria-label="Toggle Full Mock Tests options">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
         </button>
       </div>
       <div class="sb-dd-sub">
-        <a href="/mocks.html#premium">Premium Tests</a>
-        <a href="/mocks.html#academic">Academic Tests</a>
-        <a href="/mocks.html#general">General Tests</a>
+        <a href="/premium-academic-full-mock.html">Premium Academic Full Mock</a>
+        <a href="/regular-academic-full-mock.html">Regular Academic Full Mock</a>
+        <a href="/general-academic-full-mock.html">General Academic Full Mock</a>
       </div>
     </div>
     <div class="sb-dd">
@@ -1349,9 +1629,11 @@
         </button>
       </div>
       <div class="sb-dd-sub">
+        <a href="/recent-listening-tests.html" style="color:var(--red)!important;font-weight:700!important;">Recent Listening Real Tests (NEW)</a>
+        <a href="/cambridge-listening.html">Cambridge Listening Test</a>
         <a href="/listening-exercises">Practice by Question Type</a>
         <a href="/cambridge-listening.html#tests">Practice by Part</a>
-        <a href="/cambridge-listening.html">Practice Full Test</a>
+        <a href="/listening-spelling-game" style="color:var(--blue)!important;font-weight:700!important;">Spelling Practice Game (GAME)</a>
       </div>
     </div>
     <div class="sb-dd">
@@ -1362,9 +1644,10 @@
         </button>
       </div>
       <div class="sb-dd-sub">
+        <a href="/recent-reading-tests.html" style="color:var(--red)!important;font-weight:700!important;">Recent Reading Real Tests (NEW)</a>
+        <a href="/cambridge-reading.html">Cambridge Reading Test</a>
         <a href="/reading-exercises">Practice by Question Type</a>
         <a href="/cambridge-reading.html#tests">Practice by Part</a>
-        <a href="/cambridge-reading.html">Practice Full Test</a>
       </div>
     </div>
     <div class="sb-dd">
@@ -1375,9 +1658,10 @@
         </button>
       </div>
       <div class="sb-dd-sub">
-        <a href="/practice-hub?skill=writing#hub">Practice by Question Type</a>
+        <a href="/recent-writing-tests" style="color:var(--red)!important;font-weight:700!important;">Recent Writing Real Tests (NEW)</a>
+        <a href="/cambridge-writing.html">Cambridge Writing Test</a>
+        <a href="/writing-exercises">Practice by Question Type</a>
         <a href="/cambridge-writing.html#part">Practice by Part</a>
-        <a href="/cambridge-writing.html">Practice Full Test</a>
       </div>
     </div>
     <div class="sb-dd">
@@ -1519,8 +1803,9 @@
         </div>
         <div class="source-filter-tabs" id="sourceFilterTabs">
           <button type="button" class="source-tab active" data-src="all">All Exercises (<span id="countAll">100</span>)</button>
-          <button type="button" class="source-tab" data-src="cambridge">Cambridge Official (<span id="countCambridge">60</span>)</button>
-          <button type="button" class="source-tab" data-src="practice_bank">Practice Bank (<span id="countBank">40</span>)</button>
+          <button type="button" class="source-tab" data-src="cambridge">Cambridge Academic (<span id="countCambridge">60</span>)</button>
+          <button type="button" class="source-tab" data-src="cambridge_gt" id="btnFilterGT" style="display:none;">Cambridge GT (<span id="countGT">0</span>)</button>
+          <button type="button" class="source-tab" data-src="practice_bank">Practice Bank (Academic) (<span id="countBank">40</span>)</button>
         </div>
       </div>
       <div class="search-box">
@@ -1540,6 +1825,84 @@
       <div class="sk-card"></div>
       <div class="sk-card"></div>
     </div>
+  
+    <!-- Comprehensive Educational Guide & FAQ Section (Band 8+ Strategy) -->
+    <section class="seo-guide-wrap">
+      <div class="seo-guide-head">
+        <h2>How to Master IELTS Reading by Question Type (Band 8+ Guide)</h2>
+        <p>Practice authentic Cambridge Academic passages broken down by question type with instant evidence locators and timing strategies.</p>
+      </div>
+
+      <div class="guide-pillars-grid">
+        
+          <div class="guide-pillar-card">
+            <div class="pillar-icon">🔍</div>
+            <h3>Skimming vs Scanning</h3>
+            <p>Skim paragraph opening and closing sentences to understand the central theme. Scan quickly for non-paraphrasable anchors like years, capitalized names, and technical terms.</p>
+          </div>
+        
+          <div class="guide-pillar-card">
+            <div class="pillar-icon">⚖️</div>
+            <h3>True, False, Not Given Precision</h3>
+            <p>TRUE agrees with the passage. FALSE directly contradicts the passage facts. NOT GIVEN means the text does not contain enough evidence to confirm or deny the statement.</p>
+          </div>
+        
+          <div class="guide-pillar-card">
+            <div class="pillar-icon">📑</div>
+            <h3>Matching Headings Tactics</h3>
+            <p>Always complete Matching Headings first for a passage. Focus on main paragraph ideas rather than matching a single identical keyword found in a supporting sentence.</p>
+          </div>
+        
+          <div class="guide-pillar-card">
+            <div class="pillar-icon">⏳</div>
+            <h3>60-Minute Time Budgeting</h3>
+            <p>Follow the 17-20-23 minute pacing rule. Passage 1 is simpler; spend 17 minutes there so you have 23 minutes for the denser philosophical or research text in Passage 3.</p>
+          </div>
+        
+      </div>
+
+      <div class="seo-cta-banner">
+        <div>
+          <h3>Ready to Sit a Timed 60-Minute Reading Mock Test?</h3>
+          <p>Test your stamina with authentic Cambridge 12–21 Academic Reading exams featuring split-screen text viewer, instant auto-grading, and detailed answer explanations.</p>
+        </div>
+        <div class="seo-cta-btns">
+          <a href="/cambridge-reading" class="seo-cta-btn red">Start Reading Mock Test →</a>
+          <a href="/practice-hub" class="seo-cta-btn white">Practice All Skills (Hub)</a>
+        </div>
+      </div>
+
+      <div class="guide-faq-wrap">
+        <h2>Frequently Asked Questions</h2>
+        
+          <details open>
+            <summary>What is the difference between FALSE and NOT GIVEN in IELTS Reading?</summary>
+            <p>FALSE means the information in the question directly contradicts what the author states. NOT GIVEN means the passage neither confirms nor disproves the statement, even if the topic is mentioned.</p>
+          </details>
+        
+          <details>
+            <summary>Which IELTS Reading question types follow the chronological order of the text?</summary>
+            <p>Multiple Choice, True/False/Not Given, Yes/No/Not Given, Sentence Completion, and Short Answer questions follow chronological text order. Matching Headings and Matching Information do NOT follow text order.</p>
+          </details>
+        
+          <details>
+            <summary>Should I read the entire passage before looking at the questions?</summary>
+            <p>No. Reading every word of all three passages consumes 25+ minutes of your 60-minute limit. Spend 60 seconds skimming the heading and first paragraph, then read question stems and scan for target answers.</p>
+          </details>
+        
+          <details>
+            <summary>How many correct answers are required for Band 7.0 and 8.0 in Academic Reading?</summary>
+            <p>In Academic Reading, 30 out of 40 correct answers corresponds to Band 7.0, 33 correct is Band 7.5, and 35 correct corresponds to Band 8.0.</p>
+          </details>
+        
+          <details>
+            <summary>Can I write T, F, or NG instead of TRUE, FALSE, or NOT GIVEN on the answer sheet?</summary>
+            <p>Yes, official IELTS guidelines accept 'T', 'F', and 'NG', but writing the full words is always safest to prevent any handwriting ambiguity.</p>
+          </details>
+        
+      </div>
+    </section>
+  
   </main>
 
   <!-- Shared Footer -->
@@ -1576,6 +1939,7 @@
         <a href="/blog.html">Blog & Tips</a>
         <a href="/learn.html">Free lessons</a>
         <a href="/band-calculator.html">Band score calculator</a>
+        <a href="/listening-spelling-game">Listening Spelling Game</a>
         <a href="/writing-samples.html">Writing samples</a>
         <a href="/faq">Frequently Asked Questions</a>
       </div>
@@ -1666,8 +2030,14 @@
         if (data.success && Array.isArray(data.exercises)) {
           allExercises = data.exercises;
           
+          const gtCount = allExercises.filter(x => x.isGT || x.sourceType === 'cambridge_gt').length;
+          const academicCount = allExercises.filter(x => x.sourceType === 'cambridge').length;
           if (countAll) countAll.textContent = data.totalExercises || allExercises.length;
-          if (countCambridge) countCambridge.textContent = data.cambridgeCount || 0;
+          if (countCambridge) countCambridge.textContent = academicCount;
+          const countGTEl = document.getElementById('countGT');
+          if (countGTEl) countGTEl.textContent = gtCount;
+          const btnFilterGTEl = document.getElementById('btnFilterGT');
+          if (btnFilterGTEl) btnFilterGTEl.style.display = gtCount > 0 ? 'inline-flex' : 'none';
           if (countBank) countBank.textContent = data.bankCount || 0;
 
           applyFilterAndSearch();
@@ -1815,11 +2185,12 @@
 
       grid.innerHTML = items.map((ex, idx) => {
         const isBank = ex.sourceType === 'practice_bank';
+        const isGT = ex.isGT || ex.sourceType === 'cambridge_gt';
         const storageKey = isBank ? `pb|${ex.pracType || currentType}|${ex.setNumber}` : `cr_v2|${ex.book}|${ex.testNo}|${ex.qRange}`;
         const isDone = !!doneStore[storageKey];
         const numStr = String(ex.setNumber || ex.exerciseNumber || idx + 1).padStart(2, '0');
-        const pillClass = isBank ? 'pill pill-bank' : 'pill pill-cambridge';
-        const pillText = ex.badgeText || (isBank ? `PRACTICE BANK • SET ${ex.setNumber}` : `CAMBRIDGE ${ex.book} • TEST ${ex.testNo}`);
+        const pillClass = isBank ? 'pill pill-bank' : (isGT ? 'pill pill-gt' : 'pill pill-cambridge');
+        const pillText = ex.badgeText || (isBank ? `PRACTICE BANK (ACADEMIC) • SET ${ex.setNumber}` : `CAMBRIDGE ${ex.book} • TEST ${ex.testNo}`);
         const titleText = isBank ? (ex.title || `Exercise ${idx + 1}`) : (ex.title || `Exercise ${idx + 1}`);
         const sourceText = ex.source || (isBank ? `from Practice Bank Set ${ex.setNumber} Academic Reading` : `from Cambridge IELTS ${ex.book} Academic Reading Test ${ex.testNo}`);
 
@@ -1896,7 +2267,9 @@
       const q = searchInput ? searchInput.value.trim().toLowerCase() : '';
       let list = allExercises;
 
-      if (currentSource !== 'all') {
+      if (currentSource === 'cambridge_gt') {
+        list = list.filter(ex => ex.sourceType === 'cambridge_gt' || ex.isGT);
+      } else if (currentSource !== 'all') {
         list = list.filter(ex => ex.sourceType === currentSource);
       }
 

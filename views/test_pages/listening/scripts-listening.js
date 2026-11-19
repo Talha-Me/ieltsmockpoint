@@ -1943,48 +1943,43 @@ window.addEventListener("DOMContentLoaded", async () => {
 let listeningAutoSaveTimer = null;
 
 function getListeningTestId() {
-  return (typeof mockID !== "undefined" && mockID) ||
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get("mockID") ||
+    (typeof mockID !== "undefined" && mockID) ||
     (typeof parsedQuestionData !== "undefined" && parsedQuestionData && parsedQuestionData.mockNumber) ||
     sessionStorage.getItem("currentMockId") ||
-    localStorage.getItem("currentMockId") || "";
+    localStorage.getItem("currentMockId") || "Academic-UKA-FINAL-1";
 }
 
-function autoSaveListeningDraft() {
+function autoSaveListeningDraft(isExit = false) {
   try {
     inputCheckUpdated();
     const testId = getListeningTestId();
     if (!testId) return;
 
-    // 1. Test-specific isolated local backup
-    const draftKey = "ielts_draft_listening_" + testId;
-    const payload = JSON.stringify({
-      testId: testId,
-      module: "listening",
-      updatedAt: Date.now(),
-      answers: answerArrayUpdated
-    });
-
-    localStorage.setItem(draftKey, payload);
-    sessionStorage.setItem(draftKey, payload);
-
-    // Clear legacy generic keys
-    localStorage.removeItem("listeningDraftAnswers");
-    sessionStorage.removeItem("listeningDraftAnswers");
-
-    // 2. Cloud auto-save if logged in
     const u = JSON.parse(localStorage.getItem("user") || "null");
     const email = u && u.email ? u.email : "";
+
+    const payload = JSON.stringify({
+      testId,
+      testType: testId.includes("Premium") ? "Premium Full Mock" : "Academic Full Mock",
+      module: "listening",
+      title: testId.replace(/-UKA-FINAL-/i, " Mock Test ").replace(/[-_]/g, " "),
+      answers: answerArrayUpdated,
+      email
+    });
+
+    if (isExit && navigator.sendBeacon) {
+      const blob = new Blob([payload], { type: "application/json" });
+      navigator.sendBeacon("/api/student/auto-save", blob);
+    }
 
     fetch("/api/student/auto-save", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        testId,
-        testType: testId.includes("Premium") ? "Premium Full Mock" : "Academic Full Mock",
-        module: "listening",
-        answers: answerArrayUpdated,
-        email
-      })
+      body: payload,
+      credentials: "include",
+      keepalive: Boolean(isExit)
     }).catch(() => {});
   } catch (e) {
     console.warn("Listening auto-save notice:", e);
@@ -2048,32 +2043,14 @@ function restoreListeningDraft() {
   }
 }
 
-// Start auto-save periodic loop (every 3 minutes)
+// Start auto-save periodic loop (every 1 minute)
 if (!listeningAutoSaveTimer) {
-  listeningAutoSaveTimer = setInterval(autoSaveListeningDraft, 3 * 60 * 1000);
+  listeningAutoSaveTimer = setInterval(autoSaveListeningDraft, 60 * 1000);
 }
 
-// Real-time debounce local save on input change
-let listeningDebounceTimeout = null;
-document.addEventListener("input", () => {
-  if (listeningDebounceTimeout) clearTimeout(listeningDebounceTimeout);
-  listeningDebounceTimeout = setTimeout(() => {
-    inputCheckUpdated();
-    try {
-      const testId = getListeningTestId();
-      if (!testId) return;
-      const draftKey = "ielts_draft_listening_" + testId;
-      const payload = JSON.stringify({
-        testId: testId,
-        module: "listening",
-        updatedAt: Date.now(),
-        answers: answerArrayUpdated
-      });
-      localStorage.setItem(draftKey, payload);
-      sessionStorage.setItem(draftKey, payload);
-    } catch(e) {}
-  }, 3000);
-});
+// Exit listeners for reliable autosave when candidate leaves or closes tab
+window.addEventListener("pagehide", () => autoSaveListeningDraft(true));
+window.addEventListener("beforeunload", () => autoSaveListeningDraft(true));
 
-// Restore on page load if exam was already rendered
-setTimeout(restoreListeningDraft, 800);
+// Clean start: tests always start fresh with blank inputs per user requirement
+// (Drafts are preserved securely in DB and visible on Candidate Dashboard)

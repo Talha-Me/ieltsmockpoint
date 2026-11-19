@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Cambridge IELTS Listening Practice Test Online Free (Audio & Answers) | IELTS Mockpoint</title>
+  <title>Cambridge IELTS Listening Practice Online Free (Audio, Script & Answers) | IELTS Mockpoint</title>
   <meta name="description" content="Take authentic Cambridge IELTS Listening practice tests online with real audio, timed exam interface, split-screen questions and instant band score.">
   <link rel="canonical" href="https://ieltsmockpoint.com/cambridge-listening-test">
   <script>
@@ -26,6 +26,80 @@
 
   <!-- Custom Styles V2 -->
   <link rel="stylesheet" href="/cambridgetest/styles-listening-v2.css">
+
+  <!-- Structured Data: EducationalOrganization, LearningResource & FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "EducationalOrganization",
+        "name": "IELTS Mockpoint",
+        "url": "https://ieltsmockpoint.com/",
+        "logo": "https://ieltsmockpoint.com/Brandlogo.png"
+      },
+      {
+        "@type": "LearningResource",
+        "name": "Cambridge IELTS Listening Practice Test Online with Audio & Script",
+        "learningResourceType": "Listening Practice Exam",
+        "educationalLevel": "Intermediate to Advanced",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "provider": {
+          "@type": "Organization",
+          "name": "IELTS Mockpoint",
+          "url": "https://ieltsmockpoint.com/"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Is the listening audio played like the real IELTS exam?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. The audio simulates the authentic computer-delivered IELTS exam with real native speakers, section pauses, time to read questions, and time to check answers."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does this test include the full audioscript and transcript?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. After completing your test, you can review the complete audioscript with timestamped answer evidence, highlighting exactly where each answer was spoken."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I practise individual listening parts separately?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes! You can take full 30-minute 40-question mock exams or practice part-by-part (Part 1 everyday conversation, Part 2 monologue, Part 3 educational discussion, Part 4 academic lecture)."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How is the IELTS Listening band score calculated?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "IELTS Listening contains 40 questions. Scoring benchmarks: 30–31 correct is Band 7.0, 32–34 correct is Band 7.5, 35–36 correct is Band 8.0, and 39–40 correct is Band 9.0."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is this Cambridge Listening practice test free?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, all Cambridge IELTS Listening tests on IELTS Mockpoint are completely free to practice with real audio, instant auto-scoring, and answer explanations."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
 </head>
 <body>
 
@@ -64,7 +138,21 @@
 
     <!-- Right: Timer, Notes, Fullscreen & Finish Test -->
     <div class="cl-nav-right">
-      <div class="cl-timer-pill">
+      <!-- Completed Score & Band Badges (Hidden during test, displayed on completion) -->
+      <div class="cl-completed-badges" id="clCompletedBadges" style="display:none;" title="Click to view detailed scorecard">
+        <div class="cl-score-pill" id="topbarScorePill" title="Earned Marks (Click for Review Breakdown)">
+          <i class="bi bi-check-circle-fill"></i>
+          <span class="cl-pill-label">Score:</span>
+          <strong id="topbarScoreVal">0/40</strong>
+        </div>
+        <div class="cl-band-pill" id="topbarBandPill" title="IELTS Band Score (Click for Review Breakdown)">
+          <i class="bi bi-award-fill"></i>
+          <span class="cl-pill-label">Band</span>
+          <strong id="topbarBandVal">0.0</strong>
+        </div>
+      </div>
+
+      <div class="cl-timer-pill" id="timerPill">
         <i class="bi bi-clock"></i> <span id="minutes">00</span>:<span id="seconds">00</span>
       </div>
       <button type="button" class="cl-icon-btn" id="fullscreenBtn" title="Toggle Fullscreen" onclick="toggleFullScreen()">
@@ -141,6 +229,109 @@
     </div>
   </div>
 
+  <!-- Advanced IELTS Mockpoint Result Scorecard Modal -->
+  <div id="scorecardModal" class="cl-modal-overlay mp-advanced-scorecard-overlay" style="display:none;" onclick="if(event.target === this) closeScorecardModal()">
+    <div class="mp-scorecard-modal">
+      <div class="mp-scorecard-bar"></div>
+      
+      <!-- Header -->
+      <div class="mp-scorecard-header">
+        <div class="mp-scorecard-header-info">
+          <div class="mp-scorecard-badge">
+            <span class="mp-badge-dot"></span> Test Review &amp; Analytics
+          </div>
+          <h2 id="mpScorecardTitle" class="mp-scorecard-title">IELTS Listening Test Result</h2>
+          <p id="mpScorecardSubtitle" class="mp-scorecard-subtitle">Official Performance Breakdown · 40 Questions</p>
+        </div>
+        <button type="button" class="mp-scorecard-close" onclick="closeScorecardModal()" aria-label="Close and review transcripts" title="Close and review transcripts">&times;</button>
+      </div>
+
+      <!-- Hero Score Summary -->
+      <div class="mp-scorecard-hero">
+        <!-- Clean Band Score Circle (Only number inside) -->
+        <div class="mp-scorecard-band-box">
+          <div class="mp-scorecard-band-circle" id="resBandScore">0.0</div>
+          <div class="mp-band-info">
+            <span class="mp-band-kicker">BAND SCORE</span>
+            <strong class="mp-band-desc" id="mpBandDescriptor">Non User</strong>
+          </div>
+        </div>
+
+        <!-- 4 Stat Cards without 3rd party icons -->
+        <div class="mp-scorecard-stats-grid">
+          <div class="mp-stat-card">
+            <div class="mp-stat-label">Raw Score</div>
+            <div class="mp-stat-val"><span id="resCorrectNum">0</span> <small>/ <span id="resTotalNum">40</span></small></div>
+            <div class="mp-stat-sub" id="mpAccuracyPct">0% Accuracy</div>
+          </div>
+          <div class="mp-stat-card">
+            <div class="mp-stat-label">Time Taken</div>
+            <div class="mp-stat-val" id="resTimeTaken">00:00:00</div>
+            <div class="mp-stat-sub">Official Timer</div>
+          </div>
+          <div class="mp-stat-card mp-stat-card-green">
+            <div class="mp-stat-label">Correct</div>
+            <div class="mp-stat-val text-green" id="mpCorrectCount">0</div>
+            <div class="mp-stat-sub">Earned Marks</div>
+          </div>
+          <div class="mp-stat-card mp-stat-card-red">
+            <div class="mp-stat-label">Incorrect / Skipped</div>
+            <div class="mp-stat-val text-red" id="mpIncorrectCount">40</div>
+            <div class="mp-stat-sub">Review Needed</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters Toolbar -->
+      <div class="mp-scorecard-toolbar">
+        <div class="mp-filter-pills" id="mpSectionFilterPills">
+          <button type="button" class="mp-pill-btn active" data-filter="all">All Questions (40)</button>
+       <button type="button" class="mp-pill-btn" data-filter="p1">Part 1 (1–10)</button>
+       <button type="button" class="mp-pill-btn" data-filter="p2">Part 2 (11–20)</button>
+       <button type="button" class="mp-pill-btn" data-filter="p3">Part 3 (21–30)</button>
+       <button type="button" class="mp-pill-btn" data-filter="p4">Part 4 (31–40)</button>
+        </div>
+        <div class="mp-status-pills">
+          <button type="button" class="mp-status-btn active" data-status="all">Show All</button>
+          <button type="button" class="mp-status-btn status-wrong" data-status="wrong">✕ Incorrect Only</button>
+          <button type="button" class="mp-status-btn status-correct" data-status="correct">✓ Correct Only</button>
+        </div>
+      </div>
+
+      <!-- Scrollable Table -->
+      <div class="mp-scorecard-table-wrap">
+        <table class="mp-scorecard-table">
+          <thead>
+            <tr>
+              <th style="width: 58px; text-align: center;">#</th>
+              <th style="width: 38%;">Your Answer</th>
+              <th style="width: 38%;">Correct Answer</th>
+              <th style="width: 120px; text-align: center;">Status</th>
+            </tr>
+          </thead>
+          <tbody id="mpScorecardTableBody">
+            <!-- Dynamic rows -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Footer Buttons without 3rd party icons -->
+      <div class="mp-scorecard-footer">
+        <div class="mp-footer-hint">
+          <span>Close this popup to inspect audio transcripts &amp; highlighted evidence.</span>
+        </div>
+        <div class="mp-footer-buttons">
+          <button type="button" class="mp-btn-secondary" onclick="window.location.reload()">
+            Retake Test
+          </button>
+          <button type="button" class="mp-btn-primary" onclick="closeScorecardModal()">
+            Review Answers &amp; Transcripts
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Notes Popup -->
   <div id="notesModal" class="cl-modal-overlay" style="display:none;" onclick="if(event.target === this) this.style.display='none'">
     <div class="cl-result-modal" style="max-width: 520px; text-align: left;">
@@ -205,5 +396,7 @@
     </div>
   </div>
 
+  <!-- Guest Recommendation Modal -->
+  <script src="/js/guest-test-modal.js"></script>
 </body>
 </html>

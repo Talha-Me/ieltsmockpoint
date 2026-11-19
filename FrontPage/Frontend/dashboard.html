@@ -672,10 +672,35 @@
     }
     @media (max-width: 640px) {
       .kpi-grid { grid-template-columns: 1fr; }
-      .cand-hero { padding: 24px 20px; }
-      .cand-name { font-size: 1.35rem; }
+      .cand-hero { padding: 20px 16px; }
+      .cand-name { font-size: 1.3rem; }
       .cand-hero-wrap { flex-direction: column; align-items: flex-start; }
       .sub-stats-bar { flex-direction: column; align-items: flex-start; gap: 14px; }
+      .dash-modal-card {
+        padding: 20px 14px;
+        border-radius: 16px;
+        max-height: 94dvh;
+        width: 95vw;
+        margin: 0 auto;
+      }
+      .dash-modal-card.cambridge-review-frame {
+        width: 98vw;
+        max-height: 96dvh;
+        height: 96dvh;
+        border-radius: 12px;
+      }
+      .cam-rev-header {
+        padding: 10px 12px;
+        gap: 6px;
+      }
+      .cam-nav-tabs-bar {
+        padding: 6px 10px 0;
+        gap: 6px;
+      }
+      .cam-split-grid {
+        padding: 8px 6px;
+        gap: 8px;
+      }
     }
   
     /* Advanced Test Review Modal & Filter Controls */
@@ -1080,6 +1105,522 @@
       color: #14532d;
     }
     
+
+    /* ==========================================
+       MODERN DASHBOARD SEGMENTED TABS & VIEWS
+       ========================================== */
+    .dash-tabs-nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 22px 0 24px;
+      background: #ffffff;
+      padding: 6px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-sm);
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .dash-tabs-nav::-webkit-scrollbar {
+      display: none;
+    }
+    .dash-tab-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-family: 'Sora', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--muted);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      white-space: nowrap;
+      user-select: none;
+    }
+    .dash-tab-btn:hover {
+      color: var(--navy);
+      background: var(--surface);
+    }
+    .dash-tab-btn.active {
+      background: var(--navy);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(11, 43, 82, 0.18);
+    }
+    .dash-tab-pill {
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: var(--line);
+      color: var(--text);
+      line-height: 1.2;
+      transition: background 0.2s, color 0.2s;
+    }
+    .dash-tab-btn.active .dash-tab-pill {
+      background: rgba(255, 255, 255, 0.22);
+      color: #ffffff;
+    }
+    .dash-tab-pill.focus-pill {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+    .dash-tab-btn.active .dash-tab-pill.focus-pill {
+      background: #ef4444;
+      color: #ffffff;
+    }
+
+    .dash-view-panel {
+      display: none;
+      animation: dashFadeIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .dash-view-panel.active {
+      display: block;
+    }
+    @keyframes dashFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* RECOMMENDED NEXT ACTION HERO BANNER */
+    .overview-next-step-card {
+      background: linear-gradient(135deg, #0b2b52 0%, #1565c9 100%);
+      color: #ffffff;
+      border-radius: 16px;
+      padding: 22px 26px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 25px rgba(21, 101, 201, 0.20);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+      position: relative;
+      overflow: hidden;
+    }
+    .overview-next-step-card::after {
+      content: '';
+      position: absolute;
+      right: -30px;
+      top: -30px;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+      pointer-events: none;
+    }
+    .next-step-info {
+      flex: 1 1 340px;
+    }
+    .next-step-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.16);
+      color: #fde047;
+      margin-bottom: 8px;
+    }
+    .next-step-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin: 0 0 4px;
+    }
+    .next-step-desc {
+      font-size: 0.86rem;
+      opacity: 0.92;
+      line-height: 1.5;
+      margin: 0;
+      max-width: 620px;
+    }
+    .btn-next-step {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #ffffff;
+      color: #0b2b52;
+      font-family: 'Sora', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 800;
+      padding: 11px 22px;
+      border-radius: 10px;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .btn-next-step:hover {
+      background: #f8fafc;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+      color: var(--blue);
+    }
+
+    /* WEAK POINTS SECTION STYLES */
+    .weakpoints-summary-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+    .weak-sum-card {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+    .weak-sum-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .weak-sum-val {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 3px;
+    }
+    .weak-sum-lbl {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .weakpoints-filters {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+    .weak-filter-btn {
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      border: 1px solid var(--line);
+      background: #ffffff;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .weak-filter-btn:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+    .weak-filter-btn.active {
+      background: var(--blue-subtle);
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+
+    .weakpoints-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 18px;
+    }
+    .weak-card {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 14px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      position: relative;
+    }
+    .weak-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--blue-border);
+    }
+    .weak-card.status-weak {
+      border-left: 4px solid #ef4444;
+    }
+    .weak-card.status-moderate {
+      border-left: 4px solid #f59e0b;
+    }
+    .weak-card.status-strong {
+      border-left: 4px solid #10b981;
+    }
+    .weak-card.status-unattempted {
+      border-left: 4px solid #94a3b8;
+    }
+
+    .weak-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .weak-card-title-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .weak-card-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: var(--surface);
+      color: var(--navy);
+    }
+    .weak-card-name {
+      font-family: 'Sora', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 2px;
+    }
+    .weak-card-mod {
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .weak-status-badge {
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+    .badge-status-weak {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+    .badge-status-moderate {
+      background: #fef3c7;
+      color: #b45309;
+    }
+    .badge-status-strong {
+      background: #ecfdf5;
+      color: #047857;
+    }
+    .badge-status-unattempted {
+      background: #f1f5f9;
+      color: #64748b;
+    }
+
+    .weak-prog-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+      margin-bottom: 6px;
+    }
+    .weak-prog-track {
+      height: 8px;
+      border-radius: 999px;
+      background: #f1f5f9;
+      overflow: hidden;
+    }
+    .weak-prog-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .fill-weak {
+      background: linear-gradient(90deg, #f87171, #ef4444);
+    }
+    .fill-moderate {
+      background: linear-gradient(90deg, #fbbf24, #f59e0b);
+    }
+    .fill-strong {
+      background: linear-gradient(90deg, #34d399, #10b981);
+    }
+    .fill-unattempted {
+      background: #cbd5e1;
+    }
+
+    .weak-card-action {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 10px;
+      border-top: 1px solid #f1f5f9;
+      margin-top: 4px;
+    }
+    .weak-card-stat {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .btn-weak-practice {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 7px 13px;
+      border-radius: 8px;
+      background: var(--blue-subtle);
+      color: var(--blue);
+      border: 1px solid var(--blue-border);
+      text-decoration: none;
+      transition: all 0.18s ease;
+    }
+    .btn-weak-practice:hover {
+      background: var(--blue);
+      color: #ffffff;
+      border-color: var(--blue);
+    }
+
+    .overview-weak-teaser {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px 22px;
+      margin-bottom: 22px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .overview-weak-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .overview-weak-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: #fee2e2;
+      color: #b91c1c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .overview-weak-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 3px;
+    }
+    .overview-weak-sub {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin: 0;
+    }
+    .btn-teaser-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 16px;
+      border-radius: 8px;
+      background: var(--navy);
+      color: #ffffff;
+      font-size: 0.84rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      font-family: 'Sora', sans-serif;
+    }
+    .btn-teaser-action:hover {
+      background: var(--blue);
+    }
+
+    /* ==========================================
+       PAGINATION BAR FOR TEST HISTORY
+       ========================================== */
+    .activity-pagination-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 18px;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-top: none;
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+      flex-wrap: wrap;
+    }
+    .pagination-info {
+      font-size: 0.83rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .pagination-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .page-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 34px;
+      height: 34px;
+      padding: 0 10px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+      color: var(--text);
+      font-family: 'Sora', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      user-select: none;
+    }
+    .page-btn:hover:not(:disabled) {
+      border-color: var(--blue);
+      color: var(--blue);
+      background: var(--blue-subtle);
+    }
+    .page-btn.active {
+      background: var(--navy);
+      color: #ffffff;
+      border-color: var(--navy);
+      box-shadow: 0 2px 8px rgba(11, 43, 82, 0.2);
+    }
+    .page-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
 </style>
 
   <script src="/shared-layout.js"></script>
@@ -1096,33 +1637,72 @@
       </a>
       <div class="nav-links">
         <div class="nav-dd">
-          <a href="/mocks.html" class="nav-dd-trigger">Full Tests<svg class="nav-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
+          <a href="/mocks.html" class="nav-dd-trigger">Full Mock Tests<svg class="nav-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
           <div class="nav-dd-menu">
             <div class="nav-dd-card">
-              <a href="/mocks.html#premium" class="nav-dd-item"><span>Premium Tests</span></a>
-              <a href="/mocks.html#academic" class="nav-dd-item"><span>Academic Tests</span></a>
-              <a href="/mocks.html#general" class="nav-dd-item"><span>General Tests</span></a>
-            </div>
+            <a href="/premium-academic-full-mock.html" class="nav-dd-item">
+              <span class="nav-dd-ico ico-gold" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+              <span>Premium Academic Full Mock</span>
+            </a>
+            <a href="/regular-academic-full-mock.html" class="nav-dd-item">
+              <span class="nav-dd-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5"/></svg></span>
+              <span>Regular Academic Full Mock</span>
+            </a>
+            <a href="/general-academic-full-mock.html" class="nav-dd-item">
+              <span class="nav-dd-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+              <span>General Academic Full Mock</span>
+            </a>
           </div>
         </div>
-        <div class="nav-dd">
-          <a href="/cambridge-listening.html" class="nav-dd-trigger">Listening<svg class="nav-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
+      </div>
+      <div class="nav-dd">
+        <a href="/cambridge-listening.html" class="nav-dd-trigger">Listening<svg class="nav-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
           <div class="nav-dd-menu">
             <div class="nav-dd-card">
-              <a href="/listening-exercises" class="nav-dd-item"><span>Practice by Question Type</span></a>
-              <a href="/cambridge-listening.html#tests" class="nav-dd-item"><span>Practice by Part</span></a>
-              <a href="/cambridge-listening.html" class="nav-dd-item"><span>Practice Full Test</span></a>
-            </div>
+            <a href="/recent-listening-tests.html" class="nav-dd-item" style="background:#fef2f2; border:1px solid #fee2e2; margin-bottom:4px;">
+              <span class="nav-dd-ico" aria-hidden="true" style="color:#e0202d;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></span>
+              <span>Recent Listening Real Tests <span style="background:#e0202d; color:#fff; font-size:9.5px; font-weight:800; padding:1.5px 6px; border-radius:10px; margin-left:6px; letter-spacing:0.4px;">NEW</span></span>
+            </a>
+            <a href="/cambridge-listening.html" class="nav-dd-item">
+              <span class="nav-dd-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg></span>
+              <span>Cambridge Listening Test</span>
+            </a>
+            <a href="/listening-exercises" class="nav-dd-item">
+              <span class="nav-dd-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
+              <span>Practice by Question Type</span>
+            </a>
+            <a href="/cambridge-listening.html#tests" class="nav-dd-item">
+              <span class="nav-dd-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></span>
+              <span>Practice by Part</span>
+            </a>
+            <a href="/listening-spelling-game" class="nav-dd-item" style="background:#f0f6ff; border:1px solid #dbeafe; margin-top:4px;">
+              <span class="nav-dd-ico" aria-hidden="true" style="color:#1565c9;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span>
+              <span>Spelling Practice Game <span style="background:#1565c9; color:#fff; font-size:9.5px; font-weight:800; padding:1.5px 6px; border-radius:10px; margin-left:6px; letter-spacing:0.4px;">GAME</span></span>
+            </a>
+          </div>
           </div>
         </div>
         <div class="nav-dd">
           <a href="/cambridge-reading.html" class="nav-dd-trigger">Reading<svg class="nav-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
           <div class="nav-dd-menu">
             <div class="nav-dd-card">
-              <a href="/reading-exercises" class="nav-dd-item"><span>Practice by Question Type</span></a>
-              <a href="/cambridge-reading.html#tests" class="nav-dd-item"><span>Practice by Passage</span></a>
-              <a href="/cambridge-reading.html" class="nav-dd-item"><span>Practice Full Test</span></a>
-            </div>
+            <a href="/recent-reading-tests.html" class="nav-dd-item" style="background:#f0f9ff; border:1px solid #e0f2fe; margin-bottom:4px;">
+              <span class="nav-dd-ico" aria-hidden="true" style="color:#0284c7;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></span>
+              <span>Recent Reading Real Tests <span style="font-size:0.65rem; background:#0284c7; color:#fff; padding:2px 6px; border-radius:10px; font-weight:700; margin-left:4px;">NEW</span></span>
+            </a>
+            <a href="/cambridge-reading.html" class="nav-dd-item">
+              <span class="nav-dd-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>
+              <span>Cambridge Reading Test</span>
+            </a>
+            <a href="/reading-exercises" class="nav-dd-item">
+              <span class="nav-dd-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
+              <span>Practice by Question Type</span>
+            </a>
+            <a href="/cambridge-reading.html#tests" class="nav-dd-item">
+              <span class="nav-dd-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></span>
+              <span>Practice by Part</span>
+            </a>
+          </div>
           </div>
         </div>
         <div class="nav-dd">
@@ -1239,9 +1819,49 @@
             </div>
           </div>
         </section>
+        <!-- Segmented Dashboard Navigation Pills -->
+        <nav class="dash-tabs-nav" aria-label="Dashboard Views">
+          <button type="button" class="dash-tab-btn active" id="dashTabBtnOverview" onclick="switchDashboardView('overview')">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            Overview &amp; Insights
+          </button>
+          <button type="button" class="dash-tab-btn" id="dashTabBtnWeakpoints" onclick="switchDashboardView('weakpoints')">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+            Weak Points &amp; Diagnostics
+            <span class="dash-tab-pill focus-pill" id="weakpointsTabBadge">Focus</span>
+          </button>
+          <button type="button" class="dash-tab-btn" id="dashTabBtnHistory" onclick="switchDashboardView('history')">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
+            Test History &amp; Review
+            <span class="dash-tab-pill" id="historyTabCountBadge">0</span>
+          </button>
+          <button type="button" class="dash-tab-btn" id="dashTabBtnWriting" onclick="switchDashboardView('writing')">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            AI Writing &amp; Speaking Vault
+            <span class="dash-tab-pill" id="writingTabCountBadge">0</span>
+          </button>
+        </nav>
 
-        <!-- 4-Card Band Metrics -->
-        <section class="kpi-grid">
+        <!-- VIEW 1: OVERVIEW & INSIGHTS -->
+        <div id="dashViewOverview" class="dash-view-panel active">
+          <!-- Recommended Next Action Hero Banner -->
+          <div id="overviewNextStepBanner" class="overview-next-step-card" style="display:none;">
+            <div class="next-step-info">
+              <div class="next-step-tag">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                RECOMMENDED NEXT PRACTICE
+              </div>
+              <h3 class="next-step-title" id="nextStepTitle">Focus Area: Matching Headings</h3>
+              <p class="next-step-desc" id="nextStepDesc">Your current diagnostic accuracy is 40%. Practicing targeted sets will help boost your Reading score to Band 7.5.</p>
+            </div>
+            <a href="/practice-hub?skill=reading#hub" id="nextStepActionBtn" class="btn-next-step">
+              Start Targeted Practice
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+
+          <!-- Existing KPI Grid -->
+          <section class="kpi-grid">
           <!-- Overall Band -->
           <div class="kpi-card highlight">
             <div class="kpi-top">
@@ -1307,8 +1927,8 @@
           </div>
         </section>
 
-        <!-- Sub Stats Bar: Accuracy + Question Volume -->
-        <section class="sub-stats-bar">
+          <!-- Existing Sub Stats Bar -->
+          <section class="sub-stats-bar">
           <div class="stat-pill-group">
             <div class="stat-mini-item">
               <div class="stat-mini-icon">
@@ -1345,8 +1965,8 @@
           </div>
         </section>
 
-        <!-- Visual Analytics Grid: Timeline + Module Mastery -->
-        <section class="analytics-grid">
+          <!-- Existing Analytics Grid -->
+          <section class="analytics-grid">
           <!-- Band Score Progression Chart -->
           <div class="panel-card">
             <div class="panel-head">
@@ -1410,18 +2030,7 @@
           </div>
         </section>
 
-        <!-- Test History Feed with Filter Tabs -->
-        <section class="history-section">
-          <div class="panel-head">
-            <h2 class="panel-title">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-              Complete Activity &amp; Test Records
-            </h2>
-            <span id="recordsBadge" class="badge-test-type">0 Records</span>
-          </div>
-
-          <!-- Category Filter Tabs -->
-          <!-- Latest Completed Test Review Banner -->
+          <!-- Latest Test Review Banner -->
           <div id="latestTestReviewBanner" style="display:none; background:linear-gradient(135deg, #0b2b52 0%, #1565c9 100%); color:#fff; border-radius:14px; padding:18px 22px; margin-bottom:22px; box-shadow:0 4px 15px rgba(11,43,82,0.15); align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px;">
             <div style="display:flex; align-items:center; gap:14px;">
               <div style="width:44px; height:44px; border-radius:12px; background:rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0;">📋</div>
@@ -1435,6 +2044,95 @@
               🔍 Review 1–40 Questions &amp; Feedback &rarr;
             </button>
           </div>
+
+          <!-- Quick Weak Points Teaser Card -->
+          <div class="overview-weak-teaser">
+            <div class="overview-weak-left">
+              <div class="overview-weak-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+              </div>
+              <div>
+                <h3 class="overview-weak-title">Question-Type Weakness &amp; Skill Diagnostics</h3>
+                <p class="overview-weak-sub">Deep dive into accuracy rates across Matching Headings, TFNG, Multiple Choice, and Completion questions.</p>
+              </div>
+            </div>
+            <button type="button" class="btn-teaser-action" onclick="switchDashboardView('weakpoints')">
+              View Detailed Diagnostics &rarr;
+            </button>
+          </div>
+        </div>
+
+        <!-- VIEW 2: WEAK POINTS & DIAGNOSTICS -->
+        <div id="dashViewWeakpoints" class="dash-view-panel" style="display:none;">
+          <div class="panel-head" style="margin-bottom:18px;">
+            <div>
+              <h2 class="panel-title" style="margin-bottom:4px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                Skill Diagnostics &amp; Question-Type Analytics
+              </h2>
+              <p style="font-size:0.84rem; color:var(--muted); margin:0;">Real-time accuracy analysis across all IELTS question types based on your completed tests and practice sets.</p>
+            </div>
+          </div>
+
+          <!-- Summary Strip -->
+          <div class="weakpoints-summary-strip">
+            <div class="weak-sum-card">
+              <div class="weak-sum-icon" style="background:#ecfdf5; color:#059669;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div>
+                <div class="weak-sum-val" id="cntStrongTypes" style="color:#059669;">0</div>
+                <div class="weak-sum-lbl">Strong Skills (&ge;75%)</div>
+              </div>
+            </div>
+            <div class="weak-sum-card">
+              <div class="weak-sum-icon" style="background:#fef3c7; color:#d97706;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              </div>
+              <div>
+                <div class="weak-sum-val" id="cntModerateTypes" style="color:#d97706;">0</div>
+                <div class="weak-sum-lbl">Moderate Progress (60-74%)</div>
+              </div>
+            </div>
+            <div class="weak-sum-card">
+              <div class="weak-sum-icon" style="background:#fee2e2; color:#dc2626;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+              </div>
+              <div>
+                <div class="weak-sum-val" id="cntWeakTypes" style="color:#dc2626;">0</div>
+                <div class="weak-sum-lbl">Needs Focus (&lt;60%)</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filter Pills -->
+          <div class="weakpoints-filters">
+            <button type="button" class="weak-filter-btn active" onclick="filterWeakpointCards('all', this)">All Question Types</button>
+            <button type="button" class="weak-filter-btn" onclick="filterWeakpointCards('focus', this)">⚠️ Needs Focus Only</button>
+            <button type="button" class="weak-filter-btn" onclick="filterWeakpointCards('reading', this)">Reading Question Types</button>
+            <button type="button" class="weak-filter-btn" onclick="filterWeakpointCards('listening', this)">Listening Question Types</button>
+          </div>
+
+          <!-- Dynamic Cards Grid -->
+          <div id="weakpointsCardsGrid" class="weakpoints-grid">
+            <!-- Populated dynamically by renderWeakpointsDiagnostics -->
+          </div>
+        </div>
+
+        <!-- VIEW 3: TEST HISTORY & REVIEW -->
+        <div id="dashViewHistory" class="dash-view-panel" style="display:none;">
+          <section class="history-section">
+          <div class="panel-head">
+            <h2 class="panel-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              Complete Activity &amp; Test Records
+            </h2>
+            <span id="recordsBadge" class="badge-test-type">0 Records</span>
+          </div>
+
+          <!-- Category Filter Tabs -->
+          <!-- Latest Completed Test Review Banner -->
+          
 
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:14px;">
             <div class="filter-tabs" style="margin-bottom:0;">
@@ -1478,10 +2176,16 @@
               </tbody>
             </table>
           </div>
+          <div id="activityPaginationBar" class="activity-pagination-bar" style="display:none;">
+            <div class="pagination-info" id="paginationInfo">Showing 1–10 of 0 tests</div>
+            <div class="pagination-controls" id="paginationControls"></div>
+          </div>
         </section>
+        </div>
 
-        <!-- AI Writing Evaluations Vault -->
-        <section class="writing-vault">
+        <!-- VIEW 4: AI WRITING & SPEAKING VAULT -->
+        <div id="dashViewWriting" class="dash-view-panel" style="display:none;">
+          <section class="writing-vault">
           <div class="panel-head">
             <h2 class="panel-title">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -1497,6 +2201,8 @@
             </div>
           </div>
         </section>
+        </div>
+
 
       </div>
     </div>
@@ -1658,7 +2364,14 @@
 
     async function loadDashboardData() {
       try {
-        const res = await fetch('/api/student/dashboard-data');
+        const u = getCachedUser();
+        const headers = {};
+        let url = '/api/student/dashboard-data';
+        if (u && u.email) {
+          headers['x-user-email'] = u.email;
+          url += '?email=' + encodeURIComponent(u.email);
+        }
+        const res = await fetch(url, { headers, credentials: 'include' });
         if (res.status === 401) {
           showAuthGate();
           return;
@@ -1673,6 +2386,11 @@
           renderActivityTable(globalHistory);
           renderWritingVault(globalHistory);
           renderRecommendations(data);
+          renderWeakpointsDiagnostics(globalHistory, data);
+          const histBadge = document.getElementById('historyTabCountBadge');
+          if (histBadge) histBadge.textContent = globalHistory.length || 0;
+          const wrtBadge = document.getElementById('writingTabCountBadge');
+          if (wrtBadge) wrtBadge.textContent = data.evaluatedWritingCount || 0;
         }
       } catch (err) {
         console.error('Failed to load dashboard data:', err);
@@ -1764,6 +2482,363 @@
         recomEl.innerHTML = `<strong>Strong Performance!</strong> You are maintaining solid consistency across all modules. Keep taking full-length timed mock tests to build stamina for test day.`;
       }
     }
+
+    
+    // ==========================================
+    // MODERN SEGMENTED DASHBOARD VIEW SWITCHER
+    // ==========================================
+    function switchDashboardView(viewId) {
+      const views = ['overview', 'weakpoints', 'history', 'writing'];
+      views.forEach(v => {
+        const btnId = 'dashTabBtn' + v.charAt(0).toUpperCase() + v.slice(1);
+        const panelId = 'dashView' + v.charAt(0).toUpperCase() + v.slice(1);
+        const btn = document.getElementById(btnId);
+        const panel = document.getElementById(panelId);
+        if (btn) btn.classList.toggle('active', v === viewId);
+        if (panel) {
+          panel.classList.toggle('active', v === viewId);
+          panel.style.display = (v === viewId) ? 'block' : 'none';
+        }
+      });
+
+      if (viewId === 'overview' && progressionChart) {
+        setTimeout(() => {
+          try { progressionChart.resize(); } catch(e) {}
+        }, 50);
+      }
+
+      // Smooth scroll if needed
+      try {
+        const nav = document.querySelector('.dash-tabs-nav');
+        if (nav && window.scrollY > nav.offsetTop) {
+          window.scrollTo({ top: nav.offsetTop - 70, behavior: 'smooth' });
+        }
+      } catch(e) {}
+    }
+
+    // ==========================================
+    // WEAK POINTS & QUESTION-TYPE DIAGNOSTICS ENGINE
+    // ==========================================
+    function renderWeakpointsDiagnostics(history, data) {
+      const qTypes = [
+        {
+          id: 'matching-headings',
+          name: 'Matching Headings',
+          module: 'reading',
+          keywords: ['heading', 'headings', 'matching heading', 'list-of-headings'],
+          link: '/practice-hub?skill=reading#hub',
+          practiceText: 'Practise Headings',
+          iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="14" y2="12"/><line x1="4" y1="18" x2="18" y2="18"/></svg>'
+        },
+        {
+          id: 'true-false-not-given',
+          name: 'True / False / Not Given',
+          module: 'reading',
+          keywords: ['true / false', 'true/false', 'tfng', 'true false', 'true-false-not-given'],
+          link: '/practice-hub?skill=reading#hub',
+          practiceText: 'Practise TFNG',
+          iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>'
+        },
+        {
+          id: 'yes-no-not-given',
+          name: 'Yes / No / Not Given',
+          module: 'reading',
+          keywords: ['yes / no', 'yes/no', 'ynng', 'yes no', 'yes-no-not-given'],
+          link: '/practice-hub?skill=reading#hub',
+          practiceText: 'Practise YNNG',
+          iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6L6 18M6 6l12 12"/><circle cx="12" cy="12" r="10"/></svg>'
+        },
+        {
+          id: 'summary-completion',
+          name: 'Summary Completion',
+          module: 'reading',
+          keywords: ['summary', 'summary completion', 'summary-completion'],
+          link: '/practice-hub?skill=reading#hub',
+          practiceText: 'Practise Summary',
+          iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>'
+        },
+        {
+          id: 'sentence-completion',
+          name: 'Sentence Completion',
+          module: 'reading',
+          keywords: ['sentence completion', 'complete the sentences', 'sentence-completion'],
+          link: '/practice-hub?skill=reading#hub',
+          practiceText: 'Practise Sentences',
+          iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>'
+        },
+        {
+          id: 'multiple-choice',
+          name: 'Multiple Choice (MCQ)',
+          module: 'reading',
+          keywords: ['multiple choice', 'mcq', 'choose the correct letter', 'multiple-choice', 'two-choice'],
+          link: '/practice-hub?skill=reading#hub',
+          practiceText: 'Practise MCQ',
+          iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>'
+        },
+        {
+          id: 'flow-chart',
+          name: 'Flow-chart & Diagram',
+          module: 'reading',
+          keywords: ['flow-chart', 'flow chart', 'diagram', 'label the diagram', 'diagram-completion'],
+          link: '/practice-hub?skill=reading#hub',
+          practiceText: 'Practise Flow-chart',
+          iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="15" y="15" width="6" height="6" rx="1"/><path d="M6 9v3a3 3 0 0 0 3 3h6"/></svg>'
+        },
+        {
+          id: 'matching-matrix',
+          name: 'Matching Information & Features',
+          module: 'reading',
+          keywords: ['matching information', 'matching features', 'which section contains', 'matching-matrix', 'name-matching'],
+          link: '/practice-hub?skill=reading#hub',
+          practiceText: 'Practise Matching',
+          iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>'
+        },
+        {
+          id: 'listening-notes',
+          name: 'Form & Note Completion',
+          module: 'listening',
+          keywords: ['note completion', 'form completion', 'section 1', 'section 2', 'notes'],
+          link: '/cambridge-listening.html',
+          practiceText: 'Practise Listening',
+          iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>'
+        },
+        {
+          id: 'listening-academic',
+          name: 'Academic Discussion & Lecture',
+          module: 'listening',
+          keywords: ['section 3', 'section 4', 'lecture', 'discussion', 'academic lecture'],
+          link: '/cambridge-listening.html',
+          practiceText: 'Practise Audio',
+          iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>'
+        }
+      ];
+
+      const stats = {};
+      qTypes.forEach(t => {
+        stats[t.id] = { attempted: 0, correct: 0 };
+      });
+
+      (history || []).forEach(item => {
+        const titleLower = String(item.title || '').toLowerCase();
+        const typeLower = String(item.testType || '').toLowerCase();
+
+        qTypes.forEach(qt => {
+          let matched = false;
+          for (const kw of qt.keywords) {
+            if (titleLower.includes(kw) || typeLower.includes(kw)) {
+              matched = true;
+              break;
+            }
+          }
+          if (matched) {
+            const att = item.totalQuestions || 10;
+            const cor = (qt.module === 'listening') ? (item.listeningScore || 0) : (item.readingScore || 0);
+            stats[qt.id].attempted += att;
+            stats[qt.id].correct += cor;
+          }
+        });
+      });
+
+      let strongCount = 0;
+      let moderateCount = 0;
+      let weakCount = 0;
+      let highestPriorityWeak = null;
+
+      const cardItems = qTypes.map(qt => {
+        const s = stats[qt.id];
+        let accuracy = null;
+        let status = 'unattempted';
+        let statusLabel = 'Not Attempted';
+        let statusBadgeClass = 'badge-status-unattempted';
+        let fillClass = 'fill-unattempted';
+
+        if (s.attempted > 0) {
+          accuracy = Math.round((s.correct / s.attempted) * 100);
+          if (accuracy >= 75) {
+            status = 'strong';
+            statusLabel = 'Strong Skill';
+            statusBadgeClass = 'badge-status-strong';
+            fillClass = 'fill-strong';
+            strongCount++;
+          } else if (accuracy >= 60) {
+            status = 'moderate';
+            statusLabel = 'Fair Progress';
+            statusBadgeClass = 'badge-status-moderate';
+            fillClass = 'fill-moderate';
+            moderateCount++;
+          } else {
+            status = 'weak';
+            statusLabel = 'Needs Focus ⚠️';
+            statusBadgeClass = 'badge-status-weak';
+            fillClass = 'fill-weak';
+            weakCount++;
+            if (!highestPriorityWeak || accuracy < highestPriorityWeak.accuracy) {
+              highestPriorityWeak = { ...qt, accuracy, ...s };
+            }
+          }
+        }
+
+        return {
+          ...qt,
+          attempted: s.attempted,
+          correct: s.correct,
+          accuracy,
+          status,
+          statusLabel,
+          statusBadgeClass,
+          fillClass
+        };
+      });
+
+      if (!highestPriorityWeak) {
+        const b = (data && data.averages) || {};
+        const r = b.reading || 0;
+        const l = b.listening || 0;
+        const w = b.writing || 0;
+        const minM = Math.min(r || 9, l || 9, w || 9);
+        if (minM === r && r > 0 && r < 7.0) {
+          highestPriorityWeak = {
+            name: 'Matching Headings & True/False',
+            module: 'reading',
+            accuracy: Math.round((r / 9) * 100),
+            link: '/practice-hub?skill=reading#hub',
+            practiceText: 'Practise Reading'
+          };
+        } else if (minM === l && l > 0 && l < 7.0) {
+          highestPriorityWeak = {
+            name: 'Listening Note & Section 3/4 Completion',
+            module: 'listening',
+            accuracy: Math.round((l / 9) * 100),
+            link: '/cambridge-listening.html',
+            practiceText: 'Practise Listening'
+          };
+        } else if (minM === w && w > 0 && w < 7.0) {
+          highestPriorityWeak = {
+            name: 'Academic Writing Task 2 Coherence',
+            module: 'writing',
+            accuracy: Math.round((w / 9) * 100),
+            link: '/cambridge-writing.html',
+            practiceText: 'Practise Writing'
+          };
+        }
+      }
+
+      // Update summary numbers
+      const cntStrongEl = document.getElementById('cntStrongTypes');
+      if (cntStrongEl) cntStrongEl.textContent = strongCount;
+      const cntModEl = document.getElementById('cntModerateTypes');
+      if (cntModEl) cntModEl.textContent = moderateCount;
+      const cntWeakEl = document.getElementById('cntWeakTypes');
+      if (cntWeakEl) cntWeakEl.textContent = weakCount;
+
+      // Update Tab Pill
+      const tabBadge = document.getElementById('weakpointsTabBadge');
+      if (tabBadge) {
+        if (weakCount > 0) {
+          tabBadge.textContent = `${weakCount} Focus`;
+          tabBadge.className = 'dash-tab-pill focus-pill';
+        } else if (strongCount > 0) {
+          tabBadge.textContent = `${strongCount} Solid`;
+          tabBadge.className = 'dash-tab-pill';
+        } else {
+          tabBadge.textContent = 'Diagnostics';
+          tabBadge.className = 'dash-tab-pill';
+        }
+      }
+
+      // Update Overview Banner
+      const nextStepBanner = document.getElementById('overviewNextStepBanner');
+      const nextStepTitle = document.getElementById('nextStepTitle');
+      const nextStepDesc = document.getElementById('nextStepDesc');
+      const nextStepBtn = document.getElementById('nextStepActionBtn');
+
+      if (highestPriorityWeak) {
+        if (nextStepBanner) nextStepBanner.style.display = 'flex';
+        if (nextStepTitle) nextStepTitle.textContent = `Focus Area: ${highestPriorityWeak.name}`;
+        if (nextStepDesc) {
+          nextStepDesc.textContent = `Your current diagnostic accuracy is ${highestPriorityWeak.accuracy}%. Practising dedicated targeted sets will quickly improve your ${highestPriorityWeak.module.toUpperCase()} score.`;
+        }
+        if (nextStepBtn) {
+          nextStepBtn.href = highestPriorityWeak.link || '/practice-hub?skill=reading#hub';
+          nextStepBtn.innerHTML = `Start Targeted Practice <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
+        }
+      } else {
+        if (nextStepBanner) nextStepBanner.style.display = 'flex';
+        if (nextStepTitle) nextStepTitle.textContent = `Begin Your IELTS Journey`;
+        if (nextStepDesc) nextStepDesc.textContent = `Take your first Cambridge Practice test or Question-Type exercise to establish your diagnostic baseline.`;
+        if (nextStepBtn) {
+          nextStepBtn.href = '/cambridge-reading.html';
+          nextStepBtn.innerHTML = `Start Free Test <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
+        }
+      }
+
+      // Render Cards Grid
+      const gridEl = document.getElementById('weakpointsCardsGrid');
+      if (gridEl) {
+        gridEl.innerHTML = cardItems.map(item => {
+          const pctDisplay = item.accuracy !== null ? `${item.accuracy}%` : '--';
+          const widthVal = item.accuracy !== null ? item.accuracy : 0;
+          const statLabel = item.attempted > 0 ? `${item.correct} / ${item.attempted} correct` : 'No attempts yet';
+
+          return `
+            <div class="weak-card status-${item.status}" data-module="${item.module}" data-status="${item.status}">
+              <div class="weak-card-top">
+                <div class="weak-card-title-group">
+                  <div class="weak-card-icon">
+                    ${item.iconSvg}
+                  </div>
+                  <div>
+                    <h4 class="weak-card-name">${escapeHtml(item.name)}</h4>
+                    <span class="weak-card-mod">${escapeHtml(item.module.toUpperCase())}</span>
+                  </div>
+                </div>
+                <span class="weak-status-badge ${item.statusBadgeClass}">${item.statusLabel}</span>
+              </div>
+
+              <div>
+                <div class="weak-prog-row">
+                  <span style="font-weight:700; color:var(--text); font-size:0.86rem;">Accuracy Rate</span>
+                  <strong style="font-family:'Sora',sans-serif; font-size:0.92rem; color:var(--navy);">${pctDisplay}</strong>
+                </div>
+                <div class="weak-prog-track">
+                  <div class="weak-prog-fill ${item.fillClass}" style="width: ${widthVal}%;"></div>
+                </div>
+              </div>
+
+              <div class="weak-card-action">
+                <span class="weak-card-stat">${statLabel}</span>
+                <a href="${item.link}" class="btn-weak-practice">
+                  ${item.practiceText} &rarr;
+                </a>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    function filterWeakpointCards(filterType, btnEl) {
+      const btns = document.querySelectorAll('.weak-filter-btn');
+      btns.forEach(b => b.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+
+      const cards = document.querySelectorAll('#weakpointsCardsGrid .weak-card');
+      cards.forEach(card => {
+        const mod = card.getAttribute('data-module');
+        const status = card.getAttribute('data-status');
+
+        if (filterType === 'all') {
+          card.style.display = 'flex';
+        } else if (filterType === 'focus') {
+          card.style.display = (status === 'weak' || status === 'moderate') ? 'flex' : 'none';
+        } else if (filterType === 'reading') {
+          card.style.display = (mod === 'reading') ? 'flex' : 'none';
+        } else if (filterType === 'listening') {
+          card.style.display = (mod === 'listening') ? 'flex' : 'none';
+        }
+      });
+    }
+
 
     function renderChart(history) {
       const ctx = document.getElementById('progressionChart');
@@ -1900,29 +2975,106 @@
       const rScore = latest.readingBand ? 'Reading: Band ' + latest.readingBand.toFixed(1) : (latest.readingScore ? 'Reading: ' + latest.readingScore + '/40' : '');
       const wScore = latest.writingBand ? 'Writing: Band ' + latest.writingBand.toFixed(1) : '';
       const scoresArr = [lScore, rScore, wScore].filter(Boolean);
-      document.getElementById('bannerTestScores').textContent = (scoresArr.length ? scoresArr.join(' | ') + ' | ' : '') + 'Overall: Band ' + oBand;
+      if (latest.status === 'in-progress') {
+        document.getElementById('bannerTestScores').textContent = (scoresArr.length ? scoresArr.join(' | ') + ' | ' : '') + 'Status: 💾 In-Progress (Auto-saved Draft)';
+      } else {
+        document.getElementById('bannerTestScores').textContent = (scoresArr.length ? scoresArr.join(' | ') + ' | ' : '') + 'Overall: Band ' + oBand;
+      }
 
       const btn = document.getElementById('bannerReviewBtn');
       if (btn) {
+        btn.innerHTML = (latest.status === 'in-progress' ? 'View Saved Draft' : 'Review Test Answers') + ' &rarr;';
         btn.onclick = () => openTestReviewModal(latest.id);
       }
       banner.style.display = 'flex';
     }
 
+    let currentHistoryList = [];
+    let currentHistoryPage = 1;
+    const historyPageSize = 10;
+    let currentSearchTerm = '';
+
+    function applyHistoryFilterAndSearch() {
+      let list = globalHistory || [];
+
+      if (activeFilter === 'full') {
+        list = list.filter(h => {
+          const t = String(h.testType || '').toLowerCase();
+          return t.includes('full') || t.includes('academic') || t.includes('premium') || t.includes('general');
+        });
+      } else if (activeFilter === 'cambridge') {
+        list = list.filter(h => String(h.testType || '').toLowerCase().includes('cambridge'));
+      } else if (activeFilter === 'hub') {
+        list = list.filter(h => {
+          const t = String(h.testType || '').toLowerCase();
+          return t.includes('hub') || t.includes('question') || t.includes('type');
+        });
+      } else if (activeFilter === 'writing') {
+        list = list.filter(h => String(h.testType || '').toLowerCase().includes('writing') || h.writingBand > 0);
+      } else if (activeFilter === 'speaking') {
+        list = list.filter(h => String(h.testType || '').toLowerCase().includes('speaking') || (h.speakingBand && h.speakingBand > 0) || h.module === 'speaking');
+      }
+
+      if (currentSearchTerm && currentSearchTerm.trim()) {
+        const q = currentSearchTerm.toLowerCase().trim();
+        list = list.filter(h => {
+          const title = String(h.title || '').toLowerCase();
+          const tType = String(h.testType || '').toLowerCase();
+          const tId = String(h.testId || '').toLowerCase();
+          return title.includes(q) || tType.includes(q) || tId.includes(q);
+        });
+      }
+
+      currentHistoryList = list;
+      currentHistoryPage = 1;
+      renderPaginatedHistoryTable();
+    }
+
+    function handleTableSearch(val) {
+      currentSearchTerm = val || '';
+      applyHistoryFilterAndSearch();
+    }
+
+    function filterActivity(category, btn) {
+      activeFilter = category;
+      document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      applyHistoryFilterAndSearch();
+    }
+
+    function goToHistoryPage(page) {
+      const totalPages = Math.ceil(currentHistoryList.length / historyPageSize) || 1;
+      if (page < 1 || page > totalPages) return;
+      currentHistoryPage = page;
+      renderPaginatedHistoryTable();
+    }
+
     function renderActivityTable(items) {
+      currentHistoryList = items || globalHistory || [];
+      currentHistoryPage = 1;
+      renderPaginatedHistoryTable();
+    }
+
+    function renderPaginatedHistoryTable() {
       const tbody = document.getElementById('activityTableBody');
       const counter = document.getElementById('recordsBadge');
+      const pBar = document.getElementById('activityPaginationBar');
+      const pInfo = document.getElementById('paginationInfo');
+      const pControls = document.getElementById('paginationControls');
       if (!tbody) return;
 
-      if (!items || items.length === 0) {
-        if (counter) counter.textContent = '0 Records';
+      const totalItems = currentHistoryList.length;
+      if (counter) counter.textContent = `${totalItems} Recorded`;
+
+      if (totalItems === 0) {
+        if (pBar) pBar.style.display = 'none';
         tbody.innerHTML = `
           <tr>
-            <td colspan="6">
+            <td colspan="8">
               <div class="empty-state">
                 <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                <p style="font-weight:700; margin-bottom:4px;">No records found for this category.</p>
-                <p style="font-size:0.84rem;">Switch filters or take tests to view recorded scores.</p>
+                <p style="font-weight:700; margin-bottom:4px;">No records found.</p>
+                <p style="font-size:0.84rem;">Try clearing your search or switching categories.</p>
               </div>
             </td>
           </tr>
@@ -1930,56 +3082,94 @@
         return;
       }
 
-      if (counter) counter.textContent = `${items.length} Recorded`;
-      let rows = '';
+      const totalPages = Math.ceil(totalItems / historyPageSize) || 1;
+      if (currentHistoryPage > totalPages) currentHistoryPage = totalPages;
 
-      items.forEach(item => {
-        const dateStr = item.completedAt ? new Date(item.completedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Recently';
-        const oBand = item.overallBand ? item.overallBand.toFixed(1) : '--';
+      const startIndex = (currentHistoryPage - 1) * historyPageSize;
+      const endIndex = Math.min(startIndex + historyPageSize, totalItems);
+      const pageItems = currentHistoryList.slice(startIndex, endIndex);
+
+      let rows = '';
+      pageItems.forEach(item => {
+        let dateStr = 'Recently';
+        let timeStr = '';
+        if (item.completedAt || item.lastSavedAt) {
+          const d = new Date(item.completedAt || item.lastSavedAt);
+          if (!isNaN(d.getTime())) {
+            dateStr = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+            timeStr = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+          }
+        }
+        const isDraft = item.status === 'in-progress';
+        const oBand = item.overallBand ? item.overallBand.toFixed(1) : (isDraft ? 'Draft' : '--');
         const lBand = item.listeningBand ? item.listeningBand.toFixed(1) : '--';
         const rBand = item.readingBand ? item.readingBand.toFixed(1) : '--';
         const wBand = item.writingBand ? item.writingBand.toFixed(1) : '--';
         const sBand = (item.speakingBand && item.speakingBand > 0) ? item.speakingBand.toFixed(1) : '--';
 
-        const tType = item.testType || 'Full Mock';
-        let badgeClass = 'full';
-        const tl = tType.toLowerCase();
-        if (tl.includes('cambridge')) badgeClass = 'cambridge';
-        else if (tl.includes('hub') || tl.includes('question')) badgeClass = 'hub';
-        else if (tl.includes('writing')) badgeClass = 'writing';
-        else if (tl.includes('speaking')) badgeClass = 'speaking';
+        let actionBtn = '';
+        if (isDraft) {
+          actionBtn = `<button type="button" class="btn-table-action" onclick="openTestReviewModal('${escapeAttr(item.id)}')">Resume Draft</button>`;
+        } else {
+          actionBtn = `<button type="button" class="btn-table-action" onclick="openTestReviewModal('${escapeAttr(item.id)}')">Review Test &rarr;</button>`;
+        }
 
         rows += `
           <tr>
             <td>
-              <div class="test-cell-name">
-                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                  <a href="javascript:void(0)" onclick="openTestReviewModal('${item.id}')" style="color:#0b2b52; font-weight:800; font-size:0.95rem; text-decoration:none;" title="Click to view full test review">
-                    ${escapeHtml(item.title || 'IELTS Mock Test')}
-                  </a>
-                  <button type="button" class="btn-review-item" onclick="openTestReviewModal('${item.id}')" style="padding:2px 8px; font-size:0.75rem; background:#0b2b52; color:#ffffff; border-radius:6px; border:none; cursor:pointer;">
-                    Review 🔍
-                  </button>
-                </div>
-                <span class="badge-test-type ${badgeClass}">${escapeHtml(tType)}</span>
-              </div>
+              <div style="font-weight:700; color:var(--text);">${escapeHtml(item.title || 'IELTS Mock Test')}</div>
+              <div style="font-size:0.75rem; color:var(--muted);">${escapeHtml(item.testType || 'Full Mock')}</div>
             </td>
-            <td>${dateStr}</td>
-            <td><span class="score-badge-circle mod">${lBand}</span></td>
-            <td><span class="score-badge-circle mod">${rBand}</span></td>
-            <td><span class="score-badge-circle mod">${wBand}</span></td>
-            <td><span class="score-badge-circle mod">${sBand}</span></td>
-            <td><span class="score-badge-circle overall">${oBand}</span></td>
             <td>
-              <button type="button" class="btn-review-item" onclick="openTestReviewModal('${item.id}')" style="background:#0b2b52; color:#ffffff; font-weight:800; border-color:#0b2b52; padding:7px 16px; border-radius:8px; box-shadow:0 2px 6px rgba(11,43,82,0.18);">
-                🔍 Review &rarr;
-              </button>
+              <div>${dateStr}</div>
+              <div style="font-size:0.74rem; color:var(--muted);">${timeStr}</div>
             </td>
+            <td><strong>${lBand}</strong></td>
+            <td><strong>${rBand}</strong></td>
+            <td><strong>${wBand}</strong></td>
+            <td><strong>${sBand}</strong></td>
+            <td><span class="badge-test-type" style="font-weight:800; font-size:0.86rem; color:var(--blue);">${oBand}</span></td>
+            <td>${actionBtn}</td>
           </tr>
         `;
       });
-
       tbody.innerHTML = rows;
+
+      if (pBar) {
+        if (totalPages <= 1) {
+          pBar.style.display = 'none';
+        } else {
+          pBar.style.display = 'flex';
+          if (pInfo) {
+            pInfo.textContent = `Showing ${startIndex + 1}–${endIndex} of ${totalItems} tests`;
+          }
+          if (pControls) {
+            let btnsHtml = '';
+            btnsHtml += `
+              <button type="button" class="page-btn" onclick="goToHistoryPage(${currentHistoryPage - 1})" ${currentHistoryPage === 1 ? 'disabled' : ''} aria-label="Previous Page">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+            `;
+
+            for (let p = 1; p <= totalPages; p++) {
+              if (p === 1 || p === totalPages || (p >= currentHistoryPage - 1 && p <= currentHistoryPage + 1)) {
+                btnsHtml += `
+                  <button type="button" class="page-btn ${p === currentHistoryPage ? 'active' : ''}" onclick="goToHistoryPage(${p})">${p}</button>
+                `;
+              } else if (p === currentHistoryPage - 2 || p === currentHistoryPage + 2) {
+                btnsHtml += `<span style="padding:0 4px; color:var(--muted); font-size:0.82rem;">...</span>`;
+              }
+            }
+
+            btnsHtml += `
+              <button type="button" class="page-btn" onclick="goToHistoryPage(${currentHistoryPage + 1})" ${currentHistoryPage === totalPages ? 'disabled' : ''} aria-label="Next Page">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            `;
+            pControls.innerHTML = btnsHtml;
+          }
+        }
+      }
     }
 
     function renderWritingVault(history) {
@@ -1995,7 +3185,15 @@
       let html = '';
       writingItems.forEach(item => {
         const fb = item.feedback || {};
-        const dateStr = item.completedAt ? new Date(item.completedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Recently';
+        let dateStr = 'Recently';
+        let timeStr = '';
+        if (item.completedAt || item.lastSavedAt) {
+          const d = new Date(item.completedAt || item.lastSavedAt);
+          if (!isNaN(d.getTime())) {
+            dateStr = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+            timeStr = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+          }
+        }
         const wBand = item.writingBand ? item.writingBand.toFixed(1) : '--';
 
         html += `
@@ -2003,7 +3201,10 @@
             <div class="eval-card-top">
               <div>
                 <h3 class="eval-card-title">${escapeHtml(item.title || 'Writing Assessment')}</h3>
-                <span style="font-size:0.80rem; color:var(--muted);">${dateStr}</span>
+                <span style="font-size:0.80rem; color:var(--muted); display:inline-flex; align-items:center; gap:6px;">
+                  <span>${dateStr}</span>
+                  ${timeStr ? `<span>•</span> <span>🕒 ${timeStr}</span>` : ''}
+                </span>
               </div>
               <div style="display:flex; align-items:center; gap:8px;">
                 <span style="font-size:0.82rem; font-weight:700; color:var(--muted);">Examiner Band:</span>
@@ -2077,7 +3278,17 @@
       const titleEl = document.getElementById('revTitle');
       if (titleEl) titleEl.textContent = rec.title || 'IELTS Mock Test';
       const dateEl = document.getElementById('revDate');
-      if (dateEl) dateEl.textContent = 'Completed on ' + (rec.completedAt ? new Date(rec.completedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit' }) : 'Recently');
+      if (dateEl) {
+        let dateFormatted = 'Recently';
+        if (rec.completedAt || rec.lastSavedAt) {
+          const d = new Date(rec.completedAt || rec.lastSavedAt);
+          if (!isNaN(d.getTime())) {
+            dateFormatted = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) + ' at ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+          }
+        }
+        const prefix = rec.status === 'in-progress' ? 'Saved Draft on ' : 'Completed on ';
+        dateEl.textContent = prefix + dateFormatted;
+      }
       const badgeEl = document.getElementById('revBadgeType');
       if (badgeEl) badgeEl.textContent = rec.testType || 'Full Mock Review';
 
@@ -3079,7 +4290,7 @@
     function getEvaluatedQuestionList(mod, rec) {
       const out = [];
       const mList = (rec.mistakes && rec.mistakes[mod]) ? rec.mistakes[mod] : [];
-      const userAnsObj = (rec.answers && rec.answers[mod]) ? rec.answers[mod] : {};
+      const userAnsObj = (rec.answers && rec.answers[mod]) ? rec.answers[mod] : (rec.answers || {});
       const officialObj = (mod === 'listening' ? rec.listeningAnswers : rec.readingAnswers) || {};
 
       for (let i = 1; i <= 40; i++) {
@@ -3291,19 +4502,43 @@
       out += '</div>';
       out += '</div>';
 
-      // 3. Official Band 9 Model Sample Answer
+      // 2b. Topic-Specific Lexical Upgrades & Power Collocations (if available in evalData)
+      const lexicalList = (evalData && Array.isArray(evalData.lexical_upgrades)) ? evalData.lexical_upgrades.filter(Boolean) : [];
+      if (lexicalList.length > 0) {
+        out += '<div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:12px; padding:16px 18px; margin-bottom:20px;">';
+        out += '<div style="display:flex; align-items:center; gap:6px; margin-bottom:12px;">';
+        out += '<span style="color:#e0202d; font-size:1.1rem;">💎</span>';
+        out += '<h4 style="margin:0; color:#0b2b52; font-size:0.92rem; font-weight:800;">High-Band Topic Vocabulary &amp; Collocations (Task ' + taskNum + ')</h4>';
+        out += '</div>';
+        out += '<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:10px;">';
+        lexicalList.forEach(item => {
+          out += '<div style="background:#ffffff; border:1px solid #e2e8f0; border-left:3.5px solid #1565c9; border-radius:8px; padding:10px 12px;">';
+          out += '<div style="color:#0b2b52; font-weight:800; font-size:0.86rem; margin-bottom:3px;">' + escapeHtml(item.phrase || item.term) + '</div>';
+          if (item.meaning) {
+            out += '<div style="color:#64748b; font-size:0.78rem; margin-bottom:4px; line-height:1.4;"><i>' + escapeHtml(item.meaning) + '</i></div>';
+          }
+          if (item.example) {
+            out += '<div style="color:#334155; font-size:0.78rem; line-height:1.45; background:#f1f5f9; padding:4px 8px; border-radius:4px;">&ldquo;' + escapeHtml(item.example) + '&rdquo;</div>';
+          }
+          out += '</div>';
+        });
+        out += '</div></div>';
+      }
+
+      // 3. Official Band 9 Model Sample Answer / Examiner Rewrite
+      const effectiveModel = sampleAnswer || (evalData && evalData.band_9_model) || '';
       out += '<div class="writing-sample-box" style="background:#f0fdf4; border:1.5px solid #86efac; border-radius:12px; padding:18px 22px; margin-bottom:24px;">';
-      out += '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid #bbf7d0; padding-bottom:8px;">';
+      out += '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid #bbf7d0; padding-bottom:8px; flex-wrap:wrap; gap:8px;">';
       out += '<div style="font-family:\'Sora\',sans-serif; color:#166534; font-size:0.98rem; font-weight:800; display:flex; align-items:center; gap:8px;">';
       out += '<span>🏆</span> Official Band 9.0 Examiner Model Sample Answer (Task ' + taskNum + ')';
       out += '</div>';
-      if (sampleAnswer) {
-        out += '<button type="button" onclick="navigator.clipboard.writeText(this.dataset.sample); alert(\'Sample answer copied to clipboard!\');" data-sample="' + escapeAttr(sampleAnswer) + '" style="background:#ffffff; color:#166534; border:1px solid #86efac; border-radius:6px; padding:4px 10px; font-size:0.75rem; font-weight:700; cursor:pointer;">📋 Copy Sample Answer</button>';
+      if (effectiveModel) {
+        out += '<button type="button" onclick="navigator.clipboard.writeText(this.dataset.sample); this.textContent=\'Copied! ✓\'; setTimeout(()=>this.textContent=\'📋 Copy Sample Answer\', 2000);" data-sample="' + escapeAttr(effectiveModel) + '" style="background:#ffffff; color:#166534; border:1px solid #86efac; border-radius:6px; padding:4px 10px; font-size:0.75rem; font-weight:700; cursor:pointer;">📋 Copy Sample Answer</button>';
       }
       out += '</div>';
 
-      if (sampleAnswer) {
-        out += '<div style="white-space:pre-line; line-height:1.8; font-size:0.90rem; color:#14532d;">' + escapeHtml(sampleAnswer) + '</div>';
+      if (effectiveModel) {
+        out += '<div style="white-space:pre-line; line-height:1.8; font-size:0.90rem; color:#14532d;">' + escapeHtml(effectiveModel) + '</div>';
       } else {
         out += '<div style="color:#166534; font-size:0.86rem; font-style:italic;">Band 9 model answer will be provided upon formal publication.</div>';
       }

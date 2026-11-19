@@ -824,21 +824,26 @@
       testBookBadge.textContent = isRecent ? "Recent Real Test" : `Cambridge ${bookParam}`;
     }
 
-    let seoTitle = isRecent ? `IELTS Listening Recent Actual Test ${testParam} (2026 Edition)` : `Cambridge IELTS ${bookParam} Listening Test ${testParam}`;
+    let seoTitle = isRecent ? `IELTS Listening Recent Actual Test ${testParam}` : `Cambridge IELTS ${bookParam} Listening Test ${testParam}`;
     if (testTitleBadge) {
       if (practiceMode === "section") {
         const qRange = `Questions ${targetQIds[0]}–${targetQIds[targetQIds.length - 1]}`;
         const friendlyType = getFriendlyGroupType(targetGroup.type);
         testTitleBadge.textContent = isRecent ? `Recent Test ${testParam} • ${qRange} (${friendlyType})` : `Test ${testParam} • ${qRange} (${friendlyType})`;
-        seoTitle += ` • ${qRange}`;
       } else if (practiceMode === "part") {
         testTitleBadge.textContent = isRecent ? `Recent Actual Test ${testParam} • Part ${targetPart}` : `Listening Test ${testParam} • Part ${targetPart}`;
-        seoTitle += ` Part ${targetPart}`;
       } else {
         testTitleBadge.textContent = isRecent ? `Recent Listening Real Test ${testParam}` : `Academic Listening Test ${testParam}`;
       }
     }
-    document.title = `${seoTitle} Online with Audio & Answers | IELTS Mockpoint`;
+
+    if (practiceMode === "part") {
+      document.title = `${seoTitle} Part ${targetPart} (Audio & Script) | IELTS Mockpoint`;
+    } else if (practiceMode === "section" && targetQIds && targetQIds.length) {
+      document.title = `${seoTitle} (Q${targetQIds[0]}–${targetQIds[targetQIds.length - 1]} Audio & Script) | IELTS Mockpoint`;
+    } else {
+      document.title = `${seoTitle} (Audio, Script & Answers) | IELTS Mockpoint`;
+    }
   }
 
   // -------------------------------------------------------------
@@ -2079,8 +2084,14 @@
   // -------------------------------------------------------------
   // 7. Test Submission & Evaluation Logic
   // -------------------------------------------------------------
+  let lastEvaluationResult = null;
+
   if (finishBtn) {
     finishBtn.addEventListener("click", () => {
+      if (isSubmitted && lastEvaluationResult) {
+        showResultScorecard(lastEvaluationResult.correctCount, lastEvaluationResult.totalPossible, lastEvaluationResult.bandScore);
+        return;
+      }
       if (submitModal) submitModal.style.display = "flex";
     });
   }
@@ -2209,6 +2220,7 @@
     buildTranscriptsWithEvidence();
 
     // Show result scorecard
+    lastEvaluationResult = { correctCount, totalPossible, bandScore };
     showResultScorecard(correctCount, totalPossible, bandScore);
 
     // Automatically record student practice in dashboard
@@ -2247,6 +2259,38 @@
       const btn = document.getElementById(`partTranscriptToggleBtn-${p}`);
       if (btn) btn.style.display = "none";
     });
+
+    // Update top navbar Finish Test button to Test Completed (matching Reading Test)
+    if (finishBtn) {
+      finishBtn.textContent = "Test Completed";
+      finishBtn.style.background = "#10b981";
+      finishBtn.style.boxShadow = "0 2px 8px rgba(16, 185, 129, 0.25)";
+      finishBtn.disabled = false;
+      finishBtn.onclick = function() {
+        showResultScorecard(correctCount, totalPossible, bandScore);
+      };
+    }
+
+    // Update topbar badges & hide inactive timer
+    try {
+      document.body.classList.add("cl-review-active");
+      const timerEl = document.getElementById("timerPill") || document.querySelector(".cl-timer-pill");
+      if (timerEl) timerEl.style.display = "none";
+
+      const badgesWrap = document.getElementById("clCompletedBadges");
+      const scoreVal = document.getElementById("topbarScoreVal");
+      const bandVal = document.getElementById("topbarBandVal");
+      if (scoreVal) scoreVal.textContent = `${correctCount}/${totalPossible}`;
+      if (bandVal) bandVal.textContent = Number(bandScore || 0).toFixed(1);
+      if (badgesWrap) {
+        badgesWrap.style.display = "inline-flex";
+        badgesWrap.onclick = function() {
+          showResultScorecard(correctCount, totalPossible, bandScore);
+        };
+      }
+    } catch(e) {
+      console.warn("Listening topbar badge update error:", e);
+    }
   }
 
   // -------------------------------------------------------------
@@ -2818,105 +2862,212 @@
   // -------------------------------------------------------------
   // 10. Result Scorecard Modal
   // -------------------------------------------------------------
+  function getListeningBandDescriptor(bandNum) {
+    const b = Number(bandNum);
+    if (b >= 9.0) return "Expert User";
+    if (b >= 8.5) return "Very Good User";
+    if (b >= 8.0) return "Very Good User";
+    if (b >= 7.5) return "Good User";
+    if (b >= 7.0) return "Good User";
+    if (b >= 6.5) return "Competent User";
+    if (b >= 6.0) return "Competent User";
+    if (b >= 5.5) return "Modest User";
+    if (b >= 5.0) return "Modest User";
+    if (b >= 4.5) return "Limited User";
+    if (b >= 4.0) return "Limited User";
+    if (b >= 3.5) return "Extremely Limited";
+    if (b >= 3.0) return "Extremely Limited";
+    if (b >= 2.5) return "Intermittent User";
+    if (b >= 2.0) return "Intermittent User";
+    if (b >= 1.0) return "Non User";
+    return "Did Not Attempt";
+  }
+
+  function calculateListeningBand(correct) {
+    if (correct >= 39) return 9.0;
+    if (correct >= 37) return 8.5;
+    if (correct >= 35) return 8.0;
+    if (correct >= 32) return 7.5;
+    if (correct >= 30) return 7.0;
+    if (correct >= 26) return 6.5;
+    if (correct >= 23) return 6.0;
+    if (correct >= 18) return 5.5;
+    if (correct >= 16) return 5.0;
+    if (correct >= 13) return 4.5;
+    if (correct >= 10) return 4.0;
+    if (correct >= 8)  return 3.5;
+    if (correct >= 6)  return 3.0;
+    if (correct >= 4)  return 2.5;
+    if (correct >= 2)  return 2.0;
+    if (correct >= 1)  return 1.0;
+    return 0.0;
+  }
+
+  window.closeScorecardModal = function() {
+    const scModal = document.getElementById("scorecardModal");
+    document.body.style.overflow = "";
+    if (scModal) {
+      scModal.classList.remove("active");
+      scModal.style.setProperty("display", "none", "important");
+    }
+    const scOverlay = document.getElementById("scorecardOverlay");
+    if (scOverlay) scOverlay.remove();
+  };
+
+  function setupListeningScorecardFilters() {
+    const pBtns = document.querySelectorAll("#mpSectionFilterPills .mp-pill-btn");
+    pBtns.forEach(btn => {
+      btn.onclick = function() {
+        pBtns.forEach(b => b.classList.remove("active"));
+        this.classList.add("active");
+        applyListeningScorecardFilters();
+      };
+    });
+
+    const sBtns = document.querySelectorAll(".mp-status-pills .mp-status-btn");
+    sBtns.forEach(btn => {
+      btn.onclick = function() {
+        sBtns.forEach(b => b.classList.remove("active"));
+        this.classList.add("active");
+        applyListeningScorecardFilters();
+      };
+    });
+  }
+
+  function applyListeningScorecardFilters() {
+    const activeSection = document.querySelector("#mpSectionFilterPills .mp-pill-btn.active")?.dataset.filter || "all";
+    const activeStatus = document.querySelector(".mp-status-pills .mp-status-btn.active")?.dataset.status || "all";
+
+    const rows = document.querySelectorAll("#mpScorecardTableBody tr");
+    rows.forEach(tr => {
+      const rowSec = tr.dataset.section;
+      const rowStat = tr.dataset.status;
+
+      const matchSec = (activeSection === "all" || rowSec === activeSection);
+      const matchStat = (activeStatus === "all" || rowStat === activeStatus);
+
+      tr.style.display = (matchSec && matchStat) ? "" : "none";
+    });
+  }
+
   function showResultScorecard(correct, totalPossible, band) {
-    const m = Math.floor(totalSeconds / 60);
-    const s = totalSeconds % 60;
-    const timeFormatted = `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
-    const pct = Math.round((correct / totalPossible) * 100);
+    const scModal = document.getElementById("scorecardModal");
+    if (!scModal) return;
 
-    const overlay = document.createElement("div");
-    overlay.className = "cl-modal-overlay";
-    overlay.id = "scorecardOverlay";
+    const actualBand = (practiceMode === "full")
+      ? calculateListeningBand(correct).toFixed(1)
+      : (band !== null ? Number(band).toFixed(1) : (totalPossible > 0 ? (correct / totalPossible * 9).toFixed(1) : "0.0"));
 
-    let titleText = "Practice Complete!";
-    let subtitleText = `${escapeHtml(testData.title || `Cambridge ${bookParam} Test ${testParam}`)} &nbsp;|&nbsp; Time: ${timeFormatted}`;
-    let scoreDisplayHtml = "";
+    // 1. Band & Descriptor
+    const bandEl = document.getElementById("resBandScore");
+    if (bandEl) bandEl.textContent = actualBand;
 
-    if (practiceMode === "full") {
-      titleText = "Full Mock Test Complete!";
-      scoreDisplayHtml = `
-        <div style="background:var(--surface); border:1.5px solid var(--line); border-radius:14px; padding:20px; margin-bottom:20px;">
-          <div style="font-size:12px; font-weight:800; text-transform:uppercase; color:var(--muted); letter-spacing:0.05em; margin-bottom:4px;">
-            IELTS Band Score
-          </div>
-          <div style="font-family:'Sora',sans-serif; font-size:46px; font-weight:800; color:var(--red); line-height:1;">
-            ${(band || 0).toFixed(1)}
-          </div>
-          <div style="font-size:14px; font-weight:600; color:var(--navy); margin-top:10px;">
-            Score: ${correct} / ${totalPossible} (${pct}% Accuracy)
-          </div>
-        </div>
-      `;
-    } else if (practiceMode === "part") {
-      titleText = `Part ${targetPart} Practice Complete!`;
-      subtitleText = `Cambridge ${bookParam} Test ${testParam} • Part ${targetPart} &nbsp;|&nbsp; Time: ${timeFormatted}`;
-      scoreDisplayHtml = `
-        <div style="background:var(--surface); border:1.5px solid var(--line); border-radius:14px; padding:20px; margin-bottom:20px;">
-          <div style="font-size:12px; font-weight:800; text-transform:uppercase; color:var(--muted); letter-spacing:0.05em; margin-bottom:4px;">
-            Part Accuracy
-          </div>
-          <div style="font-family:'Sora',sans-serif; font-size:46px; font-weight:800; color:var(--blue); line-height:1;">
-            ${pct}%
-          </div>
-          <div style="font-size:14px; font-weight:600; color:var(--navy); margin-top:10px;">
-            Score: ${correct} / ${totalPossible} Questions
-          </div>
-        </div>
-      `;
-    } else if (practiceMode === "section") {
-      const qRange = `Questions ${targetQIds[0]}–${targetQIds[targetQIds.length - 1]}`;
-      const fType = getFriendlyGroupType(targetGroup ? targetGroup.type : "");
-      titleText = `${qRange} Practice Complete!`;
-      subtitleText = `${fType} • Cambridge ${bookParam} Test ${testParam} &nbsp;|&nbsp; Time: ${timeFormatted}`;
-      scoreDisplayHtml = `
-        <div style="background:var(--surface); border:1.5px solid var(--line); border-radius:14px; padding:20px; margin-bottom:20px;">
-          <div style="font-size:12px; font-weight:800; text-transform:uppercase; color:var(--muted); letter-spacing:0.05em; margin-bottom:4px;">
-            Section Accuracy
-          </div>
-          <div style="font-family:'Sora',sans-serif; font-size:46px; font-weight:800; color:#16a34a; line-height:1;">
-            ${pct}%
-          </div>
-          <div style="font-size:14px; font-weight:600; color:var(--navy); margin-top:10px;">
-            Score: ${correct} / ${totalPossible} Questions (${fType})
-          </div>
-        </div>
-      `;
+    const descEl = document.getElementById("mpBandDescriptor");
+    if (descEl) descEl.textContent = getListeningBandDescriptor(actualBand);
+
+    // 2. Metrics
+    const numEl = document.getElementById("resCorrectNum");
+    if (numEl) numEl.textContent = correct;
+
+    const totalEl = document.getElementById("resTotalNum");
+    if (totalEl) totalEl.textContent = totalPossible;
+
+    const corrEl = document.getElementById("mpCorrectCount");
+    if (corrEl) corrEl.textContent = correct;
+
+    const incorrEl = document.getElementById("mpIncorrectCount");
+    if (incorrEl) incorrEl.textContent = Math.max(0, totalPossible - correct);
+
+    const pct = totalPossible > 0 ? Math.round((correct / totalPossible) * 100) : 0;
+    const accEl = document.getElementById("mpAccuracyPct");
+    if (accEl) accEl.textContent = `${pct}% Accuracy`;
+
+    // 3. Time Taken (HH:MM:SS)
+    const timeEl = document.getElementById("resTimeTaken");
+    if (timeEl) {
+      const hrs = Math.floor(totalSeconds / 3600);
+      const mins = Math.floor((totalSeconds % 3600) / 60);
+      const secs = totalSeconds % 60;
+      timeEl.textContent = `${String(hrs).padStart(2, "0")}:${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
     }
 
-    overlay.innerHTML = `
-      <div class="cl-result-modal">
-        <h2 style="font-family:'Sora',sans-serif; color:var(--navy); font-weight:800; font-size:24px; margin-bottom:6px;">
-          ${titleText}
-        </h2>
-        <p style="color:var(--muted); font-size:14px; margin-bottom:20px;">
-          ${subtitleText}
-        </p>
+    // 4. Header Titles
+    const titleEl = document.getElementById("mpScorecardTitle");
+    if (titleEl && testData && testData.title) {
+      titleEl.textContent = testData.title;
+    }
+    const subEl = document.getElementById("mpScorecardSubtitle");
+    if (subEl) {
+      const series = (bookParam >= 2000) ? `Recent Actual Test ${testParam}` : `Cambridge ${bookParam} Test ${testParam}`;
+      subEl.textContent = `${series} • Official Evaluation Breakdown (${totalPossible} Questions)`;
+    }
 
-        ${scoreDisplayHtml}
+    // 5. Populate Detailed Table
+    const tbody = document.getElementById("mpScorecardTableBody");
+    if (tbody) {
+      let rowsHtml = "";
+      const officialAnswers = testData.answers || {};
+      const qIdsToScore = (practiceMode === "full")
+        ? Array.from({ length: 40 }, (_, i) => i + 1)
+        : targetQIds;
 
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:24px;">
-          <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:10px;">
-            <strong style="color:#16a34a; font-size:18px;">${correct}</strong>
-            <div style="font-size:12px; color:#15803d; font-weight:600;">Correct</div>
-          </div>
-          <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:8px; padding:10px;">
-            <strong style="color:#dc2626; font-size:18px;">${totalPossible - correct}</strong>
-            <div style="font-size:12px; color:#b91c1c; font-weight:600;">Incorrect / Empty</div>
-          </div>
-        </div>
+      qIdsToScore.forEach(qId => {
+        const uAns = String(userAnswers[qId] || "").trim();
+        const oAns = officialAnswers[String(qId)] || officialAnswers[qId] || "";
+        const isOk = isAnswerCorrect(uAns, oAns, qId);
+        const isUnanswered = !uAns;
 
-        <div style="display:flex; gap:10px; justify-content:center;">
-          <button type="button" class="cl-btn-finish" style="background:var(--navy); padding:10px 22px;" onclick="document.getElementById('scorecardOverlay').remove()">
-            <i class="bi bi-search"></i> Review Answers & Script
-          </button>
-          <a href="/cambridge-listening.html" class="cl-btn-finish" style="background:#fff; color:var(--navy); border:1.5px solid var(--line); text-decoration:none; padding:10px 20px;">
-            Exit to Hub
-          </a>
-        </div>
-      </div>
-    `;
+        let sectionKey = "p1";
+        if (qId > 30) sectionKey = "p4";
+        else if (qId > 20) sectionKey = "p3";
+        else if (qId > 10) sectionKey = "p2";
 
-    document.body.appendChild(overlay);
+        let statusKey = isOk ? "correct" : "wrong";
+
+        let statusBadge = "";
+        let userAnsDisplay = "";
+
+        const fullOAns = getFullOptionForQuestion(qId, oAns) || oAns;
+        const fullUAns = getFullOptionForQuestion(qId, uAns) || uAns;
+
+        let officialFormatted = "";
+        if (Array.isArray(fullOAns)) {
+          officialFormatted = fullOAns.join(" / ");
+        } else {
+          officialFormatted = String(fullOAns).trim();
+        }
+
+        if (isOk) {
+          statusBadge = '<span class="mp-status-tag correct">✓ Correct</span>';
+          userAnsDisplay = '<span class="mp-user-ans correct">' + escapeHtml(fullUAns) + ' ✓</span>';
+        } else if (isUnanswered) {
+          statusBadge = '<span class="mp-status-tag unanswered">— Skipped</span>';
+          userAnsDisplay = '<span class="mp-user-ans empty">(Not Answered)</span>';
+        } else {
+          statusBadge = '<span class="mp-status-tag incorrect">✕ Incorrect</span>';
+          userAnsDisplay = '<span class="mp-user-ans incorrect">' + escapeHtml(fullUAns) + '</span>';
+        }
+
+        rowsHtml += `
+          <tr data-section="${sectionKey}" data-status="${statusKey}">
+            <td style="text-align: center;">
+              <div class="mp-q-num-pill">${qId}</div>
+            </td>
+            <td>${userAnsDisplay}</td>
+            <td><span class="mp-correct-ans-pill">${escapeHtml(officialFormatted || "—")}</span></td>
+            <td style="text-align: center;">${statusBadge}</td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = rowsHtml;
+    }
+
+    // 6. Setup filter listeners & show modal
+    setupListeningScorecardFilters();
+    document.body.style.overflow = "hidden";
+    scModal.classList.add("active");
+    scModal.style.setProperty("display", "flex", "important");
   }
 
   // -------------------------------------------------------------
@@ -3095,6 +3246,43 @@
   function escapeAttr(str) {
     return String(str || "").replace(/"/g, "&quot;");
   }
+
+  // Auto-Save in-progress answers (periodic 60s & on exit)
+  function autoSaveCambridgeListening(isExit = false) {
+    if (isSubmitted) return;
+    try {
+      if (!userAnswers || Object.keys(userAnswers).length === 0) return;
+      const u = JSON.parse(localStorage.getItem("user") || "null");
+      const email = u && u.email ? u.email : "";
+
+      const seriesPrefix = (bookParam >= 2000) ? `Recent Actual Test ${testParam}` : `Cambridge ${bookParam} Test ${testParam}`;
+      const payload = JSON.stringify({
+        email,
+        testType: (bookParam >= 2000) ? 'Recent Listening Actual Test' : 'Cambridge Listening',
+        module: 'listening',
+        testId: `cambridge-listening-${bookParam}-${testParam}`,
+        title: `${seriesPrefix} Listening`,
+        answers: userAnswers
+      });
+
+      if (isExit && navigator.sendBeacon) {
+        const blob = new Blob([payload], { type: "application/json" });
+        navigator.sendBeacon("/api/student/auto-save", blob);
+      }
+
+      fetch("/api/student/auto-save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: payload,
+        credentials: "include",
+        keepalive: Boolean(isExit)
+      }).catch(() => {});
+    } catch (e) {}
+  }
+
+  setInterval(autoSaveCambridgeListening, 60 * 1000);
+  window.addEventListener("pagehide", () => autoSaveCambridgeListening(true));
+  window.addEventListener("beforeunload", () => autoSaveCambridgeListening(true));
 
   // Start on load
   window.addEventListener("DOMContentLoaded", () => {

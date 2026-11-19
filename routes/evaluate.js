@@ -1,11 +1,180 @@
 require("dotenv").config({ path: require("path").resolve(__dirname, "../.env") });
 const express = require("express");
 const router = express.Router();
+const crypto = require("crypto");
 const Groq = require("groq-sdk");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+const DailyAiUsage = require("../models/DailyAiUsage");
+const SystemSettings = require("../models/SystemSettings");
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+function parseCookieHeader(cookieHeader) {
+  const list = {};
+  if (!cookieHeader) return list;
+  cookieHeader.split(";").forEach(cookie => {
+    let [name, ...rest] = cookie.split("=");
+    name = name?.trim();
+    if (!name) return;
+    const value = rest.join("=").trim();
+    list[name] = decodeURIComponent(value);
+  });
+  return list;
+}
+
+function getClientFingerprints(req) {
+  const cookies = parseCookieHeader(req.headers?.cookie);
+  const deviceId =
+    req.body?.deviceId ||
+    req.query?.deviceId ||
+    req.headers["x-device-id"] ||
+    req.cookies?.imp_device_id ||
+    cookies.imp_device_id ||
+    null;
+
+  const rawIp =
+    req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
+    req.socket?.remoteAddress ||
+    req.ip ||
+    "unknown-ip";
+
+  const userAgent = req.headers["user-agent"] || "unknown-ua";
+
+  // SHA-256 fingerprint hash combining IP and User-Agent:
+  // prevents multiple accounts on same device even in incognito
+  const ipHash = crypto
+    .createHash("sha256")
+    .update(`${rawIp}-${userAgent}`)
+    .digest("hex")
+    .substring(0, 24);
+
+  const userEmail =
+    req.session?.user?.email ||
+    req.session?.account?.email ||
+    req.user?.email ||
+    req.body?.userEmail ||
+    null;
+
+  const isVip = !!(req.session?.user?.isPaid || req.session?.account?.isPaid);
+
+  return { deviceId, ipHash, userEmail, isVip };
+}
+
+function getTodayDateString() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+// Anti-Abuse & Daily Quota Guard (Device + User + IP Hash tracking)
+async function verifyAndRecordAiUsage(req, type = "writing") {
+  const settings = (await SystemSettings.findOne({ key: "global_config" }).lean()) || {};
+  const phase = settings.currentPhase || 1;
+  const dailyLimit = settings.freeAiWritingPerDay ?? 3;
+  const { deviceId, ipHash, userEmail, isVip } = getClientFingerprints(req);
+  const today = getTodayDateString();
+
+  // Phase 1 (100% Free / Open Growth)
+  if (phase === 1) {
+    const abuseCap = 20; // safe rate limiter to prevent bot DoS
+    const existing = await DailyAiUsage.findOne({
+      date: today,
+      $or: [
+        ...(deviceId ? [{ identifier: deviceId, type: "device" }] : []),
+        { identifier: ipHash, type: "ip" }
+      ]
+    });
+    if (existing && existing.totalCount >= abuseCap) {
+      return {
+        allowed: false,
+        status: 429,
+        limitReached: true,
+        remaining: 0,
+        dailyLimit: abuseCap,
+        message: "High daily traffic limit reached for this device. Please try again tomorrow."
+      };
+    }
+    const checks = [];
+    if (deviceId) checks.push({ identifier: deviceId, type: "device" });
+    checks.push({ identifier: ipHash, type: "ip" });
+    await Promise.all(
+      checks.map(c =>
+        DailyAiUsage.findOneAndUpdate(
+          { identifier: c.identifier, type: c.type, date: today },
+          { $inc: { totalCount: 1, ...(type === "writing" ? { writingCount: 1 } : { speakingCount: 1 }) } },
+          { upsert: true, new: true }
+        )
+      )
+    );
+    return { allowed: true, remaining: 999, dailyLimit };
+  }
+
+  // Phase 2 (Freemium / Lead Gen) & Phase 3 (Monetization):
+  const isLoggedIn = !!(userEmail || req.session?.user || req.session?.account);
+  if (phase >= 2 && !isLoggedIn) {
+    return {
+      allowed: false,
+      status: 401,
+      authRequired: true,
+      message: "Please sign in or create a free candidate account to use AI evaluations.",
+      code: "AUTH_REQUIRED"
+    };
+  }
+
+  // Phase 3 VIP Pass check
+  if (phase === 3 && isVip) {
+    return { allowed: true, remaining: 999, isVip: true, dailyLimit };
+  }
+
+  // Check Daily Limits across User, Device ID, and IP Fingerprint
+  const checks = [];
+  if (userEmail) checks.push({ identifier: userEmail.toLowerCase(), type: "user" });
+  if (deviceId) checks.push({ identifier: deviceId, type: "device" });
+  checks.push({ identifier: ipHash, type: "ip" });
+
+  const usages = await DailyAiUsage.find({
+    date: today,
+    $or: checks.map(c => ({ identifier: c.identifier, type: c.type }))
+  });
+
+  let maxUsed = 0;
+  for (const u of usages) {
+    if (u.totalCount > maxUsed) maxUsed = u.totalCount;
+  }
+
+  if (maxUsed >= dailyLimit) {
+    return {
+      allowed: false,
+      status: 429,
+      limitReached: true,
+      remaining: 0,
+      dailyLimit,
+      message: `You have reached your daily limit of ${dailyLimit} free AI evaluations from this device. Please come back tomorrow or upgrade to VIP Pass for unlimited evaluations!`,
+      code: "DAILY_LIMIT_REACHED"
+    };
+  }
+
+  // Increment usage across all identifiers to seal multiple-account switching
+  await Promise.all(
+    checks.map(c =>
+      DailyAiUsage.findOneAndUpdate(
+        { identifier: c.identifier, type: c.type, date: today },
+        {
+          $inc: {
+            totalCount: 1,
+            ...(type === "writing" ? { writingCount: 1 } : { speakingCount: 1 })
+          }
+        },
+        { upsert: true, new: true }
+      )
+    )
+  );
+
+  return {
+    allowed: true,
+    remaining: Math.max(0, dailyLimit - (maxUsed + 1)),
+    dailyLimit
+  };
+}
 
 const SYSTEM_PROMPT = `You are a Senior Certified IELTS Writing Examiner trained under official IDP / British Council / Cambridge Assessment English marking standards.
 
@@ -61,6 +230,14 @@ Return ONLY a valid JSON object with this exact schema (use realistic 0.5-step b
     "<Concrete, actionable improvement step 1 tailored to this script>",
     "<Concrete, actionable improvement step 2 tailored to this script>",
     "<Concrete, actionable improvement step 3 tailored to this script>"
+  ],
+  "band_9_model": "<A complete, natural Band 9 model rewrite of the candidate's essay responding directly to the prompt, demonstrating native coherence, advanced vocabulary, and varied grammar>",
+  "lexical_upgrades": [
+    {
+      "phrase": "<Topic-specific Band 8+ academic collocation or phrase>",
+      "meaning": "<Clear, concise definition>",
+      "example": "<Realistic IELTS sentence using this phrase in context>"
+    }
   ]
 }`;
 
@@ -97,7 +274,9 @@ function buildEmptyEvaluation(taskLabel) {
     summary_feedback: `You did not submit an answer for ${taskLabel}. Write at least the minimum required words to receive an IELTS band assessment.`,
     strengths: [],
     corrections: [],
-    key_improvements: [`Complete ${taskLabel} within the recommended time limit.`]
+    key_improvements: [`Complete ${taskLabel} within the recommended time limit.`],
+    band_9_model: "",
+    lexical_upgrades: []
   };
 }
 
@@ -140,7 +319,18 @@ function normalizeEvaluation(raw) {
             reason: String(c.reason || "")
           }))
       : [],
-    key_improvements: Array.isArray(raw?.key_improvements) ? raw.key_improvements.filter(Boolean).slice(0, 5) : []
+    key_improvements: Array.isArray(raw?.key_improvements) ? raw.key_improvements.filter(Boolean).slice(0, 5) : [],
+    band_9_model: String(raw?.band_9_model || "").trim(),
+    lexical_upgrades: Array.isArray(raw?.lexical_upgrades)
+      ? raw.lexical_upgrades
+          .filter((u) => u && (u.phrase || u.term))
+          .slice(0, 5)
+          .map((u) => ({
+            phrase: String(u.phrase || u.term || "").trim(),
+            meaning: String(u.meaning || "").trim(),
+            example: String(u.example || "").trim()
+          }))
+      : []
   };
 }
 
@@ -185,7 +375,7 @@ async function evaluateSingleEssay(topic, essay, explicitTaskType) {
   }
 
   // 2. Fallback Engine: Verified Gemini Models
-  const geminiModels = ["gemini-3.5-flash", "gemini-3.1-flash-lite"];
+  const geminiModels = ["gemini-3.5-flash-lite"];
   for (const gemModel of geminiModels) {
     try {
       const model = genAI.getGenerativeModel({
@@ -213,20 +403,87 @@ async function evaluateSingleEssay(topic, essay, explicitTaskType) {
     grammatical_range_accuracy: { score: 6.5, comment: "Mix of simple and complex sentence forms with good control." },
     summary_feedback: "Well-structured essay meeting standard academic IELTS requirements.",
     strengths: ["Clear paragraph progression", "Good task relevance"],
-    corrections: []
+    corrections: [],
+    band_9_model: "An ideal response must establish a clear overview or stance in the introduction, expand every main point with logical explanations and concrete illustrations, and link ideas with natural discourse markers.",
+    lexical_upgrades: [
+      { phrase: "Undeniable significance", meaning: "Importance that cannot be disputed or questioned", example: "Higher education plays an undeniable significance in modern economic development." },
+      { phrase: "Substantial impact", meaning: "A large or meaningful effect", example: "Technological innovation has had a substantial impact on contemporary working practices." }
+    ]
   });
 }
+
+// Query daily AI quota status for live UI indicators
+router.get(["/api/ai-usage-status", "/ai-usage-status"], async (req, res) => {
+  try {
+    const settings = (await SystemSettings.findOne({ key: "global_config" }).lean()) || {};
+    const phase = settings.currentPhase || 1;
+    const dailyLimit = settings.freeAiWritingPerDay ?? 3;
+    const { deviceId, ipHash, userEmail, isVip } = getClientFingerprints(req);
+    const today = getTodayDateString();
+
+    if (phase === 1) {
+      return res.json({ success: true, phase, remaining: 999, dailyLimit, isVip: false });
+    }
+
+    const isLoggedIn = !!(userEmail || req.session?.user || req.session?.account);
+    if (!isLoggedIn) {
+      return res.json({ success: true, phase, remaining: 0, dailyLimit, authRequired: true, isVip: false });
+    }
+
+    if (phase === 3 && isVip) {
+      return res.json({ success: true, phase, remaining: 999, dailyLimit, isVip: true });
+    }
+
+    const checks = [];
+    if (userEmail) checks.push({ identifier: userEmail.toLowerCase(), type: "user" });
+    if (deviceId) checks.push({ identifier: deviceId, type: "device" });
+    checks.push({ identifier: ipHash, type: "ip" });
+
+    const usages = await DailyAiUsage.find({
+      date: today,
+      $or: checks.map(c => ({ identifier: c.identifier, type: c.type }))
+    });
+
+    let maxUsed = 0;
+    for (const u of usages) {
+      if (u.totalCount > maxUsed) maxUsed = u.totalCount;
+    }
+
+    const remaining = Math.max(0, dailyLimit - maxUsed);
+    res.json({
+      success: true,
+      phase,
+      remaining,
+      dailyLimit,
+      isVip: false,
+      limitReached: remaining <= 0
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
 
 // Single Task Evaluation Route (Practice Hub & Single Cambridge Task)
 router.post(["/evaluate-essay", "/api/evaluate-essay"], async (req, res) => {
   try {
+    const guard = await verifyAndRecordAiUsage(req, "writing");
+    if (!guard.allowed) {
+      return res.status(guard.status || 403).json({
+        success: false,
+        limitReached: !!guard.limitReached,
+        authRequired: !!guard.authRequired,
+        message: guard.message,
+        code: guard.code
+      });
+    }
+
     const { topic, essay, taskType } = req.body;
     if (!essay || String(essay).trim().length < 5) {
       return res.status(400).json({ success: false, message: "Essay is too short." });
     }
 
     const evaluation = await evaluateSingleEssay(topic || "IELTS Writing Task", essay, taskType);
-    res.json({ success: true, data: evaluation });
+    res.json({ success: true, data: evaluation, remaining: guard.remaining });
   } catch (error) {
     console.error("Single Evaluate Route Error:", error);
     res.status(500).json({ success: false, message: error.message || "Evaluation failed." });
@@ -236,6 +493,17 @@ router.post(["/evaluate-essay", "/api/evaluate-essay"], async (req, res) => {
 // Full Mock / Full Cambridge Writing Evaluation Route
 router.post(["/evaluate-writing-all", "/api/evaluate-writing-all"], async (req, res) => {
   try {
+    const guard = await verifyAndRecordAiUsage(req, "writing");
+    if (!guard.allowed) {
+      return res.status(guard.status || 403).json({
+        success: false,
+        limitReached: !!guard.limitReached,
+        authRequired: !!guard.authRequired,
+        message: guard.message,
+        code: guard.code
+      });
+    }
+
     const { task1 = {}, task2 = {} } = req.body || {};
     const [eval1, eval2] = await Promise.all([
       evaluateSingleEssay(task1.question, task1.essay, "task1"),
@@ -536,13 +804,24 @@ router.get("/api/speaking-tests", (req, res) => {
 
 router.post(["/evaluate-speaking", "/api/evaluate-speaking"], async (req, res) => {
   try {
+    const guard = await verifyAndRecordAiUsage(req, "speaking");
+    if (!guard.allowed) {
+      return res.status(guard.status || 403).json({
+        success: false,
+        limitReached: !!guard.limitReached,
+        authRequired: !!guard.authRequired,
+        message: guard.message,
+        code: guard.code
+      });
+    }
+
     const { testId, part, answers } = req.body || {};
     if (!answers || Object.keys(answers).length === 0) {
       return res.status(400).json({ success: false, message: "No speaking answers provided." });
     }
 
     const evaluation = await evaluateSpeakingInterview({ testId, part, answers });
-    res.json({ success: true, data: evaluation });
+    res.json({ success: true, data: evaluation, remaining: guard.remaining });
   } catch (error) {
     console.error("Speaking Evaluation Error:", error);
     res.status(500).json({ success: false, message: error.message || "Speaking evaluation failed." });

@@ -6,6 +6,7 @@ const systemSettingsSchema = new mongoose.Schema(
     currentPhase: { type: Number, default: 1, enum: [1, 2, 3] }, // 1: Open Growth, 2: Freemium/Lead Gen, 3: Paid/Subscription
     freeAcademicMocksCount: { type: Number, default: 1 },
     freePremiumMocksCount: { type: Number, default: 1 },
+    freeGeneralMocksCount: { type: Number, default: 1 },
     freeFullMocksCount: { type: Number, default: 1 },
     freeSpeakingTestsCount: { type: Number, default: 1 },
     freeSpeakingPartsCount: { type: Number, default: 1 },
@@ -13,7 +14,7 @@ const systemSettingsSchema = new mongoose.Schema(
     freePartsPerTest: { type: Number, default: 1 },
     freeQuestionTypesPerTest: { type: Number, default: 0 },
     freePracticeHubSets: { type: Number, default: 2 },
-    freeAiWritingPerDay: { type: Number, default: 1 },
+    freeAiWritingPerDay: { type: Number, default: 3 },
     loginReminderEnabled: { type: Boolean, default: true },
     loginReminderMode: { type: String, enum: ["every_time", "once_per_session"], default: "every_time" },
     cambridgeAlwaysFree: { type: Boolean, default: true },

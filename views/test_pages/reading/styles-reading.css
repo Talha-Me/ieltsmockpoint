@@ -1506,10 +1506,14 @@ display: flex;
     flex-wrap: nowrap !important;
     justify-content: flex-start !important;
     align-items: stretch !important;
-    padding: 6px 8px !important;
+    padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px)) !important;
     gap: 6px !important;
     -webkit-overflow-scrolling: touch;
     z-index: 1000 !important;
+  }
+  input[type="text"],
+  select {
+    font-size: 16px !important;
   }
 
   .nav-button {

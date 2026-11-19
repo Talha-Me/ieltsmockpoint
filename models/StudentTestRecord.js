@@ -39,6 +39,9 @@ const studentTestRecordSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+studentTestRecordSchema.index({ userEmail: 1, testId: 1, status: 1 });
+studentTestRecordSchema.index({ userEmail: 1, completedAt: -1 });
+
 module.exports =
   mongoose.models.StudentTestRecord ||
   mongoose.model("StudentTestRecord", studentTestRecordSchema);

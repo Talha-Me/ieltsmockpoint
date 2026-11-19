@@ -4,10 +4,13 @@ const nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
 const { OAuth2Client } = require("google-auth-library");
 const Account = require("../models/Account");
+const EmailVerification = require("../models/EmailVerification");
+const { sendOtpEmail } = require("../services/otpMailService");
 
 const router = express.Router();
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const sha256 = (s) => crypto.createHash("sha256").update(String(s)).digest("hex");
 
 const publicUser = (a) => {
   const now = new Date();
@@ -34,16 +37,16 @@ function startSession(req, account) {
 }
 
 // ---------------------------------------------------------------------------
-// POST /register  { name, email, password }
+// 1. REGISTER: Send 6-digit OTP (Verify Email First)
 // ---------------------------------------------------------------------------
-router.post("/register", async (req, res) => {
+router.post(["/register/send-otp", "/auth/register/send-otp", "/register"], async (req, res) => {
   try {
     const name = String(req.body.name || "").trim();
     const email = String(req.body.email || "").trim().toLowerCase();
     const password = String(req.body.password || "");
 
     if (name.length < 2) {
-      return res.status(400).json({ success: false, message: "Please enter your full name." });
+      return res.status(400).json({ success: false, message: "Please enter your full name (at least 2 characters)." });
     }
     if (!EMAIL_RE.test(email)) {
       return res.status(400).json({ success: false, message: "Please enter a valid email address." });
@@ -56,21 +59,184 @@ router.post("/register", async (req, res) => {
     if (existing) {
       const msg =
         existing.provider === "google" && !existing.password
-          ? "This email is registered with Google. Please use Google login."
+          ? "This email is registered with Google. Please click 'Continue with Google'."
           : "This email is already registered. Please log in.";
       return res.status(409).json({ success: false, message: msg });
     }
 
-    const hash = await bcrypt.hash(password, 10);
-    await Account.create({ name, email, password: hash, provider: "local" });
+    // Rate limiting: cooldown of 60 seconds
+    const pending = await EmailVerification.findOne({
+      email,
+      purpose: "register",
+      expiresAt: { $gt: new Date() }
+    });
 
-    return res.status(201).json({ success: true, message: "Registration successful!" });
+    if (pending && pending.resendAfter && pending.resendAfter > new Date()) {
+      const waitSec = Math.ceil((pending.resendAfter.getTime() - Date.now()) / 1000);
+      return res.status(429).json({
+        success: false,
+        message: `Please wait ${waitSec} seconds before requesting a new code.`
+      });
+    }
+
+    // Generate 6-digit secure numeric OTP
+    const otp = String(crypto.randomInt(100000, 999999));
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const otpHash = sha256(otp);
+
+    await EmailVerification.findOneAndUpdate(
+      { email, purpose: "register" },
+      {
+        email,
+        name,
+        password: hashedPassword,
+        otpHash,
+        purpose: "register",
+        attempts: 0,
+        resendAfter: new Date(Date.now() + 60 * 1000), // 60s cooldown
+        expiresAt: new Date(Date.now() + 10 * 60 * 1000) // 10 minutes expiry
+      },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
+
+    await sendOtpEmail(email, name, otp, "register");
+
+    return res.status(200).json({
+      success: true,
+      requireOtp: true,
+      email,
+      message: "A 6-digit verification code has been sent to your email."
+    });
   } catch (err) {
-    console.error("Register error:", err);
+    console.error("Register send-otp error:", err);
+    return res.status(500).json({ success: false, message: "Failed to send verification code. Please try again." });
+  }
+});
+
+// ---------------------------------------------------------------------------
+// 2. REGISTER: Verify 6-digit OTP & Create Authentic Account
+// ---------------------------------------------------------------------------
+router.post(["/register/verify-otp", "/auth/register/verify-otp"], async (req, res) => {
+  try {
+    const email = String(req.body.email || "").trim().toLowerCase();
+    const otp = String(req.body.otp || "").trim();
+
+    if (!EMAIL_RE.test(email)) {
+      return res.status(400).json({ success: false, message: "Valid email is required." });
+    }
+    if (!/^\d{6}$/.test(otp)) {
+      return res.status(400).json({ success: false, message: "Please enter the 6-digit verification code." });
+    }
+
+    const record = await EmailVerification.findOne({
+      email,
+      purpose: "register",
+      expiresAt: { $gt: new Date() }
+    });
+
+    if (!record) {
+      return res.status(400).json({
+        success: false,
+        message: "Verification code has expired or is invalid. Please request a new code."
+      });
+    }
+
+    if (record.attempts >= 5) {
+      await EmailVerification.deleteOne({ _id: record._id });
+      return res.status(429).json({
+        success: false,
+        message: "Too many failed attempts. Please request a new verification code."
+      });
+    }
+
+    if (sha256(otp) !== record.otpHash) {
+      record.attempts += 1;
+      await record.save();
+      const remaining = 5 - record.attempts;
+      return res.status(400).json({
+        success: false,
+        message: `Invalid code. ${remaining > 0 ? remaining + " attempt(s) remaining." : "Please request a new code."}`
+      });
+    }
+
+    // Double-check existing account
+    const existing = await Account.findOne({ email });
+    if (existing) {
+      await EmailVerification.deleteOne({ _id: record._id });
+      return res.status(409).json({ success: false, message: "This email is already registered. Please log in." });
+    }
+
+    // Create the authentic, verified account
+    const newAccount = await Account.create({
+      name: record.name,
+      email: record.email,
+      password: record.password,
+      provider: "local"
+    });
+
+    await EmailVerification.deleteOne({ _id: record._id });
+    await startSession(req, newAccount);
+
+    return res.status(201).json({
+      success: true,
+      message: "Account verified and created successfully!",
+      user: publicUser(newAccount)
+    });
+  } catch (err) {
+    console.error("Register verify-otp error:", err);
     if (err && err.code === 11000) {
-      return res.status(409).json({ success: false, message: "This email is already registered." });
+      return res.status(409).json({ success: false, message: "This email is already registered. Please log in." });
     }
     return res.status(500).json({ success: false, message: "Server error. Please try again." });
+  }
+});
+
+// ---------------------------------------------------------------------------
+// 3. REGISTER: Resend 6-digit OTP
+// ---------------------------------------------------------------------------
+router.post(["/register/resend-otp", "/auth/register/resend-otp"], async (req, res) => {
+  try {
+    const email = String(req.body.email || "").trim().toLowerCase();
+    if (!EMAIL_RE.test(email)) {
+      return res.status(400).json({ success: false, message: "Valid email is required." });
+    }
+
+    const record = await EmailVerification.findOne({
+      email,
+      purpose: "register"
+    });
+
+    if (!record) {
+      return res.status(400).json({
+        success: false,
+        message: "No pending registration found. Please fill in the registration form."
+      });
+    }
+
+    if (record.resendAfter && record.resendAfter > new Date()) {
+      const waitSec = Math.ceil((record.resendAfter.getTime() - Date.now()) / 1000);
+      return res.status(429).json({
+        success: false,
+        message: `Please wait ${waitSec} seconds before requesting a new code.`
+      });
+    }
+
+    const otp = String(crypto.randomInt(100000, 999999));
+    record.otpHash = sha256(otp);
+    record.attempts = 0;
+    record.resendAfter = new Date(Date.now() + 60 * 1000);
+    record.expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+    await record.save();
+
+    await sendOtpEmail(email, record.name, otp, "register");
+
+    return res.status(200).json({
+      success: true,
+      message: "A new 6-digit verification code has been sent."
+    });
+  } catch (err) {
+    console.error("Register resend-otp error:", err);
+    return res.status(500).json({ success: false, message: "Failed to resend code. Please try again." });
   }
 });
 
@@ -161,8 +327,10 @@ router.post("/auth/google", async (req, res) => {
 // ---------------------------------------------------------------------------
 // Forgot password
 // ---------------------------------------------------------------------------
-const RESET_MINUTES = 30;
-const sha256 = (s) => crypto.createHash("sha256").update(s).digest("hex");
+// ---------------------------------------------------------------------------
+// 4. FORGOT PASSWORD: Send 6-digit OTP & Reset Link
+// ---------------------------------------------------------------------------
+const RESET_MINUTES = 15;
 
 function getTransport() {
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) return null;
@@ -174,12 +342,11 @@ function getTransport() {
   });
 }
 
-// POST /auth/forgot  { email }
-router.post("/auth/forgot", async (req, res) => {
-  // Email royeche kina ta bole dei na (account enumeration thekate), shobsomoy same reply
+// POST /auth/forgot { email }
+router.post(["/auth/forgot", "/auth/forgot/send-otp"], async (req, res) => {
   const generic = {
     success: true,
-    message: "If this email is registered, a reset link has been sent. Please check your inbox (and spam folder)."
+    message: "If this email is registered, a 6-digit reset code has been sent. Please check your inbox (and spam folder)."
   };
 
   try {
@@ -191,43 +358,131 @@ router.post("/auth/forgot", async (req, res) => {
     const account = await Account.findOne({ email });
     if (!account) return res.json(generic);
 
+    if (account.provider === "google" && !account.password) {
+      return res.status(400).json({
+        success: false,
+        message: "This account uses Google Login. Please sign in by clicking 'Continue with Google'."
+      });
+    }
+
+    // Rate limiting: 60s cooldown
+    const pending = await EmailVerification.findOne({
+      email,
+      purpose: "forgot",
+      expiresAt: { $gt: new Date() }
+    });
+
+    if (pending && pending.resendAfter && pending.resendAfter > new Date()) {
+      const waitSec = Math.ceil((pending.resendAfter.getTime() - Date.now()) / 1000);
+      return res.status(429).json({
+        success: false,
+        message: `Please wait ${waitSec} seconds before requesting a new code.`
+      });
+    }
+
+    // 6-digit OTP
+    const otp = String(crypto.randomInt(100000, 999999));
     const token = crypto.randomBytes(32).toString("hex");
+
+    // Save token hash on account for link reset support
     account.resetTokenHash = sha256(token);
     account.resetTokenExpires = new Date(Date.now() + RESET_MINUTES * 60 * 1000);
     await account.save();
 
-    const base = (process.env.APP_URL || `${req.protocol}://${req.get("host")}`).replace(/\/+$/, "");
-    const link = `${base}/forgot?token=${token}`;
+    // Save OTP verification record for 6-digit OTP reset
+    await EmailVerification.findOneAndUpdate(
+      { email, purpose: "forgot" },
+      {
+        email,
+        name: account.name,
+        otpHash: sha256(otp),
+        purpose: "forgot",
+        attempts: 0,
+        resendAfter: new Date(Date.now() + 60 * 1000),
+        expiresAt: new Date(Date.now() + RESET_MINUTES * 60 * 1000)
+      },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
 
-    const transport = getTransport();
-    if (!transport) {
-      // Email setup na thakle local test er jonno link ta terminal e dekhay
-      console.log("\n[DEV] Email not configured. Reset link for", email, "=>", link, "\n");
-      return res.json(generic);
-    }
-
-    await transport.sendMail({
-      from: `"IELTS Mockpoint" <${process.env.EMAIL_USER}>`,
-      to: email,
-      subject: "Reset your IELTS Mockpoint password",
-      text:
-        `Hi ${account.name},\n\nWe received a request to reset your password.\n` +
-        `Open this link to choose a new one (valid for ${RESET_MINUTES} minutes):\n${link}\n\n` +
-        `If you didn't ask for this, you can ignore this email.`,
-      html:
-        `<div style="font-family:Arial,sans-serif;max-width:480px;margin:auto;color:#0f2038">` +
-        `<h2 style="color:#0b2b52">Reset your password</h2>` +
-        `<p>Hi ${String(account.name).replace(/[<>&]/g, "")},</p>` +
-        `<p>We received a request to reset your IELTS Mockpoint password. This link is valid for ${RESET_MINUTES} minutes.</p>` +
-        `<p><a href="${link}" style="display:inline-block;background:#e0202d;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;font-weight:bold">Reset Password</a></p>` +
-        `<p style="font-size:13px;color:#5d708c">If the button doesn't work, copy this link:<br>${link}</p>` +
-        `<p style="font-size:13px;color:#5d708c">If you didn't request this, you can safely ignore this email.</p></div>`
-    });
+    // Send 6-digit OTP email
+    await sendOtpEmail(email, account.name, otp, "forgot");
 
     return res.json(generic);
   } catch (err) {
     console.error("Forgot password error:", err.message);
     return res.status(500).json({ success: false, message: "Could not send the email. Please try again later." });
+  }
+});
+
+// ---------------------------------------------------------------------------
+// 5. FORGOT PASSWORD: Reset with 6-digit OTP { email, otp, password }
+// ---------------------------------------------------------------------------
+router.post(["/auth/forgot/verify-otp", "/auth/reset-otp"], async (req, res) => {
+  try {
+    const email = String(req.body.email || "").trim().toLowerCase();
+    const otp = String(req.body.otp || "").trim();
+    const password = String(req.body.password || "");
+
+    if (!EMAIL_RE.test(email)) {
+      return res.status(400).json({ success: false, message: "Valid email is required." });
+    }
+    if (!/^\d{6}$/.test(otp)) {
+      return res.status(400).json({ success: false, message: "Please enter the 6-digit reset code." });
+    }
+    if (password.length < 4) {
+      return res.status(400).json({ success: false, message: "Password must be at least 4 characters." });
+    }
+
+    const record = await EmailVerification.findOne({
+      email,
+      purpose: "forgot",
+      expiresAt: { $gt: new Date() }
+    });
+
+    if (!record) {
+      return res.status(400).json({
+        success: false,
+        message: "Reset code has expired or is invalid. Please request a new code."
+      });
+    }
+
+    if (record.attempts >= 5) {
+      await EmailVerification.deleteOne({ _id: record._id });
+      return res.status(429).json({
+        success: false,
+        message: "Too many failed attempts. Please request a new reset code."
+      });
+    }
+
+    if (sha256(otp) !== record.otpHash) {
+      record.attempts += 1;
+      await record.save();
+      const remaining = 5 - record.attempts;
+      return res.status(400).json({
+        success: false,
+        message: `Invalid code. ${remaining > 0 ? remaining + " attempt(s) remaining." : "Please request a new code."}`
+      });
+    }
+
+    const account = await Account.findOne({ email });
+    if (!account) {
+      return res.status(404).json({ success: false, message: "Account not found." });
+    }
+
+    account.password = await bcrypt.hash(password, 10);
+    account.resetTokenHash = null;
+    account.resetTokenExpires = null;
+    await account.save();
+
+    await EmailVerification.deleteOne({ _id: record._id });
+
+    return res.json({
+      success: true,
+      message: "Password updated successfully! Please log in with your new password."
+    });
+  } catch (err) {
+    console.error("Forgot password verify-otp error:", err);
+    return res.status(500).json({ success: false, message: "Server error. Please try again." });
   }
 });
 

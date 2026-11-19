@@ -986,6 +986,42 @@ function showFinalComprehensiveResultModal(writingData, reason) {
             </div>`
           : "";
 
+        const band9Html = data.band_9_model
+          ? `<div class="mp-b9-card" style="background:#ffffff; border:1.5px solid #dbeafe; border-radius:10px; margin:12px 0; overflow:hidden; box-shadow:0 3px 10px rgba(11,43,82,0.05);">
+              <div style="background:#0a2a6e; color:#ffffff; padding:10px 14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span style="background:#d52b1e; color:#ffffff; font-size:11px; font-weight:800; padding:2px 8px; border-radius:4px; text-transform:uppercase;">Examiner Benchmark</span>
+                  <b style="font-size:13px; font-family:'Sora',sans-serif;">⭐ Band 9 Model Rewrite</b>
+                </div>
+                <button type="button" onclick="const b=this.closest('.mp-b9-card').querySelector('.mp-b9-body'); if(b){ navigator.clipboard.writeText(b.innerText).then(()=>{ this.textContent='Copied! ✓'; setTimeout(()=>this.textContent='Copy Model Answer', 2000); }); }" style="background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.3); color:#ffffff; font-size:11.5px; font-weight:700; padding:4px 10px; border-radius:5px; cursor:pointer;">
+                  Copy Model Answer
+                </button>
+              </div>
+              <div class="mp-b9-body" style="padding:14px; font-size:12.5px; color:#1e293b; line-height:1.65; white-space:pre-line; background:#fbfdff;">${escapeHtml(data.band_9_model)}</div>
+            </div>`
+          : "";
+
+        const lexicalList = Array.isArray(data.lexical_upgrades) ? data.lexical_upgrades.filter(Boolean) : [];
+        const lexicalHtml = lexicalList.length
+          ? `<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px 14px; margin:12px 0;">
+              <div style="display:flex; align-items:center; gap:6px; margin-bottom:10px;">
+                <span style="color:#d52b1e; font-size:14px;">💎</span>
+                <b style="color:#0a2a6e; font-size:12.5px;">High-Band Topic Vocabulary &amp; Collocations:</b>
+              </div>
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:8px;">
+                ${lexicalList.map(item => `
+                  <div style="background:#ffffff; border:1px solid #e2e8f0; border-left:3px solid #1565c9; border-radius:6px; padding:8px 10px;">
+                    <div style="color:#0a2a6e; font-weight:800; font-size:12px; margin-bottom:2px;">
+                      ${escapeHtml(item.phrase || item.term)}
+                    </div>
+                    ${item.meaning ? `<div style="color:#64748b; font-size:11px; margin-bottom:4px; line-height:1.35;"><i>${escapeHtml(item.meaning)}</i></div>` : ""}
+                    ${item.example ? `<div style="color:#334155; font-size:11px; line-height:1.35; background:#f1f5f9; padding:3px 6px; border-radius:4px;">&ldquo;${escapeHtml(item.example)}&rdquo;</div>` : ""}
+                  </div>
+                `).join("")}
+              </div>
+            </div>`
+          : "";
+
         resultContainer.innerHTML = `
           <div class="bc-ai-card">
             <div class="bc-ai-head">
@@ -1018,6 +1054,8 @@ function showFinalComprehensiveResultModal(writingData, reason) {
 
             ${strengthsHtml}
             ${correctionsHtml}
+            ${band9Html}
+            ${lexicalHtml}
 
             <div class="bc-ai-tips">
               <h5>Priority Improvement Tips:</h5>
@@ -1215,6 +1253,42 @@ function showFinalComprehensiveResultModal(writingData, reason) {
                     ${c.original ? `<div style="color:#b91c1c; margin-bottom:3px;"><b>Original:</b> <span style="text-decoration:line-through; opacity:0.9;">${escapeHtml(c.original)}</span></div>` : ""}
                     ${c.improved ? `<div style="color:#15803d; margin-bottom:3px;"><b>Band 8+ Upgrade:</b> ${escapeHtml(c.improved)}</div>` : ""}
                     ${c.reason ? `<div style="color:#64748b; font-size:11.5px;"><i>Why:</i> ${escapeHtml(c.reason)}</div>` : ""}
+                  </div>
+                `).join("")}
+              </div>
+            </div>`
+          : "";
+
+        const band9Html = data.band_9_model
+          ? `<div class="mp-b9-card" style="background:#ffffff; border:1.5px solid #dbeafe; border-radius:10px; margin:12px 0; overflow:hidden; box-shadow:0 3px 10px rgba(11,43,82,0.05);">
+              <div style="background:#0a2a6e; color:#ffffff; padding:10px 14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span style="background:#d52b1e; color:#ffffff; font-size:11px; font-weight:800; padding:2px 8px; border-radius:4px; text-transform:uppercase;">Examiner Benchmark</span>
+                  <b style="font-size:13px; font-family:'Sora',sans-serif;">⭐ Band 9 Model Rewrite</b>
+                </div>
+                <button type="button" onclick="const b=this.closest('.mp-b9-card').querySelector('.mp-b9-body'); if(b){ navigator.clipboard.writeText(b.innerText).then(()=>{ this.textContent='Copied! ✓'; setTimeout(()=>this.textContent='Copy Model Answer', 2000); }); }" style="background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.3); color:#ffffff; font-size:11.5px; font-weight:700; padding:4px 10px; border-radius:5px; cursor:pointer;">
+                  Copy Model Answer
+                </button>
+              </div>
+              <div class="mp-b9-body" style="padding:14px; font-size:12.5px; color:#1e293b; line-height:1.65; white-space:pre-line; background:#fbfdff;">${escapeHtml(data.band_9_model)}</div>
+            </div>`
+          : "";
+
+        const lexicalList = Array.isArray(data.lexical_upgrades) ? data.lexical_upgrades.filter(Boolean) : [];
+        const lexicalHtml = lexicalList.length
+          ? `<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px 14px; margin:12px 0;">
+              <div style="display:flex; align-items:center; gap:6px; margin-bottom:10px;">
+                <span style="color:#d52b1e; font-size:14px;">💎</span>
+                <b style="color:#0a2a6e; font-size:12.5px;">High-Band Topic Vocabulary &amp; Collocations:</b>
+              </div>
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:8px;">
+                ${lexicalList.map(item => `
+                  <div style="background:#ffffff; border:1px solid #e2e8f0; border-left:3px solid #1565c9; border-radius:6px; padding:8px 10px;">
+                    <div style="color:#0a2a6e; font-weight:800; font-size:12px; margin-bottom:2px;">
+                      ${escapeHtml(item.phrase || item.term)}
+                    </div>
+                    ${item.meaning ? `<div style="color:#64748b; font-size:11px; margin-bottom:4px; line-height:1.35;"><i>${escapeHtml(item.meaning)}</i></div>` : ""}
+                    ${item.example ? `<div style="color:#334155; font-size:11px; line-height:1.35; background:#f1f5f9; padding:3px 6px; border-radius:4px;">&ldquo;${escapeHtml(item.example)}&rdquo;</div>` : ""}
                   </div>
                 `).join("")}
               </div>
@@ -1663,45 +1737,43 @@ document.addEventListener("keydown", function (e) {
 let writingAutoSaveTimer = null;
 
 function getWritingTestId() {
-  return (parsedQuestions && parsedQuestions.mockNumber) ||
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get("mockID") ||
+    (parsedQuestions && parsedQuestions.mockNumber) ||
     (typeof currentMockId !== "undefined" ? currentMockId : "") ||
     sessionStorage.getItem("currentMockId") ||
-    localStorage.getItem("currentMockId") || "";
+    localStorage.getItem("currentMockId") || "Academic-UKA-FINAL-1";
 }
 
-function autoSaveWritingDraft() {
+function autoSaveWritingDraft(isExit = false) {
   try {
     const testId = getWritingTestId();
     if (!testId) return;
 
     const writingInputs = typeof gatherInput === "function" ? gatherInput(inputs) : {};
-    const draftKey = "ielts_draft_writing_" + testId;
-    const payload = JSON.stringify({
-      testId: testId,
-      module: "writing",
-      updatedAt: Date.now(),
-      answers: writingInputs
-    });
-
-    localStorage.setItem(draftKey, payload);
-    sessionStorage.setItem(draftKey, payload);
-
-    localStorage.removeItem("writingDraftAnswers");
-    sessionStorage.removeItem("writingDraftAnswers");
-
     const u = JSON.parse(localStorage.getItem("user") || "null");
     const email = u && u.email ? u.email : "";
+
+    const payload = JSON.stringify({
+      testId,
+      testType: testId.includes("Premium") ? "Premium Full Mock" : "Academic Full Mock",
+      module: "writing",
+      title: testId.replace(/-UKA-FINAL-/i, " Mock Test ").replace(/[-_]/g, " "),
+      answers: writingInputs,
+      email
+    });
+
+    if (isExit && navigator.sendBeacon) {
+      const blob = new Blob([payload], { type: "application/json" });
+      navigator.sendBeacon("/api/student/auto-save", blob);
+    }
 
     fetch("/api/student/auto-save", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        testId,
-        testType: testId.includes("Premium") ? "Premium Full Mock" : "Academic Full Mock",
-        module: "writing",
-        answers: writingInputs,
-        email
-      })
+      body: payload,
+      credentials: "include",
+      keepalive: Boolean(isExit)
     }).catch(() => {});
   } catch (e) {
     console.warn("Writing auto-save notice:", e);
@@ -1741,33 +1813,14 @@ function restoreWritingDraft() {
   }
 }
 
-// Start auto-save periodic loop (every 3 minutes)
+// Start auto-save periodic loop (every 1 minute)
 if (!writingAutoSaveTimer) {
-  writingAutoSaveTimer = setInterval(autoSaveWritingDraft, 3 * 60 * 1000);
+  writingAutoSaveTimer = setInterval(autoSaveWritingDraft, 60 * 1000);
 }
 
-// Real-time debounce local save on writing input
-let writingDebounceTimeout = null;
-document.addEventListener("input", (e) => {
-  if (e.target && e.target.classList && e.target.classList.contains("write-input")) {
-    if (writingDebounceTimeout) clearTimeout(writingDebounceTimeout);
-    writingDebounceTimeout = setTimeout(() => {
-      try {
-        const testId = getWritingTestId();
-        if (!testId) return;
-        const writingInputs = typeof gatherInput === "function" ? gatherInput(inputs) : {};
-        const draftKey = "ielts_draft_writing_" + testId;
-        const payload = JSON.stringify({
-          testId: testId,
-          module: "writing",
-          updatedAt: Date.now(),
-          answers: writingInputs
-        });
-        localStorage.setItem(draftKey, payload);
-        sessionStorage.setItem(draftKey, payload);
-      } catch(e) {}
-    }, 2000);
-  }
-});
+// Exit listeners for reliable autosave when candidate leaves or closes tab
+window.addEventListener("pagehide", () => autoSaveWritingDraft(true));
+window.addEventListener("beforeunload", () => autoSaveWritingDraft(true));
 
-setTimeout(restoreWritingDraft, 600);
+// Clean start: tests always start fresh with blank text inputs per user requirement
+// (Drafts are preserved securely in DB and visible on Candidate Dashboard)

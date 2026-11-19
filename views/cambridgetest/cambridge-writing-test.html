@@ -14,7 +14,7 @@
         var b = u.get('book');
         var t = u.get('test') || u.get('testNo');
         if (b && t) {
-          document.title = 'Cambridge IELTS ' + b + ' Academic Writing Test ' + t + ' (Task 1 & 2) | IELTS Mockpoint';
+          document.title = 'Cambridge IELTS ' + b + ' Writing Test ' + t + ' (Sample Answers & Band Feedback) | IELTS Mockpoint';
         }
       } catch(e) {}
     })();
@@ -77,6 +77,9 @@
       align-items: center;
       gap: 14px;
       min-width: 0;
+      flex: 0 1 auto;
+      max-width: 38%;
+      z-index: 2;
     }
 
     .cr-brand-link {
@@ -137,12 +140,19 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      max-width: 260px;
     }
 
     .cr-nav-center {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 12px;
+      pointer-events: auto;
+      z-index: 3;
     }
 
     .cr-reading-badge {
@@ -151,12 +161,13 @@
       border: 1px solid rgba(21, 101, 201, 0.2);
       font-size: 0.82rem;
       font-weight: 700;
-      padding: 4px 12px;
+      padding: 4px 14px;
       border-radius: 20px;
       display: flex;
       align-items: center;
       gap: 6px;
       white-space: nowrap;
+      box-shadow: 0 1px 3px rgba(11, 43, 82, 0.04);
     }
 
     .cr-nav-right {
@@ -164,6 +175,8 @@
       align-items: center;
       gap: 10px;
       flex-shrink: 0;
+      margin-left: auto;
+      z-index: 2;
     }
 
     .cr-timer-pill {
@@ -259,6 +272,24 @@
       .cr-btn-finish {
         padding: 6px 12px;
         font-size: 0.8rem;
+      }
+      .info-panel, .write-panel {
+        min-height: auto !important;
+        padding: 14px 16px !important;
+      }
+      .write-input {
+        min-height: 300px !important;
+        font-size: 16px !important;
+        padding: 12px 14px !important;
+      }
+      .bottom-navbar {
+        padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+      }
+      .main-wrapper {
+        padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px)) !important;
+      }
+      #notesArea {
+        font-size: 16px !important;
       }
     }
 
@@ -515,6 +546,80 @@
     }
 
   </style>
+
+  <!-- Structured Data: EducationalOrganization, LearningResource & FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "EducationalOrganization",
+        "name": "IELTS Mockpoint",
+        "url": "https://ieltsmockpoint.com/",
+        "logo": "https://ieltsmockpoint.com/Brandlogo.png"
+      },
+      {
+        "@type": "LearningResource",
+        "name": "Cambridge IELTS Academic Writing Practice Test with AI Evaluation",
+        "learningResourceType": "Writing Practice Exam",
+        "educationalLevel": "Intermediate to Advanced",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "provider": {
+          "@type": "Organization",
+          "name": "IELTS Mockpoint",
+          "url": "https://ieltsmockpoint.com/"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How does the AI evaluate my IELTS Writing Task 1 and Task 2?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Our AI assessment engine evaluates your essays against the official IELTS Band Descriptors across all four criteria: Task Achievement/Response, Coherence and Cohesion, Lexical Resource, and Grammatical Range and Accuracy."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does the writing simulator have a live word counter and timer?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. The test interface includes a real-time word counter (warning if below 150 words for Task 1 or 250 words for Task 2) and an authentic 60-minute exam timer."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Are official Band 9 sample answers included?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes! Every Cambridge Writing test includes high-band sample answers, topic vocabulary breakdowns, and detailed examiner feedback."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I practise Task 1 and Task 2 separately?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, you can take a full 60-minute mock test covering both tasks, or choose single-task mode to focus specifically on Task 1 reports/letters or Task 2 essays."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is my writing score and essay feedback saved?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. When logged in, your submitted essays, band scores, grammar corrections, and AI feedback are permanently saved in your candidate dashboard's AI Writing Feedback Vault."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
 </head>
 <body>
 
@@ -654,6 +759,9 @@
     </div>
   </main>
 
+  <!-- On-Page Candidate Review & Analysis Arena -->
+  <section id="on-page-writing-review" style="display:none; max-width:1200px; margin:34px auto 90px; padding:0 24px; font-family:'Plus Jakarta Sans', system-ui, sans-serif;"></section>
+
   <!-- Bottom Part Navigation -->
   <footer class="bottom-navbar" id="bottom-navbar">
     <button class="nav-button active" id="nav-tab-1" onclick="showPart(1)">Task 1</button>
@@ -688,5 +796,7 @@
     </div>
   </div>
 
+  <!-- Guest Recommendation Modal -->
+  <script src="/js/guest-test-modal.js"></script>
 </body>
 </html>

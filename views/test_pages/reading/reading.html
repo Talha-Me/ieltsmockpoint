@@ -43,6 +43,9 @@
       align-items: center;
       gap: 14px;
       min-width: 0;
+      flex: 0 1 auto;
+      max-width: 38%;
+      z-index: 2;
     }
     .cr-brand-link {
       text-decoration: none;
@@ -96,11 +99,18 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      max-width: 260px;
     }
     .cr-nav-center {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 12px;
+      pointer-events: auto;
+      z-index: 3;
     }
     .cr-reading-badge {
       background: var(--blue-light);
@@ -108,12 +118,13 @@
       border: 1px solid rgba(21, 101, 201, 0.2);
       font-size: 0.82rem;
       font-weight: 700;
-      padding: 4px 12px;
+      padding: 4px 14px;
       border-radius: 20px;
       display: flex;
       align-items: center;
       gap: 6px;
       white-space: nowrap;
+      box-shadow: 0 1px 3px rgba(11, 43, 82, 0.04);
     }
     .audio-playing {
       background: rgba(21, 101, 201, 0.12);
@@ -128,6 +139,8 @@
       align-items: center;
       gap: 10px;
       flex-shrink: 0;
+      margin-left: auto;
+      z-index: 2;
     }
     .cr-timer-pill {
       background: #ffffff;
@@ -361,7 +374,7 @@
     <!-- Center: Mode Badge -->
     <div class="cr-nav-center">
       <div class="cr-reading-badge" id="readingModeBadge">
-        <i class="bi bi-book"></i> <span id="readingModeText">Full Reading Mock Test</span>
+        <i class="bi bi-book"></i> <span id="readingModeText">Full Reading Mock Test (60 Mins)</span>
       </div>
     </div>
 
@@ -563,5 +576,7 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   </script>
+  <!-- Guest Recommendation Modal -->
+  <script src="/js/guest-test-modal.js"></script>
 </body>
 </html>

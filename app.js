@@ -855,6 +855,18 @@ const app = express();
 app.use(cors());
 
 // ==========================================
+// SEO: 301 REDIRECT www.ieltsmockpoint.com -> ieltsmockpoint.com (single canonical host)
+// Only GET/HEAD are redirected so POST/API requests are never broken. Localhost is unaffected.
+// ==========================================
+app.use((req, res, next) => {
+  const host = String(req.headers.host || "").toLowerCase();
+  if ((req.method === "GET" || req.method === "HEAD") && host.startsWith("www.ieltsmockpoint.com")) {
+    return res.redirect(301, "https://ieltsmockpoint.com" + req.originalUrl);
+  }
+  next();
+});
+
+// ==========================================
 // CSP & DEVTOOLS HEADER FIX
 // ==========================================
 app.use((req, res, next) => {
@@ -983,7 +995,7 @@ app.use((req, res, next) => {
   if (req.path.endsWith(".html")) {
     const cleanPath = req.path.replace(/\.html$/i, "");
     const query = req.url.includes("?") ? req.url.slice(req.url.indexOf("?")) : "";
-    return res.redirect(302, cleanPath + query); // টেস্ট করার সময় 302 রাখা নিরাপদ যাতে ব্রাউজার ক্যাশ না ধরে
+    return res.redirect(301, cleanPath + query); // SEO: permanent 301 so Google consolidates /page.html into /page
   }
   next();
 });
@@ -1044,9 +1056,10 @@ app.use((req, res, next) => {
     return authRoutes.cambridge_listening_test(req, res, next);
   });
   app.get("/cambridge-reading-test", (req, res, next) => {
-    const book = Number(req.query.book);
-    const test = Number(req.query.test);
-    if (book >= 12 && book <= 21) {
+    const rawBook = String(req.query.book || "");
+    const book = Number(rawBook.replace(/\D/g, ''));
+    const isGT = req.query.type === 'gt' || req.query.mode === 'gt' || rawBook.toLowerCase().includes('gt');
+    if ((book >= 12 && book <= 21) || isGT) {
       const q = new URLSearchParams(req.query).toString();
       return res.redirect(`/cambridge-reading-v2?${q}`);
     }
@@ -1154,10 +1167,28 @@ app.use((req, res, next) => {
     );
   });
 
+  // In-memory cache for ultra-fast Cambridge & Practice test delivery (sub-5ms)
+  const _testDataCache = new Map();
+  const TEST_DATA_CACHE_TTL = 30 * 60 * 1000; // 30 minutes
+  function getCachedTestData(key) {
+    const entry = _testDataCache.get(key);
+    if (entry && (Date.now() - entry.time < TEST_DATA_CACHE_TTL)) {
+      return entry.data;
+    }
+    return null;
+  }
+  function setCachedTestData(key, data) {
+    _testDataCache.set(key, { data, time: Date.now() });
+  }
+
   app.get("/api/cambridge-listening-v2/:book/:testNo", async (req, res) => {
     try {
       const book = Number(req.params.book);
       const testNo = Number(req.params.testNo);
+      const cacheKey = `cl_v2_${book}_${testNo}`;
+      const cached = getCachedTestData(cacheKey);
+      if (cached) return res.json({ success: true, data: cached });
+
       const db = mongoose.connection.db;
       const test = await db.collection("cambridge_listening_v2").findOne({
         $or: [
@@ -1170,6 +1201,7 @@ app.use((req, res, next) => {
       if (!test) {
         return res.status(404).json({ success: false, message: "Test not found in cambridge_listening_v2" });
       }
+      setCachedTestData(cacheKey, test);
       res.json({ success: true, data: test });
     } catch (err) {
       console.error("cambridge_listening_v2 fetch error:", err);
@@ -1183,15 +1215,23 @@ app.use((req, res, next) => {
   app.get(["/cambridge-reading-v2", "/cambridge-reading-test-v2"], (req, res) => {
     const book = String(req.query.book || "").trim();
     const testNo = String(req.query.test || "").trim();
+    const isGT = req.query.type === 'gt' || req.query.mode === 'gt' || book.toLowerCase().includes('gt');
     const is2026 = book === "2026";
+    const cleanBook = book.replace(/\D/g, '') || book;
     const seo = (book && testNo) ? {
-      title: is2026
-        ? `2026 Recent IELTS Reading Test ${testNo} (Actual Exam Mock) | IELTS Mockpoint`
-        : `Cambridge IELTS ${book} Academic Reading Test ${testNo} Free Online | IELTS Mockpoint`,
-      description: is2026
-        ? `Practise 2026 Recent Actual IELTS Reading Test ${testNo} free online with split-screen passages, 60-minute timer, Verbatim Evidence Highlights & instant band score.`
-        : `Take Cambridge IELTS ${book} Academic Reading Test ${testNo} free online with authentic split-screen interface, 60-minute timer & instant band score on IELTS Mockpoint.`,
-      canonical: `https://ieltsmockpoint.com/cambridge-reading-v2?book=${encodeURIComponent(book)}&test=${encodeURIComponent(testNo)}`
+      title: isGT
+        ? `Cambridge IELTS ${cleanBook} General Training Reading Test ${testNo} Free Online | IELTS Mockpoint`
+        : (is2026
+          ? `2026 Recent IELTS Reading Test ${testNo} (Actual Exam Mock) | IELTS Mockpoint`
+          : `Cambridge IELTS ${book} Academic Reading Test ${testNo} Free Online | IELTS Mockpoint`),
+      description: isGT
+        ? `Take Cambridge IELTS ${cleanBook} General Training Reading Test ${testNo} free online with authentic split-screen interface, 60-minute timer, Verbatim Evidence Highlights & instant band score on IELTS Mockpoint.`
+        : (is2026
+          ? `Practise 2026 Recent Actual IELTS Reading Test ${testNo} free online with split-screen passages, 60-minute timer, Verbatim Evidence Highlights & instant band score.`
+          : `Take Cambridge IELTS ${book} Academic Reading Test ${testNo} free online with authentic split-screen interface, 60-minute timer & instant band score on IELTS Mockpoint.`),
+      canonical: isGT
+        ? `https://ieltsmockpoint.com/cambridge-reading-v2?book=${encodeURIComponent(book)}&test=${encodeURIComponent(testNo)}&type=gt`
+        : `https://ieltsmockpoint.com/cambridge-reading-v2?book=${encodeURIComponent(book)}&test=${encodeURIComponent(testNo)}`
     } : {
       canonical: "https://ieltsmockpoint.com/cambridge-reading"
     };
@@ -1204,20 +1244,44 @@ app.use((req, res, next) => {
 
   app.get("/api/cambridge-reading-v2/:book/:testNo", async (req, res) => {
     try {
-      const book = Number(req.params.book);
+      const bookParam = String(req.params.book || "").trim();
       const testNo = Number(req.params.testNo);
+      const isGT = req.query.type === 'gt' || req.query.mode === 'gt' || bookParam.toLowerCase().includes('gt');
+      const bookNum = Number(bookParam.replace(/\D/g, '')) || 21;
+      const cacheKey = `cr_v2_${bookParam}_${testNo}_${isGT ? 'gt' : 'ac'}`;
+      const cached = getCachedTestData(cacheKey);
+      if (cached) return res.json({ success: true, data: cached });
+
       const db = mongoose.connection.db;
-      const test = await db.collection("cambridge_reading_v2").findOne({
-        $or: [
-          { book, testNo },
-          { book: String(book), testNo: String(testNo) },
-          { bookNumber: book, testNumber: testNo }
-        ]
-      });
+      let query;
+      if (isGT) {
+        query = {
+          $or: [
+            { book: `gt-${bookNum}`, testNo },
+            { book: `gt${bookNum}`, testNo },
+            { book: `GT-${bookNum}`, testNo },
+            { book: bookParam, testNo },
+            { book: bookNum, testNo, testType: "GT" },
+            { book: bookNum, testNo, isGeneralTraining: true },
+            { bookNumber: bookNum, testNumber: testNo, testType: "GT" }
+          ]
+        };
+      } else {
+        query = {
+          $or: [
+            { book: bookNum, testNo, testType: { $ne: "GT" } },
+            { book: String(bookNum), testNo: String(testNo), testType: { $ne: "GT" } },
+            { bookNumber: bookNum, testNumber: testNo, testType: { $ne: "GT" } }
+          ]
+        };
+      }
+
+      const test = await db.collection("cambridge_reading_v2").findOne(query);
 
       if (!test) {
         return res.status(404).json({ success: false, message: "Test not found in cambridge_reading_v2" });
       }
+      setCachedTestData(cacheKey, test);
       res.json({ success: true, data: test });
     } catch (err) {
       console.error("cambridge_reading_v2 fetch error:", err);
@@ -1229,6 +1293,9 @@ app.use((req, res, next) => {
     try {
       const book = Number(req.params.book);
       const testNo = Number(req.params.testNo);
+      const cacheKey = `cw_${book}_${testNo}`;
+      const cached = getCachedTestData(cacheKey);
+      if (cached) return res.json({ success: true, data: cached });
 
       const Model =
         mongoose.models.CambridgeWriting ||
@@ -1242,6 +1309,7 @@ app.use((req, res, next) => {
       if (!test) {
         return res.status(404).json({ success: false, message: "Test not found" });
       }
+      setCachedTestData(cacheKey, test);
       res.json({ success: true, data: test });
     } catch (err) {
       console.error("Writing test data error:", err);
@@ -1673,6 +1741,10 @@ app.post(["/api/save-cambridge-reading", "/admin/api/cambridge-reading/save"], a
     try {
       const typeParam = req.params.type;
       const setParam = Number(req.params.setNumber) || 1;
+      const cacheKey = `rp_v2_${encodeURIComponent(typeParam)}_${setParam}`;
+      const cached = getCachedTestData(cacheKey);
+      if (cached) return res.json({ success: true, data: cached });
+
       const db = mongoose.connection.db;
       const col = db.collection("reading-practices");
 
@@ -1693,6 +1765,7 @@ app.post(["/api/save-cambridge-reading", "/admin/api/cambridge-reading/save"], a
       }
 
       const normalized = normalizePracticeReadingDoc(doc);
+      setCachedTestData(cacheKey, normalized);
       res.json({ success: true, data: normalized });
     } catch (err) {
       console.error("reading-practice-v2 fetch error:", err);
@@ -1778,6 +1851,8 @@ app.post(["/api/save-cambridge-reading", "/admin/api/cambridge-reading/save"], a
         if (t.includes('heading') || inst.includes('heading') || title.includes('heading')) return 'Matching-Headings';
         if (t.includes('note') || inst.includes('notes') || title.includes('notes')) return 'Note-Completion';
         if (t.includes('table') || inst.includes('table')) return 'Table-Completion';
+        if (t.includes('flow') || inst.includes('flow')) return 'Flow-Chart-Completion';
+        if (t.includes('short') || inst.includes('answer the questions')) return 'Short-Answer Questions';
         if (t.includes('sentence-ending') || inst.includes('sentence ending')) return 'Matching Sentence Endings';
         if (t.includes('sentence') || inst.includes('sentence')) return 'Sentence Completion';
         if (t.includes('name') || t.includes('feature') || inst.includes('people') || inst.includes('researcher')) return 'Matching Features';
@@ -1831,20 +1906,31 @@ app.post(["/api/save-cambridge-reading", "/admin/api/cambridge-reading/save"], a
 
           if (!categoryMap[cat]) categoryMap[cat] = [];
           const exNum = categoryMap[cat].length + 1;
+          const isGT = doc.isGT || String(doc.book || "").toLowerCase().includes("gt");
+          const gtBookNum = doc.bookNumber || String(doc.book || "").replace(/\D/g, "") || "21";
+          const sourceText = isGT
+            ? `from Cambridge IELTS ${gtBookNum} General Training Reading Test ${doc.testNo}`
+            : `from Cambridge IELTS ${doc.book} Academic Reading Test ${doc.testNo}`;
+          const badgeText = isGT
+            ? `CAMBRIDGE ${gtBookNum} (GT) • TEST ${doc.testNo}`
+            : `CAMBRIDGE ${doc.book} • TEST ${doc.testNo}`;
+          const link = `/cambridge-reading-v2?book=${doc.book}&test=${doc.testNo}&section=${qIds[0]}-${qIds[qIds.length - 1]}${isGT ? '&type=gt' : ''}`;
+
           categoryMap[cat].push({
             exerciseNumber: exNum,
-            sourceType: "cambridge",
-            sourceLabel: "Cambridge Official",
-            badgeText: `CAMBRIDGE ${doc.book} • TEST ${doc.testNo}`,
+            sourceType: isGT ? "cambridge_gt" : "cambridge",
+            sourceLabel: isGT ? "Cambridge GT" : "Cambridge Official",
+            isGT: isGT,
+            badgeText,
             title: `Exercise ${exNum}`,
             book: doc.book,
             testNo: doc.testNo,
             passageNum: pNum,
             passageTitle,
-            source: `from Cambridge IELTS ${doc.book} Academic Reading Test ${doc.testNo}`,
+            source: sourceText,
             qRange: `Questions ${qIds[0]}-${qIds[qIds.length - 1]}`,
             questionsCount: qIds.length,
-            link: `/cambridge-reading-v2?book=${doc.book}&test=${doc.testNo}&section=${qIds[0]}-${qIds[qIds.length - 1]}`
+            link
           });
         });
       });
@@ -1887,13 +1973,13 @@ app.post(["/api/save-cambridge-reading", "/admin/api/cambridge-reading/save"], a
         categoryMap[cat].push({
           exerciseNumber: exNum,
           sourceType: "practice_bank",
-          sourceLabel: "Practice Bank",
-          badgeText: `PRACTICE BANK • SET ${setNum}`,
+          sourceLabel: "Practice Bank (Academic)",
+          badgeText: `PRACTICE BANK (ACADEMIC) • SET ${setNum}`,
           title: `Practice Set ${setNum}`,
           setNumber: setNum,
           passageNum: 1,
           passageTitle,
-          source: `from IELTS Mockpoint Practice Bank`,
+          source: `from IELTS Mockpoint Academic Practice Bank`,
           qRange: `Questions 1-${qCount}`,
           questionsCount: qCount,
           link: `/cambridge-reading-v2?practice=bank&type=${encodeURIComponent(doc.type)}&set=${setNum}`
@@ -1913,12 +1999,16 @@ app.post(["/api/save-cambridge-reading", "/admin/api/cambridge-reading/save"], a
       if (!matchedCat) matchedCat = 'Summary Completion';
 
       let exercises = categoryMap[matchedCat] || [];
-      const cambridgeCount = exercises.filter(x => x.sourceType === "cambridge").length;
+      const cambridgeCount = exercises.filter(x => x.sourceType === "cambridge" || x.sourceType === "cambridge_gt").length;
       const bankCount = exercises.filter(x => x.sourceType === "practice_bank").length;
 
       // Apply source filter if specified
       if (sourceFilter === "cambridge") {
+        exercises = exercises.filter(x => x.sourceType === "cambridge" || x.sourceType === "cambridge_gt");
+      } else if (sourceFilter === "cambridge_academic") {
         exercises = exercises.filter(x => x.sourceType === "cambridge");
+      } else if (sourceFilter === "cambridge_gt" || sourceFilter === "gt") {
+        exercises = exercises.filter(x => x.sourceType === "cambridge_gt" || x.isGT);
       } else if (sourceFilter === "bank" || sourceFilter === "practice_bank") {
         exercises = exercises.filter(x => x.sourceType === "practice_bank");
       }
@@ -2161,6 +2251,11 @@ app.post(["/api/save-cambridge-reading", "/admin/api/cambridge-reading/save"], a
   // Recent IELTS Writing Real Tests
   app.get(["/recent-writing-tests", "/recent-writing-tests.html", "/recent-writing-real-tests"], (req, res) => {
     res.sendFile(path.join(__dirname, "public", "recent-writing-tests.html"));
+  });
+
+  // All Essential Links & Resources Directory
+  app.get(["/essential-links", "/essential-links.html", "/resources", "/all-links", "/directory"], (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "essential-links.html"));
   });
 
   // ==========================================
@@ -2464,6 +2559,29 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "FrontPage", "Frontend", "home.html"));
 });
 
+const WRITING_SAMPLES = require("./data/writingSamples");
+const { renderWritingSamplePage } = require("./data/renderWritingSamplePage");
+const SPEAKING_CUE_CARDS = require("./data/speakingCueCards");
+const { renderSpeakingCueCardPage } = require("./data/renderSpeakingCueCardPage");
+
+app.get("/writing-samples/:slug", (req, res) => {
+  const sample = WRITING_SAMPLES.find(s => s.slug === req.params.slug);
+  if (!sample) return res.redirect(302, "/writing-samples");
+  res.setHeader("Content-Type", "text/html; charset=utf-8");
+  return res.send(renderWritingSamplePage(sample, WRITING_SAMPLES));
+});
+
+app.get(["/speaking-cue-cards", "/speaking-cue-cards/"], (req, res) => {
+  return res.sendFile(path.join(__dirname, "FrontPage", "Frontend", "speaking-cue-cards.html"));
+});
+
+app.get("/speaking-cue-cards/:slug", (req, res) => {
+  const card = SPEAKING_CUE_CARDS.find(c => c.slug === req.params.slug);
+  if (!card) return res.redirect(302, "/speaking-cue-cards");
+  res.setHeader("Content-Type", "text/html; charset=utf-8");
+  return res.send(renderSpeakingCueCardPage(card, SPEAKING_CUE_CARDS));
+});
+
 
 // ==========================================
 // DYNAMIC SITEMAP.XML ROUTE
@@ -2508,8 +2626,13 @@ app.get('/sitemap.xml', async (req, res) => {
     // 2. High-value Core Landing Pages
     const staticPages = [
       { url: '', priority: '1.0', changefreq: 'daily' },
+      { url: '/essential-links', priority: '0.98', changefreq: 'daily' },
       { url: '/mocks', priority: '0.95', changefreq: 'daily' },
+      { url: '/premium-academic-full-mock', priority: '0.95', changefreq: 'daily' },
+      { url: '/regular-academic-full-mock', priority: '0.95', changefreq: 'daily' },
+      { url: '/general-academic-full-mock', priority: '0.95', changefreq: 'daily' },
       { url: '/cambridge-reading', priority: '0.95', changefreq: 'daily' },
+      { url: '/cambridge-gt-reading', priority: '0.95', changefreq: 'daily' },
       { url: '/cambridge-listening', priority: '0.95', changefreq: 'daily' },
       { url: '/cambridge-writing', priority: '0.95', changefreq: 'daily' },
       { url: '/recent-reading-tests', priority: '0.95', changefreq: 'daily' },
@@ -2518,6 +2641,9 @@ app.get('/sitemap.xml', async (req, res) => {
       { url: '/speaking', priority: '0.95', changefreq: 'daily' },
       { url: '/practice-hub', priority: '0.95', changefreq: 'daily' },
       { url: '/band-calculator', priority: '0.90', changefreq: 'weekly' },
+      { url: '/listening-spelling-game', priority: '0.90', changefreq: 'weekly' },
+      { url: '/writing-samples', priority: '0.92', changefreq: 'weekly' },
+      { url: '/speaking-cue-cards', priority: '0.92', changefreq: 'weekly' },
       { url: '/reading-exercises', priority: '0.85', changefreq: 'weekly' },
       { url: '/listening-exercises', priority: '0.85', changefreq: 'weekly' },
       { url: '/writing-exercises', priority: '0.85', changefreq: 'weekly' },
@@ -2544,6 +2670,16 @@ app.get('/sitemap.xml', async (req, res) => {
     // (A) Static Landing Pages
     staticPages.forEach(page => {
       pushUrl('https://ieltsmockpoint.com' + page.url, { changefreq: page.changefreq, priority: page.priority });
+    });
+
+    // (A2) Individual IELTS Writing Sample Pages (Blog-style SEO Pages)
+    WRITING_SAMPLES.forEach(ws => {
+      pushUrl('https://ieltsmockpoint.com/writing-samples/' + ws.slug, { changefreq: 'weekly', priority: '0.88' });
+    });
+
+    // (A3) Individual IELTS Speaking Cue Card Pages (Auto-added to sitemap)
+    SPEAKING_CUE_CARDS.forEach(cc => {
+      pushUrl('https://ieltsmockpoint.com/speaking-cue-cards/' + cc.slug, { changefreq: 'weekly', priority: '0.88' });
     });
 
     // (B) 20 Authentic IELTS Speaking Mock Tests
@@ -2605,7 +2741,8 @@ app.get('/sitemap.xml', async (req, res) => {
       const t = item.testNo || item.testNumber;
       if (b && t) {
         readingV2Keys.add(`${b}:${t}`);
-        pushUrl('https://ieltsmockpoint.com/cambridge-reading-v2?book=' + escapeXml(b) + '&amp;test=' + escapeXml(t), { changefreq: 'monthly', priority: '0.88' });
+        const isGT = String(b).toLowerCase().includes('gt');
+        pushUrl('https://ieltsmockpoint.com/cambridge-reading-v2?book=' + escapeXml(b) + '&amp;test=' + escapeXml(t) + (isGT ? '&amp;type=gt' : ''), { changefreq: 'monthly', priority: '0.88' });
       }
     });
     cambridgeReadingDocs.forEach(item => {
@@ -2708,6 +2845,11 @@ Allow: /
 Sitemap: https://ieltsmockpoint.com/sitemap.xml
 `);
 });
+  // Alias for General Training Mock URL
+  app.get(["/general-training-full-mock", "/general-training-full-mock.html"], (req, res) => {
+    return res.redirect(301, "/general-academic-full-mock");
+  });
+
   // ==========================================
   // CLEAN URL FALLBACK: /mocks  ->  mocks.html serve korbe
   // (Shob route er por, tai kono existing route/auth bypass hobe na)

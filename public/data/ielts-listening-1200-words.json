@@ -1,0 +1,6197 @@
+[
+  {
+    "word": "Monday",
+    "pron": "Mun-day",
+    "category": "Days and Months"
+  },
+  {
+    "word": "Tuesday",
+    "pron": "Tooz-day",
+    "category": "Days and Months"
+  },
+  {
+    "word": "Wednesday",
+    "pron": "Wenz-day",
+    "category": "Days and Months"
+  },
+  {
+    "word": "Thursday",
+    "pron": "Thurz-day",
+    "category": "Days and Months"
+  },
+  {
+    "word": "Friday",
+    "pron": "Fry-day",
+    "category": "Days and Months"
+  },
+  {
+    "word": "Saturday",
+    "pron": "Sat-er-day",
+    "category": "Days and Months"
+  },
+  {
+    "word": "Sunday",
+    "pron": "Sun-day",
+    "category": "Days and Months"
+  },
+  {
+    "word": "Weekdays",
+    "pron": "Week-dayz",
+    "category": "Days and Months"
+  },
+  {
+    "word": "Weekend",
+    "pron": "Week-end",
+    "category": "Days and Months"
+  },
+  {
+    "word": "January",
+    "pron": "Jan-yoo-er-ee",
+    "category": "Days and Months"
+  },
+  {
+    "word": "February",
+    "pron": "Feb-roo-er-ee",
+    "category": "Days and Months"
+  },
+  {
+    "word": "March",
+    "pron": "March",
+    "category": "Days and Months"
+  },
+  {
+    "word": "April",
+    "pron": "Ay-pril",
+    "category": "Days and Months"
+  },
+  {
+    "word": "May",
+    "pron": "May",
+    "category": "Days and Months"
+  },
+  {
+    "word": "June",
+    "pron": "Joon",
+    "category": "Days and Months"
+  },
+  {
+    "word": "July",
+    "pron": "Joo-ly",
+    "category": "Days and Months"
+  },
+  {
+    "word": "August",
+    "pron": "Aw-gust",
+    "category": "Days and Months"
+  },
+  {
+    "word": "September",
+    "pron": "Sep-tem-ber",
+    "category": "Days and Months"
+  },
+  {
+    "word": "October",
+    "pron": "Ok-toh-ber",
+    "category": "Days and Months"
+  },
+  {
+    "word": "November",
+    "pron": "No-vem-ber",
+    "category": "Days and Months"
+  },
+  {
+    "word": "December",
+    "pron": "Di-sem-ber",
+    "category": "Days and Months"
+  },
+  {
+    "word": "Cash",
+    "pron": "Kash",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Debit",
+    "pron": "Deb-it",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Credit card",
+    "pron": "Kred-it kard",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Cheque",
+    "pron": "Chek",
+    "category": "Money Matters"
+  },
+  {
+    "word": "In advance",
+    "pron": "In ad-vans",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Annual fee",
+    "pron": "An-yoo-ul fee",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Monthly membership",
+    "pron": "Munth-lee mem-ber-ship",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Interest rate",
+    "pron": "In-ter-est rayt",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Deposit",
+    "pron": "Di-poz-it",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Tuition fees",
+    "pron": "Too-ish-un fee",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Poverty",
+    "pron": "Pov-er-tee",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Bank statement",
+    "pron": "Bank stayt-ment",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Money management",
+    "pron": "Mun-ee man-ij-ment",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Current account",
+    "pron": "Kur-ent uh-kount",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Student account",
+    "pron": "Stoo-dent uh-kount",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Withdraw",
+    "pron": "With-draw",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Low-risk investment",
+    "pron": "Loh-risk in-vest-ment",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Mortgage",
+    "pron": "Mor-gij",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Grace period",
+    "pron": "Grays peer-ee-ud",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Budget deficit",
+    "pron": "Buj-it def-uh-sit",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Retail voucher",
+    "pron": "Ree-tayl vow-cher",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Coupon",
+    "pron": "Koo-pon",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Counterfeit money",
+    "pron": "Koun-ter-fit mun-ee",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Public money",
+    "pron": "Pub-lik mun-ee",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Tax payers' money",
+    "pron": "Taks pay-erz mun-ee",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Debt",
+    "pron": "Det",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Interest-free credit",
+    "pron": "In-ter-est-free kred-it",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Purchase",
+    "pron": "Pur-chus",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Partial refund",
+    "pron": "Par-shul ree-fund",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Annuity",
+    "pron": "Uh-noo-i-tee",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Non-refundable",
+    "pron": "Non-ree-fun-duh-bul",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Master card",
+    "pron": "Mas-ter kard",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Visa",
+    "pron": "Vee-zuh",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Distribution costs",
+    "pron": "Dis-tri-byoo-shun kosts",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Income",
+    "pron": "In-kum",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Finance department",
+    "pron": "Fy-nans di-part-ment",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Family finances",
+    "pron": "Fam-lee fy-nans-es",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Duty-free store",
+    "pron": "Doo-tee-free stor",
+    "category": "Money Matters"
+  },
+  {
+    "word": "Science",
+    "pron": "Sy-ens",
+    "category": "Subjects"
+  },
+  {
+    "word": "Politics",
+    "pron": "Pol-i-tiks",
+    "category": "Subjects"
+  },
+  {
+    "word": "History",
+    "pron": "His-tuh-ree",
+    "category": "Subjects"
+  },
+  {
+    "word": "Biology",
+    "pron": "By-ol-uh-jee",
+    "category": "Subjects"
+  },
+  {
+    "word": "Architecture",
+    "pron": "Ar-ki-tek-cher",
+    "category": "Subjects"
+  },
+  {
+    "word": "Law",
+    "pron": "Law",
+    "category": "Subjects"
+  },
+  {
+    "word": "Geography",
+    "pron": "Jee-og-ruh-fee",
+    "category": "Subjects"
+  },
+  {
+    "word": "Archaeology",
+    "pron": "Ar-kee-ol-uh-jee",
+    "category": "Subjects"
+  },
+  {
+    "word": "Literature",
+    "pron": "Lit-er-uh-cher",
+    "category": "Subjects"
+  },
+  {
+    "word": "Business management",
+    "pron": "Biz-nis man-ij-ment",
+    "category": "Subjects"
+  },
+  {
+    "word": "Agriculture",
+    "pron": "Ag-ri-kul-cher",
+    "category": "Subjects"
+  },
+  {
+    "word": "Statistics",
+    "pron": "Stuh-tis-tiks",
+    "category": "Subjects"
+  },
+  {
+    "word": "Mathematics",
+    "pron": "Math-uh-mat-iks",
+    "category": "Subjects"
+  },
+  {
+    "word": "Logic",
+    "pron": "Loj-ik",
+    "category": "Subjects"
+  },
+  {
+    "word": "Physics",
+    "pron": "Fiz-iks",
+    "category": "Subjects"
+  },
+  {
+    "word": "Psychology",
+    "pron": "Sy-kol-uh-jee",
+    "category": "Subjects"
+  },
+  {
+    "word": "Anthropology",
+    "pron": "An-thruh-pol-uh-jee",
+    "category": "Subjects"
+  },
+  {
+    "word": "Economics",
+    "pron": "Ee-kuh-nom-iks",
+    "category": "Subjects"
+  },
+  {
+    "word": "Philosophy",
+    "pron": "Fi-los-uh-fee",
+    "category": "Subjects"
+  },
+  {
+    "word": "Performing arts",
+    "pron": "Per-form-ing arts",
+    "category": "Subjects"
+  },
+  {
+    "word": "Visual arts",
+    "pron": "Vizh-oo-ul arts",
+    "category": "Subjects"
+  },
+  {
+    "word": "Chemistry",
+    "pron": "Kem-uh-stree",
+    "category": "Subjects"
+  },
+  {
+    "word": "Humanities",
+    "pron": "Hyoo-man-i-teez",
+    "category": "Subjects"
+  },
+  {
+    "word": "Course outline",
+    "pron": "Kors owt-lyne",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Group discussion",
+    "pron": "Groop dis-kuh-shun",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Handout",
+    "pron": "Hand-owt",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Written work",
+    "pron": "Rit-n wurk",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Report writing",
+    "pron": "Ri-port ry-ting",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Research",
+    "pron": "Ree-surch",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Proofreading",
+    "pron": "Proof-ree-ding",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Experiment",
+    "pron": "Ik-sper-uh-ment",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Experience",
+    "pron": "Ik-speer-ee-uns",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Reference",
+    "pron": "Ref-rens",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Textbook",
+    "pron": "Teks-book",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Dictionary",
+    "pron": "Dik-shuh-ner-ee",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Laptop",
+    "pron": "Lap-top",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Printer",
+    "pron": "Prin-ter",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Student advisor",
+    "pron": "Stoo-dent ad-vy-zer",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Teamwork",
+    "pron": "Teem-wurk",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Module",
+    "pron": "Moj-ool",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Topic",
+    "pron": "Top-ik",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Assessment",
+    "pron": "Uh-ses-ment",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Library",
+    "pron": "Ly-brer-ee",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Department",
+    "pron": "Di-part-ment",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Computer center",
+    "pron": "Kum-pyoo-ter sen-ter",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Classroom",
+    "pron": "Klas-room",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Lecture",
+    "pron": "Lek-cher",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Tutor",
+    "pron": "Too-ter",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Main hall",
+    "pron": "Mayn hawl",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Attendance",
+    "pron": "Uh-ten-duns",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Deadline",
+    "pron": "Ded-lyne",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Give a talk",
+    "pron": "Giv uh tawk",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Speech",
+    "pron": "Speech",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Computer laboratory",
+    "pron": "Kum-pyoo-ter lab-ruh-tor-ee",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Certificate",
+    "pron": "Ser-tif-uh-kit",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Diploma",
+    "pron": "Di-ploh-muh",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Placement test",
+    "pron": "Plays-ment test",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Overseas students",
+    "pron": "Oh-ver-seez stoo-dents",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Full-time",
+    "pron": "Fool tym",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Facilities",
+    "pron": "Fuh-sil-uh-teez",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "College",
+    "pron": "Kol-ij",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Dining room",
+    "pron": "Dy-ning room",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Specialist",
+    "pron": "Spesh-uh-list",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Knowledge",
+    "pron": "Nol-ij",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "International",
+    "pron": "In-ter-nash-uh-nul",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Accommodation",
+    "pron": "Uh-kom-uh-day-shun",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Homestay",
+    "pron": "Hohm-stay",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Primary",
+    "pron": "Pry-mer-ee",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Secondary",
+    "pron": "Sek-un-der-ee",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Intermediate",
+    "pron": "In-ter-mee-dee-ut",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Media room",
+    "pron": "Mee-dee-uh room",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Resources room",
+    "pron": "Ree-sors-iz room",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Staff",
+    "pron": "Staf",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Commencement",
+    "pron": "Kuh-mens-ment",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Dissertation",
+    "pron": "Dis-er-tay-shun",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Leaflet",
+    "pron": "Leef-let",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Faculty",
+    "pron": "Fak-uhl-tee",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Pupils",
+    "pron": "Pyoo-pulz",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Pencil",
+    "pron": "Pen-sul",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Feedback",
+    "pron": "Feed-bak",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Tasks",
+    "pron": "Tasks",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Outcomes",
+    "pron": "Owt-kumz",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Advanced",
+    "pron": "Ad-vanst",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Introductory",
+    "pron": "In-truh-duk-tuh-ree",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Extra background",
+    "pron": "Eks-truh bak-ground",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Higher education",
+    "pron": "Hy-er ej-oo-kay-shun",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Guidelines",
+    "pron": "Gyd-lynez",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Post-secondary",
+    "pron": "Pohst-sek-un-der-ee",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Supervisor",
+    "pron": "Soo-per-vy-zer",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Bachelor's degree",
+    "pron": "Bach-uh-lerz di-gree",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Compound",
+    "pron": "Kom-pound",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Vocabulary",
+    "pron": "Voh-kab-yuh-ler-ee",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Student support services",
+    "pron": "Stoo-dent suh-port sur-vis-ez",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Student retention",
+    "pron": "Stoo-dent ri-ten-shun",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Publication",
+    "pron": "Pub-li-kay-shun",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Foreign students",
+    "pron": "For-un stoo-dents",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Schedule",
+    "pron": "Sked-jool",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "School reunion",
+    "pron": "Skool ree-yoon-yun",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Registrar's office",
+    "pron": "Rej-uh-strarz of-is",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Stationery",
+    "pron": "Stay-shuh-ner-ee",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "Catalog",
+    "pron": "Kat-uh-log",
+    "category": "Marketing"
+  },
+  {
+    "word": "Interview",
+    "pron": "In-ter-vyoo",
+    "category": "Marketing"
+  },
+  {
+    "word": "Newsletter",
+    "pron": "Nooz-let-er",
+    "category": "Marketing"
+  },
+  {
+    "word": "Competition",
+    "pron": "Kom-puh-tish-un",
+    "category": "Marketing"
+  },
+  {
+    "word": "Tv program",
+    "pron": "Tee-vee proh-gram",
+    "category": "Marketing"
+  },
+  {
+    "word": "Strategies",
+    "pron": "Strat-uh-jeez",
+    "category": "Marketing"
+  },
+  {
+    "word": "Research method",
+    "pron": "Ree-surch meth-ud",
+    "category": "Marketing"
+  },
+  {
+    "word": "Entertainment industry",
+    "pron": "En-ter-tayn-ment in-duh-stree",
+    "category": "Marketing"
+  },
+  {
+    "word": "Leadership",
+    "pron": "Lee-der-ship",
+    "category": "Marketing"
+  },
+  {
+    "word": "Management",
+    "pron": "Man-ij-ment",
+    "category": "Marketing"
+  },
+  {
+    "word": "Display",
+    "pron": "Dis-play",
+    "category": "Marketing"
+  },
+  {
+    "word": "Products",
+    "pron": "Prod-ukts",
+    "category": "Marketing"
+  },
+  {
+    "word": "Customer",
+    "pron": "Kus-tuh-mer",
+    "category": "Marketing"
+  },
+  {
+    "word": "Special offer",
+    "pron": "Spesh-ul of-er",
+    "category": "Marketing"
+  },
+  {
+    "word": "Collecting data",
+    "pron": "Kuh-lek-ting day-tuh",
+    "category": "Marketing"
+  },
+  {
+    "word": "Questionnaire",
+    "pron": "Kwes-chuh-nair",
+    "category": "Marketing"
+  },
+  {
+    "word": "Survey",
+    "pron": "Sur-vay",
+    "category": "Marketing"
+  },
+  {
+    "word": "Mass media",
+    "pron": "Mas mee-dee-uh",
+    "category": "Marketing"
+  },
+  {
+    "word": "Statistic",
+    "pron": "Stuh-tis-tik",
+    "category": "Marketing"
+  },
+  {
+    "word": "Profit margin",
+    "pron": "Prof-it mar-jin",
+    "category": "Marketing"
+  },
+  {
+    "word": "Poll",
+    "pron": "Pohl",
+    "category": "Marketing"
+  },
+  {
+    "word": "Business card",
+    "pron": "Biz-nis kard",
+    "category": "Marketing"
+  },
+  {
+    "word": "Training",
+    "pron": "Trayn-ing",
+    "category": "Marketing"
+  },
+  {
+    "word": "Trainee",
+    "pron": "Tray-nee",
+    "category": "Marketing"
+  },
+  {
+    "word": "Merchandise",
+    "pron": "Mur-chun-dyz",
+    "category": "Marketing"
+  },
+  {
+    "word": "Manufacture",
+    "pron": "Man-yuh-fak-cher",
+    "category": "Marketing"
+  },
+  {
+    "word": "Recruitment",
+    "pron": "Ri-kroot-ment",
+    "category": "Marketing"
+  },
+  {
+    "word": "Yoga",
+    "pron": "Yoh-guh",
+    "category": "Health"
+  },
+  {
+    "word": "Keep-fit",
+    "pron": "Keep-fit",
+    "category": "Health"
+  },
+  {
+    "word": "Salad bar",
+    "pron": "Sal-ud bar",
+    "category": "Health"
+  },
+  {
+    "word": "Vegetarian",
+    "pron": "Vej-uh-tair-ee-un",
+    "category": "Health"
+  },
+  {
+    "word": "Outdoor activities",
+    "pron": "Owt-dor ak-tiv-uh-teez",
+    "category": "Health"
+  },
+  {
+    "word": "Leisure time",
+    "pron": "Lee-zher tym",
+    "category": "Health"
+  },
+  {
+    "word": "Disease",
+    "pron": "Di-zeez",
+    "category": "Health"
+  },
+  {
+    "word": "Meal",
+    "pron": "Meel",
+    "category": "Health"
+  },
+  {
+    "word": "Protein",
+    "pron": "Proh-teen",
+    "category": "Health"
+  },
+  {
+    "word": "Balanced diet",
+    "pron": "Bal-unst dy-ut",
+    "category": "Health"
+  },
+  {
+    "word": "Food pyramid",
+    "pron": "Food pir-uh-mid",
+    "category": "Health"
+  },
+  {
+    "word": "Vitamin",
+    "pron": "Vy-tuh-min",
+    "category": "Health"
+  },
+  {
+    "word": "Carbohydrates",
+    "pron": "Kar-boh-hy-drayts",
+    "category": "Health"
+  },
+  {
+    "word": "Rice",
+    "pron": "Rys",
+    "category": "Health"
+  },
+  {
+    "word": "Pasta",
+    "pron": "Pas-tuh",
+    "category": "Health"
+  },
+  {
+    "word": "Potatoes",
+    "pron": "Puh-tay-tohz",
+    "category": "Health"
+  },
+  {
+    "word": "Pizza",
+    "pron": "Peet-suh",
+    "category": "Health"
+  },
+  {
+    "word": "Tomatoes",
+    "pron": "Tuh-may-tohz",
+    "category": "Health"
+  },
+  {
+    "word": "Bread",
+    "pron": "Bred",
+    "category": "Health"
+  },
+  {
+    "word": "Cereals",
+    "pron": "Seer-ee-ulz",
+    "category": "Health"
+  },
+  {
+    "word": "Minerals",
+    "pron": "Min-er-ulz",
+    "category": "Health"
+  },
+  {
+    "word": "Zinc",
+    "pron": "Zink",
+    "category": "Health"
+  },
+  {
+    "word": "Meat",
+    "pron": "Meet",
+    "category": "Health"
+  },
+  {
+    "word": "Seafood",
+    "pron": "See-food",
+    "category": "Health"
+  },
+  {
+    "word": "Eggs",
+    "pron": "Egz",
+    "category": "Health"
+  },
+  {
+    "word": "Beans",
+    "pron": "Beenz",
+    "category": "Health"
+  },
+  {
+    "word": "Milk",
+    "pron": "Milk",
+    "category": "Health"
+  },
+  {
+    "word": "Cheese",
+    "pron": "Cheez",
+    "category": "Health"
+  },
+  {
+    "word": "Yoghurt",
+    "pron": "Yoh-gurt",
+    "category": "Health"
+  },
+  {
+    "word": "Fruit",
+    "pron": "Froot",
+    "category": "Health"
+  },
+  {
+    "word": "Vegetables",
+    "pron": "Vej-tuh-bulz",
+    "category": "Health"
+  },
+  {
+    "word": "Citrus fruits",
+    "pron": "Sit-rus froots",
+    "category": "Health"
+  },
+  {
+    "word": "Green pepper",
+    "pron": "Green pep-er",
+    "category": "Health"
+  },
+  {
+    "word": "Blackcurrant",
+    "pron": "Blak-kur-unt",
+    "category": "Health"
+  },
+  {
+    "word": "Nuts",
+    "pron": "Nuts",
+    "category": "Health"
+  },
+  {
+    "word": "Egg yolk",
+    "pron": "Eg yohk",
+    "category": "Health"
+  },
+  {
+    "word": "Liver",
+    "pron": "Liv-er",
+    "category": "Health"
+  },
+  {
+    "word": "Medicine",
+    "pron": "Med-uh-sin",
+    "category": "Health"
+  },
+  {
+    "word": "Treatment",
+    "pron": "Treet-ment",
+    "category": "Health"
+  },
+  {
+    "word": "Remedy",
+    "pron": "Rem-uh-dee",
+    "category": "Health"
+  },
+  {
+    "word": "Nursing care",
+    "pron": "Nurs-ing kair",
+    "category": "Health"
+  },
+  {
+    "word": "Nursery",
+    "pron": "Nur-suh-ree",
+    "category": "Health"
+  },
+  {
+    "word": "Regular exercise",
+    "pron": "Reg-yuh-ler ek-ser-syz",
+    "category": "Health"
+  },
+  {
+    "word": "Field",
+    "pron": "Feeld",
+    "category": "Nature"
+  },
+  {
+    "word": "Footbridge",
+    "pron": "Foot-brij",
+    "category": "Nature"
+  },
+  {
+    "word": "Environment",
+    "pron": "En-vy-run-ment",
+    "category": "Nature"
+  },
+  {
+    "word": "Waterfall",
+    "pron": "Waw-ter-fawl",
+    "category": "Nature"
+  },
+  {
+    "word": "River",
+    "pron": "Riv-er",
+    "category": "Nature"
+  },
+  {
+    "word": "Mountain",
+    "pron": "Moun-tn",
+    "category": "Nature"
+  },
+  {
+    "word": "Forest",
+    "pron": "For-ist",
+    "category": "Nature"
+  },
+  {
+    "word": "Village",
+    "pron": "Vil-ij",
+    "category": "Nature"
+  },
+  {
+    "word": "Coast",
+    "pron": "Kohst",
+    "category": "Nature"
+  },
+  {
+    "word": "Reef",
+    "pron": "Reef",
+    "category": "Nature"
+  },
+  {
+    "word": "Lake",
+    "pron": "Layk",
+    "category": "Nature"
+  },
+  {
+    "word": "Valley",
+    "pron": "Val-ee",
+    "category": "Nature"
+  },
+  {
+    "word": "Hill",
+    "pron": "Hil",
+    "category": "Nature"
+  },
+  {
+    "word": "Cliff",
+    "pron": "Klif",
+    "category": "Nature"
+  },
+  {
+    "word": "Island",
+    "pron": "Eye-lund",
+    "category": "Nature"
+  },
+  {
+    "word": "Peninsula",
+    "pron": "Puh-nin-suh-luh",
+    "category": "Nature"
+  },
+  {
+    "word": "Earthquake",
+    "pron": "Urth-kwayk",
+    "category": "Nature"
+  },
+  {
+    "word": "Avalanche",
+    "pron": "Av-uh-lanch",
+    "category": "Nature"
+  },
+  {
+    "word": "Tornado",
+    "pron": "Tor-nay-doh",
+    "category": "Nature"
+  },
+  {
+    "word": "Typhoon",
+    "pron": "Ty-foon",
+    "category": "Nature"
+  },
+  {
+    "word": "Desertification",
+    "pron": "Di-zur-tuh-fi-kay-shun",
+    "category": "Nature"
+  },
+  {
+    "word": "Volcano",
+    "pron": "Vol-kay-noh",
+    "category": "Nature"
+  },
+  {
+    "word": "Disaster",
+    "pron": "Di-zas-ter",
+    "category": "Nature"
+  },
+  {
+    "word": "Catastrophe",
+    "pron": "Kuh-tas-truh-fee",
+    "category": "Nature"
+  },
+  {
+    "word": "Erosion",
+    "pron": "Ih-roh-zhun",
+    "category": "Nature"
+  },
+  {
+    "word": "Landslides",
+    "pron": "Land-slydz",
+    "category": "Nature"
+  },
+  {
+    "word": "Storm",
+    "pron": "Storm",
+    "category": "Nature"
+  },
+  {
+    "word": "Flood",
+    "pron": "Flud",
+    "category": "Nature"
+  },
+  {
+    "word": "Hurricane",
+    "pron": "Hur-uh-kayn",
+    "category": "Nature"
+  },
+  {
+    "word": "Pond",
+    "pron": "Pond",
+    "category": "Nature"
+  },
+  {
+    "word": "Jungle",
+    "pron": "Jung-gul",
+    "category": "Nature"
+  },
+  {
+    "word": "Oasis",
+    "pron": "Oh-ay-sis",
+    "category": "Nature"
+  },
+  {
+    "word": "Dam",
+    "pron": "Dam",
+    "category": "Nature"
+  },
+  {
+    "word": "Canyon",
+    "pron": "Kan-yun",
+    "category": "Nature"
+  },
+  {
+    "word": "Greenhouse effect",
+    "pron": "Green-hows uh-fekt",
+    "category": "The Environment"
+  },
+  {
+    "word": "Acid rain",
+    "pron": "As-id rayn",
+    "category": "The Environment"
+  },
+  {
+    "word": "Global warming",
+    "pron": "Gloh-bul wor-ming",
+    "category": "The Environment"
+  },
+  {
+    "word": "Carbon dioxide",
+    "pron": "Kar-bun dy-ok-syd",
+    "category": "The Environment"
+  },
+  {
+    "word": "Burning fossil",
+    "pron": "Burn-ing fos-ul",
+    "category": "The Environment"
+  },
+  {
+    "word": "Exhaust fumes",
+    "pron": "Eg-zost fyoomz",
+    "category": "The Environment"
+  },
+  {
+    "word": "Deforestation",
+    "pron": "Dee-for-uh-stay-shun",
+    "category": "The Environment"
+  },
+  {
+    "word": "Nitrogen oxide",
+    "pron": "Ny-truh-jen ok-syd",
+    "category": "The Environment"
+  },
+  {
+    "word": "Smog",
+    "pron": "Smog",
+    "category": "The Environment"
+  },
+  {
+    "word": "Climate",
+    "pron": "Kly-mit",
+    "category": "The Environment"
+  },
+  {
+    "word": "Pollution",
+    "pron": "Puh-loo-shun",
+    "category": "The Environment"
+  },
+  {
+    "word": "Temperature",
+    "pron": "Tem-per-uh-cher",
+    "category": "The Environment"
+  },
+  {
+    "word": "Power plants",
+    "pron": "Pow-er plants",
+    "category": "The Environment"
+  },
+  {
+    "word": "Landfill",
+    "pron": "Land-fil",
+    "category": "The Environment"
+  },
+  {
+    "word": "Cattle",
+    "pron": "Kat-ul",
+    "category": "The Environment"
+  },
+  {
+    "word": "Wind turbine",
+    "pron": "Wind tur-byn",
+    "category": "The Environment"
+  },
+  {
+    "word": "Solar power",
+    "pron": "Soh-ler pow-er",
+    "category": "The Environment"
+  },
+  {
+    "word": "Hydroelectric power",
+    "pron": "Hy-droh-ee-lek-trik pow-er",
+    "category": "The Environment"
+  },
+  {
+    "word": "Renewable",
+    "pron": "Ri-noo-uh-bul",
+    "category": "The Environment"
+  },
+  {
+    "word": "Source of energy",
+    "pron": "Sors uv en-er-jee",
+    "category": "The Environment"
+  },
+  {
+    "word": "Reliable",
+    "pron": "Ri-ly-uh-bul",
+    "category": "The Environment"
+  },
+  {
+    "word": "Solar panels",
+    "pron": "Soh-ler pan-ulz",
+    "category": "The Environment"
+  },
+  {
+    "word": "Environmentally friendly",
+    "pron": "En-vy-run-men-tuh-lee frend-lee",
+    "category": "The Environment"
+  },
+  {
+    "word": "Oxygen",
+    "pron": "Ok-si-jen",
+    "category": "The Environment"
+  },
+  {
+    "word": "Chemical-free",
+    "pron": "Kem-i-kul free",
+    "category": "The Environment"
+  },
+  {
+    "word": "Desert",
+    "pron": "Dez-ert",
+    "category": "The Environment"
+  },
+  {
+    "word": "Degradation",
+    "pron": "Deg-ruh-day-shun",
+    "category": "The Environment"
+  },
+  {
+    "word": "Vegetation",
+    "pron": "Vej-uh-tay-shun",
+    "category": "The Environment"
+  },
+  {
+    "word": "Sea level",
+    "pron": "See lev-ul",
+    "category": "The Environment"
+  },
+  {
+    "word": "Ocean currents",
+    "pron": "Oh-shun kur-ents",
+    "category": "The Environment"
+  },
+  {
+    "word": "Soil conditioner",
+    "pron": "Soyl kun-dish-uh-ner",
+    "category": "The Environment"
+  },
+  {
+    "word": "Coal",
+    "pron": "Kohl",
+    "category": "The Environment"
+  },
+  {
+    "word": "Fossil fuels",
+    "pron": "Fos-ul fyoo-ulz",
+    "category": "The Environment"
+  },
+  {
+    "word": "Firewood",
+    "pron": "Fyre-wood",
+    "category": "The Environment"
+  },
+  {
+    "word": "Drought",
+    "pron": "Drout",
+    "category": "The Environment"
+  },
+  {
+    "word": "Contaminated",
+    "pron": "Kun-tam-uh-nay-tid",
+    "category": "The Environment"
+  },
+  {
+    "word": "Birds of prey",
+    "pron": "Burdz uv pray",
+    "category": "The Animal Kingdom"
+  },
+  {
+    "word": "Seabirds",
+    "pron": "See-burdz",
+    "category": "The Animal Kingdom"
+  },
+  {
+    "word": "Poultry and game",
+    "pron": "Pohl-tree and gaym",
+    "category": "The Animal Kingdom"
+  },
+  {
+    "word": "Mammals",
+    "pron": "Mam-ulz",
+    "category": "The Animal Kingdom"
+  },
+  {
+    "word": "Cetacean",
+    "pron": "Si-tay-shun",
+    "category": "The Animal Kingdom"
+  },
+  {
+    "word": "Whale",
+    "pron": "Wayl",
+    "category": "The Animal Kingdom"
+  },
+  {
+    "word": "Primates",
+    "pron": "Pry-maytz",
+    "category": "The Animal Kingdom"
+  },
+  {
+    "word": "Rodents",
+    "pron": "Roh-dents",
+    "category": "The Animal Kingdom"
+  },
+  {
+    "word": "Fish",
+    "pron": "Fish",
+    "category": "The Animal Kingdom"
+  },
+  {
+    "word": "Amphibian",
+    "pron": "Am-fib-ee-un",
+    "category": "The Animal Kingdom"
+  },
+  {
+    "word": "Reptile",
+    "pron": "Rep-tyl",
+    "category": "The Animal Kingdom"
+  },
+  {
+    "word": "Insects",
+    "pron": "In-sekts",
+    "category": "The Animal Kingdom"
+  },
+  {
+    "word": "Octopus",
+    "pron": "Ok-tuh-pus",
+    "category": "The Animal Kingdom"
+  },
+  {
+    "word": "Phylum",
+    "pron": "Fy-lum",
+    "category": "The Animal Kingdom"
+  },
+  {
+    "word": "Class",
+    "pron": "Klas",
+    "category": "The Animal Kingdom"
+  },
+  {
+    "word": "Order",
+    "pron": "Or-der",
+    "category": "The Animal Kingdom"
+  },
+  {
+    "word": "Family",
+    "pron": "Fam-lee",
+    "category": "The Animal Kingdom"
+  },
+  {
+    "word": "Genus",
+    "pron": "Jee-nus",
+    "category": "The Animal Kingdom"
+  },
+  {
+    "word": "Species",
+    "pron": "Spee-sheez",
+    "category": "The Animal Kingdom"
+  },
+  {
+    "word": "Livestock",
+    "pron": "Lyv-stok",
+    "category": "The Animal Kingdom"
+  },
+  {
+    "word": "Creature",
+    "pron": "Kree-cher",
+    "category": "The Animal Kingdom"
+  },
+  {
+    "word": "Lion",
+    "pron": "Ly-un",
+    "category": "The Animal Kingdom"
+  },
+  {
+    "word": "Penguin",
+    "pron": "Peng-gwin",
+    "category": "The Animal Kingdom"
+  },
+  {
+    "word": "Mushroom",
+    "pron": "Muh-shroom",
+    "category": "Plants"
+  },
+  {
+    "word": "Fungus",
+    "pron": "Fun-gus",
+    "category": "Plants"
+  },
+  {
+    "word": "Leaves",
+    "pron": "Leevz",
+    "category": "Plants"
+  },
+  {
+    "word": "Seed",
+    "pron": "Seed",
+    "category": "Plants"
+  },
+  {
+    "word": "Core",
+    "pron": "Kor",
+    "category": "Plants"
+  },
+  {
+    "word": "Bark",
+    "pron": "Bark",
+    "category": "Plants"
+  },
+  {
+    "word": "Trunk",
+    "pron": "Trunk",
+    "category": "Plants"
+  },
+  {
+    "word": "Twig",
+    "pron": "Twig",
+    "category": "Plants"
+  },
+  {
+    "word": "Branch",
+    "pron": "Branch",
+    "category": "Plants"
+  },
+  {
+    "word": "Flower",
+    "pron": "Flow-er",
+    "category": "Plants"
+  },
+  {
+    "word": "Stem",
+    "pron": "Stem",
+    "category": "Plants"
+  },
+  {
+    "word": "Roots",
+    "pron": "Roots",
+    "category": "Plants"
+  },
+  {
+    "word": "Cluster",
+    "pron": "Klus-ter",
+    "category": "Plants"
+  },
+  {
+    "word": "Fertilizer",
+    "pron": "Fur-tuh-ly-zer",
+    "category": "Plants"
+  },
+  {
+    "word": "South america",
+    "pron": "South uh-mer-uh-kuh",
+    "category": "Continents"
+  },
+  {
+    "word": "North america",
+    "pron": "North uh-mer-uh-kuh",
+    "category": "Continents"
+  },
+  {
+    "word": "Africa",
+    "pron": "Af-ri-kuh",
+    "category": "Continents"
+  },
+  {
+    "word": "Asia",
+    "pron": "Ay-zhuh",
+    "category": "Continents"
+  },
+  {
+    "word": "Europe",
+    "pron": "Yoor-up",
+    "category": "Continents"
+  },
+  {
+    "word": "Australia",
+    "pron": "Aw-stray-lee-uh",
+    "category": "Continents"
+  },
+  {
+    "word": "Antarctica",
+    "pron": "Ant-ark-ti-kuh",
+    "category": "Continents"
+  },
+  {
+    "word": "Egypt",
+    "pron": "Ee-jipt",
+    "category": "Countries"
+  },
+  {
+    "word": "Mexico",
+    "pron": "Mek-si-koh",
+    "category": "Countries"
+  },
+  {
+    "word": "France",
+    "pron": "Frans",
+    "category": "Countries"
+  },
+  {
+    "word": "Indonesia",
+    "pron": "In-duh-nee-zhuh",
+    "category": "Countries"
+  },
+  {
+    "word": "Turkey",
+    "pron": "Tur-kee",
+    "category": "Countries"
+  },
+  {
+    "word": "England",
+    "pron": "Ing-glund",
+    "category": "Countries"
+  },
+  {
+    "word": "Germany",
+    "pron": "Jur-muh-nee",
+    "category": "Countries"
+  },
+  {
+    "word": "China",
+    "pron": "Chy-nuh",
+    "category": "Countries"
+  },
+  {
+    "word": "Greece",
+    "pron": "Grees",
+    "category": "Countries"
+  },
+  {
+    "word": "Brazil",
+    "pron": "Bruh-zil",
+    "category": "Countries"
+  },
+  {
+    "word": "India",
+    "pron": "In-dee-uh",
+    "category": "Countries"
+  },
+  {
+    "word": "North korea",
+    "pron": "North kuh-ree-uh",
+    "category": "Countries"
+  },
+  {
+    "word": "Malaysia",
+    "pron": "Muh-lay-zhuh",
+    "category": "Countries"
+  },
+  {
+    "word": "New zealand",
+    "pron": "Noo zee-lund",
+    "category": "Countries"
+  },
+  {
+    "word": "Nigeria",
+    "pron": "Ny-jeer-ee-uh",
+    "category": "Countries"
+  },
+  {
+    "word": "Pakistan",
+    "pron": "Pak-uh-stan",
+    "category": "Countries"
+  },
+  {
+    "word": "Singapore",
+    "pron": "Sing-uh-por",
+    "category": "Countries"
+  },
+  {
+    "word": "Switzerland",
+    "pron": "Swit-ser-lund",
+    "category": "Countries"
+  },
+  {
+    "word": "United kingdom",
+    "pron": "Yoo-ny-tid king-dum",
+    "category": "Countries"
+  },
+  {
+    "word": "Italy",
+    "pron": "It-uh-lee",
+    "category": "Countries"
+  },
+  {
+    "word": "The dominican republic",
+    "pron": "Duh-min-uh-kun ri-pub-lik",
+    "category": "Countries"
+  },
+  {
+    "word": "The philippines",
+    "pron": "Fil-uh-peenz",
+    "category": "Countries"
+  },
+  {
+    "word": "Denmark",
+    "pron": "Den-mark",
+    "category": "Countries"
+  },
+  {
+    "word": "Linguistics",
+    "pron": "Ling-gwis-tiks",
+    "category": "Languages"
+  },
+  {
+    "word": "Bilingual",
+    "pron": "By-ling-gwul",
+    "category": "Languages"
+  },
+  {
+    "word": "Trilingual",
+    "pron": "Try-ling-gwul",
+    "category": "Languages"
+  },
+  {
+    "word": "Polyglot",
+    "pron": "Pol-ee-glot",
+    "category": "Languages"
+  },
+  {
+    "word": "Portuguese",
+    "pron": "Por-chuh-geez",
+    "category": "Languages"
+  },
+  {
+    "word": "Mandarin",
+    "pron": "Man-duh-rin",
+    "category": "Languages"
+  },
+  {
+    "word": "Bengali",
+    "pron": "Ben-gaw-lee",
+    "category": "Languages"
+  },
+  {
+    "word": "Chinese",
+    "pron": "Chy-neez",
+    "category": "Languages"
+  },
+  {
+    "word": "Hindi",
+    "pron": "Hin-dee",
+    "category": "Languages"
+  },
+  {
+    "word": "Russian",
+    "pron": "Ruh-shun",
+    "category": "Languages"
+  },
+  {
+    "word": "Japanese",
+    "pron": "Jap-uh-neez",
+    "category": "Languages"
+  },
+  {
+    "word": "German",
+    "pron": "Jur-mun",
+    "category": "Languages"
+  },
+  {
+    "word": "Punjabi",
+    "pron": "Pun-jah-bee",
+    "category": "Languages"
+  },
+  {
+    "word": "Thai",
+    "pron": "Ty",
+    "category": "Languages"
+  },
+  {
+    "word": "Persian",
+    "pron": "Pur-zhun",
+    "category": "Languages"
+  },
+  {
+    "word": "Filipino",
+    "pron": "Fil-uh-pee-noh",
+    "category": "Languages"
+  },
+  {
+    "word": "French",
+    "pron": "French",
+    "category": "Languages"
+  },
+  {
+    "word": "Italian",
+    "pron": "Ih-tal-yun",
+    "category": "Languages"
+  },
+  {
+    "word": "Greek",
+    "pron": "Greek",
+    "category": "Languages"
+  },
+  {
+    "word": "Dome",
+    "pron": "Dohm",
+    "category": "Architecture and Buildings"
+  },
+  {
+    "word": "Palace",
+    "pron": "Pal-is",
+    "category": "Architecture and Buildings"
+  },
+  {
+    "word": "Fort",
+    "pron": "Fort",
+    "category": "Architecture and Buildings"
+  },
+  {
+    "word": "Castle",
+    "pron": "Kas-ul",
+    "category": "Architecture and Buildings"
+  },
+  {
+    "word": "Glasshouse",
+    "pron": "Glas-hows",
+    "category": "Architecture and Buildings"
+  },
+  {
+    "word": "Pyramid",
+    "pron": "Pir-uh-mid",
+    "category": "Architecture and Buildings"
+  },
+  {
+    "word": "Log cabin",
+    "pron": "Log kab-in",
+    "category": "Architecture and Buildings"
+  },
+  {
+    "word": "Lighthouse",
+    "pron": "Lyt-hows",
+    "category": "Architecture and Buildings"
+  },
+  {
+    "word": "Hut",
+    "pron": "Hut",
+    "category": "Architecture and Buildings"
+  },
+  {
+    "word": "Skyscraper",
+    "pron": "Sky-skray-per",
+    "category": "Architecture and Buildings"
+  },
+  {
+    "word": "Sculpture",
+    "pron": "Skulp-cher",
+    "category": "Architecture and Buildings"
+  },
+  {
+    "word": "Semi-detached house",
+    "pron": "Sem-ee-di-tacht hows",
+    "category": "Homes"
+  },
+  {
+    "word": "Duplex",
+    "pron": "Doo-pleks",
+    "category": "Homes"
+  },
+  {
+    "word": "Terraced house",
+    "pron": "Ter-ust hows",
+    "category": "Homes"
+  },
+  {
+    "word": "Town house",
+    "pron": "Town hows",
+    "category": "Homes"
+  },
+  {
+    "word": "Row house",
+    "pron": "Roh hows",
+    "category": "Homes"
+  },
+  {
+    "word": "Bungalow",
+    "pron": "Bung-guh-loh",
+    "category": "Homes"
+  },
+  {
+    "word": "Thatched cottage",
+    "pron": "Thacht kot-ij",
+    "category": "Homes"
+  },
+  {
+    "word": "Mobile home",
+    "pron": "Moh-bul hohm",
+    "category": "Homes"
+  },
+  {
+    "word": "Houseboat",
+    "pron": "Hows-boht",
+    "category": "Homes"
+  },
+  {
+    "word": "Block of flats",
+    "pron": "Blok uv flats",
+    "category": "Homes"
+  },
+  {
+    "word": "Apartment building",
+    "pron": "Uh-part-ment bil-ding",
+    "category": "Homes"
+  },
+  {
+    "word": "Condominium",
+    "pron": "Kon-duh-min-ee-um",
+    "category": "Homes"
+  },
+  {
+    "word": "Chimney",
+    "pron": "Chim-nee",
+    "category": "Homes"
+  },
+  {
+    "word": "Bedroom",
+    "pron": "Bed-room",
+    "category": "Homes"
+  },
+  {
+    "word": "Basement",
+    "pron": "Bays-ment",
+    "category": "Homes"
+  },
+  {
+    "word": "Landlord",
+    "pron": "Land-lord",
+    "category": "Homes"
+  },
+  {
+    "word": "Tenant",
+    "pron": "Ten-unt",
+    "category": "Homes"
+  },
+  {
+    "word": "Rent",
+    "pron": "Rent",
+    "category": "Homes"
+  },
+  {
+    "word": "Lease",
+    "pron": "Lees",
+    "category": "Homes"
+  },
+  {
+    "word": "Neighborhood",
+    "pron": "Nay-ber-hood",
+    "category": "Homes"
+  },
+  {
+    "word": "Suburb",
+    "pron": "Sub-urb",
+    "category": "Homes"
+  },
+  {
+    "word": "Sofa",
+    "pron": "Soh-fuh",
+    "category": "Homes"
+  },
+  {
+    "word": "Coffee table",
+    "pron": "Kaw-fee tay-bul",
+    "category": "Homes"
+  },
+  {
+    "word": "Dormitory",
+    "pron": "Dor-mi-tor-ee",
+    "category": "Homes"
+  },
+  {
+    "word": "Storey",
+    "pron": "Stor-ee",
+    "category": "Homes"
+  },
+  {
+    "word": "Kitchen",
+    "pron": "Kich-in",
+    "category": "Homes"
+  },
+  {
+    "word": "Refrigerator",
+    "pron": "Ri-frij-uh-ray-ter",
+    "category": "Homes"
+  },
+  {
+    "word": "Microwave",
+    "pron": "My-kroh-weyv",
+    "category": "Homes"
+  },
+  {
+    "word": "Ground floor",
+    "pron": "Ground flor",
+    "category": "Homes"
+  },
+  {
+    "word": "Oven",
+    "pron": "Uv-un",
+    "category": "Homes"
+  },
+  {
+    "word": "Hallway",
+    "pron": "Hawl-way",
+    "category": "Homes"
+  },
+  {
+    "word": "Insurance",
+    "pron": "In-shoor-uns",
+    "category": "Homes"
+  },
+  {
+    "word": "Cities",
+    "pron": "Sit-eez",
+    "category": "Cities"
+  },
+  {
+    "word": "Street",
+    "pron": "Street",
+    "category": "Cities"
+  },
+  {
+    "word": "Lane",
+    "pron": "Layn",
+    "category": "Cities"
+  },
+  {
+    "word": "City centre",
+    "pron": "Sit-ee sen-ter",
+    "category": "Cities"
+  },
+  {
+    "word": "Central station",
+    "pron": "Sen-trul stay-shun",
+    "category": "Cities"
+  },
+  {
+    "word": "Car park",
+    "pron": "Kar park",
+    "category": "Cities"
+  },
+  {
+    "word": "Department store",
+    "pron": "Di-part-ment stor",
+    "category": "Cities"
+  },
+  {
+    "word": "Bridge",
+    "pron": "Brij",
+    "category": "Cities"
+  },
+  {
+    "word": "Temple",
+    "pron": "Tem-pul",
+    "category": "Cities"
+  },
+  {
+    "word": "Embassy",
+    "pron": "Em-buh-see",
+    "category": "Cities"
+  },
+  {
+    "word": "Road system",
+    "pron": "Rohd sis-tum",
+    "category": "Cities"
+  },
+  {
+    "word": "Hospital",
+    "pron": "Hos-pi-tul",
+    "category": "Cities"
+  },
+  {
+    "word": "Garden",
+    "pron": "Gar-dn",
+    "category": "Cities"
+  },
+  {
+    "word": "Clinic",
+    "pron": "Klin-ik",
+    "category": "Workplaces"
+  },
+  {
+    "word": "Dentist",
+    "pron": "Den-tist",
+    "category": "Workplaces"
+  },
+  {
+    "word": "Reception",
+    "pron": "Ri-sep-shun",
+    "category": "Workplaces"
+  },
+  {
+    "word": "Appointment",
+    "pron": "Uh-poyn-ment",
+    "category": "Workplaces"
+  },
+  {
+    "word": "Selection",
+    "pron": "Suh-lek-shun",
+    "category": "Workplaces"
+  },
+  {
+    "word": "Colleague",
+    "pron": "Kol-eeg",
+    "category": "Workplaces"
+  },
+  {
+    "word": "Workshop",
+    "pron": "Wurk-shop",
+    "category": "Workplaces"
+  },
+  {
+    "word": "Showroom",
+    "pron": "Shoh-room",
+    "category": "Workplaces"
+  },
+  {
+    "word": "Information desk",
+    "pron": "In-for-may-shun desk",
+    "category": "Workplaces"
+  },
+  {
+    "word": "Employer",
+    "pron": "Em-ploy-er",
+    "category": "Workplaces"
+  },
+  {
+    "word": "Employment",
+    "pron": "Em-ploy-ment",
+    "category": "Workplaces"
+  },
+  {
+    "word": "Unemployed",
+    "pron": "Un-em-ployd",
+    "category": "Workplaces"
+  },
+  {
+    "word": "Technical cooperation",
+    "pron": "Tek-ni-kul ko-op-uh-ray-shun",
+    "category": "Workplaces"
+  },
+  {
+    "word": "Team leaders",
+    "pron": "Teem lee-ders",
+    "category": "Workplaces"
+  },
+  {
+    "word": "Stress",
+    "pron": "Stress",
+    "category": "Workplaces"
+  },
+  {
+    "word": "Ability",
+    "pron": "Uh-bil-i-tee",
+    "category": "Workplaces"
+  },
+  {
+    "word": "Vision",
+    "pron": "Vizh-un",
+    "category": "Workplaces"
+  },
+  {
+    "word": "Confidence",
+    "pron": "Kon-fi-dens",
+    "category": "Workplaces"
+  },
+  {
+    "word": "Employee",
+    "pron": "Em-ploy-ee",
+    "category": "Workplaces"
+  },
+  {
+    "word": "Internship",
+    "pron": "In-turn-ship",
+    "category": "Workplaces"
+  },
+  {
+    "word": "Reasonable",
+    "pron": "Ree-zuh-nuh-bul",
+    "category": "Rating and Qualities"
+  },
+  {
+    "word": "Satisfactory",
+    "pron": "Sat-is-fak-tuh-ree",
+    "category": "Rating and Qualities"
+  },
+  {
+    "word": "Dangerous",
+    "pron": "Dayn-juh-rus",
+    "category": "Rating and Qualities"
+  },
+  {
+    "word": "Safe",
+    "pron": "Sayf",
+    "category": "Rating and Qualities"
+  },
+  {
+    "word": "Strongly recommended",
+    "pron": "Strong-lee rek-uh-men-did",
+    "category": "Rating and Qualities"
+  },
+  {
+    "word": "Poor quality",
+    "pron": "Poor kwol-i-tee",
+    "category": "Rating and Qualities"
+  },
+  {
+    "word": "Satisfied",
+    "pron": "Sat-is-fyd",
+    "category": "Rating and Qualities"
+  },
+  {
+    "word": "Disappointed",
+    "pron": "Dis-uh-poyn-tid",
+    "category": "Rating and Qualities"
+  },
+  {
+    "word": "Efficient",
+    "pron": "Uh-fish-unt",
+    "category": "Rating and Qualities"
+  },
+  {
+    "word": "Luxurious",
+    "pron": "Lug-zhoor-ee-us",
+    "category": "Rating and Qualities"
+  },
+  {
+    "word": "Colored",
+    "pron": "Kuh-lerd",
+    "category": "Rating and Qualities"
+  },
+  {
+    "word": "Spotted",
+    "pron": "Spot-id",
+    "category": "Rating and Qualities"
+  },
+  {
+    "word": "Striped",
+    "pron": "Strypt",
+    "category": "Rating and Qualities"
+  },
+  {
+    "word": "Expensive",
+    "pron": "Ik-spen-siv",
+    "category": "Rating and Qualities"
+  },
+  {
+    "word": "Cheap",
+    "pron": "Cheep",
+    "category": "Rating and Qualities"
+  },
+  {
+    "word": "Tourist guided tour",
+    "pron": "Toor-ist gy-ded toor",
+    "category": "Tour"
+  },
+  {
+    "word": "Ticket office",
+    "pron": "Tik-it of-is",
+    "category": "Tour"
+  },
+  {
+    "word": "Souvenir",
+    "pron": "Soo-vuh-neer",
+    "category": "Tour"
+  },
+  {
+    "word": "Trip",
+    "pron": "Trip",
+    "category": "Tour"
+  },
+  {
+    "word": "Guest",
+    "pron": "Gest",
+    "category": "Tour"
+  },
+  {
+    "word": "Reservation",
+    "pron": "Rez-er-vay-shun",
+    "category": "Tour"
+  },
+  {
+    "word": "View",
+    "pron": "Vyoo",
+    "category": "Tour"
+  },
+  {
+    "word": "Culture",
+    "pron": "Kuhl-cher",
+    "category": "Tour"
+  },
+  {
+    "word": "Memorable",
+    "pron": "Mem-ruh-bul",
+    "category": "Tour"
+  },
+  {
+    "word": "Single/double bedded room",
+    "pron": "Sing-gul/dub-ul bed-id room",
+    "category": "Tour"
+  },
+  {
+    "word": "Picnic",
+    "pron": "Pik-nik",
+    "category": "Tour"
+  },
+  {
+    "word": "Tourist attraction",
+    "pron": "Toor-ist uh-trak-shun",
+    "category": "Tour"
+  },
+  {
+    "word": "Hostel",
+    "pron": "Hos-tel",
+    "category": "Tour"
+  },
+  {
+    "word": "Suite",
+    "pron": "Sweet",
+    "category": "Tour"
+  },
+  {
+    "word": "Aquarium",
+    "pron": "Uh-kwair-ee-um",
+    "category": "Tour"
+  },
+  {
+    "word": "Train",
+    "pron": "Trayn",
+    "category": "Verbs"
+  },
+  {
+    "word": "Develop",
+    "pron": "Di-vel-uhp",
+    "category": "Verbs"
+  },
+  {
+    "word": "Collect",
+    "pron": "Kuh-lekt",
+    "category": "Verbs"
+  },
+  {
+    "word": "Supervise",
+    "pron": "Soo-per-vyz",
+    "category": "Verbs"
+  },
+  {
+    "word": "Mark",
+    "pron": "Mark",
+    "category": "Verbs"
+  },
+  {
+    "word": "Edit",
+    "pron": "Ed-it",
+    "category": "Verbs"
+  },
+  {
+    "word": "Revise",
+    "pron": "Ri-vyz",
+    "category": "Verbs"
+  },
+  {
+    "word": "Exhibit",
+    "pron": "Ig-zib-it",
+    "category": "Verbs"
+  },
+  {
+    "word": "Donate",
+    "pron": "Doh-neyt",
+    "category": "Verbs"
+  },
+  {
+    "word": "Surpass",
+    "pron": "Ser-pas",
+    "category": "Verbs"
+  },
+  {
+    "word": "Register",
+    "pron": "Rej-uh-ster",
+    "category": "Verbs"
+  },
+  {
+    "word": "Support",
+    "pron": "Suh-port",
+    "category": "Verbs"
+  },
+  {
+    "word": "Hunt",
+    "pron": "Hunt",
+    "category": "Verbs"
+  },
+  {
+    "word": "Persuade",
+    "pron": "Per-sweyd",
+    "category": "Verbs"
+  },
+  {
+    "word": "Concentrate",
+    "pron": "Kon-suhn-trayt",
+    "category": "Verbs"
+  },
+  {
+    "word": "Discuss",
+    "pron": "Di-skuhs",
+    "category": "Verbs"
+  },
+  {
+    "word": "Suggest",
+    "pron": "Suhg-jest",
+    "category": "Verbs"
+  },
+  {
+    "word": "Arrange",
+    "pron": "Uh-raynj",
+    "category": "Verbs"
+  },
+  {
+    "word": "Borrow",
+    "pron": "Bor-oh",
+    "category": "Verbs"
+  },
+  {
+    "word": "Immigrate",
+    "pron": "Im-i-grayt",
+    "category": "Verbs"
+  },
+  {
+    "word": "Review",
+    "pron": "Ri-vyoo",
+    "category": "Verbs"
+  },
+  {
+    "word": "Learn",
+    "pron": "Lurn",
+    "category": "Verbs"
+  },
+  {
+    "word": "Touch",
+    "pron": "Tuch",
+    "category": "Verbs"
+  },
+  {
+    "word": "Energetic",
+    "pron": "En-er-JET-ik",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Social",
+    "pron": "SOH-shuhl",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Ancient",
+    "pron": "AYN-shunt",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Necessary",
+    "pron": "NES-uh-ser-ee",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Fantastic",
+    "pron": "Fan-TAS-tik",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Exciting",
+    "pron": "Ik-SY-ting",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Fabulous",
+    "pron": "FAB-yuh-lus",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Dull",
+    "pron": "DUHL",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Comfortable",
+    "pron": "KUMF-tuh-bul",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Convenient",
+    "pron": "Kuhn-VEE-nyunt",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Suitable",
+    "pron": "SOO-tuh-bul",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Affordable",
+    "pron": "Uh-FOR-duh-bul",
+    "category": "Adjectives"
+  },
+  {
+    "word": "V oluntary",
+    "pron": "VOL-uhn-ter-ee",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Mandatory",
+    "pron": "MAN-duh-tor-ee",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Compulsory",
+    "pron": "Kuhm-PUHL-suh-ree",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Temporary",
+    "pron": "TEM-puh-rer-ee",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Permanent",
+    "pron": "PUR-muh-nunt",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Immense",
+    "pron": "Ih-MENS",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Vast",
+    "pron": "V AST",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Salty",
+    "pron": "SOL-tee",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Extinct",
+    "pron": "Ik-STINGKT",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Vulnerable",
+    "pron": "VUHL-ner-uh-bul",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Pessimistic",
+    "pron": "Pes-uh-MIS-tik",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Optimistic",
+    "pron": "Op-tuh-MIS-tik",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Realistic",
+    "pron": "Ree-uh-LIS-tik",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Practical",
+    "pron": "PRAK-ti-kul",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Knowledgeable",
+    "pron": "NOL-ij-uh-bul",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Flexible",
+    "pron": "FLEK-suh-bul",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Confident",
+    "pron": "KON-fi-duhnt",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Western",
+    "pron": "WES-tern",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Intensive",
+    "pron": "In-TEN-siv",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Tranquil",
+    "pron": "TRAN-kwil",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Spectacular",
+    "pron": "Spek-TAK-yuh-ler",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Intact",
+    "pron": "In-TAKT",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Various",
+    "pron": "V AIR-ee-us",
+    "category": "Adjectives"
+  },
+  {
+    "word": "Orienteering",
+    "pron": "Or-ee-uhn-TEER-ing",
+    "category": "Hobbies"
+  },
+  {
+    "word": "Caving",
+    "pron": "KAY-ving",
+    "category": "Hobbies"
+  },
+  {
+    "word": "Spelunking",
+    "pron": "Spi-LUHN-king",
+    "category": "Hobbies"
+  },
+  {
+    "word": "Archery",
+    "pron": "AHR-chuh-ree",
+    "category": "Hobbies"
+  },
+  {
+    "word": "Ice skating",
+    "pron": "AYS SKAY-ting",
+    "category": "Hobbies"
+  },
+  {
+    "word": "Scuba-diving",
+    "pron": "SKOO-buh DY-ving",
+    "category": "Hobbies"
+  },
+  {
+    "word": "Snorkeling",
+    "pron": "SNOR-kuh-ling",
+    "category": "Hobbies"
+  },
+  {
+    "word": "Skateboarding",
+    "pron": "SKAYT-bor-ding",
+    "category": "Hobbies"
+  },
+  {
+    "word": "Bowls",
+    "pron": "BOHLZ",
+    "category": "Hobbies"
+  },
+  {
+    "word": "Darts",
+    "pron": "DARTS",
+    "category": "Hobbies"
+  },
+  {
+    "word": "Golf",
+    "pron": "GOLF",
+    "category": "Hobbies"
+  },
+  {
+    "word": "Billiards",
+    "pron": "BIL-yerdz",
+    "category": "Hobbies"
+  },
+  {
+    "word": "Photography",
+    "pron": "Fuh-TOG-ruh-fee",
+    "category": "Hobbies"
+  },
+  {
+    "word": "Painting",
+    "pron": "PAYN-ting",
+    "category": "Hobbies"
+  },
+  {
+    "word": "Pottery",
+    "pron": "POT-uh-ree",
+    "category": "Hobbies"
+  },
+  {
+    "word": "Woodcarving",
+    "pron": "WOOD-kahr-ving",
+    "category": "Hobbies"
+  },
+  {
+    "word": "Gardening",
+    "pron": "GAHRD-ning",
+    "category": "Hobbies"
+  },
+  {
+    "word": "Stamp collection",
+    "pron": "STAMP kuh-LEK-shun",
+    "category": "Hobbies"
+  },
+  {
+    "word": "Embroidery",
+    "pron": "Em-BROID-uh-ree",
+    "category": "Hobbies"
+  },
+  {
+    "word": "Climbing",
+    "pron": "KLY-ming",
+    "category": "Hobbies"
+  },
+  {
+    "word": "Chess",
+    "pron": "CHESS",
+    "category": "Hobbies"
+  },
+  {
+    "word": "Parachute",
+    "pron": "PAR-uh-shoot",
+    "category": "Hobbies"
+  },
+  {
+    "word": "Cricket",
+    "pron": "Krik-it",
+    "category": "Sports"
+  },
+  {
+    "word": "Baseball",
+    "pron": "Bays-bawl",
+    "category": "Sports"
+  },
+  {
+    "word": "Basketball",
+    "pron": "Bas-kit-bawl",
+    "category": "Sports"
+  },
+  {
+    "word": "Rugby",
+    "pron": "Ruhg-bee",
+    "category": "Sports"
+  },
+  {
+    "word": "Soccer",
+    "pron": "Sok-er",
+    "category": "Sports"
+  },
+  {
+    "word": "American football",
+    "pron": "Uh-MER-uh-kun FOOT-bawl",
+    "category": "Sports"
+  },
+  {
+    "word": "Hockey",
+    "pron": "Hok-ee",
+    "category": "Sports"
+  },
+  {
+    "word": "Swimming",
+    "pron": "Swim-ing",
+    "category": "Sports"
+  },
+  {
+    "word": "Tennis",
+    "pron": "Ten-is",
+    "category": "Sports"
+  },
+  {
+    "word": "Squash",
+    "pron": "Skwosh",
+    "category": "Sports"
+  },
+  {
+    "word": "Badminton",
+    "pron": "Bad-min-tun",
+    "category": "Sports"
+  },
+  {
+    "word": "Ping-pong",
+    "pron": "Ping-pong",
+    "category": "Sports"
+  },
+  {
+    "word": "Court",
+    "pron": "Kort",
+    "category": "Sports"
+  },
+  {
+    "word": "Pitch",
+    "pron": "Pich",
+    "category": "Sports"
+  },
+  {
+    "word": "Stadium",
+    "pron": "Stay-dee-um",
+    "category": "Sports"
+  },
+  {
+    "word": "Team",
+    "pron": "Teem",
+    "category": "Sports"
+  },
+  {
+    "word": "The discus",
+    "pron": "Dis-kus",
+    "category": "Sports"
+  },
+  {
+    "word": "The javelin",
+    "pron": "Jav-lin",
+    "category": "Sports"
+  },
+  {
+    "word": "The hammer",
+    "pron": "Ham-er",
+    "category": "Sports"
+  },
+  {
+    "word": "The high jump",
+    "pron": "Hy jump",
+    "category": "Sports"
+  },
+  {
+    "word": "Horse racing",
+    "pron": "Hors ray-sing",
+    "category": "Sports"
+  },
+  {
+    "word": "Show jumping",
+    "pron": "Shoh jump-ing",
+    "category": "Sports"
+  },
+  {
+    "word": "Polo",
+    "pron": "Poh-loh",
+    "category": "Sports"
+  },
+  {
+    "word": "Cycling",
+    "pron": "Sy-kling",
+    "category": "Sports"
+  },
+  {
+    "word": "Gymnasium",
+    "pron": "Jim-nay-zee-um",
+    "category": "Sports"
+  },
+  {
+    "word": "Athlete",
+    "pron": "Ath-leet",
+    "category": "Sports"
+  },
+  {
+    "word": "Gym",
+    "pron": "Jim",
+    "category": "Sports"
+  },
+  {
+    "word": "Extreme sports",
+    "pron": "Ik-streem sports",
+    "category": "Sports"
+  },
+  {
+    "word": "Paragliding",
+    "pron": "Par-uh-gly-ding",
+    "category": "Sports"
+  },
+  {
+    "word": "Hang-gliding",
+    "pron": "Hang-gly-ding",
+    "category": "Sports"
+  },
+  {
+    "word": "Skydiving",
+    "pron": "Sky-dy-ving",
+    "category": "Sports"
+  },
+  {
+    "word": "Abseiling",
+    "pron": "Ab-say-ling",
+    "category": "Sports"
+  },
+  {
+    "word": "Snowboarding",
+    "pron": "Snoh-bor-ding",
+    "category": "Sports"
+  },
+  {
+    "word": "Bungee jumping",
+    "pron": "Bun-gee jump-ing",
+    "category": "Sports"
+  },
+  {
+    "word": "Surfing",
+    "pron": "Sur-fing",
+    "category": "Sports"
+  },
+  {
+    "word": "Windsurfing",
+    "pron": "Wind-sur-fing",
+    "category": "Sports"
+  },
+  {
+    "word": "Jet-skiing",
+    "pron": "Jet-skee-ing",
+    "category": "Sports"
+  },
+  {
+    "word": "Body boarding",
+    "pron": "Bod-ee bor-ding",
+    "category": "Sports"
+  },
+  {
+    "word": "White-water rafting",
+    "pron": "Wyt-waw-ter raf-ting",
+    "category": "Sports"
+  },
+  {
+    "word": "Kite surfing",
+    "pron": "Kyte sur-fing",
+    "category": "Sports"
+  },
+  {
+    "word": "Mountain biking",
+    "pron": "Mown-tun by-king",
+    "category": "Sports"
+  },
+  {
+    "word": "Jogging",
+    "pron": "Jog-ing",
+    "category": "Sports"
+  },
+  {
+    "word": "Press-up",
+    "pron": "Pres-up",
+    "category": "Sports"
+  },
+  {
+    "word": "Push-up",
+    "pron": "Poosh-up",
+    "category": "Sports"
+  },
+  {
+    "word": "Barbell",
+    "pron": "Bar-bel",
+    "category": "Sports"
+  },
+  {
+    "word": "Treadmill",
+    "pron": "Tred-mil",
+    "category": "Sports"
+  },
+  {
+    "word": "Judo",
+    "pron": "Joo-doh",
+    "category": "Sports"
+  },
+  {
+    "word": "Recreation",
+    "pron": "Rek-ree-ay-shun",
+    "category": "Sports"
+  },
+  {
+    "word": "Snooker",
+    "pron": "Snoo-ker",
+    "category": "Sports"
+  },
+  {
+    "word": "Walking",
+    "pron": "Wok-ing",
+    "category": "Sports"
+  },
+  {
+    "word": "Championship",
+    "pron": "Champ-ee-un-ship",
+    "category": "Sports"
+  },
+  {
+    "word": "Canoeing",
+    "pron": "Kuh-noo-ing",
+    "category": "Sports"
+  },
+  {
+    "word": "Refreshment",
+    "pron": "Ri-fresh-munt",
+    "category": "Sports"
+  },
+  {
+    "word": "Square",
+    "pron": "Skwair",
+    "category": "Shapes"
+  },
+  {
+    "word": "Rectangular",
+    "pron": "Rek-tang-gyuh-ler",
+    "category": "Shapes"
+  },
+  {
+    "word": "Triangular",
+    "pron": "Try-ang-gyuh-ler",
+    "category": "Shapes"
+  },
+  {
+    "word": "Polygon",
+    "pron": "Pol-ee-gon",
+    "category": "Shapes"
+  },
+  {
+    "word": "Oval",
+    "pron": "Oh-vuhl",
+    "category": "Shapes"
+  },
+  {
+    "word": "Spherical",
+    "pron": "Sfeer-i-kuhl",
+    "category": "Shapes"
+  },
+  {
+    "word": "Spiral",
+    "pron": "Spy-ruhl",
+    "category": "Shapes"
+  },
+  {
+    "word": "Circular",
+    "pron": "Sur-kyuh-ler",
+    "category": "Shapes"
+  },
+  {
+    "word": "Curved",
+    "pron": "Kurvd",
+    "category": "Shapes"
+  },
+  {
+    "word": "Cylindrical",
+    "pron": "Si-lin-dri-kuhl",
+    "category": "Shapes"
+  },
+  {
+    "word": "width",
+    "pron": "WIDTH",
+    "category": "Measurements"
+  },
+  {
+    "word": "length",
+    "pron": "LENGTH",
+    "category": "Measurements"
+  },
+  {
+    "word": "altitude",
+    "pron": "AL-ti-tood",
+    "category": "Measurements"
+  },
+  {
+    "word": "imperial system",
+    "pron": "im-PEER-ee-ul SIS-tem",
+    "category": "Measurements"
+  },
+  {
+    "word": "metric system",
+    "pron": "MET-rik SIS-tem",
+    "category": "Measurements"
+  },
+  {
+    "word": "mass",
+    "pron": "MAS",
+    "category": "Measurements"
+  },
+  {
+    "word": "depth",
+    "pron": "DEPTH",
+    "category": "Measurements"
+  },
+  {
+    "word": "breadth",
+    "pron": "BREDTH",
+    "category": "Measurements"
+  },
+  {
+    "word": "height",
+    "pron": "HITE",
+    "category": "Measurements"
+  },
+  {
+    "word": "three dimensions",
+    "pron": "THREE di-MEN-shunz",
+    "category": "Measurements"
+  },
+  {
+    "word": "frequency",
+    "pron": "FREE-kwun-see",
+    "category": "Measurements"
+  },
+  {
+    "word": "Cargo plane",
+    "pron": "Kar-goh playn",
+    "category": "Transportations"
+  },
+  {
+    "word": "Shipment",
+    "pron": "Ship-munt",
+    "category": "Transportations"
+  },
+  {
+    "word": "Container ship",
+    "pron": "Kun-tay-ner ship",
+    "category": "Transportations"
+  },
+  {
+    "word": "Boat",
+    "pron": "Boht",
+    "category": "Transportations"
+  },
+  {
+    "word": "Lifeboat",
+    "pron": "Lyf-boht",
+    "category": "Transportations"
+  },
+  {
+    "word": "Ferry",
+    "pron": "Fer-ee",
+    "category": "Transportations"
+  },
+  {
+    "word": "Hovercraft",
+    "pron": "Huv-er-kraft",
+    "category": "Transportations"
+  },
+  {
+    "word": "Hydrofoil",
+    "pron": "Hy-droh-foyl",
+    "category": "Transportations"
+  },
+  {
+    "word": "Liner",
+    "pron": "Ly-ner",
+    "category": "Transportations"
+  },
+  {
+    "word": "Canal boat",
+    "pron": "Kuh-nal boht",
+    "category": "Transportations"
+  },
+  {
+    "word": "Narrow boat",
+    "pron": "Nar-oh boht",
+    "category": "Transportations"
+  },
+  {
+    "word": "Dinghy sailing",
+    "pron": "Din-gee sayl-ing",
+    "category": "Transportations"
+  },
+  {
+    "word": "Sailboat",
+    "pron": "Sayl-boht",
+    "category": "Transportations"
+  },
+  {
+    "word": "Paddle steamer",
+    "pron": "Pad-ul stee-mer",
+    "category": "Transportations"
+  },
+  {
+    "word": "Cabin cruiser",
+    "pron": "Kab-in kroo-zer",
+    "category": "Transportations"
+  },
+  {
+    "word": "Rowing boat",
+    "pron": "Roh-ing boht",
+    "category": "Transportations"
+  },
+  {
+    "word": "Rowboat",
+    "pron": "Roh-boht",
+    "category": "Transportations"
+  },
+  {
+    "word": "Kayak",
+    "pron": "Ky-ak",
+    "category": "Transportations"
+  },
+  {
+    "word": "Canoe",
+    "pron": "Kuh-noo",
+    "category": "Transportations"
+  },
+  {
+    "word": "Punt",
+    "pron": "Punt",
+    "category": "Transportations"
+  },
+  {
+    "word": "Gondola",
+    "pron": "Gon-duh-luh",
+    "category": "Transportations"
+  },
+  {
+    "word": "Aircraft",
+    "pron": "Air-kraft",
+    "category": "Transportations"
+  },
+  {
+    "word": "Helicopter",
+    "pron": "Hel-i-kop-ter",
+    "category": "Transportations"
+  },
+  {
+    "word": "Seaplane",
+    "pron": "See-playn",
+    "category": "Transportations"
+  },
+  {
+    "word": "Airship",
+    "pron": "Air-ship",
+    "category": "Transportations"
+  },
+  {
+    "word": "Hot-air balloon",
+    "pron": "Hot-air buh-loon",
+    "category": "Transportations"
+  },
+  {
+    "word": "Humid",
+    "pron": "Hyoo-mid",
+    "category": "Weather"
+  },
+  {
+    "word": "Hot",
+    "pron": "Hot",
+    "category": "Weather"
+  },
+  {
+    "word": "Sticky",
+    "pron": "Stik-ee",
+    "category": "Weather"
+  },
+  {
+    "word": "Breeze",
+    "pron": "Breez",
+    "category": "Weather"
+  },
+  {
+    "word": "Chilly",
+    "pron": "Chil-ee",
+    "category": "Weather"
+  },
+  {
+    "word": "Cold",
+    "pron": "Kohld",
+    "category": "Weather"
+  },
+  {
+    "word": "Cool",
+    "pron": "Kool",
+    "category": "Weather"
+  },
+  {
+    "word": "Dry",
+    "pron": "Dry",
+    "category": "Weather"
+  },
+  {
+    "word": "Dusty",
+    "pron": "Dus-tee",
+    "category": "Weather"
+  },
+  {
+    "word": "Freezing",
+    "pron": "Free-zing",
+    "category": "Weather"
+  },
+  {
+    "word": "Warm",
+    "pron": "Worm",
+    "category": "Weather"
+  },
+  {
+    "word": "Wet",
+    "pron": "Wet",
+    "category": "Weather"
+  },
+  {
+    "word": "Weather forecast",
+    "pron": "Weth-er for-kast",
+    "category": "Weather"
+  },
+  {
+    "word": "Antenna",
+    "pron": "An-ten-uh",
+    "category": "Weather"
+  },
+  {
+    "word": "Moisture",
+    "pron": "Moys-cher",
+    "category": "Weather"
+  },
+  {
+    "word": "Local library",
+    "pron": "Loh-kul ly-brer-ee",
+    "category": "Places"
+  },
+  {
+    "word": "Swimming pool",
+    "pron": "Swim-ing pool",
+    "category": "Places"
+  },
+  {
+    "word": "Cafeteria",
+    "pron": "Kaf-uh-teer-ee-uh",
+    "category": "Places"
+  },
+  {
+    "word": "Cottage",
+    "pron": "Kot-ij",
+    "category": "Places"
+  },
+  {
+    "word": "Parliament",
+    "pron": "Par-luh-munt",
+    "category": "Places"
+  },
+  {
+    "word": "Restaurant",
+    "pron": "Res-tuh-rant",
+    "category": "Places"
+  },
+  {
+    "word": "Canteen",
+    "pron": "Kan-teen",
+    "category": "Places"
+  },
+  {
+    "word": "Caf",
+    "pron": "Ka-fay",
+    "category": "Places"
+  },
+  {
+    "word": "Bookshop",
+    "pron": "Book-shop",
+    "category": "Places"
+  },
+  {
+    "word": "Sports centre",
+    "pron": "Sports sen-ter",
+    "category": "Places"
+  },
+  {
+    "word": "City council",
+    "pron": "Sit-ee kown-sul",
+    "category": "Places"
+  },
+  {
+    "word": "Dance studio",
+    "pron": "Dans stoo-dee-oh",
+    "category": "Places"
+  },
+  {
+    "word": "Park",
+    "pron": "Park",
+    "category": "Places"
+  },
+  {
+    "word": "Conversation club",
+    "pron": "Kon-ver-say-shun klub",
+    "category": "Places"
+  },
+  {
+    "word": "Kindergarten",
+    "pron": "Kin-der-gar-ten",
+    "category": "Places"
+  },
+  {
+    "word": "Helmet",
+    "pron": "Hel-mit",
+    "category": "Equipment and Tools"
+  },
+  {
+    "word": "Light",
+    "pron": "Lyt",
+    "category": "Equipment and Tools"
+  },
+  {
+    "word": "Musical instrument",
+    "pron": "Myoo-zi-kul in-struh-ment",
+    "category": "Equipment and Tools"
+  },
+  {
+    "word": "Cassette",
+    "pron": "Ka-set",
+    "category": "Equipment and Tools"
+  },
+  {
+    "word": "Silicon chip",
+    "pron": "Sil-i-kon chip",
+    "category": "Equipment and Tools"
+  },
+  {
+    "word": "Digital monitor",
+    "pron": "Dij-i-tuhl mon-i-ter",
+    "category": "Equipment and Tools"
+  },
+  {
+    "word": "Gadget",
+    "pron": "Gaj-it",
+    "category": "Equipment and Tools"
+  },
+  {
+    "word": "Device",
+    "pron": "Di-vys",
+    "category": "Equipment and Tools"
+  },
+  {
+    "word": "Screen",
+    "pron": "Skreen",
+    "category": "Equipment and Tools"
+  },
+  {
+    "word": "Brakes",
+    "pron": "Brayk",
+    "category": "Equipment and Tools"
+  },
+  {
+    "word": "Wheels",
+    "pron": "Wheelz",
+    "category": "Equipment and Tools"
+  },
+  {
+    "word": "Mechanical pencil",
+    "pron": "Mi-kan-i-kul pen-suhl",
+    "category": "Equipment and Tools"
+  },
+  {
+    "word": "Disk",
+    "pron": "Disk",
+    "category": "Equipment and Tools"
+  },
+  {
+    "word": "Backpack",
+    "pron": "Bak-pak",
+    "category": "Equipment and Tools"
+  },
+  {
+    "word": "Opera",
+    "pron": "Op-ruh",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "Orchestra",
+    "pron": "Or-kuh-struh",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "Concert",
+    "pron": "Kon-sert",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "Symphony",
+    "pron": "Sim-fuh-nee",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "The press",
+    "pron": "Pres",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "Conductor",
+    "pron": "Kun-duk-ter",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "V ocalist",
+    "pron": "V oh-kuh-list",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "Audience",
+    "pron": "Aw-dee-uns",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "Festival",
+    "pron": "Fes-tuh-vuhl",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "Carnival",
+    "pron": "Kar-nuh-vuhl",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "Exhibition",
+    "pron": "Ek-suh-bish-un",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "Classical music",
+    "pron": "Klas-i-kuhl myoo-zik",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "Theatre",
+    "pron": "Thee-uh-ter",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "Cinema",
+    "pron": "Sin-uh-muh",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "Art gallery",
+    "pron": "Art gal-uh-ree",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "Museum",
+    "pron": "Myoo-zee-um",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "Ballet",
+    "pron": "Ba-lay",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "Television",
+    "pron": "Tel-uh-vizh-un",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "Radio",
+    "pron": "Ray-dee-oh",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "Graphics",
+    "pron": "Graf-iks",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "Newspaper",
+    "pron": "Nooz-pey-per",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "Fur",
+    "pron": "Fur",
+    "category": "Materials"
+  },
+  {
+    "word": "Metal",
+    "pron": "Met-uhl",
+    "category": "Materials"
+  },
+  {
+    "word": "Steel",
+    "pron": "Steel",
+    "category": "Materials"
+  },
+  {
+    "word": "Aluminum",
+    "pron": "Uh-loo-muh-num",
+    "category": "Materials"
+  },
+  {
+    "word": "Copper",
+    "pron": "Kop-er",
+    "category": "Materials"
+  },
+  {
+    "word": "Rubber",
+    "pron": "Rub-er",
+    "category": "Materials"
+  },
+  {
+    "word": "Plastic",
+    "pron": "Plas-tik",
+    "category": "Materials"
+  },
+  {
+    "word": "Ceramics",
+    "pron": "Suh-ram-iks",
+    "category": "Materials"
+  },
+  {
+    "word": "Glass",
+    "pron": "Glas",
+    "category": "Materials"
+  },
+  {
+    "word": "Cement",
+    "pron": "Suh-ment",
+    "category": "Materials"
+  },
+  {
+    "word": "Stone",
+    "pron": "Stohn",
+    "category": "Materials"
+  },
+  {
+    "word": "Textile",
+    "pron": "Teks-tyl",
+    "category": "Materials"
+  },
+  {
+    "word": "Cotton",
+    "pron": "Kot-n",
+    "category": "Materials"
+  },
+  {
+    "word": "Fabric",
+    "pron": "Fab-rik",
+    "category": "Materials"
+  },
+  {
+    "word": "Wool",
+    "pron": "Wool",
+    "category": "Materials"
+  },
+  {
+    "word": "Leather",
+    "pron": "Leth-er",
+    "category": "Materials"
+  },
+  {
+    "word": "Bone",
+    "pron": "Bohn",
+    "category": "Materials"
+  },
+  {
+    "word": "Paper",
+    "pron": "Pay-per",
+    "category": "Materials"
+  },
+  {
+    "word": "Lumber/wood",
+    "pron": "Lum-ber/wood",
+    "category": "Materials"
+  },
+  {
+    "word": "Glue",
+    "pron": "Gloo",
+    "category": "Materials"
+  },
+  {
+    "word": "Composite",
+    "pron": "Kuhm-poz-it",
+    "category": "Materials"
+  },
+  {
+    "word": "Fiberglass",
+    "pron": "Fy-ber-glas",
+    "category": "Materials"
+  },
+  {
+    "word": "Concrete",
+    "pron": "Kon-kreet",
+    "category": "Materials"
+  },
+  {
+    "word": "Wax",
+    "pron": "Waks",
+    "category": "Materials"
+  },
+  {
+    "word": "Silver",
+    "pron": "Sil-ver",
+    "category": "Materials"
+  },
+  {
+    "word": "Gold",
+    "pron": "Gohld",
+    "category": "Materials"
+  },
+  {
+    "word": "Feather",
+    "pron": "Feth-er",
+    "category": "Materials"
+  },
+  {
+    "word": "Occupation",
+    "pron": "Ok-yuh-pay-shun",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "Profession",
+    "pron": "Pruh-fesh-un",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "Designer",
+    "pron": "Di-zy-ner",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "Decorator",
+    "pron": "Dek-uh-ray-ter",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "Architect",
+    "pron": "Ar-ki-tekt",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "Engineer",
+    "pron": "En-juh-neer",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "Manager",
+    "pron": "Man-uh-jer",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "Waitress",
+    "pron": "Way-tris",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "Waiter",
+    "pron": "Way-ter",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "Teacher",
+    "pron": "Tee-cher",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "Vacancy",
+    "pron": "Vay-kuhn-see",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "Professor",
+    "pron": "Pruh-fes-er",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "Psychologist",
+    "pron": "Sy-kol-uh-jist",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "V olunteer",
+    "pron": "V ol-uhn-teer",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "Freelance",
+    "pron": "Free-lans",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "Secretary",
+    "pron": "Sek-ri-ter-ee",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "Craftsman",
+    "pron": "Krats-muhn",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "Work experience",
+    "pron": "Wurk ik-speer-ee-uns",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "Curriculum vitae",
+    "pron": "Kuh-rik-yuh-luhm vee-tay",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "Mail address",
+    "pron": "Mayl uh-dres",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "Receptionist",
+    "pron": "Ri-sep-shuh-nist",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "Pilot",
+    "pron": "Py-luht",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "Guard",
+    "pron": "Gard",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "Flight attendant",
+    "pron": "Flyt uh-ten-duhnt",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "Lecturer",
+    "pron": "Lek-cher-er",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "Office assistant",
+    "pron": "Aw-fis uh-sis-tuhnt",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "Clerk",
+    "pron": "Klurk",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "Accountant",
+    "pron": "Uh-koun-tuhnt",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "Cashier",
+    "pron": "Ka-sheer",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "Captain",
+    "pron": "Kap-tuhn",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "Blue",
+    "pron": "Bloo",
+    "category": "Colors"
+  },
+  {
+    "word": "White",
+    "pron": "Wyt",
+    "category": "Colors"
+  },
+  {
+    "word": "Orange",
+    "pron": "Or-inj",
+    "category": "Colors"
+  },
+  {
+    "word": "Green",
+    "pron": "Green",
+    "category": "Colors"
+  },
+  {
+    "word": "Grey",
+    "pron": "Gray",
+    "category": "Colors"
+  },
+  {
+    "word": "Black",
+    "pron": "Blak",
+    "category": "Colors"
+  },
+  {
+    "word": "Red",
+    "pron": "Red",
+    "category": "Colors"
+  },
+  {
+    "word": "Yellow",
+    "pron": "Yel-oh",
+    "category": "Colors"
+  },
+  {
+    "word": "Purple",
+    "pron": "Pur-pul",
+    "category": "Colors"
+  },
+  {
+    "word": "Brown",
+    "pron": "Brown",
+    "category": "Colors"
+  },
+  {
+    "word": "Pink",
+    "pron": "Pink",
+    "category": "Colors"
+  },
+  {
+    "word": "Three times",
+    "pron": "Three tymz",
+    "category": "Expressions and Time"
+  },
+  {
+    "word": "Three times per week",
+    "pron": "Three tymz per week",
+    "category": "Expressions and Time"
+  },
+  {
+    "word": "A gap year",
+    "pron": "Uh gap yeer",
+    "category": "Expressions and Time"
+  },
+  {
+    "word": "Part-time",
+    "pron": "Part tym",
+    "category": "Expressions and Time"
+  },
+  {
+    "word": "Midday",
+    "pron": "Mid-day",
+    "category": "Expressions and Time"
+  },
+  {
+    "word": "Midnight",
+    "pron": "Mid-nyt",
+    "category": "Expressions and Time"
+  },
+  {
+    "word": "Millennium",
+    "pron": "Mi-len-ee-um",
+    "category": "Expressions and Time"
+  },
+  {
+    "word": "Century",
+    "pron": "Sen-chuhr-ee",
+    "category": "Expressions and Time"
+  },
+  {
+    "word": "Decade",
+    "pron": "Dek-ayd",
+    "category": "Expressions and Time"
+  },
+  {
+    "word": "Fortnight",
+    "pron": "Fort-nyt",
+    "category": "Expressions and Time"
+  },
+  {
+    "word": "Passport photo",
+    "pron": "Pas-port foh-toh",
+    "category": "Other Terms"
+  },
+  {
+    "word": "State",
+    "pron": "Stayt",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Government",
+    "pron": "Guv-ern-ment",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Individual",
+    "pron": "In-di-vij-oo-ul",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Variety",
+    "pron": "Vuh-ry-i-tee",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Private sector",
+    "pron": "Pry-vit sek-ter",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Practice",
+    "pron": "Prak-tis",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Gender",
+    "pron": "Jen-der",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Creativity",
+    "pron": "Kree-ay-tiv-i-tee",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Original inhabitant",
+    "pron": "Uh-rij-uh-nul in-hab-i-tunt",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Indigenous",
+    "pron": "In-dij-uh-nus",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Demonstration",
+    "pron": "Dem-un-stray-shun",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Strike",
+    "pron": "Stryk",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Entrance",
+    "pron": "En-trunss",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Circuit",
+    "pron": "Sur-kit",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Guarantee",
+    "pron": "Gar-un-tee",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Dialog",
+    "pron": "Dy-uh-log",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Commerce",
+    "pron": "Kom-ers",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Carriage",
+    "pron": "Kar-ij",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Narrative",
+    "pron": "Nar-uh-tiv",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Chocolate",
+    "pron": "Chok-lit",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Satellite",
+    "pron": "Sat-uh-lyt",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Decision",
+    "pron": "Di-sizh-un",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Prototype",
+    "pron": "Proh-tuh-typ",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Attitude",
+    "pron": "At-i-tood",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Daily routine",
+    "pron": "Day-lee roo-teen",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Personal fulfillment",
+    "pron": "Per-sun-ul ful-fil-ment",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Activity",
+    "pron": "Ak-tiv-i-tee",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Recipient",
+    "pron": "Ri-sip-ee-unt",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Ultrasound",
+    "pron": "Ul-truh-sownd",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Pedestrian safety",
+    "pron": "Pe-des-tree-uhn sayf-tee",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Traffic jams",
+    "pron": "Traf-ik jamz",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Procedures",
+    "pron": "Pruh-see-jers",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Creation",
+    "pron": "Kree-ay-shun",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Prize",
+    "pron": "Pryz",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Junior",
+    "pron": "Joon-yer",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Senior",
+    "pron": "Seen-yer",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Opportunity",
+    "pron": "Op-er-too-ni-tee",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Driving license",
+    "pron": "Dry-ving ly-suns",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Process",
+    "pron": "Pros-es",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Literary",
+    "pron": "Lit-uh-rer-ee",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Man-made",
+    "pron": "Man-mayd",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Republicans",
+    "pron": "Ri-pub-li-kunz",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Umbrella",
+    "pron": "Um-brel-uh",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Frequently updated",
+    "pron": "Free-kwent-lee up-day-tid",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Waiting list",
+    "pron": "Wayt-ing list",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Sewer systems",
+    "pron": "Soo-er sis-tumz",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Liberal democracy",
+    "pron": "Lib-er-ul di-mok-ruh-see",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Democrats",
+    "pron": "Dem-uh-krats",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Lunar calendar",
+    "pron": "Loo-ner kal-un-der",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Libertarian",
+    "pron": "Lib-er-tair-ee-un",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Burger",
+    "pron": "Bur-ger",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Videos",
+    "pron": "Vid-ee-ohz",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Nature conservation",
+    "pron": "Nay-cher kon-ser-vay-shun",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Life expectancy",
+    "pron": "Lyf ik-spek-tun-see",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Fund-raising event",
+    "pron": "Fund-ray-zing i-vent",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Magnet",
+    "pron": "Mag-nit",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Dialect",
+    "pron": "Dy-uh-lekt",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Ramification",
+    "pron": "Ram-uh-fi-kay-shun",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Straight",
+    "pron": "Strayt",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Farewell",
+    "pron": "Fair-wel",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Welfare",
+    "pron": "Wel-fair",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Encyclopedia",
+    "pron": "En-sy-kluh-pee-dee-uh",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Evolution",
+    "pron": "Ev-uh-loo-shun",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Revolution",
+    "pron": "Rev-uh-loo-shun",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Illiteracy",
+    "pron": "Il-lit-er-uh-see",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Robot",
+    "pron": "Roh-bot",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Proficiency",
+    "pron": "Pruh-fish-un-see",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Sufficient",
+    "pron": "Suh-fish-unt",
+    "category": "Other Terms"
+  },
+  {
+    "word": "Maintenance",
+    "pron": "MAYN-tuh-nuns",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Committee",
+    "pron": "kuh-MIT-ee",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Separate",
+    "pron": "SEP-uh-rut",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Embarrassment",
+    "pron": "im-BAR-us-munt",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Bureaucracy",
+    "pron": "byoo-ROK-ruh-see",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Exaggerate",
+    "pron": "ig-ZAJ-uh-rayt",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Privilege",
+    "pron": "PRIV-uh-lij",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Receipt",
+    "pron": "ri-SEET",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Entrepreneur",
+    "pron": "on-truh-pruh-NUR",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Fahrenheit",
+    "pron": "FAR-un-hyt",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Miniature",
+    "pron": "MIN-uh-chur",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Miscellaneous",
+    "pron": "mis-uh-LAY-nee-us",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Occasionally",
+    "pron": "uh-KAY-zhuh-nul-ee",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Occurrence",
+    "pron": "uh-KUR-uns",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Perseverance",
+    "pron": "pur-suh-VEER-uns",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Phenomenon",
+    "pron": "fi-NOM-uh-non",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Pronunciation",
+    "pron": "pruh-nun-see-AY-shun",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Recommend",
+    "pron": "rek-uh-MEND",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Twelfth",
+    "pron": "TWELFTH",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Vacuum",
+    "pron": "VAK-yoom",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Liaison",
+    "pron": "lee-AY-zon",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Conscientious",
+    "pron": "kon-shee-EN-shus",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Calendar",
+    "pron": "KAL-un-dur",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Definite",
+    "pron": "DEF-uh-nit",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Discipline",
+    "pron": "DIS-uh-plin",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Existence",
+    "pron": "ig-ZIS-tuns",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Independent",
+    "pron": "in-di-PEN-dunt",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Leisure",
+    "pron": "LEZH-ur",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Neighbour",
+    "pron": "NAY-bur",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Noticeable",
+    "pron": "NOH-tis-uh-bul",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Parallel",
+    "pron": "PAR-uh-lel",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Possession",
+    "pron": "puh-ZESH-un",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Professional",
+    "pron": "pruh-FESH-un-ul",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Relevant",
+    "pron": "REL-uh-vunt",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Sincerity",
+    "pron": "sin-SER-i-tee",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Tomorrow",
+    "pron": "tuh-MOR-oh",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Vehicle",
+    "pron": "VEE-i-kul",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Rhythm",
+    "pron": "RITH-um",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Cemetery",
+    "pron": "SEM-uh-ter-ee",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Fluorescent",
+    "pron": "floo-RES-unt",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Hygiene",
+    "pron": "HY-jeen",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Immediate",
+    "pron": "i-MEE-dee-ut",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Itinerary",
+    "pron": "eye-TIN-uh-rer-ee",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Brochure",
+    "pron": "BROH-shur",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Curriculum",
+    "pron": "kuh-RIK-yuh-lum",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Prerequisite",
+    "pron": "pree-REK-wih-zit",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Refurbishment",
+    "pron": "ree-FUR-bish-munt",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Auditorium",
+    "pron": "aw-dih-TOR-ee-um",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Veterinary",
+    "pron": "VET-er-ih-ner-ee",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Definitely",
+    "pron": "DEF-uh-nit-lee",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Personnel",
+    "pron": "pur-suh-NEL",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Queue",
+    "pron": "KYOO",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Tuition",
+    "pron": "tyoo-ISH-un",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Scholarship",
+    "pron": "SKOL-er-ship",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Bibliography",
+    "pron": "bib-lee-OG-ruh-fee",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Plagiarism",
+    "pron": "PLAY-juh-riz-um",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Hypothesis",
+    "pron": "hy-POTH-uh-sis",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Methodology",
+    "pron": "meth-uh-DOL-uh-jee",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Demographics",
+    "pron": "dem-uh-GRAF-iks",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Sustainability",
+    "pron": "suh-stay-nuh-BIL-uh-tee",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Biodiversity",
+    "pron": "by-oh-dy-VUR-sih-tee",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Infrastructure",
+    "pron": "IN-fruh-struk-chur",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Municipality",
+    "pron": "myoo-nis-ih-PAL-uh-tee",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Pedestrian",
+    "pron": "puh-DES-tree-un",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Commuter",
+    "pron": "kuh-MYOO-ter",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Chauffeur",
+    "pron": "SHOH-fer",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "Rendezvous",
+    "pron": "RON-day-voo",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "programme",
+    "pron": "PROH-gram",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "centre",
+    "pron": "SEN-ter",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "harbour",
+    "pron": "HAR-ber",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "behaviour",
+    "pron": "bih-HAYV-yer",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "cancelled",
+    "pron": "KAN-seld",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "traveller",
+    "pron": "TRAV-uh-ler",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "jewellery",
+    "pron": "JOO-ul-ree",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "catalogue",
+    "pron": "KAT-uh-log",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "dialogue",
+    "pron": "DY-uh-log",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "counsellor",
+    "pron": "KOWN-suh-ler",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "enrolment",
+    "pron": "en-ROHL-ment",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "instalment",
+    "pron": "in-STAWL-ment",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "fulfil",
+    "pron": "ful-FIL",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "skilful",
+    "pron": "SKIL-ful",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "aluminium",
+    "pron": "al-yoo-MIN-ee-um",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "manoeuvre",
+    "pron": "muh-NOO-ver",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "medieval",
+    "pron": "med-ee-EE-vul",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "paediatrician",
+    "pron": "pee-dee-uh-TRISH-un",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "yacht",
+    "pron": "YOT",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "pneumonia",
+    "pron": "nyoo-MOH-nee-uh",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "silhouette",
+    "pron": "sil-oo-ET",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "bouquet",
+    "pron": "boo-KAY",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "etiquette",
+    "pron": "ET-ih-ket",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "bureau",
+    "pron": "BYOOR-oh",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "plateau",
+    "pron": "PLAT-oh",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "chateau",
+    "pron": "SHAT-oh",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "camouflage",
+    "pron": "KAM-uh-flahzh",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "conscience",
+    "pron": "KON-shens",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "conscious",
+    "pron": "KON-shus",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "consensus",
+    "pron": "kun-SEN-sus",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "correspondence",
+    "pron": "kor-uh-SPON-dens",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "handkerchief",
+    "pron": "HANG-ker-chif",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "mischievous",
+    "pron": "MIS-chih-vus",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "rhetoric",
+    "pron": "RET-uh-rik",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "scissors",
+    "pron": "SIZ-erz",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "sophomore",
+    "pron": "SOF-uh-mor",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "threshold",
+    "pron": "THRESH-ohld",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "unanimous",
+    "pron": "yoo-NAN-ih-mus",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "weird",
+    "pron": "WEERD",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "wrestle",
+    "pron": "RES-ul",
+    "category": "IELTS High-Trap Spellings"
+  },
+  {
+    "word": "orientation",
+    "pron": "or-ee-en-TAY-shun",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "extracurricular",
+    "pron": "ek-struh-kuh-RIK-yoo-ler",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "postgraduate",
+    "pron": "pohst-GRAJ-oo-ut",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "undergraduate",
+    "pron": "un-der-GRAJ-oo-ut",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "symposium",
+    "pron": "sim-POH-zee-um",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "semester",
+    "pron": "sih-MES-ter",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "timetable",
+    "pron": "TYM-tay-bul",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "syllabus",
+    "pron": "SIL-uh-bus",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "tutorial",
+    "pron": "tyoo-TOR-ee-ul",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "seminar",
+    "pron": "SEM-ih-nar",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "assignment",
+    "pron": "uh-SYN-ment",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "chancellor",
+    "pron": "CHAN-suh-ler",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "laboratory",
+    "pron": "luh-BOR-uh-tree",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "microscope",
+    "pron": "MY-kruh-skohp",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "observation",
+    "pron": "ob-zer-VAY-shun",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "appendix",
+    "pron": "uh-PEN-diks",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "abstract",
+    "pron": "AB-strakt",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "citation",
+    "pron": "sy-TAY-shun",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "journal",
+    "pron": "JER-nul",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "archive",
+    "pron": "AR-kyv",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "enrollment",
+    "pron": "en-ROHL-ment",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "graduation",
+    "pron": "graj-oo-AY-shun",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "fellowship",
+    "pron": "FEL-oh-ship",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "prospectus",
+    "pron": "pruh-SPEK-tus",
+    "category": "Studying at College/University"
+  },
+  {
+    "word": "commission",
+    "pron": "kuh-MISH-un",
+    "category": "Money Matters"
+  },
+  {
+    "word": "reimbursement",
+    "pron": "ree-im-BERS-ment",
+    "category": "Money Matters"
+  },
+  {
+    "word": "invoice",
+    "pron": "IN-voys",
+    "category": "Money Matters"
+  },
+  {
+    "word": "expenditure",
+    "pron": "ik-SPEN-dih-cher",
+    "category": "Money Matters"
+  },
+  {
+    "word": "withdrawal",
+    "pron": "with-DRAW-ul",
+    "category": "Money Matters"
+  },
+  {
+    "word": "overdraft",
+    "pron": "OH-ver-drahft",
+    "category": "Money Matters"
+  },
+  {
+    "word": "subsidy",
+    "pron": "SUB-sih-dee",
+    "category": "Money Matters"
+  },
+  {
+    "word": "tariff",
+    "pron": "TAR-if",
+    "category": "Money Matters"
+  },
+  {
+    "word": "inflation",
+    "pron": "in-FLAY-shun",
+    "category": "Money Matters"
+  },
+  {
+    "word": "recession",
+    "pron": "rih-SESH-un",
+    "category": "Money Matters"
+  },
+  {
+    "word": "currency",
+    "pron": "KUR-en-see",
+    "category": "Money Matters"
+  },
+  {
+    "word": "compensation",
+    "pron": "kom-pen-SAY-shun",
+    "category": "Money Matters"
+  },
+  {
+    "word": "deduction",
+    "pron": "dih-DUK-shun",
+    "category": "Money Matters"
+  },
+  {
+    "word": "exemption",
+    "pron": "ig-ZEMP-shun",
+    "category": "Money Matters"
+  },
+  {
+    "word": "instalments",
+    "pron": "in-STAWL-ments",
+    "category": "Money Matters"
+  },
+  {
+    "word": "pension",
+    "pron": "PEN-shun",
+    "category": "Money Matters"
+  },
+  {
+    "word": "revenue",
+    "pron": "REV-uh-nyoo",
+    "category": "Money Matters"
+  },
+  {
+    "word": "sponsorship",
+    "pron": "SPON-ser-ship",
+    "category": "Money Matters"
+  },
+  {
+    "word": "subscription",
+    "pron": "sub-SKRIP-shun",
+    "category": "Money Matters"
+  },
+  {
+    "word": "transaction",
+    "pron": "tran-ZAK-shun",
+    "category": "Money Matters"
+  },
+  {
+    "word": "valuation",
+    "pron": "val-yoo-AY-shun",
+    "category": "Money Matters"
+  },
+  {
+    "word": "warranty",
+    "pron": "WOR-un-tee",
+    "category": "Money Matters"
+  },
+  {
+    "word": "physiotherapy",
+    "pron": "fiz-ee-oh-THER-uh-pee",
+    "category": "Health"
+  },
+  {
+    "word": "nutritionist",
+    "pron": "nyoo-TRISH-uh-nist",
+    "category": "Health"
+  },
+  {
+    "word": "prescription",
+    "pron": "prih-SKRIP-shun",
+    "category": "Health"
+  },
+  {
+    "word": "vaccination",
+    "pron": "vak-sih-NAY-shun",
+    "category": "Health"
+  },
+  {
+    "word": "symptoms",
+    "pron": "SIMP-tumz",
+    "category": "Health"
+  },
+  {
+    "word": "allergy",
+    "pron": "AL-er-jee",
+    "category": "Health"
+  },
+  {
+    "word": "pharmacy",
+    "pron": "FAR-muh-see",
+    "category": "Health"
+  },
+  {
+    "word": "optician",
+    "pron": "op-TISH-un",
+    "category": "Health"
+  },
+  {
+    "word": "orthopaedic",
+    "pron": "or-thuh-PEE-dik",
+    "category": "Health"
+  },
+  {
+    "word": "ambulance",
+    "pron": "AM-byoo-luns",
+    "category": "Health"
+  },
+  {
+    "word": "emergency",
+    "pron": "ih-MER-jun-see",
+    "category": "Health"
+  },
+  {
+    "word": "cholesterol",
+    "pron": "kuh-LES-tuh-rol",
+    "category": "Health"
+  },
+  {
+    "word": "carbohydrate",
+    "pron": "kar-boh-HY-drayt",
+    "category": "Health"
+  },
+  {
+    "word": "deficiency",
+    "pron": "dih-FISH-en-see",
+    "category": "Health"
+  },
+  {
+    "word": "metabolism",
+    "pron": "muh-TAB-uh-liz-um",
+    "category": "Health"
+  },
+  {
+    "word": "dehydration",
+    "pron": "dee-hy-DRAY-shun",
+    "category": "Health"
+  },
+  {
+    "word": "sanitation",
+    "pron": "san-ih-TAY-shun",
+    "category": "Health"
+  },
+  {
+    "word": "rehabilitation",
+    "pron": "ree-uh-bil-ih-TAY-shun",
+    "category": "Health"
+  },
+  {
+    "word": "diagnosis",
+    "pron": "dy-ug-NOH-sis",
+    "category": "Health"
+  },
+  {
+    "word": "antibiotic",
+    "pron": "an-tee-by-OT-ik",
+    "category": "Health"
+  },
+  {
+    "word": "immunisation",
+    "pron": "im-yoo-ny-ZAY-shun",
+    "category": "Health"
+  },
+  {
+    "word": "asthma",
+    "pron": "AS-muh",
+    "category": "Health"
+  },
+  {
+    "word": "migraine",
+    "pron": "MY-grayn",
+    "category": "Health"
+  },
+  {
+    "word": "insomnia",
+    "pron": "in-SOM-nee-uh",
+    "category": "Health"
+  },
+  {
+    "word": "fatigue",
+    "pron": "fuh-TEEG",
+    "category": "Health"
+  },
+  {
+    "word": "ecosystem",
+    "pron": "EE-koh-sis-tum",
+    "category": "The Environment"
+  },
+  {
+    "word": "sustainable",
+    "pron": "suh-STAY-nuh-bul",
+    "category": "The Environment"
+  },
+  {
+    "word": "geothermal",
+    "pron": "jee-oh-THER-mul",
+    "category": "The Environment"
+  },
+  {
+    "word": "hydroelectric",
+    "pron": "hy-droh-ih-LEK-trik",
+    "category": "The Environment"
+  },
+  {
+    "word": "contamination",
+    "pron": "kun-tam-ih-NAY-shun",
+    "category": "The Environment"
+  },
+  {
+    "word": "conservation",
+    "pron": "kon-ser-VAY-shun",
+    "category": "The Environment"
+  },
+  {
+    "word": "extinction",
+    "pron": "ik-STINGK-shun",
+    "category": "The Environment"
+  },
+  {
+    "word": "emissions",
+    "pron": "ih-MISH-unz",
+    "category": "The Environment"
+  },
+  {
+    "word": "composting",
+    "pron": "KOM-post-ing",
+    "category": "The Environment"
+  },
+  {
+    "word": "incineration",
+    "pron": "in-sin-er-AY-shun",
+    "category": "The Environment"
+  },
+  {
+    "word": "irrigation",
+    "pron": "ir-ih-GAY-shun",
+    "category": "The Environment"
+  },
+  {
+    "word": "fertiliser",
+    "pron": "FER-tih-ly-zer",
+    "category": "The Environment"
+  },
+  {
+    "word": "pesticide",
+    "pron": "PES-tih-syd",
+    "category": "The Environment"
+  },
+  {
+    "word": "reservoir",
+    "pron": "REZ-er-vwar",
+    "category": "The Environment"
+  },
+  {
+    "word": "sanctuary",
+    "pron": "SANGK-choo-er-ee",
+    "category": "The Environment"
+  },
+  {
+    "word": "atmosphere",
+    "pron": "AT-mus-feer",
+    "category": "The Environment"
+  },
+  {
+    "word": "carbon footprint",
+    "pron": "KAR-bun FOOT-print",
+    "category": "The Environment"
+  },
+  {
+    "word": "solar panel",
+    "pron": "SOH-ler PAN-ul",
+    "category": "The Environment"
+  },
+  {
+    "word": "desalination",
+    "pron": "dee-sal-ih-NAY-shun",
+    "category": "The Environment"
+  },
+  {
+    "word": "biodegradable",
+    "pron": "by-oh-dih-GRAY-duh-bul",
+    "category": "The Environment"
+  },
+  {
+    "word": "photosynthesis",
+    "pron": "foh-toh-SIN-thuh-sis",
+    "category": "Plants"
+  },
+  {
+    "word": "chlorophyll",
+    "pron": "KLOR-uh-fil",
+    "category": "Plants"
+  },
+  {
+    "word": "germination",
+    "pron": "jer-mih-NAY-shun",
+    "category": "Plants"
+  },
+  {
+    "word": "pollination",
+    "pron": "pol-ih-NAY-shun",
+    "category": "Plants"
+  },
+  {
+    "word": "deciduous",
+    "pron": "dih-SID-yoo-us",
+    "category": "Plants"
+  },
+  {
+    "word": "evergreen",
+    "pron": "EV-er-green",
+    "category": "Plants"
+  },
+  {
+    "word": "botanical",
+    "pron": "buh-TAN-ih-kul",
+    "category": "Plants"
+  },
+  {
+    "word": "horticulture",
+    "pron": "HOR-tih-kul-cher",
+    "category": "Plants"
+  },
+  {
+    "word": "hibernation",
+    "pron": "hy-ber-NAY-shun",
+    "category": "The Animal Kingdom"
+  },
+  {
+    "word": "nocturnal",
+    "pron": "nok-TER-nul",
+    "category": "The Animal Kingdom"
+  },
+  {
+    "word": "invertebrate",
+    "pron": "in-VER-tuh-brut",
+    "category": "The Animal Kingdom"
+  },
+  {
+    "word": "predator",
+    "pron": "PRED-uh-ter",
+    "category": "The Animal Kingdom"
+  },
+  {
+    "word": "migration",
+    "pron": "my-GRAY-shun",
+    "category": "The Animal Kingdom"
+  },
+  {
+    "word": "crustacean",
+    "pron": "krus-TAY-shun",
+    "category": "The Animal Kingdom"
+  },
+  {
+    "word": "marsupial",
+    "pron": "mar-SOO-pee-ul",
+    "category": "The Animal Kingdom"
+  },
+  {
+    "word": "archipelago",
+    "pron": "ar-kih-PEL-uh-goh",
+    "category": "Nature"
+  },
+  {
+    "word": "glacier",
+    "pron": "GLAY-sher",
+    "category": "Nature"
+  },
+  {
+    "word": "hemisphere",
+    "pron": "HEM-ih-sfeer",
+    "category": "Nature"
+  },
+  {
+    "word": "latitude",
+    "pron": "LAT-ih-tyood",
+    "category": "Nature"
+  },
+  {
+    "word": "longitude",
+    "pron": "LON-jih-tyood",
+    "category": "Nature"
+  },
+  {
+    "word": "estuary",
+    "pron": "ES-tyoo-er-ee",
+    "category": "Nature"
+  },
+  {
+    "word": "wetlands",
+    "pron": "WET-landz",
+    "category": "Nature"
+  },
+  {
+    "word": "precipitation",
+    "pron": "prih-sip-ih-TAY-shun",
+    "category": "Weather"
+  },
+  {
+    "word": "evaporation",
+    "pron": "ih-vap-uh-RAY-shun",
+    "category": "Weather"
+  },
+  {
+    "word": "condensation",
+    "pron": "kon-den-SAY-shun",
+    "category": "Weather"
+  },
+  {
+    "word": "humidity",
+    "pron": "hyoo-MID-ih-tee",
+    "category": "Weather"
+  },
+  {
+    "word": "thermometer",
+    "pron": "ther-MOM-ih-ter",
+    "category": "Weather"
+  },
+  {
+    "word": "barometer",
+    "pron": "buh-ROM-ih-ter",
+    "category": "Weather"
+  },
+  {
+    "word": "monsoon",
+    "pron": "mon-SOON",
+    "category": "Weather"
+  },
+  {
+    "word": "blizzard",
+    "pron": "BLIZ-erd",
+    "category": "Weather"
+  },
+  {
+    "word": "thunderstorm",
+    "pron": "THUN-der-storm",
+    "category": "Weather"
+  },
+  {
+    "word": "excavation",
+    "pron": "eks-kuh-VAY-shun",
+    "category": "Architecture and Buildings"
+  },
+  {
+    "word": "cathedral",
+    "pron": "kuh-THEE-drul",
+    "category": "Architecture and Buildings"
+  },
+  {
+    "word": "renovation",
+    "pron": "ren-uh-VAY-shun",
+    "category": "Architecture and Buildings"
+  },
+  {
+    "word": "ventilation",
+    "pron": "ven-tih-LAY-shun",
+    "category": "Architecture and Buildings"
+  },
+  {
+    "word": "insulation",
+    "pron": "in-syoo-LAY-shun",
+    "category": "Architecture and Buildings"
+  },
+  {
+    "word": "monument",
+    "pron": "MON-yoo-ment",
+    "category": "Architecture and Buildings"
+  },
+  {
+    "word": "conservatory",
+    "pron": "kun-SER-vuh-tree",
+    "category": "Homes"
+  },
+  {
+    "word": "upholstery",
+    "pron": "up-HOHL-stuh-ree",
+    "category": "Homes"
+  },
+  {
+    "word": "dishwasher",
+    "pron": "DISH-wosh-er",
+    "category": "Homes"
+  },
+  {
+    "word": "detergent",
+    "pron": "dih-TER-junt",
+    "category": "Homes"
+  },
+  {
+    "word": "plumbing",
+    "pron": "PLUM-ing",
+    "category": "Homes"
+  },
+  {
+    "word": "carpentry",
+    "pron": "KAR-pen-tree",
+    "category": "Homes"
+  },
+  {
+    "word": "courtyard",
+    "pron": "KORT-yard",
+    "category": "Homes"
+  },
+  {
+    "word": "corridor",
+    "pron": "KOR-ih-dor",
+    "category": "Homes"
+  },
+  {
+    "word": "veranda",
+    "pron": "vuh-RAN-duh",
+    "category": "Homes"
+  },
+  {
+    "word": "roundabout",
+    "pron": "ROWND-uh-bowt",
+    "category": "Transportations"
+  },
+  {
+    "word": "intersection",
+    "pron": "in-ter-SEK-shun",
+    "category": "Transportations"
+  },
+  {
+    "word": "pavement",
+    "pron": "PAYV-ment",
+    "category": "Transportations"
+  },
+  {
+    "word": "motorway",
+    "pron": "MOH-ter-way",
+    "category": "Transportations"
+  },
+  {
+    "word": "carriageway",
+    "pron": "KAR-ij-way",
+    "category": "Transportations"
+  },
+  {
+    "word": "passenger",
+    "pron": "PAS-un-jer",
+    "category": "Transportations"
+  },
+  {
+    "word": "departure",
+    "pron": "dih-PAR-cher",
+    "category": "Transportations"
+  },
+  {
+    "word": "arrival",
+    "pron": "uh-RY-vul",
+    "category": "Transportations"
+  },
+  {
+    "word": "tramway",
+    "pron": "TRAM-way",
+    "category": "Transportations"
+  },
+  {
+    "word": "luggage",
+    "pron": "LUG-ij",
+    "category": "Tour"
+  },
+  {
+    "word": "baggage",
+    "pron": "BAG-ij",
+    "category": "Tour"
+  },
+  {
+    "word": "customs",
+    "pron": "KUS-tumz",
+    "category": "Tour"
+  },
+  {
+    "word": "immigration",
+    "pron": "im-ih-GRAY-shun",
+    "category": "Tour"
+  },
+  {
+    "word": "passport",
+    "pron": "PAHS-port",
+    "category": "Tour"
+  },
+  {
+    "word": "excursion",
+    "pron": "ik-SKER-zhun",
+    "category": "Tour"
+  },
+  {
+    "word": "sightseeing",
+    "pron": "SYT-see-ing",
+    "category": "Tour"
+  },
+  {
+    "word": "cancellation",
+    "pron": "kan-suh-LAY-shun",
+    "category": "Tour"
+  },
+  {
+    "word": "volleyball",
+    "pron": "VOL-ee-bawl",
+    "category": "Sports"
+  },
+  {
+    "word": "athletics",
+    "pron": "ath-LET-iks",
+    "category": "Sports"
+  },
+  {
+    "word": "tournament",
+    "pron": "TOOR-nuh-ment",
+    "category": "Sports"
+  },
+  {
+    "word": "referee",
+    "pron": "ref-uh-REE",
+    "category": "Sports"
+  },
+  {
+    "word": "kayaking",
+    "pron": "KY-ak-ing",
+    "category": "Sports"
+  },
+  {
+    "word": "fencing",
+    "pron": "FEN-sing",
+    "category": "Sports"
+  },
+  {
+    "word": "triathlon",
+    "pron": "try-ATH-lon",
+    "category": "Sports"
+  },
+  {
+    "word": "marathon",
+    "pron": "MAR-uh-thon",
+    "category": "Sports"
+  },
+  {
+    "word": "spectator",
+    "pron": "spek-TAY-ter",
+    "category": "Sports"
+  },
+  {
+    "word": "calligraphy",
+    "pron": "kuh-LIG-ruh-fee",
+    "category": "Hobbies"
+  },
+  {
+    "word": "origami",
+    "pron": "or-ih-GAH-mee",
+    "category": "Hobbies"
+  },
+  {
+    "word": "rehearsal",
+    "pron": "rih-HER-sul",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "audition",
+    "pron": "aw-DISH-un",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "documentary",
+    "pron": "dok-yoo-MEN-tree",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "journalism",
+    "pron": "JER-nuh-liz-um",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "editorial",
+    "pron": "ed-ih-TOR-ee-ul",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "circulation",
+    "pron": "ser-kyoo-LAY-shun",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "anonymous",
+    "pron": "uh-NON-ih-mus",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "pseudonym",
+    "pron": "SYOO-duh-nim",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "copyright",
+    "pron": "KOP-ee-ryt",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "manuscript",
+    "pron": "MAN-yoo-skript",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "illustration",
+    "pron": "il-uh-STRAY-shun",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "broadcasting",
+    "pron": "BRAWD-kahs-ting",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "choreography",
+    "pron": "kor-ee-OG-ruh-fee",
+    "category": "The Arts and Media"
+  },
+  {
+    "word": "technician",
+    "pron": "tek-NISH-un",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "electrician",
+    "pron": "ih-lek-TRISH-un",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "plumber",
+    "pron": "PLUM-er",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "carpenter",
+    "pron": "KAR-pen-ter",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "pharmacist",
+    "pron": "FAR-muh-sist",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "veterinarian",
+    "pron": "vet-er-ih-NAIR-ee-un",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "librarian",
+    "pron": "ly-BRAIR-ee-un",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "apprentice",
+    "pron": "uh-PREN-tis",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "volunteer",
+    "pron": "vol-un-TEER",
+    "category": "Works and Jobs"
+  },
+  {
+    "word": "headquarters",
+    "pron": "HED-kwor-terz",
+    "category": "Workplaces"
+  },
+  {
+    "word": "warehouse",
+    "pron": "WAIR-hows",
+    "category": "Workplaces"
+  },
+  {
+    "word": "conference",
+    "pron": "KON-fer-ens",
+    "category": "Workplaces"
+  },
+  {
+    "word": "negotiation",
+    "pron": "nih-goh-shee-AY-shun",
+    "category": "Marketing"
+  },
+  {
+    "word": "advertisement",
+    "pron": "ad-VER-tis-ment",
+    "category": "Marketing"
+  },
+  {
+    "word": "commercial",
+    "pron": "kuh-MER-shul",
+    "category": "Marketing"
+  },
+  {
+    "word": "wholesale",
+    "pron": "HOHL-sayl",
+    "category": "Marketing"
+  },
+  {
+    "word": "retail",
+    "pron": "REE-tayl",
+    "category": "Marketing"
+  },
+  {
+    "word": "manufacturer",
+    "pron": "man-yoo-FAK-cher-er",
+    "category": "Marketing"
+  },
+  {
+    "word": "consumer",
+    "pron": "kun-SYOO-mer",
+    "category": "Marketing"
+  },
+  {
+    "word": "demographic",
+    "pron": "dem-uh-GRAF-ik",
+    "category": "Marketing"
+  },
+  {
+    "word": "campaign",
+    "pron": "kam-PAYN",
+    "category": "Marketing"
+  },
+  {
+    "word": "calculator",
+    "pron": "KAL-kyoo-lay-ter",
+    "category": "Equipment and Tools"
+  },
+  {
+    "word": "binoculars",
+    "pron": "bih-NOK-yoo-lerz",
+    "category": "Equipment and Tools"
+  },
+  {
+    "word": "compass",
+    "pron": "KUM-pus",
+    "category": "Equipment and Tools"
+  },
+  {
+    "word": "wheelbarrow",
+    "pron": "WEEL-bar-oh",
+    "category": "Equipment and Tools"
+  },
+  {
+    "word": "screwdriver",
+    "pron": "SKROO-dry-ver",
+    "category": "Equipment and Tools"
+  },
+  {
+    "word": "flashlight",
+    "pron": "FLASH-lyt",
+    "category": "Equipment and Tools"
+  },
+  {
+    "word": "stainless steel",
+    "pron": "STAYN-lus STEEL",
+    "category": "Materials"
+  },
+  {
+    "word": "fibreglass",
+    "pron": "FY-ber-glahs",
+    "category": "Materials"
+  },
+  {
+    "word": "polyethylene",
+    "pron": "pol-ee-ETH-ih-leen",
+    "category": "Materials"
+  },
+  {
+    "word": "porcelain",
+    "pron": "POR-suh-lin",
+    "category": "Materials"
+  },
+  {
+    "word": "bamboo",
+    "pron": "bam-BOO",
+    "category": "Materials"
+  },
+  {
+    "word": "mahogany",
+    "pron": "muh-HOG-uh-nee",
+    "category": "Materials"
+  },
+  {
+    "word": "kilometre",
+    "pron": "kih-LOM-ih-ter",
+    "category": "Measurements"
+  },
+  {
+    "word": "centimetre",
+    "pron": "SEN-tih-mee-ter",
+    "category": "Measurements"
+  },
+  {
+    "word": "millimetre",
+    "pron": "MIL-ih-mee-ter",
+    "category": "Measurements"
+  },
+  {
+    "word": "hectare",
+    "pron": "HEK-tair",
+    "category": "Measurements"
+  },
+  {
+    "word": "diameter",
+    "pron": "dy-AM-ih-ter",
+    "category": "Measurements"
+  },
+  {
+    "word": "circumference",
+    "pron": "ser-KUM-fer-ens",
+    "category": "Measurements"
+  },
+  {
+    "word": "symmetrical",
+    "pron": "sih-MET-rih-kul",
+    "category": "Shapes"
+  },
+  {
+    "word": "accessible",
+    "pron": "ak-SES-uh-bul",
+    "category": "Adjectives"
+  },
+  {
+    "word": "beneficial",
+    "pron": "ben-ih-FISH-ul",
+    "category": "Adjectives"
+  },
+  {
+    "word": "confidential",
+    "pron": "kon-fih-DEN-shul",
+    "category": "Adjectives"
+  },
+  {
+    "word": "consecutive",
+    "pron": "kun-SEK-yoo-tiv",
+    "category": "Adjectives"
+  },
+  {
+    "word": "essential",
+    "pron": "ih-SEN-shul",
+    "category": "Adjectives"
+  },
+  {
+    "word": "hazardous",
+    "pron": "HAZ-er-dus",
+    "category": "Adjectives"
+  },
+  {
+    "word": "optional",
+    "pron": "OP-shun-ul",
+    "category": "Adjectives"
+  },
+  {
+    "word": "punctual",
+    "pron": "PUNGK-choo-ul",
+    "category": "Adjectives"
+  },
+  {
+    "word": "spacious",
+    "pron": "SPAY-shus",
+    "category": "Adjectives"
+  },
+  {
+    "word": "enthusiastic",
+    "pron": "in-thyoo-zee-AS-tik",
+    "category": "Rating and Qualities"
+  },
+  {
+    "word": "outstanding",
+    "pron": "owt-STAN-ding",
+    "category": "Rating and Qualities"
+  },
+  {
+    "word": "disappointing",
+    "pron": "dis-uh-POYN-ting",
+    "category": "Rating and Qualities"
+  },
+  {
+    "word": "exceptional",
+    "pron": "ik-SEP-shun-ul",
+    "category": "Rating and Qualities"
+  },
+  {
+    "word": "simultaneous",
+    "pron": "sim-ul-TAY-nee-us",
+    "category": "Expressions and Time"
+  },
+  {
+    "word": "biannual",
+    "pron": "by-AN-yoo-ul",
+    "category": "Expressions and Time"
+  },
+  {
+    "word": "anniversary",
+    "pron": "an-ih-VER-ser-ee",
+    "category": "Expressions and Time"
+  },
+  {
+    "word": "registration",
+    "pron": "rej-ih-STRAY-shun",
+    "category": "Other Terms"
+  },
+  {
+    "word": "membership",
+    "pron": "MEM-ber-ship",
+    "category": "Other Terms"
+  },
+  {
+    "word": "identification",
+    "pron": "eye-den-tih-fih-KAY-shun",
+    "category": "Other Terms"
+  },
+  {
+    "word": "confirmation",
+    "pron": "kon-fer-MAY-shun",
+    "category": "Other Terms"
+  },
+  {
+    "word": "notification",
+    "pron": "noh-tih-fih-KAY-shun",
+    "category": "Other Terms"
+  },
+  {
+    "word": "recommendation",
+    "pron": "rek-uh-men-DAY-shun",
+    "category": "Other Terms"
+  },
+  {
+    "word": "requirement",
+    "pron": "rih-KWYR-ment",
+    "category": "Other Terms"
+  },
+  {
+    "word": "representative",
+    "pron": "rep-rih-ZEN-tuh-tiv",
+    "category": "Other Terms"
+  },
+  {
+    "word": "responsibility",
+    "pron": "rih-spon-sih-BIL-ih-tee",
+    "category": "Other Terms"
+  },
+  {
+    "word": "characteristic",
+    "pron": "kar-ik-tuh-RIS-tik",
+    "category": "Other Terms"
+  },
+  {
+    "word": "telecommunications",
+    "pron": "tel-ih-kuh-myoo-nih-KAY-shunz",
+    "category": "Other Terms"
+  },
+  {
+    "word": "accessibility",
+    "pron": "ak-ses-ih-BIL-ih-tee",
+    "category": "Other Terms"
+  },
+  {
+    "word": "availability",
+    "pron": "uh-vay-luh-BIL-ih-tee",
+    "category": "Other Terms"
+  },
+  {
+    "word": "pamphlet",
+    "pron": "PAM-flut",
+    "category": "Other Terms"
+  },
+  {
+    "word": "directory",
+    "pron": "dih-REK-tree",
+    "category": "Other Terms"
+  }
+]

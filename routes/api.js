@@ -1551,11 +1551,26 @@ router.get("/speaking-booking-data", async (req, res) => {
 // ==========================================
 // ৭. প্র্যাকটিস ডেটা রাউটস (CAMBRIDGE vs QUESTION-TYPE)
 // ==========================================
+const _pracDataCache = new Map();
+const PRAC_CACHE_TTL = 30 * 60 * 1000; // 30 minutes
+function getCachedPracData(key) {
+  const item = _pracDataCache.get(key);
+  if (item && (Date.now() - item.time < PRAC_CACHE_TTL)) {
+    return item.data;
+  }
+  return null;
+}
+function setCachedPracData(key, data) {
+  _pracDataCache.set(key, { data, time: Date.now() });
+}
 
 // ১. LISTENING DATA
 router.get("/pracDataListening", async (req, res) => {
   try {
     const { book, test, part, type, pracNumber } = req.query;
+    const cacheKey = `pdl_${book || ''}_${test || ''}_${part || ''}_${type || ''}_${pracNumber || ''}`;
+    const cached = getCachedPracData(cacheKey);
+    if (cached) return res.json(cached);
 
     // [ক] QUESTION TYPE PRACTICE: যদি type এবং pracNumber থাকে
     if (type && pracNumber) {
@@ -1567,6 +1582,7 @@ router.get("/pracDataListening", async (req, res) => {
       });
 
       if (pracDoc) {
+        setCachedPracData(cacheKey, pracDoc);
         return res.json(pracDoc);
       }
       return res.status(404).json({ error: "Listening question-type practice not found" });
@@ -1600,7 +1616,7 @@ router.get("/pracDataListening", async (req, res) => {
           }
         }
 
-        return res.json({
+        const payload = {
           ...cDoc,
           type: cDoc.title || `Cambridge ${book} Test ${test}`,
           listening: {
@@ -1612,7 +1628,9 @@ router.get("/pracDataListening", async (req, res) => {
             audio: finalAudio,
             partAudios: cDoc.partAudios || {}
           }
-        });
+        };
+        setCachedPracData(cacheKey, payload);
+        return res.json(payload);
       }
       return res.status(404).json({ error: "Cambridge listening test not found" });
     }
@@ -1628,6 +1646,9 @@ router.get("/pracDataListening", async (req, res) => {
 router.get("/pracDataReading", async (req, res) => {
   try {
     const { book, test, type, pracNumber } = req.query;
+    const cacheKey = `pdr_${book || ''}_${test || ''}_${type || ''}_${pracNumber || ''}`;
+    const cached = getCachedPracData(cacheKey);
+    if (cached) return res.json(cached);
 
     // [ক] QUESTION TYPE PRACTICE: যদি type এবং pracNumber থাকে
     if (type && pracNumber) {
@@ -1639,6 +1660,7 @@ router.get("/pracDataReading", async (req, res) => {
       });
 
       if (pracDoc) {
+        setCachedPracData(cacheKey, pracDoc);
         return res.json(pracDoc);
       }
       return res.status(404).json({ error: "Reading question-type practice not found" });
@@ -1824,8 +1846,16 @@ router.post("/admin/accounts/:id/premium", requireAdminAuth, async (req, res) =>
   }
 });
 
+let _cachedSettings = null;
+let _cachedSettingsTime = 0;
+const SETTINGS_CACHE_TTL = 60 * 1000; // 60 seconds in-memory cache for ultra-fast page loads
+
 router.get("/system-settings", async (req, res) => {
   try {
+    if (_cachedSettings && (Date.now() - _cachedSettingsTime < SETTINGS_CACHE_TTL)) {
+      return res.json({ success: true, settings: _cachedSettings });
+    }
+
     let settings = await SystemSettings.findOne({ key: "global_config" });
     if (!settings) {
       settings = await SystemSettings.create({
@@ -1833,6 +1863,7 @@ router.get("/system-settings", async (req, res) => {
         currentPhase: 1,
         freeAcademicMocksCount: 1,
         freePremiumMocksCount: 1,
+        freeGeneralMocksCount: 1,
         freeFullMocksCount: 1,
         freeSpeakingTestsCount: 1,
         freeSpeakingPartsCount: 1,
@@ -1840,7 +1871,7 @@ router.get("/system-settings", async (req, res) => {
         freePartsPerTest: 1,
         freeQuestionTypesPerTest: 0,
         freePracticeHubSets: 2,
-        freeAiWritingPerDay: 1,
+        freeAiWritingPerDay: 3,
         loginReminderEnabled: true,
         loginReminderMode: "every_time",
         cambridgeAlwaysFree: true
@@ -1857,6 +1888,8 @@ router.get("/system-settings", async (req, res) => {
       }
       if (dirty) await settings.save();
     }
+    _cachedSettings = settings;
+    _cachedSettingsTime = Date.now();
     return res.json({ success: true, settings });
   } catch (err) {
     console.error("Error fetching system settings:", err);
@@ -1870,6 +1903,7 @@ router.post("/admin/system-settings", requireAdminAuth, async (req, res) => {
       currentPhase,
       freeAcademicMocksCount,
       freePremiumMocksCount,
+      freeGeneralMocksCount,
       freeFullMocksCount,
       freeSpeakingTestsCount,
       freeSpeakingPartsCount,
@@ -1897,6 +1931,7 @@ router.post("/admin/system-settings", requireAdminAuth, async (req, res) => {
     if (currentPhase !== undefined) updateFields.currentPhase = parseNum(currentPhase, 1);
     if (freeAcademicMocksCount !== undefined) updateFields.freeAcademicMocksCount = parseNum(freeAcademicMocksCount, 1);
     if (freePremiumMocksCount !== undefined) updateFields.freePremiumMocksCount = parseNum(freePremiumMocksCount, 1);
+    if (freeGeneralMocksCount !== undefined) updateFields.freeGeneralMocksCount = parseNum(freeGeneralMocksCount, 1);
     if (freeFullMocksCount !== undefined) {
       updateFields.freeFullMocksCount = parseNum(freeFullMocksCount, 1);
       if (freeAcademicMocksCount === undefined) updateFields.freeAcademicMocksCount = parseNum(freeFullMocksCount, 1);
@@ -1918,6 +1953,8 @@ router.post("/admin/system-settings", requireAdminAuth, async (req, res) => {
       { $set: updateFields },
       { upsert: true, new: true }
     );
+    _cachedSettings = updated;
+    _cachedSettingsTime = Date.now();
 
     return res.json({ success: true, settings: updated });
   } catch (err) {
@@ -1932,17 +1969,24 @@ router.post("/admin/system-settings", requireAdminAuth, async (req, res) => {
 router.get("/student/dashboard-data", async (req, res) => {
   try {
     const sessionUser = req.session.user || req.session.candidate;
-    if (!sessionUser || !sessionUser.email) {
-      return res.status(401).json({ success: false, message: "Please log in to view dashboard" });
+    let userEmail = (sessionUser && sessionUser.email ? sessionUser.email : "").toLowerCase().trim();
+    if (!userEmail && req.headers["x-user-email"]) {
+      userEmail = String(req.headers["x-user-email"]).toLowerCase().trim();
+    }
+    if (!userEmail && req.query.email) {
+      userEmail = String(req.query.email).toLowerCase().trim();
     }
 
-    const userEmail = sessionUser.email.toLowerCase().trim();
+    if (!userEmail) {
+      return res.status(401).json({ success: false, message: "Please log in to view dashboard" });
+    }
 
     // 1. Fetch from StudentTestRecord
     const records = await StudentTestRecord.find({
       userEmail,
       $or: [
         { status: "completed" },
+        { status: "in-progress" },
         { listeningScore: { $ne: null } },
         { readingScore: { $ne: null } },
         { writingBand: { $ne: null } },
@@ -1952,12 +1996,13 @@ router.get("/student/dashboard-data", async (req, res) => {
         { "answers.writing": { $exists: true } },
         { "answers.speaking": { $exists: true } }
       ]
-    }).sort({ createdAt: -1 }).lean();
+    }).sort({ completedAt: -1, lastSavedAt: -1, createdAt: -1 }).lean();
 
     // 2. Fetch from User.mockInformation
     let legacyMockList = [];
+    let userDoc = null;
     try {
-      const userDoc = await User.findOne({ email: userEmail }).lean();
+      userDoc = await User.findOne({ email: userEmail }).lean();
       if (userDoc && Array.isArray(userDoc.mockInformation)) {
         legacyMockList = userDoc.mockInformation;
       }
@@ -1970,7 +2015,13 @@ router.get("/student/dashboard-data", async (req, res) => {
     const seenIds = new Set();
 
     records.forEach(r => {
-      seenIds.add(r.testId || r._id.toString());
+      if (r.testId) {
+        seenIds.add(r.testId);
+        seenIds.add('legacy-' + r.testId);
+      }
+      if (r._id) {
+        seenIds.add(r._id.toString());
+      }
 
       const validBands = [r.listeningBand, r.readingBand, r.writingBand, r.speakingBand].filter(b => typeof b === 'number' && b > 0);
       let calculatedOverall = r.overallBand || 0;
@@ -1985,6 +2036,8 @@ router.get("/student/dashboard-data", async (req, res) => {
         title: r.title || 'IELTS Mock Test',
         testType: r.testType || 'Full Mock',
         module: r.module || null,
+        status: r.status || (r.completedAt ? 'completed' : 'in-progress'),
+        lastSavedAt: r.lastSavedAt || null,
         totalQuestions: r.totalQuestions || 40,
         listeningScore: r.listeningScore || 0,
         readingScore: r.readingScore || 0,
@@ -1999,16 +2052,21 @@ router.get("/student/dashboard-data", async (req, res) => {
         feedback: r.feedback || {},
         mistakes: r.mistakes || [],
         answers: r.answers || {},
-        completedAt: r.completedAt || r.createdAt || new Date()
+        completedAt: r.completedAt || r.lastSavedAt || r.updatedAt || r.createdAt || new Date()
       });
     });
 
     legacyMockList.forEach((m, idx) => {
-      const testKey = 'legacy-' + (m.mockID || m.testID || idx);
-      if (!seenIds.has(testKey)) {
+      const rawMockId = m.mockID || m.testID || '';
+      const testKey = 'legacy-' + (rawMockId || idx);
+      if (!seenIds.has(testKey) && !seenIds.has(rawMockId)) {
         const lScore = Number(m.listeningScore || m.listening || 0);
         const rScore = Number(m.readingScore || m.reading || 0);
         const wScore = Number(m.writingScore || m.writing || 0);
+        const hasAnyScore = lScore > 0 || rScore > 0 || wScore > 0;
+        if (!hasAnyScore && !m.date && !m.submittedAt) {
+          return; // Skip empty placeholder mocks without scores
+        }
 
         function calcBand(raw) {
           if (!raw) return 0;
@@ -2035,11 +2093,14 @@ router.get("/student/dashboard-data", async (req, res) => {
           overall = Math.round(rawAvg * 2) / 2;
         }
 
+        const legacyDate = m.date || m.submittedAt || (userDoc && (userDoc.updatedAt || userDoc.createdAt)) || new Date(0);
+
         combinedHistory.push({
           id: testKey,
-          testId: m.mockID || m.testID || ('Mock ' + (idx + 1)),
-          title: m.mockName || m.mockID || ('Academic IELTS Mock ' + (idx + 1)),
+          testId: rawMockId || ('Mock ' + (idx + 1)),
+          title: m.mockName || rawMockId || ('Academic IELTS Mock ' + (idx + 1)),
           testType: 'Full Mock',
+          status: 'completed',
           listeningScore: lScore,
           readingScore: rScore,
           writingScore: wScore,
@@ -2047,10 +2108,13 @@ router.get("/student/dashboard-data", async (req, res) => {
           readingBand: rBand,
           writingBand: wBand,
           overallBand: overall,
-          completedAt: m.date || m.submittedAt || new Date()
+          completedAt: legacyDate
         });
       }
     });
+
+    // Chronologically sort all attempts so newest tests/drafts appear first
+    combinedHistory.sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
 
     // Calculate official averages
     let sumListening = 0, sumReading = 0, sumWriting = 0, sumSpeaking = 0, sumOverall = 0;
@@ -2131,12 +2195,20 @@ router.get("/student/dashboard-data", async (req, res) => {
 });
 
 // ==========================================
-// AUTO-SAVE PROGRESS (EVERY 2-3 MINUTES & DRAFT RESTORE)
+// AUTO-SAVE PROGRESS (REAL-TIME CLOUD SYNC & AUTO DRAFT)
 // ==========================================
 router.post("/student/auto-save", async (req, res) => {
   try {
+    let body = req.body;
+    if (typeof body === "string") {
+      try { body = JSON.parse(body); } catch(e) {}
+    }
+    if (!body || typeof body !== "object") {
+      body = {};
+    }
+
     const sessionUser = req.session.user || req.session.candidate;
-    const userEmail = (sessionUser && sessionUser.email ? sessionUser.email : (req.body.email || '')).toLowerCase().trim();
+    const userEmail = (sessionUser && sessionUser.email ? sessionUser.email : (body.email || '')).toLowerCase().trim();
 
     if (!userEmail || userEmail === 'guest@ieltsmockpoint.com') {
       return res.json({ success: true, savedTo: 'local-only', message: 'Guest session' });
@@ -2149,7 +2221,7 @@ router.post("/student/auto-save", async (req, res) => {
       title,
       answers,
       remainingSeconds
-    } = req.body;
+    } = body;
 
     if (!testId) {
       return res.status(400).json({ error: "testId is required" });
@@ -2162,13 +2234,22 @@ router.post("/student/auto-save", async (req, res) => {
     });
 
     if (!record) {
+      let defaultTitle = title;
+      if (!defaultTitle) {
+        if (testId.toLowerCase().includes("cambridge")) {
+          defaultTitle = testId.replace(/cambridge-/i, "Cambridge ").replace(/-/g, " ");
+        } else {
+          defaultTitle = testId.replace(/-UKA-FINAL-/i, " Mock Test ").replace(/[-_]/g, " ");
+        }
+      }
+
       record = new StudentTestRecord({
         userEmail,
         userId: (sessionUser && sessionUser.id) || null,
         testId,
-        testType: testType || (testId.includes("Premium") ? "Premium Full Mock" : "Academic Full Mock"),
+        testType: testType || (testId.includes("Premium") ? "Premium Full Mock" : (testId.toLowerCase().includes("cambridge") ? "Cambridge Test" : "Academic Full Mock")),
         module: modName || null,
-        title: title || testId.replace(/-UKA-FINAL-/i, " Mock Test "),
+        title: defaultTitle,
         status: "in-progress",
         answers: {}
       });
@@ -2181,7 +2262,17 @@ router.post("/student/auto-save", async (req, res) => {
       record.answers = Object.assign(record.answers, answers);
     }
 
-    record.lastSavedAt = new Date();
+    if (modName === "writing" && answers) {
+      try {
+        const textParts = Object.values(answers).join(" ");
+        const words = textParts.trim().split(/\s+/).filter(Boolean).length;
+        if (words > 0) record.totalWords = words;
+      } catch (e) {}
+    }
+
+    const now = new Date();
+    record.lastSavedAt = now;
+    record.completedAt = now;
     record.markModified("answers");
     await record.save();
 
@@ -2219,6 +2310,40 @@ router.get("/student/test-record/:id", async (req, res) => {
       }
       if (!testDoc && record.title) {
         testDoc = await TestQuestions.findOne({ mockNumber: new RegExp(record.title.replace(/[-\[\]{}()*+?.,\\^$|#\s]/g, '\\$&'), 'i') }).lean();
+      }
+
+      // Cambridge Reading DB Lookup if not in TestQuestions
+      if (!testDoc && (String(record.testType || '').toLowerCase().includes('cambridge') || String(record.title || '').toLowerCase().includes('cambridge'))) {
+        try {
+          const isGT = String(record.title || '').toLowerCase().includes('general') || String(record.title || '').toLowerCase().includes('gt') || String(record.testId || '').toLowerCase().includes('gt');
+          const bookMatch = (record.testId || record.title || '').match(/(\d{2})/);
+          const testMatch = (record.testId || record.title || '').match(/test[- ]?(\d+)/i) || (record.testId || '').match(/-(\d+)-(full|section|passage)/i);
+          
+          if (bookMatch && testMatch) {
+            const rawNum = bookMatch[1];
+            const testNo = parseInt(testMatch[1], 10);
+            const bookVariants = isGT 
+              ? ['gt-' + rawNum, 'GT-' + rawNum, 'gt' + rawNum, parseInt(rawNum, 10), String(rawNum)]
+              : [parseInt(rawNum, 10), String(rawNum), 'gt-' + rawNum];
+
+            const camReadingColl = mongoose.connection.collection('cambridge_reading_v2');
+            const camDoc = await camReadingColl.findOne({
+              book: { $in: bookVariants },
+              $or: [{ testNo: testNo }, { testNumber: testNo }]
+            });
+
+            if (camDoc) {
+              record.readingPassages = camDoc.passages;
+              record.readingExplanations = camDoc.answerExplanations;
+              record.readingAnswers = camDoc.answers;
+              record.readingQuestions = camDoc.questionGroups;
+              record.readingTraps = camDoc.traps;
+              record.readingEvidenceHighlights = camDoc.evidenceHighlights;
+            }
+          }
+        } catch (camErr) {
+          console.warn("Cambridge Reading lookup error:", camErr.message);
+        }
       }
 
       if (testDoc) {

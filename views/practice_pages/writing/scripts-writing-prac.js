@@ -1352,12 +1352,24 @@ ${studentAnswer}`;
               <div style="background:rgba(255,255,255,0.12); padding:6px 14px; border-radius:8px; font-size:13px; font-weight:600;">
                 📝 Words: <span style="color:#38bdf8;">${wordCount}</span>
               </div>
+              <button type="button" id="modal-close-x" onclick="previewWritingOnPage()" style="background:rgba(255,255,255,0.15); border:none; color:#ffffff; font-size:20px; font-weight:700; border-radius:50%; width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; margin-left:4px;" title="Close and Preview on Test Page">&times;</button>
             </div>
           </div>
         </div>
 
         <div style="padding:22px 28px; overflow-y:auto; flex:1; background:#f8fafc;">
           
+          <!-- Clean Preview Notice Banner -->
+          <div style="background:linear-gradient(135deg, #eff6ff, #f0fdf4); border:1.5px solid #bcd9fb; border-radius:12px; padding:12px 16px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+            <div>
+              <strong style="color:#0b2b52; font-size:13px; display:block; margin-bottom:2px;">📝 Want a full-page scrollable review?</strong>
+              <span style="font-size:12px; color:#475569;">Preview your submitted writing side-by-side with mistakes, upgrades &amp; Band 9 sample answer right on the test page.</span>
+            </div>
+            <button type="button" onclick="previewWritingOnPage()" style="background:#1565c9; color:#fff; border:none; padding:7px 15px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; box-shadow:0 2px 8px rgba(21,101,201,0.25);">
+              Preview Your Writing &darr;
+            </button>
+          </div>
+
           <!-- AI ফলাফল লোড হওয়ার কন্টেইনার -->
           <div id="ai-practice-result-container" style="margin-bottom:20px;">
             <div style="background:#fff; border:1px solid #cbd5e1; border-left:5px solid #0b2b52; border-radius:12px; padding:20px; text-align:center; color:#0b2b52; font-weight:600; font-size:14px;">
@@ -1383,11 +1395,15 @@ ${studentAnswer}`;
         </div>
 
         <div style="padding:14px 28px; background:#ffffff; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-          <button id="copy-ai-btn" style="background:#fff; color:#0b2b52; border:2px solid #0b2b52; padding:8px 18px; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer;">
+          <button id="copy-ai-btn" style="background:#fff; color:#0b2b52; border:1.5px solid #0b2b52; padding:8px 16px; border-radius:8px; font-size:12.5px; font-weight:700; cursor:pointer;">
             📋 Copy Prompt
           </button>
           
-          <button id="finish-practice-btn" style="background:#0b2b52; color:#fff; border:none; padding:10px 20px; border-radius:8px; font-size:13.5px; font-weight:600; cursor:pointer;">
+          <button type="button" id="preview-writing-modal-btn" onclick="previewWritingOnPage()" style="background:linear-gradient(135deg, #1565c9, #0b2b52); color:#ffffff; border:none; padding:10px 22px; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:7px; box-shadow:0 4px 14px rgba(11,43,82,0.25); transition:all 0.2s;">
+            <span>📝</span> Preview Your Writing &amp; Detailed Review &darr;
+          </button>
+
+          <button id="finish-practice-btn" style="background:#0b2b52; color:#fff; border:none; padding:10px 18px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;">
             Return to Practice
           </button>
         </div>
@@ -1423,6 +1439,9 @@ ${studentAnswer}`;
       } catch(e) { return false; }
     })();
 
+    // Pre-populate on-page review arena with submitted text so preview is always ready
+    populateOnPageReview(null, isPart1 ? 1 : 2, questionTopic, studentAnswer);
+
     if (!isUserLoggedIn) {
       const today = new Date().toISOString().slice(0, 10);
       let guestData = { date: today, count: 0 };
@@ -1434,7 +1453,7 @@ ${studentAnswer}`;
         }
       } catch(e) {}
 
-      if (guestData.count >= 1) {
+      if (guestData.count >= 5) {
         if (badge) badge.textContent = "Limit Reached";
         container.innerHTML = `
           <div style="background:#fff; border: 1.5px solid #bcd9fb; border-radius:16px; padding:32px 24px; text-align:center; max-width:520px; margin: 30px auto; box-shadow: 0 8px 24px rgba(11,43,82,0.08);">
@@ -1488,6 +1507,7 @@ ${studentAnswer}`;
       if (badge) {
         badge.textContent = `Band: ${evalData.overall_band}`;
       }
+      populateOnPageReview(evalData, isPart1 ? 1 : 2, questionTopic, studentAnswer);
 
       const strengthsList = Array.isArray(evalData.strengths) ? evalData.strengths.filter(Boolean) : [];
       const correctionsList = Array.isArray(evalData.corrections) ? evalData.corrections.filter(c => c && (c.original || c.improved)) : [];
@@ -1513,6 +1533,46 @@ ${studentAnswer}`;
                   ${c.original ? `<div style="color:#b91c1c; margin-bottom:3px;"><b>Original:</b> <span style="text-decoration:line-through; opacity:0.9;">${escHtml(c.original)}</span></div>` : ""}
                   ${c.improved ? `<div style="color:#15803d; margin-bottom:3px;"><b>Band 8+ Upgrade:</b> ${escHtml(c.improved)}</div>` : ""}
                   ${c.reason ? `<div style="color:#64748b; font-size:11.5px;"><i>Why:</i> ${escHtml(c.reason)}</div>` : ""}
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `
+        : "";
+
+      const band9Html = evalData.band_9_model
+        ? `
+          <div class="mp-b9-card" style="background:#ffffff; border:1.5px solid #dbeafe; border-radius:10px; margin-bottom:14px; overflow:hidden; box-shadow:0 3px 10px rgba(11,43,82,0.05);">
+            <div style="background:#0b2b52; color:#ffffff; padding:10px 14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="background:#e0202d; color:#ffffff; font-size:11px; font-weight:800; padding:2px 8px; border-radius:4px; text-transform:uppercase;">Examiner Benchmark</span>
+                <b style="font-size:13px; font-family:'Sora',sans-serif;">⭐ Band 9 Model Rewrite</b>
+              </div>
+              <button type="button" onclick="const b=this.closest('.mp-b9-card').querySelector('.mp-b9-body'); if(b){ navigator.clipboard.writeText(b.innerText).then(()=>{ this.textContent='Copied! ✓'; setTimeout(()=>this.textContent='Copy Model Answer', 2000); }); }" style="background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.3); color:#ffffff; font-size:11.5px; font-weight:700; padding:4px 10px; border-radius:5px; cursor:pointer;">
+                Copy Model Answer
+              </button>
+            </div>
+            <div class="mp-b9-body" style="padding:14px; font-size:12.5px; color:#1e293b; line-height:1.65; white-space:pre-line; background:#fbfdff;">${escHtml(evalData.band_9_model)}</div>
+          </div>
+        `
+        : "";
+
+      const lexicalList = Array.isArray(evalData.lexical_upgrades) ? evalData.lexical_upgrades.filter(Boolean) : [];
+      const lexicalHtml = lexicalList.length
+        ? `
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px 14px; margin-bottom:14px;">
+            <div style="display:flex; align-items:center; gap:6px; margin-bottom:10px;">
+              <span style="color:#e0202d; font-size:14px;">💎</span>
+              <b style="color:#0b2b52; font-size:12.5px;">High-Band Topic Vocabulary &amp; Collocations:</b>
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:8px;">
+              ${lexicalList.map(item => `
+                <div style="background:#ffffff; border:1px solid #e2e8f0; border-left:3px solid #1565c9; border-radius:6px; padding:8px 10px;">
+                  <div style="color:#0b2b52; font-weight:800; font-size:12px; margin-bottom:2px;">
+                    ${escHtml(item.phrase || item.term)}
+                  </div>
+                  ${item.meaning ? `<div style="color:#64748b; font-size:11px; margin-bottom:4px; line-height:1.35;"><i>${escHtml(item.meaning)}</i></div>` : ""}
+                  ${item.example ? `<div style="color:#334155; font-size:11px; line-height:1.35; background:#f1f5f9; padding:3px 6px; border-radius:4px;">&ldquo;${escHtml(item.example)}&rdquo;</div>` : ""}
                 </div>
               `).join("")}
             </div>
@@ -1565,6 +1625,8 @@ ${studentAnswer}`;
 
           ${strengthsHtml}
           ${correctionsHtml}
+          ${band9Html}
+          ${lexicalHtml}
 
           <div style="background:#fffafa; border:1px dashed #e0202d; border-radius:8px; padding:12px 16px;">
             <b style="color:#e0202d; font-size:13px; display:block; margin-bottom:6px;">Priority Tips to Improve Band:</b>
@@ -1610,3 +1672,279 @@ if (document.readyState === "loading") {
 } else {
   main();
 }
+  // ==========================================
+  // ON-PAGE COMPREHENSIVE WRITING REVIEW ARENA
+  // ==========================================
+  function populateOnPageReview(evalData, partNo, questionTopic, studentEssay) {
+    function escHtml(str) {
+      return String(str ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    const dataObj = evalData || {};
+    let reviewContainer = document.getElementById('on-page-writing-review');
+    if (!reviewContainer) {
+      reviewContainer = document.createElement('section');
+      reviewContainer.id = 'on-page-writing-review';
+      reviewContainer.style.maxWidth = '1180px';
+      reviewContainer.style.margin = '34px auto 80px';
+      reviewContainer.style.padding = '0 20px';
+      reviewContainer.style.fontFamily = "'Plus Jakarta Sans', system-ui, sans-serif";
+      const mainEl = document.querySelector('main.wrap') || document.querySelector('main') || document.body;
+      mainEl.parentNode.insertBefore(reviewContainer, mainEl.nextSibling);
+    }
+
+    let floatBtn = document.getElementById('float-scorecard-btn');
+    if (!floatBtn) {
+      floatBtn = document.createElement('button');
+      floatBtn.id = 'float-scorecard-btn';
+      floatBtn.type = 'button';
+      floatBtn.onclick = reopenResultModal;
+      floatBtn.style.cssText = 'display:none; position:fixed; bottom:24px; right:24px; z-index:99998; background:#0b2b52; color:#fff; border:2px solid #e0202d; padding:12px 20px; border-radius:50px; font-size:13px; font-weight:800; cursor:pointer; box-shadow:0 8px 24px rgba(11,43,82,0.3); align-items:center; gap:8px;';
+      floatBtn.innerHTML = '<span>📊</span> View Scorecard Popup';
+      document.body.appendChild(floatBtn);
+    }
+
+    const isT1 = partNo === 1;
+    const crit1 = isT1 ? 'Task Achievement' : 'Task Response';
+    const words = studentEssay ? studentEssay.trim().split(/\s+/).filter(Boolean).length : 0;
+    const evalObj = evalData || {};
+    const strengths = Array.isArray(evalObj.strengths) ? evalObj.strengths.filter(Boolean) : [];
+    const corrections = Array.isArray(evalObj.corrections) ? evalObj.corrections.filter(c => c && (c.original || c.improved)) : [];
+    const lexical = Array.isArray(evalObj.lexical_upgrades) ? evalObj.lexical_upgrades.filter(Boolean) : [];
+    const improvements = Array.isArray(evalObj.key_improvements) ? evalObj.key_improvements.filter(Boolean) : [];
+
+    const strengthsHtml = strengths.length
+      ? `
+        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:12px 14px; margin-bottom:12px;">
+          <b style="color:#15803d; font-size:12.5px; display:block; margin-bottom:4px;">✓ What You Did Well:</b>
+          <ul style="margin:0; padding-left:18px; font-size:12px; color:#166534; line-height:1.55;">
+            ${strengths.map(s => `<li>${escHtml(s)}</li>`).join('')}
+          </ul>
+        </div>
+      `
+      : '';
+
+    const correctionsHtml = corrections.length
+      ? `
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          ${corrections.map(c => `
+            <div style="background:#ffffff; border:1px solid #e2e8f0; border-left:3.5px solid #dc2626; border-radius:8px; padding:10px 12px; font-size:12.5px; line-height:1.5;">
+              ${c.original ? `<div style="color:#b91c1c; margin-bottom:4px;"><strong>🔴 Original (Slip):</strong> <span style="text-decoration:line-through; opacity:0.85;">${escHtml(c.original)}</span></div>` : ''}
+              ${c.improved ? `<div style="color:#15803d; margin-bottom:4px;"><strong>🟢 Band 8+ Upgrade:</strong> <span style="font-weight:700;">${escHtml(c.improved)}</span></div>` : ''}
+              ${c.reason ? `<div style="color:#64748b; font-size:11.5px; margin-top:2px;"><em>💡 Why:</em> ${escHtml(c.reason)}</div>` : ''}
+            </div>
+          `).join('')}
+        </div>
+      `
+      : '<div style="padding:20px; text-align:center; color:#64748b; font-size:12.5px;">No sentence errors detected. Excellent control!</div>';
+
+    const band9Html = evalObj.band_9_model
+      ? `
+        <div class="mp-b9-card" style="background:#ffffff; border:1.5px solid #dbeafe; border-radius:12px; margin-bottom:18px; overflow:hidden; box-shadow:0 3px 12px rgba(11,43,82,0.05);">
+          <div style="background:#0b2b52; color:#ffffff; padding:12px 16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="background:#e0202d; color:#ffffff; font-size:11px; font-weight:800; padding:3px 8px; border-radius:4px; text-transform:uppercase;">Examiner Benchmark</span>
+              <b style="font-size:13.5px; font-family:'Sora',sans-serif;">⭐ Band 9 Model Rewrite (Task ${partNo})</b>
+            </div>
+            <button type="button" onclick="const b=this.closest('.mp-b9-card').querySelector('.mp-b9-body'); if(b){ navigator.clipboard.writeText(b.innerText).then(()=>{ this.textContent='Copied! ✓'; setTimeout(()=>this.textContent='Copy Model Answer', 2000); }); }" style="background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.3); color:#ffffff; font-size:12px; font-weight:700; padding:5px 12px; border-radius:6px; cursor:pointer;">
+              Copy Model Answer
+            </button>
+          </div>
+          <div class="mp-b9-body" style="padding:16px 18px; font-size:13px; color:#1e293b; line-height:1.75; white-space:pre-line; background:#fbfdff;">${escHtml(evalObj.band_9_model)}</div>
+        </div>
+      `
+      : '';
+
+    const lexicalHtml = lexical.length
+      ? `
+        <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:12px; padding:14px 16px; margin-bottom:18px;">
+          <div style="display:flex; align-items:center; gap:6px; margin-bottom:10px;">
+            <span style="color:#e0202d; font-size:15px;">💎</span>
+            <b style="color:#0b2b52; font-size:13px;">High-Band Topic Vocabulary &amp; Collocations (Task ${partNo}):</b>
+          </div>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:10px;">
+            ${lexical.map(item => `
+              <div style="background:#ffffff; border:1px solid #e2e8f0; border-left:3.5px solid #1565c9; border-radius:8px; padding:10px 12px;">
+                <div style="color:#0b2b52; font-weight:800; font-size:12.5px; margin-bottom:3px;">
+                  ${escHtml(item.phrase || item.term)}
+                </div>
+                ${item.meaning ? `<div style="color:#64748b; font-size:11.5px; margin-bottom:4px; line-height:1.35;"><i>${escHtml(item.meaning)}</i></div>` : ''}
+                ${item.example ? `<div style="color:#334155; font-size:11.5px; line-height:1.4; background:#f1f5f9; padding:4px 7px; border-radius:4px;">&ldquo;${escHtml(item.example)}&rdquo;</div>` : ''}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `
+      : '';
+
+    const improvementsHtml = improvements.length
+      ? `
+        <div style="background:#fffafa; border:1px dashed #e0202d; border-radius:10px; padding:12px 16px;">
+          <b style="color:#e0202d; font-size:13px; display:block; margin-bottom:6px;">🎯 Priority Improvement Tips (Task ${partNo}):</b>
+          <ul style="margin:0; padding-left:18px; font-size:12.5px; color:#334155; line-height:1.6;">
+            ${improvements.map(tip => `<li>${escHtml(tip)}</li>`).join('')}
+          </ul>
+        </div>
+      `
+      : '';
+
+    reviewContainer.innerHTML = `
+      <div style="background:#ffffff; border:1.5px solid #dbeafe; border-radius:18px; padding:26px 30px; box-shadow:0 12px 36px rgba(11,43,82,0.07); margin-bottom:30px;">
+        
+        <!-- Header -->
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; padding-bottom:18px; margin-bottom:24px; border-bottom:1.5px solid #e2e8f0;">
+          <div>
+            <div style="display:inline-flex; align-items:center; gap:6px; background:#eff6ff; color:#1d4ed8; font-size:12px; font-weight:800; padding:4px 12px; border-radius:999px; text-transform:uppercase; margin-bottom:8px;">
+              <span>📝</span> Detailed Candidate Writing Review
+            </div>
+            <h2 style="margin:0; font-family:'Sora',sans-serif; color:#0b2b52; font-size:1.5rem; font-weight:800;">
+              Your Writing &amp; In-Depth Examiner Diagnostics
+            </h2>
+            <p style="margin:6px 0 0; color:#64748b; font-size:0.92rem;">
+              Scroll below to inspect your exact submitted essay side-by-side with line-by-line examiner fixes, Band 9 model rewrite, and topic vocabulary.
+            </p>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:16px;">
+            <div style="text-align:right;">
+              <span style="display:block; font-size:11px; font-weight:800; color:#64748b; text-transform:uppercase;">Band Score</span>
+              <span style="font-family:'Sora',sans-serif; font-size:1.65rem; font-weight:800; color:#e0202d; line-height:1;">
+                Band ${evalObj.overall_band || '--'}
+              </span>
+            </div>
+            <button type="button" onclick="reopenResultModal()" style="background:#0b2b52; color:#ffffff; border:none; padding:11px 20px; border-radius:10px; font-size:13px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:7px; box-shadow:0 4px 12px rgba(11,43,82,0.2);">
+              <span>📊</span> View Scorecard Popup
+            </button>
+          </div>
+        </div>
+
+        <!-- Task Content Box -->
+        <div style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:16px; padding:22px; margin-bottom:28px;">
+          
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid #e2e8f0;">
+            <div style="max-width:80%;">
+              <span style="background:#eff6ff; color:#1d4ed8; font-size:11.5px; font-weight:800; padding:3px 10px; border-radius:6px; text-transform:uppercase;">
+                Task ${partNo} Question Prompt
+              </span>
+              <h3 style="color:#0b2b52; font-size:1.05rem; font-weight:700; margin:8px 0 0; line-height:1.5;">
+                ${escHtml(questionTopic)}
+              </h3>
+            </div>
+            <div style="background:#ffffff; border:1.5px solid #bcd9fb; border-radius:10px; padding:6px 16px; text-align:center;">
+              <div style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase;">Task Band</div>
+              <div style="font-family:'Sora',sans-serif; font-size:1.4rem; font-weight:800; color:#e0202d;">
+                ${evalObj.overall_band || '--'}
+              </div>
+            </div>
+          </div>
+
+          <!-- 4-Criteria Grid -->
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:10px; margin-bottom:18px;">
+            <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <strong style="color:#0b2b52; font-size:12.5px;">${crit1}</strong>
+                <span style="background:#eff6ff; color:#1565c9; font-weight:800; font-size:12.5px; padding:2px 7px; border-radius:4px;">${(evalObj.task_response || {}).score || '--'}</span>
+              </div>
+              <p style="margin:0; font-size:11.5px; color:#475569; line-height:1.4;">${escHtml((evalObj.task_response || {}).comment)}</p>
+            </div>
+
+            <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <strong style="color:#0b2b52; font-size:12.5px;">Coherence &amp; Cohesion</strong>
+                <span style="background:#eff6ff; color:#1565c9; font-weight:800; font-size:12.5px; padding:2px 7px; border-radius:4px;">${(evalObj.coherence_cohesion || {}).score || '--'}</span>
+              </div>
+              <p style="margin:0; font-size:11.5px; color:#475569; line-height:1.4;">${escHtml((evalObj.coherence_cohesion || {}).comment)}</p>
+            </div>
+
+            <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <strong style="color:#0b2b52; font-size:12.5px;">Lexical Resource</strong>
+                <span style="background:#eff6ff; color:#1565c9; font-weight:800; font-size:12.5px; padding:2px 7px; border-radius:4px;">${(evalObj.lexical_resource || {}).score || '--'}</span>
+              </div>
+              <p style="margin:0; font-size:11.5px; color:#475569; line-height:1.4;">${escHtml((evalObj.lexical_resource || {}).comment)}</p>
+            </div>
+
+            <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:10px 12px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <strong style="color:#0b2b52; font-size:12.5px;">Grammar &amp; Accuracy</strong>
+                <span style="background:#eff6ff; color:#1565c9; font-weight:800; font-size:12.5px; padding:2px 7px; border-radius:4px;">${(evalObj.grammar || {}).score || '--'}</span>
+              </div>
+              <p style="margin:0; font-size:11.5px; color:#475569; line-height:1.4;">${escHtml((evalObj.grammar || {}).comment)}</p>
+            </div>
+          </div>
+
+          <!-- Side-by-Side: Submitted Essay vs Mistakes & Corrections -->
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:16px; margin-bottom:18px;">
+            
+            <!-- Left: What Student Wrote -->
+            <div style="background:#ffffff; border:1.5px solid #cbd5e1; border-radius:12px; padding:16px 18px; display:flex; flex-direction:column;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid #e2e8f0; padding-bottom:8px;">
+                <h4 style="margin:0; color:#0b2b52; font-size:13.5px; font-weight:800; display:flex; align-items:center; gap:6px;">
+                  <span>📝</span> Your Submitted Essay (Task ${partNo})
+                </h4>
+                <span style="background:#f1f5f9; color:#475569; font-size:11.5px; font-weight:700; padding:2px 8px; border-radius:999px;">
+                  ${words} words
+                </span>
+              </div>
+              <div style="white-space:pre-line; line-height:1.75; font-size:13px; color:#334155; max-height:450px; overflow-y:auto; padding-right:6px;">
+                ${escHtml(studentEssay) || '(No response was submitted)'}
+              </div>
+            </div>
+
+            <!-- Right: Where You Made Mistakes & Examiner Fixes -->
+            <div style="background:#ffffff; border:1.5px solid #cbd5e1; border-radius:12px; padding:16px 18px; display:flex; flex-direction:column;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid #e2e8f0; padding-bottom:8px;">
+                <h4 style="margin:0; color:#991b1b; font-size:13.5px; font-weight:800; display:flex; align-items:center; gap:6px;">
+                  <span>🔍</span> Mistakes &amp; Band 8+ Upgrades
+                </h4>
+                <span style="background:#fee2e2; color:#991b1b; font-size:11.5px; font-weight:700; padding:2px 8px; border-radius:999px;">
+                  Examiner Fixes
+                </span>
+              </div>
+              <div style="max-height:450px; overflow-y:auto; padding-right:6px;">
+                ${strengthsHtml}
+                ${correctionsHtml}
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Band 9 Model Rewrite -->
+          ${band9Html}
+
+          <!-- High-Band Topic Vocabulary -->
+          ${lexicalHtml}
+
+          <!-- Priority Improvement Tips -->
+          ${improvementsHtml}
+
+        </div>
+
+      </div>
+    `;
+  }
+
+  window.previewWritingOnPage = function() {
+    const modal = document.getElementById('instant-result-modal');
+    if (modal) modal.style.display = 'none';
+
+    const reviewEl = document.getElementById('on-page-writing-review');
+    if (reviewEl) {
+      reviewEl.style.display = 'block';
+      reviewEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    const floatBtn = document.getElementById('float-scorecard-btn');
+    if (floatBtn) floatBtn.style.display = 'inline-flex';
+  };
+
+  window.reopenResultModal = function() {
+    const modal = document.getElementById('instant-result-modal');
+    if (modal) {
+      modal.style.display = 'flex';
+    }
+  };

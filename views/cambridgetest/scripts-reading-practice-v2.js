@@ -191,7 +191,10 @@
   let currentFocusedQ = 1;
 
   const urlParams = new URLSearchParams(window.location.search);
-  const bookParam = Number(urlParams.get("book") || 21);
+  const rawBookParam = String(urlParams.get("book") || "21").trim();
+  const isGT = urlParams.get("type") === "gt" || urlParams.get("mode") === "gt" || rawBookParam.toLowerCase().includes("gt");
+  const cleanBook = rawBookParam.replace(/\D/g, '') || "21";
+  const bookParam = isGT ? `gt-${cleanBook}` : (isNaN(Number(rawBookParam)) ? rawBookParam : Number(rawBookParam));
   const testParam = Number(urlParams.get("test") || 1);
   const passageParam = (urlParams.get("passage") || urlParams.get("part"))
     ? Number(urlParams.get("passage") || urlParams.get("part"))
@@ -329,7 +332,7 @@
   async function initTest() {
     try {
       const isPracticeBank = urlParams.get("practice") === "bank" || urlParams.has("set") || urlParams.has("pracNumber");
-      let apiUrl = `/api/cambridge-reading-v2/${bookParam}/${testParam}`;
+      let apiUrl = `/api/cambridge-reading-v2/${bookParam}/${testParam}${isGT ? '?type=gt' : ''}`;
       if (isPracticeBank) {
         const pType = urlParams.get("type") || urlParams.get("pracType") || "Summary Completion";
         const pSet = (urlParams.get("set") || urlParams.get("pracNumber") || "1").replace(/\D/g, "") || "1";
@@ -510,13 +513,17 @@
         testTitleBadge.textContent = `Set ${testData.testNo || 1} • ${qRange} (${typeName})`;
       }
       if (readingModeText) readingModeText.textContent = `Practice Hub Bank (Set ${testData.testNo || 1})`;
+      const pTypeName = targetGroup ? getFriendlyGroupType(targetGroup.type) : (testData.pracType || 'Reading');
+      document.title = `${pTypeName} Practice (Set ${testData.testNo || 1}) with Answers & Tips | IELTS Mockpoint`;
       return;
     }
 
     const isRecent = (bookParam >= 2000);
+    const isGTTest = isGT || (testData && (testData.testType === "GT" || testData.isGeneralTraining));
+    const displayBook = isRecent ? "Recent Real Test" : (isGTTest ? `Cambridge ${cleanBook} (GT)` : `Cambridge ${cleanBook}`);
 
     if (testBookBadge) {
-      testBookBadge.textContent = isRecent ? "Recent Real Test" : `Cambridge ${bookParam}`;
+      testBookBadge.textContent = displayBook;
     }
 
     if (testTitleBadge) {
@@ -525,29 +532,34 @@
         const typeName = getFriendlyGroupType(targetGroup.type);
         testTitleBadge.textContent = isRecent
           ? `Recent Test ${testParam} • ${qRange} (${typeName})`
-          : `Test ${testParam} • ${qRange} (${typeName})`;
+          : (isGTTest ? `GT Test ${testParam} • ${qRange} (${typeName})` : `Test ${testParam} • ${qRange} (${typeName})`);
         if (readingModeText) readingModeText.textContent = `Section Practice (${typeName})`;
       } else if (practiceMode === "passage") {
         testTitleBadge.textContent = isRecent
           ? `Recent Test ${testParam} • Passage ${targetPassage} (Q${targetQIds[0]}–${targetQIds[targetQIds.length - 1]})`
-          : `Test ${testParam} • Passage ${targetPassage} (Q${targetQIds[0]}–${targetQIds[targetQIds.length - 1]})`;
-        if (readingModeText) readingModeText.textContent = `Passage ${targetPassage} Practice`;
+          : (isGTTest ? `GT Test ${testParam} • Section ${targetPassage} (Q${targetQIds[0]}–${targetQIds[targetQIds.length - 1]})` : `Test ${testParam} • Passage ${targetPassage} (Q${targetQIds[0]}–${targetQIds[targetQIds.length - 1]})`);
+        if (readingModeText) readingModeText.textContent = isGTTest ? `Section ${targetPassage} Practice` : `Passage ${targetPassage} Practice`;
       } else {
         testTitleBadge.textContent = isRecent
           ? `Recent Reading Real Test ${testParam}`
-          : `Academic Reading Test ${testParam}`;
-        if (readingModeText) readingModeText.textContent = `Full Reading Mock Test (60 Mins)`;
+          : (isGTTest ? `General Training Reading Test ${testParam}` : `Academic Reading Test ${testParam}`);
+        if (readingModeText) readingModeText.textContent = isGTTest ? `Full GT Reading Mock Test (60 Mins)` : `Full Reading Mock Test (60 Mins)`;
       }
     }
-    let seoTitle = isRecent
-      ? `IELTS Reading Recent Actual Test ${testParam} (2026 Edition)`
-      : `Cambridge IELTS ${bookParam} Academic Reading Test ${testParam}`;
     if (practiceMode === "passage") {
-      seoTitle += ` Passage ${targetPassage}`;
+      const partLabel = isGTTest ? `Section ${targetPassage}` : `Passage ${targetPassage}`;
+      const prefix = isGTTest ? `Cambridge ${cleanBook} GT Reading Test ${testParam} ${partLabel}` : `Cambridge ${cleanBook} Reading Test ${testParam} ${partLabel}`;
+      document.title = `${prefix} (Answers & Explanations) | IELTS Mockpoint`;
     } else if (practiceMode === "section" && targetQIds && targetQIds.length) {
-      seoTitle += ` (${targetQIds[0]}–${targetQIds[targetQIds.length - 1]})`;
+      const qRange = `Q${targetQIds[0]}–${targetQIds[targetQIds.length - 1]}`;
+      const prefix = isGTTest ? `Cambridge ${cleanBook} GT Reading Test ${testParam} (${qRange})` : `Cambridge ${cleanBook} Reading Test ${testParam} (${qRange})`;
+      document.title = `${prefix} (Answers & Explanations) | IELTS Mockpoint`;
+    } else {
+      const prefix = isRecent
+        ? `IELTS Reading Recent Real Test ${testParam}`
+        : (isGTTest ? `Cambridge IELTS ${cleanBook} GT Reading Test ${testParam}` : `Cambridge IELTS ${cleanBook} Academic Reading Test ${testParam}`);
+      document.title = `${prefix} (Answers & Explanations) | IELTS Mockpoint`;
     }
-    document.title = `${seoTitle} Online Free (Passages & Answers) | IELTS Mockpoint`;
   }
 
   function getFriendlyGroupType(type) {
@@ -693,17 +705,25 @@
     if (Array.isArray(pc) && pc.length > 0) {
       return pc.map((item, idx) => {
         let text = "";
+        let heading = "";
+        let notice = "";
+        let label = "";
         if (Array.isArray(item)) {
           text = item.join("\n\n").trim();
         } else if (typeof item === "object" && item !== null) {
           text = (item.text || item.content || "").trim();
+          heading = item.heading || "";
+          notice = item.notice || "";
+          label = item.label || "";
         } else {
           text = String(item || "").trim();
         }
-        const label = (pMarks && pMarks[idx] && typeof pMarks[idx] === "string" && pMarks[idx].length <= 2)
-          ? pMarks[idx]
-          : (item && item.label ? item.label : String.fromCharCode(65 + idx));
-        return { label, text };
+        if (!label) {
+          label = (pMarks && pMarks[idx] && typeof pMarks[idx] === "string" && pMarks[idx].length <= 2)
+            ? pMarks[idx]
+            : (passage.noParagraphLetters ? "" : String.fromCharCode(65 + idx));
+        }
+        return { label, text, heading, notice };
       }).filter(p => p.text);
     }
     if (Array.isArray(passage.paragraphs) && passage.paragraphs.length > 0) {
@@ -807,18 +827,31 @@
     const pIndex = passageNum - 1;
     const passage = testData.passages[pIndex] || testData.passages[String(pIndex)] || testData.passages[passageNum] || {};
 
-    const startQ = (practiceMode === "section" && targetQIds.length)
-      ? targetQIds[0]
-      : ((passageNum === 1) ? 1 : (passageNum === 2 ? 14 : 27));
-    const endQ = (practiceMode === "section" && targetQIds.length)
-      ? targetQIds[targetQIds.length - 1]
-      : ((passageNum === 1) ? 13 : (passageNum === 2 ? 26 : 40));
+    const passageGroups = (testData.questionGroups || []).filter(g => (Number(g.part) || Number(g.passage) || 1) === passageNum);
+    const pQIds = [];
+    passageGroups.forEach(g => {
+      const gIds = getGroupQuestionIds(g);
+      if (Array.isArray(gIds)) pQIds.push(...gIds);
+    });
+    let startQ = (passageNum === 1) ? 1 : (passageNum === 2 ? 14 : 27);
+    let endQ = (passageNum === 1) ? 13 : (passageNum === 2 ? 26 : 40);
+    if (pQIds.length > 0) {
+      startQ = Math.min(...pQIds);
+      endQ = Math.max(...pQIds);
+    }
+    if (practiceMode === "section" && targetQIds.length) {
+      startQ = targetQIds[0];
+      endQ = targetQIds[targetQIds.length - 1];
+    }
+
+    const isGTTest = isGT || (testData && (testData.testType === "GT" || testData.isGeneralTraining));
+    const sectionName = isGTTest ? `Section ${passageNum}` : `Reading Passage ${passageNum}`;
 
     let html = `
       <div class="cr-passage-notice">
-        You should spend about 20 minutes on Questions ${startQ}–${endQ}, which are based on ${passage.title ? escapeHtml(passage.title) : `Reading Passage ${passageNum}`} below.
+        You should spend about 20 minutes on Questions ${startQ}–${endQ}, which are based on ${passage.title ? escapeHtml(passage.title) : sectionName} below.
       </div>
-      <h2 class="cr-passage-title">${escapeHtml(passage.title || `Reading Passage ${passageNum}`)}</h2>
+      <h2 class="cr-passage-title">${escapeHtml(passage.title || sectionName)}</h2>
       ${passage.subtitle ? `<div class="cr-passage-subtitle" style="font-size:0.95rem; font-style:italic; color:#475569; margin-top:-6px; margin-bottom:16px;">${escapeHtml(passage.subtitle)}</div>` : ''}
     `;
 
@@ -858,13 +891,21 @@
     }
 
     html += `<div class="cr-passage-body" id="passageBody-${passageNum}">`;
+    const hasExplicitLabels = (passage.paragraphContent || []).some(x => x && x.label);
 
     filteredParas.forEach(({ pObj, origIndex }) => {
       const paraLetter = pObj.label || String.fromCharCode(65 + origIndex); // A, B, C...
-      const paraId = `para-${passageNum}-${paraLetter}`;
+      const paraId = `para-${passageNum}-${paraLetter || origIndex}`;
+
+      if (pObj.notice) {
+        html += `<div class="cr-text-notice" style="margin: 18px 0 8px; font-style:italic; color:#475569; font-size:0.92rem; font-weight:600;">${escapeHtml(pObj.notice)}</div>`;
+      }
+      if (pObj.heading) {
+        html += `<h3 class="cr-text-heading" style="margin: 14px 0 12px; font-size:1.25rem; font-weight:700; color:var(--navy); border-bottom: 2px solid #e2e8f0; padding-bottom: 6px;">${escapeHtml(pObj.heading)}</h3>`;
+      }
 
       // Dropzone for list of headings (matching Heading matching drag and drop.jpg)
-      if (headingGroup) {
+      if (headingGroup && (!hasExplicitLabels || pObj.label)) {
         const qId = getHeadingQuestionForParagraph(headingGroup, paraLetter, origIndex, startQ);
         if (qId) {
           const val = userAnswers[qId] || '';
@@ -885,8 +926,43 @@
         }
       }
 
-      let letterHtml = `<strong class="cr-para-letter">${paraLetter}.</strong> `;
-      html += `<p id="${paraId}" data-para="${paraLetter}">${letterHtml}${escapeHtml(pObj.text)}</p>`;
+      let letterHtml = "";
+      if (pObj.label) {
+        letterHtml = `<strong class="cr-para-letter">${escapeHtml(pObj.label)}.</strong> `;
+      } else if (!passage.noParagraphLetters && !isGTTest) {
+        letterHtml = `<strong class="cr-para-letter">${paraLetter}.</strong> `;
+      }
+
+      let bodyText = escapeHtml(pObj.text || '');
+      if (bodyText.includes('\n•') || bodyText.includes('\n-')) {
+        const pLines = bodyText.split('\n');
+        let formattedHtml = '';
+        let inList = false;
+        pLines.forEach(l => {
+          const trimmed = l.trim();
+          if (trimmed.startsWith('•') || trimmed.startsWith('-')) {
+            if (!inList) {
+              formattedHtml += '<ul class="cr-passage-bullets" style="margin:8px 0 12px 18px; padding-left:12px; line-height:1.9;">';
+              inList = true;
+            }
+            formattedHtml += `<li>${trimmed.replace(/^[•\-\s]+/, '')}</li>`;
+          } else {
+            if (inList) {
+              formattedHtml += '</ul>';
+              inList = false;
+            }
+            formattedHtml += (formattedHtml ? '<br>' : '') + trimmed;
+          }
+        });
+        if (inList) formattedHtml += '</ul>';
+        bodyText = formattedHtml;
+      } else if (bodyText.includes('\n')) {
+        bodyText = bodyText.replace(/\n+/g, '<br>');
+      }
+
+      const blockTag = bodyText.includes('<ul') ? 'div class="cr-passage-block"' : 'p';
+      const closeTag = bodyText.includes('<ul') ? 'div' : 'p';
+      html += `<div class="cr-passage-p-wrap" style="margin-bottom:16px;"><${blockTag} id="${paraId}" data-para="${paraLetter}">${letterHtml}${bodyText}</${closeTag}></div>`;
     });
 
     html += `</div>`;
@@ -1026,7 +1102,11 @@
     if (Array.isArray(g.sections) && g.sections.length > 0) {
       g.sections.forEach(sec => {
         if (sec.subheading) {
-          out += `<div style="font-family:'Sora',sans-serif; font-weight:700; color:var(--navy); margin:14px 0 6px; font-size:1.02rem;">${sanitizeAllowedHtml(sec.subheading)}</div>`;
+          const parsedSub = sanitizeAllowedHtml(sec.subheading).replace(/\[(?:blank|drop):(\d+)\]/g, (match, qId) => {
+            const val = userAnswers[qId] || '';
+            return `<span class="cr-inline-q" id="qItem-${qId}"><span class="cr-inline-badge" id="badge-q-${qId}">${qId}</span><input type="text" class="cr-blank-input" data-qid="${qId}" value="${escapeAttr(val)}" autocomplete="off" spellcheck="false" placeholder=""></span>`;
+          });
+          out += `<div style="font-family:'Sora',sans-serif; font-weight:700; color:var(--navy); margin:14px 0 6px; font-size:1.02rem; line-height:2.1;">${parsedSub}</div>`;
         }
         (sec.points || []).forEach(pt => {
           let parsedLine = sanitizeAllowedHtml(pt).replace(/\[(?:blank|drop):(\d+)\]/g, (match, qId) => {
@@ -1040,22 +1120,33 @@
     // Flat sentences or paragraphs
     else {
       const sentences = g.sentences || g.paragraphs || [];
+      const isSentenceType = String(g.type || '').toLowerCase().includes('sentence') && !String(g.type || '').toLowerCase().includes('note');
       sentences.forEach((line) => {
         const text = String(line || '').trim();
         if (!text) return;
 
-        const isSubheading = text.length < 50 && !text.includes('[blank:') && !text.includes('[drop:') && !text.startsWith('•') && !text.startsWith('-');
+        const isSubheading = text.endsWith(':') || (text.length < 50 && !text.includes('[blank:') && !text.includes('[drop:') && !text.startsWith('•') && !text.startsWith('-') && !text.endsWith('.'));
         if (isSubheading) {
           out += `<div style="font-family:'Sora',sans-serif; font-weight:700; color:var(--navy); margin:12px 0 6px; font-size:1.02rem;">${sanitizeAllowedHtml(text)}</div>`;
           return;
         }
 
-        let parsedLine = sanitizeAllowedHtml(text).replace(/\[(?:blank|drop):(\d+)\]/g, (match, qId) => {
+        let cleanText = text;
+        if (isSentenceType && cleanText.startsWith('•')) {
+          cleanText = cleanText.replace(/^[•\-\s]+/, '');
+        }
+
+        let parsedLine = sanitizeAllowedHtml(cleanText).replace(/\[(?:blank|drop):(\d+)\]/g, (match, qId) => {
           const val = userAnswers[qId] || '';
           return `<span class="cr-inline-q" id="qItem-${qId}"><span class="cr-inline-badge" id="badge-q-${qId}">${qId}</span><input type="text" class="cr-blank-input" data-qid="${qId}" value="${escapeAttr(val)}" autocomplete="off" spellcheck="false" placeholder=""></span>`;
         });
 
-        out += `<div class="cr-note-line" style="margin-bottom:8px; line-height:2.1;">• ${parsedLine}</div>`;
+        if (isSentenceType) {
+          out += `<div class="cr-sentence-line" style="margin-bottom:12px; line-height:2.2;">${parsedLine}</div>`;
+        } else {
+          const bullet = cleanText.startsWith('•') ? '' : '• ';
+          out += `<div class="cr-note-line" style="margin-bottom:8px; line-height:2.1;">${bullet}${parsedLine}</div>`;
+        }
       });
     }
 
@@ -1123,7 +1214,18 @@
       out += `<div style="font-family:'Sora',sans-serif; font-weight:700; color:var(--navy); font-size:1rem; margin-bottom:8px;">${sanitizeAllowedHtml(g.subheading)}</div>`;
     }
 
-    (g.steps || []).forEach((st, idx) => {
+    let rawSteps = g.steps || [];
+    if (!rawSteps.length && Array.isArray(g.sections) && g.sections.length > 0) {
+      rawSteps = [];
+      g.sections.forEach(sec => {
+        if (sec.points) rawSteps.push(...sec.points);
+      });
+    }
+    if (!rawSteps.length && Array.isArray(g.sentences) && g.sentences.length > 0) {
+      rawSteps = g.sentences;
+    }
+
+    rawSteps.forEach((st, idx) => {
       let stepHtml = sanitizeAllowedHtml(String(st || '')).replace(/\[(?:blank|drop):(\d+)\]/g, (match, qId) => {
         const val = userAnswers[qId] || '';
         return `<span class="cr-inline-q" id="qItem-${qId}"><span class="cr-inline-badge" id="badge-q-${qId}">${qId}</span><input type="text" class="cr-blank-input" data-qid="${qId}" value="${escapeAttr(val)}" autocomplete="off" spellcheck="false" placeholder=""></span>`;
@@ -1680,8 +1782,8 @@
             <span class="cr-qnum-badge" id="badge-q-${qId}">${qId}</span>
             <div class="cr-q-text">${escapeHtml(it.text || "")}</div>
           </div>
-          <div style="margin-top:8px;">
-            <input type="text" class="cr-blank-input" data-qid="${qId}" value="${escapeAttr(val)}" style="width:100%; max-width:280px;" placeholder="">
+          <div class="cr-standalone-input-wrap">
+            <input type="text" class="cr-blank-input cr-standalone-input" data-qid="${qId}" value="${escapeAttr(val)}" autocomplete="off" spellcheck="false" placeholder="Type your answer...">
           </div>
           <div class="cr-q-review-box" id="reviewBox-${qId}"></div>
         </div>
@@ -2047,10 +2149,14 @@
   }
 
   function renderBottomNavigation() {
+    const isGTTest = isGT || (testData && (testData.testType === "GT" || testData.isGeneralTraining));
     for (let p = 1; p <= 3; p++) {
       const card = document.getElementById(`bottomPassageCard-${p}`);
       const numsContainer = document.getElementById(`passageNums-${p}`);
       if (!numsContainer || !card) continue;
+
+      const titleEl = card.querySelector('.cl-part-card-title');
+      if (titleEl) titleEl.textContent = isGTTest ? `Section ${p}` : `Passage ${p}`;
 
       // Handle Practice by Part / Section visibility
       if (practiceMode === "passage") {
@@ -2074,8 +2180,19 @@
         card.classList.toggle("active", p === activePassage);
       }
 
-      const startQ = (p === 1) ? 1 : (p === 2 ? 14 : 27);
-      const endQ = (p === 1) ? 13 : (p === 2 ? 26 : 40);
+      // Dynamic startQ and endQ from question groups for this passage
+      const passageGroups = (testData.questionGroups || []).filter(g => (Number(g.part) || Number(g.passage) || 1) === p);
+      const pQIds = [];
+      passageGroups.forEach(g => {
+        const gIds = getGroupQuestionIds(g);
+        if (Array.isArray(gIds)) pQIds.push(...gIds);
+      });
+      let startQ = (p === 1) ? 1 : (p === 2 ? 14 : 27);
+      let endQ = (p === 1) ? 13 : (p === 2 ? 26 : 40);
+      if (pQIds.length > 0) {
+        startQ = Math.min(...pQIds);
+        endQ = Math.max(...pQIds);
+      }
 
       let btnsHtml = "";
       for (let q = startQ; q <= endQ; q++) {
@@ -2145,6 +2262,9 @@
   }
 
   function goToQuestion(qId) {
+    if (window.innerWidth <= 860 && currentMobileView === 'passage') {
+      setMobileView('questions');
+    }
     let p = (qId <= 13) ? 1 : (qId <= 26 ? 2 : 3);
     const grp = (testData.questionGroups || []).find(g => getGroupQuestionIds(g).includes(qId));
     if (grp && (grp.part || grp.passage)) {
@@ -2428,8 +2548,14 @@
   // -------------------------------------------------------------
   // 10. Submission, Scoring & Review Mode
   // -------------------------------------------------------------
+  let lastReadingEvaluation = null;
+
   if (finishBtn) {
     finishBtn.addEventListener("click", () => {
+      if (isSubmitted && lastReadingEvaluation) {
+        showScorecard(lastReadingEvaluation.correctCount, lastReadingEvaluation.totalCount, lastReadingEvaluation.bandScore);
+        return;
+      }
       if (submitModal) submitModal.style.display = "flex";
     });
   }
@@ -2460,6 +2586,7 @@
     const totalCount = targetQIds.length;
     const bandScore = calculateBandScore(correctCount, totalCount);
 
+    lastReadingEvaluation = { correctCount, totalCount, bandScore };
     showScorecard(correctCount, totalCount, bandScore);
 
     // Apply Evidence Highlights to the currently active passage
@@ -2479,13 +2606,21 @@
       const pSet = (urlParams.get("set") || urlParams.get("pracNumber") || "1").replace(/\D/g, "") || "1";
       
       const isRecent = (bookParam >= 2000);
-      let testTitle = isRecent ? `Recent Reading Real Test ${testParam}` : `Cambridge ${bookParam} Academic Reading Test ${testParam}`;
+      const isGTTest = isGT || (testData && (testData.testType === "GT" || testData.isGeneralTraining));
+      const cleanBookLabel = cleanBook || String(bookParam).replace(/gt-?/i, '');
+      let testTitle = isRecent
+        ? `Recent Reading Real Test ${testParam}`
+        : (isGTTest ? `Cambridge ${cleanBookLabel} General Training Reading Test ${testParam}` : `Cambridge ${bookParam} Academic Reading Test ${testParam}`);
       if (isPracticeBank) {
         testTitle = `${pType} Practice (Set ${pSet})`;
       } else if (practiceMode === "section") {
-        testTitle = isRecent ? `Recent Test ${testParam} (Q${sectionStart}-${sectionEnd})` : `Cambridge ${bookParam} Reading Test ${testParam} (Q${sectionStart}-${sectionEnd})`;
+        testTitle = isRecent
+          ? `Recent Test ${testParam} (Q${sectionStart}-${sectionEnd})`
+          : (isGTTest ? `Cambridge ${cleanBookLabel} GT Reading Test ${testParam} (Q${sectionStart}-${sectionEnd})` : `Cambridge ${bookParam} Reading Test ${testParam} (Q${sectionStart}-${sectionEnd})`);
       } else if (practiceMode === "passage") {
-        testTitle = isRecent ? `Recent Test ${testParam} (Passage ${targetPassage})` : `Cambridge ${bookParam} Reading Test ${testParam} (Passage ${targetPassage})`;
+        testTitle = isRecent
+          ? `Recent Test ${testParam} (Passage ${targetPassage})`
+          : (isGTTest ? `Cambridge ${cleanBookLabel} GT Reading Test ${testParam} (Section ${targetPassage})` : `Cambridge ${bookParam} Reading Test ${testParam} (Passage ${targetPassage})`);
       }
 
       fetch('/api/student/record-test', {
@@ -2509,7 +2644,32 @@
     if (finishBtn) {
       finishBtn.textContent = "Test Completed";
       finishBtn.style.background = "#10b981";
-      finishBtn.disabled = true;
+      finishBtn.style.boxShadow = "0 2px 8px rgba(16, 185, 129, 0.25)";
+      finishBtn.disabled = false;
+      finishBtn.onclick = function() {
+        showScorecard(correctCount, totalCount, bandScore);
+      };
+    }
+
+    // Update topbar badges & hide inactive timer
+    try {
+      document.body.classList.add("cr-review-active");
+      const timerEl = document.getElementById("timerPill") || document.querySelector(".cr-timer-pill");
+      if (timerEl) timerEl.style.display = "none";
+
+      const badgesWrap = document.getElementById("crCompletedBadges");
+      const scoreVal = document.getElementById("topbarScoreVal");
+      const bandVal = document.getElementById("topbarBandVal");
+      if (scoreVal) scoreVal.textContent = `${correctCount}/${totalCount}`;
+      if (bandVal) bandVal.textContent = Number(bandScore || 0).toFixed(1);
+      if (badgesWrap) {
+        badgesWrap.style.display = "inline-flex";
+        badgesWrap.onclick = function() {
+          showScorecard(correctCount, totalCount, bandScore);
+        };
+      }
+    } catch(e) {
+      console.warn("Reading topbar badge update error:", e);
     }
   }
 
@@ -2537,8 +2697,50 @@
     return acceptable.includes(uVal);
   }
 
+  function getBandDescriptor(bandNum) {
+    const b = Number(bandNum);
+    if (b >= 9.0) return "Expert User";
+    if (b >= 8.5) return "Very Good User";
+    if (b >= 8.0) return "Very Good User";
+    if (b >= 7.5) return "Good User";
+    if (b >= 7.0) return "Good User";
+    if (b >= 6.5) return "Competent User";
+    if (b >= 6.0) return "Competent User";
+    if (b >= 5.5) return "Modest User";
+    if (b >= 5.0) return "Modest User";
+    if (b >= 4.5) return "Limited User";
+    if (b >= 4.0) return "Limited User";
+    if (b >= 3.5) return "Extremely Limited";
+    if (b >= 3.0) return "Extremely Limited";
+    if (b >= 2.5) return "Intermittent User";
+    if (b >= 2.0) return "Intermittent User";
+    if (b >= 1.0) return "Non User";
+    return "Did Not Attempt";
+  }
+
   function calculateBandScore(correct, total) {
+    const isGTTest = isGT || (testData && (testData.testType === "GT" || testData.isGeneralTraining));
     if (total === 40) {
+      if (isGTTest) {
+        if (correct >= 40) return "9.0";
+        if (correct >= 39) return "8.5";
+        if (correct >= 37) return "8.0";
+        if (correct >= 36) return "7.5";
+        if (correct >= 34) return "7.0";
+        if (correct >= 32) return "6.5";
+        if (correct >= 30) return "6.0";
+        if (correct >= 27) return "5.5";
+        if (correct >= 23) return "5.0";
+        if (correct >= 19) return "4.5";
+        if (correct >= 15) return "4.0";
+        if (correct >= 12) return "3.5";
+        if (correct >= 9)  return "3.0";
+        if (correct >= 6)  return "2.5";
+        if (correct >= 4)  return "2.0";
+        if (correct >= 2)  return "1.5";
+        if (correct >= 1)  return "1.0";
+        return "0.0";
+      }
       if (correct >= 39) return "9.0";
       if (correct >= 37) return "8.5";
       if (correct >= 35) return "8.0";
@@ -2550,12 +2752,16 @@
       if (correct >= 15) return "5.0";
       if (correct >= 13) return "4.5";
       if (correct >= 10) return "4.0";
-      if (correct >= 8) return "3.5";
-      return "3.0";
+      if (correct >= 8)  return "3.5";
+      if (correct >= 6)  return "3.0";
+      if (correct >= 4)  return "2.5";
+      if (correct >= 2)  return "2.0";
+      if (correct >= 1)  return "1.0";
+      return "0.0";
     }
 
     // Scaled score for passage / section practice
-    const ratio = correct / total;
+    const ratio = total > 0 ? (correct / total) : 0;
     if (ratio >= 0.95) return "9.0";
     if (ratio >= 0.90) return "8.5";
     if (ratio >= 0.85) return "8.0";
@@ -2565,35 +2771,194 @@
     if (ratio >= 0.55) return "6.0";
     if (ratio >= 0.45) return "5.5";
     if (ratio >= 0.35) return "5.0";
-    return "4.0";
+    if (ratio >= 0.25) return "4.0";
+    if (ratio >= 0.15) return "3.0";
+    if (ratio > 0) return "2.0";
+    return "0.0";
+  }
+
+  window.closeScorecardModal = function() {
+    const scModal = document.getElementById("scorecardModal");
+    document.body.style.overflow = "";
+    if (scModal) {
+      scModal.classList.remove("active");
+      scModal.style.setProperty("display", "none", "important");
+    }
+
+    // Ensure Evidence Highlights and Review Boxes are active in the passage
+    try {
+      applyEvidenceHighlightsOnPassage(activePassage);
+      renderReviewBoxesForPassage(activePassage);
+      updateAllButtons();
+    } catch(e) {}
+  };
+
+  function setupScorecardFilters() {
+    const pBtns = document.querySelectorAll("#mpSectionFilterPills .mp-pill-btn");
+    pBtns.forEach(btn => {
+      btn.onclick = function() {
+        pBtns.forEach(b => b.classList.remove("active"));
+        this.classList.add("active");
+        applyScorecardTableFilters();
+      };
+    });
+
+    const sBtns = document.querySelectorAll(".mp-status-pills .mp-status-btn");
+    sBtns.forEach(btn => {
+      btn.onclick = function() {
+        sBtns.forEach(b => b.classList.remove("active"));
+        this.classList.add("active");
+        applyScorecardTableFilters();
+      };
+    });
+  }
+
+  function applyScorecardTableFilters() {
+    const activeSection = document.querySelector("#mpSectionFilterPills .mp-pill-btn.active")?.dataset.filter || "all";
+    const activeStatus = document.querySelector(".mp-status-pills .mp-status-btn.active")?.dataset.status || "all";
+
+    const rows = document.querySelectorAll("#mpScorecardTableBody tr");
+    rows.forEach(tr => {
+      const rowSec = tr.dataset.section;
+      const rowStat = tr.dataset.status;
+
+      const matchSec = (activeSection === "all" || rowSec === activeSection);
+      const matchStat = (activeStatus === "all" || rowStat === activeStatus);
+
+      tr.style.display = (matchSec && matchStat) ? "" : "none";
+    });
   }
 
   function showScorecard(correct, total, band) {
-    if (!scorecardModal) return;
+    const scModal = document.getElementById("scorecardModal");
+    if (!scModal) return;
 
+    // 1. Populate Band Score & Descriptor
     const bandEl = document.getElementById("resBandScore");
-    const numEl = document.getElementById("resCorrectNum");
-    const totalEl = document.getElementById("resTotalNum");
-    const timeEl = document.getElementById("resTimeTaken");
-
     if (bandEl) bandEl.textContent = band;
+
+    const descEl = document.getElementById("mpBandDescriptor");
+    if (descEl) descEl.textContent = getBandDescriptor(band);
+
+    // 2. Populate Metrics
+    const numEl = document.getElementById("resCorrectNum");
     if (numEl) numEl.textContent = correct;
+
+    const totalEl = document.getElementById("resTotalNum");
     if (totalEl) totalEl.textContent = total;
 
+    const corrEl = document.getElementById("mpCorrectCount");
+    if (corrEl) corrEl.textContent = correct;
+
+    const incorrEl = document.getElementById("mpIncorrectCount");
+    if (incorrEl) incorrEl.textContent = Math.max(0, total - correct);
+
+    const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
+    const accEl = document.getElementById("mpAccuracyPct");
+    if (accEl) accEl.textContent = `${pct}% Accuracy`;
+
+    // 3. Format Time (HH:MM:SS format)
+    const timeEl = document.getElementById("resTimeTaken");
     if (timeEl) {
-      if (practiceMode === "full") {
-        const spent = 3600 - remainingSeconds;
-        const m = Math.floor(spent / 60);
-        const s = spent % 60;
-        timeEl.textContent = `${m}m ${s}s`;
-      } else {
-        const m = Math.floor(practiceSeconds / 60);
-        const s = practiceSeconds % 60;
-        timeEl.textContent = `${m}m ${s}s`;
-      }
+      let spent = (typeof elapsedSeconds === "number" && elapsedSeconds > 0)
+        ? elapsedSeconds
+        : ((practiceMode === "full") ? Math.max(0, 3600 - remainingSeconds) : practiceSeconds);
+      const hrs = Math.floor(spent / 3600);
+      const mins = Math.floor((spent % 3600) / 60);
+      const secs = spent % 60;
+      timeEl.textContent = `${String(hrs).padStart(2, "0")}:${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
     }
 
-    scorecardModal.style.display = "flex";
+    // Update Scorecard Filter Pills for GT sections
+    const isGTScorecard = isGT || (testData && (testData.testType === "GT" || testData.isGeneralTraining));
+    if (isGTScorecard) {
+      const p1Btn = scModal.querySelector('.mp-pill-btn[data-filter="p1"]');
+      const p2Btn = scModal.querySelector('.mp-pill-btn[data-filter="p2"]');
+      const p3Btn = scModal.querySelector('.mp-pill-btn[data-filter="p3"]');
+      if (p1Btn) p1Btn.textContent = "Section 1 (1–14)";
+      if (p2Btn) p2Btn.textContent = "Section 2 (15–27)";
+      if (p3Btn) p3Btn.textContent = "Section 3 (28–40)";
+    }
+
+    // 4. Update Header Subtitle
+    const titleEl = document.getElementById("mpScorecardTitle");
+    if (titleEl && testData && testData.title) {
+      titleEl.textContent = testData.title;
+    }
+    const subEl = document.getElementById("mpScorecardSubtitle");
+    if (subEl) {
+      const series = (bookParam >= 2000) ? `Recent Actual Test ${testParam}` : `Cambridge ${bookParam} Test ${testParam}`;
+      subEl.textContent = `${series} • Official Evaluation Breakdown (${total} Questions)`;
+    }
+
+    // 5. Populate Detailed Question-by-Question Table
+    const tbody = document.getElementById("mpScorecardTableBody");
+    if (tbody) {
+      let rowsHtml = "";
+      const qList = (practiceMode === "full")
+        ? Array.from({ length: 40 }, (_, i) => i + 1)
+        : targetQIds;
+
+      qList.forEach(qId => {
+        const uVal = String(userAnswers[qId] || "").trim();
+        const rawOfficial = (testData.answers || {})[qId] || (testData.answers || {})[String(qId)] || "";
+        
+        let officialFormatted = "";
+        if (Array.isArray(rawOfficial)) {
+          officialFormatted = rawOfficial.join(" / ");
+        } else {
+          officialFormatted = String(rawOfficial).trim();
+        }
+
+        const isOk = checkAnswerCorrectness(qId);
+        const isUnanswered = !uVal;
+
+        // Determine section key
+        let sectionKey = "p1";
+        const grp = (testData.questionGroups || []).find(g => getGroupQuestionIds(g).includes(qId));
+        if (grp && (grp.part || grp.passage)) {
+          sectionKey = `p${grp.part || grp.passage}`;
+        } else {
+          if (qId >= 27) sectionKey = "p3";
+          else if (qId >= 14) sectionKey = "p2";
+        }
+
+        let statusKey = isOk ? "correct" : "wrong";
+
+        let statusBadge = "";
+        let userAnsDisplay = "";
+
+        if (isOk) {
+          statusBadge = '<span class="mp-status-tag correct">✓ Correct</span>';
+          userAnsDisplay = '<span class="mp-user-ans correct">' + escapeHtml(uVal) + ' ✓</span>';
+        } else if (isUnanswered) {
+          statusBadge = '<span class="mp-status-tag unanswered">— Skipped</span>';
+          userAnsDisplay = '<span class="mp-user-ans empty">(Not Answered)</span>';
+        } else {
+          statusBadge = '<span class="mp-status-tag incorrect">✕ Incorrect</span>';
+          userAnsDisplay = '<span class="mp-user-ans incorrect">' + escapeHtml(uVal) + '</span>';
+        }
+
+        rowsHtml += `
+          <tr data-section="${sectionKey}" data-status="${statusKey}">
+            <td style="text-align: center;">
+              <div class="mp-q-num-pill">${qId}</div>
+            </td>
+            <td>${userAnsDisplay}</td>
+            <td><span class="mp-correct-ans-pill">${escapeHtml(officialFormatted || "—")}</span></td>
+            <td style="text-align: center;">${statusBadge}</td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = rowsHtml;
+    }
+
+    // 6. Setup filter listeners & show modal
+    setupScorecardFilters();
+    document.body.style.overflow = "hidden";
+    scModal.classList.add("active");
+    scModal.style.setProperty("display", "flex", "important");
   }
 
   // -------------------------------------------------------------
@@ -2657,14 +3022,16 @@
       const box = document.getElementById(`reviewBox-${q}`);
       if (!box) return;
 
+      const isGTTest = isGT || (testData && (testData.testType === "GT" || testData.isGeneralTraining));
       const explanationText = (testData.answerExplanations && (testData.answerExplanations[q] || testData.answerExplanations[String(q)]))
         || (testData.explanations && (testData.explanations[q] || testData.explanations[String(q)]))
-        || (bookParam === 21 && testParam === 1 ? c21Explanations[q] : '')
+        || (!isGTTest && bookParam === 21 && testParam === 1 ? c21Explanations[q] : '')
         || '';
 
       const trapText = (testData.traps && (testData.traps[q] || testData.traps[String(q)]))
-        || (bookParam === 21 && testParam === 1 ? c21Traps[q] : '')
+        || (!isGTTest && bookParam === 21 && testParam === 1 ? c21Traps[q] : '')
         || '';
+      const cleanTrapText = String(trapText).replace(/^Trap Alert:\s*/i, '');
 
       box.style.display = 'block';
       box.innerHTML = `
@@ -2699,9 +3066,9 @@
             <strong>💡 Explanation:</strong> ${escapeHtml(explanationText)}
           </div>
         ` : ''}
-        ${trapText ? `
+        ${cleanTrapText ? `
           <div class="cr-expand-box cr-trap-box" id="trap-${q}">
-            <strong>⚠️ Trap Alert:</strong> ${escapeHtml(trapText)}
+            <strong>⚠️ Trap Alert:</strong> ${escapeHtml(cleanTrapText)}
           </div>
         ` : ''}
       `;
@@ -2798,9 +3165,65 @@
     return { start: Math.max(0, s), end: Math.min(para.length, e) };
   }
 
+  function buildNormCharMap(el) {
+    let normChars = [];
+    let charMap = [];
+    let prevWasSpace = true;
+
+    function walk(node) {
+      if (node.nodeType === 3) {
+        const val = node.nodeValue || "";
+        for (let i = 0; i < val.length; i++) {
+          let ch = val[i];
+          if (/[\u2018\u2019\u201B']/.test(ch)) ch = "'";
+          else if (/[\u201C\u201D\u201F"]/.test(ch)) ch = '"';
+          else if (/[\u2013\u2014–—]/.test(ch)) ch = "-";
+
+          if (/\s/.test(ch)) {
+            if (!prevWasSpace) {
+              normChars.push(" ");
+              charMap.push({ node, offset: i });
+              prevWasSpace = true;
+            }
+          } else {
+            normChars.push(ch);
+            charMap.push({ node, offset: i });
+            prevWasSpace = false;
+          }
+        }
+      } else if (node.nodeType === 1) {
+        const tag = node.tagName;
+        if (node.classList && (node.classList.contains("cr-para-letter") || node.classList.contains("cr-ev-tag") || node.classList.contains("cr-evidence-hl"))) {
+          return;
+        }
+        if (tag === "UL" || tag === "OL") return;
+        if (tag === "BR") {
+          if (!prevWasSpace) {
+            normChars.push(" ");
+            charMap.push(null);
+            prevWasSpace = true;
+          }
+          return;
+        }
+        for (let c = node.firstChild; c; c = c.nextSibling) {
+          walk(c);
+        }
+      }
+    }
+
+    walk(el);
+    while (normChars.length && normChars[normChars.length - 1] === " ") {
+      normChars.pop();
+      charMap.pop();
+    }
+    return { normPara: normChars.join(""), charMap };
+  }
+
   function applyEvidenceHighlightsOnPassage(passageNum) {
     const passageBody = document.getElementById(`passageBody-${passageNum}`);
     if (!passageBody || !testData.evidenceHighlights) return;
+    if (passageBody.dataset.evApplied === "1") return;
+    passageBody.dataset.evApplied = "1";
 
     let startQ = (passageNum === 1) ? 1 : (passageNum === 2 ? 14 : 27);
     let endQ = (passageNum === 1) ? 13 : (passageNum === 2 ? 26 : 40);
@@ -2832,38 +3255,42 @@
       }
     }
 
-    const paragraphs = passageBody.querySelectorAll("p");
+    const paragraphs = Array.from(passageBody.querySelectorAll(".cr-passage-block, p, li"));
     const normParas = [];
+    const charMaps = [];
     const paraLetters = [];
     paragraphs.forEach((p, idx) => {
-      let pureText = p.textContent || "";
+      if (p.querySelector(".cr-evidence-hl")) {
+        normParas.push("");
+        charMaps.push([]);
+        paraLetters.push("");
+        return;
+      }
       let letter = p.dataset.para || "";
       const letterEl = p.querySelector(".cr-para-letter");
-      if (letterEl) {
-        if (!letter) {
-          letter = letterEl.textContent.replace(/[^A-Za-z]/g, '').trim();
-        }
-        pureText = pureText.replace(/^\s*[A-Za-z]\.?\s*/, '');
+      if (letterEl && !letter) {
+        letter = letterEl.textContent.replace(/[^A-Za-z]/g, '').trim();
       }
-      if (!letter) letter = String.fromCharCode(65 + idx);
+      if (!letter && p.tagName !== "LI") letter = String.fromCharCode(65 + idx);
       paraLetters.push(letter);
-      normParas.push(normalizeForSearch(pureText));
+
+      const { normPara, charMap } = buildNormCharMap(p);
+      normParas.push(normPara);
+      charMaps.push(charMap);
     });
 
-    // Best paragraph assignment for each question to avoid duplicate or weak matches
+    // Best paragraph/list-item assignment for each question
     const bestParaForQ = {};
     passageHls.forEach(({ qId, text }) => {
       const evObj = highlights[String(qId)] || highlights[qId];
       let assignedIdx = -1;
 
-      // 1. Direct metadata match by para letter (e.g. { part: 1, para: 'F', text: '...' })
       if (typeof evObj === "object" && evObj !== null && evObj.para) {
         const targetLetter = String(evObj.para).trim().toUpperCase();
         const foundIdx = paraLetters.findIndex(l => l.toUpperCase() === targetLetter);
-        if (foundIdx !== -1) {
-          const normPara = normParas[foundIdx];
+        if (foundIdx !== -1 && normParas[foundIdx]) {
           const normEv = normalizeForSearch(text);
-          const match = findBestMatchInPara(normPara, normEv);
+          const match = findBestMatchInPara(normParas[foundIdx], normEv);
           if (match) {
             bestParaForQ[qId] = { pIndex: foundIdx, match, text };
             assignedIdx = foundIdx;
@@ -2871,7 +3298,6 @@
         }
       }
 
-      // 2. Fallback to scoring across visible paragraphs
       if (assignedIdx === -1) {
         const normEv = normalizeForSearch(text);
         let bestScore = 0;
@@ -2879,6 +3305,7 @@
         let bestMatch = null;
 
         normParas.forEach((normPara, pIdx) => {
+          if (!normPara) return;
           const match = findBestMatchInPara(normPara, normEv);
           if (match && match.score > bestScore) {
             bestScore = match.score;
@@ -2894,10 +3321,11 @@
     });
 
     paragraphs.forEach((p, pIndex) => {
-      const paraLetter = paraLetters[pIndex] || p.dataset.para || String.fromCharCode(65 + pIndex);
       const normPara = normParas[pIndex];
-      const matchedSpans = [];
+      const charMap = charMaps[pIndex];
+      if (!normPara || !charMap.length) return;
 
+      const matchedSpans = [];
       passageHls.forEach(({ qId }) => {
         const item = bestParaForQ[qId];
         if (item && item.pIndex === pIndex) {
@@ -2914,64 +3342,83 @@
 
       if (!matchedSpans.length) return;
 
-      // Sort spans by start index
       matchedSpans.sort((a, b) => a.start - b.start || b.end - a.end);
 
-      // Merge overlapping or identical spans (e.g. two-choice questions sharing evidence)
       const mergedSpans = [];
       matchedSpans.forEach(span => {
         if (!mergedSpans.length) {
-          mergedSpans.push({
-            start: span.start,
-            end: span.end,
-            qIds: [span.qId],
-            rawText: span.rawText
-          });
+          mergedSpans.push({ start: span.start, end: span.end, qIds: [span.qId] });
           return;
         }
-
         const prev = mergedSpans[mergedSpans.length - 1];
         if (span.start < prev.end) {
           if (!prev.qIds.includes(span.qId)) prev.qIds.push(span.qId);
           prev.end = Math.max(prev.end, span.end);
         } else {
-          mergedSpans.push({
-            start: span.start,
-            end: span.end,
-            qIds: [span.qId],
-            rawText: span.rawText
-          });
+          mergedSpans.push({ start: span.start, end: span.end, qIds: [span.qId] });
         }
       });
 
-      // Build highlighted HTML without overwriting sibling highlights
-      let newHtml = "";
-      let lastIdx = 0;
-
-      mergedSpans.forEach(span => {
-        if (span.start >= lastIdx) {
-          newHtml += escapeHtml(normPara.slice(lastIdx, span.start));
-          const snippet = normPara.slice(span.start, span.end);
-
-          // Render tags for all questions in this span
-          const tagsHtml = span.qIds
-            .map(qid => `<span id="evHighlight-${qid}" class="cr-ev-tag" onclick="window.crV2.goToQuestion(${qid})">Q${qid}</span>`)
-            .join(' ');
-          const dataQids = span.qIds.join(',');
-
-          newHtml += `<mark class="cr-evidence-hl" data-qids="${dataQids}">${tagsHtml} ${escapeHtml(snippet)}</mark>`;
-          lastIdx = span.end;
+      // Wrap DOM text nodes in reverse order to preserve offsets, <br>, and <strong> tags
+      for (let sIdx = mergedSpans.length - 1; sIdx >= 0; sIdx--) {
+        const span = mergedSpans[sIdx];
+        const nodeRuns = [];
+        for (let k = span.start; k < span.end && k < charMap.length; k++) {
+          const entry = charMap[k];
+          if (!entry) continue;
+          const lastRun = nodeRuns[nodeRuns.length - 1];
+          if (lastRun && lastRun.node === entry.node) {
+            lastRun.endOffset = entry.offset + 1;
+          } else {
+            nodeRuns.push({ node: entry.node, startOffset: entry.offset, endOffset: entry.offset + 1 });
+          }
         }
-      });
-      newHtml += escapeHtml(normPara.slice(lastIdx));
 
-      // Preserve paragraph letter tag
-      const letterHtml = `<strong class="cr-para-letter">${paraLetter}.</strong> `;
-      p.innerHTML = letterHtml + newHtml;
+        const dataQids = span.qIds.join(',');
+        for (let rIdx = nodeRuns.length - 1; rIdx >= 0; rIdx--) {
+          const run = nodeRuns[rIdx];
+          const textNode = run.node;
+          if (!textNode || !textNode.parentNode) continue;
+
+          const fullVal = textNode.nodeValue || "";
+          const beforeText = fullVal.slice(0, run.startOffset);
+          const matchText = fullVal.slice(run.startOffset, run.endOffset);
+          const afterText = fullVal.slice(run.endOffset);
+
+          const mark = document.createElement("mark");
+          mark.className = "cr-evidence-hl";
+          mark.dataset.qids = dataQids;
+
+          if (rIdx === 0) {
+            span.qIds.forEach((qid, qi) => {
+              const tag = document.createElement("span");
+              tag.id = `evHighlight-${qid}`;
+              tag.className = "cr-ev-tag";
+              tag.textContent = `Q${qid}`;
+              tag.onclick = function() { window.crV2.goToQuestion(qid); };
+              mark.appendChild(tag);
+              mark.appendChild(document.createTextNode(" "));
+            });
+          }
+          mark.appendChild(document.createTextNode(matchText));
+
+          const parent = textNode.parentNode;
+          if (afterText) parent.insertBefore(document.createTextNode(afterText), textNode.nextSibling);
+          parent.insertBefore(mark, textNode.nextSibling);
+          if (beforeText) {
+            textNode.nodeValue = beforeText;
+          } else {
+            parent.removeChild(textNode);
+          }
+        }
+      }
     });
   }
 
   function locateEvidence(qId) {
+    if (window.innerWidth <= 860 && currentMobileView === 'questions') {
+      setMobileView('passage');
+    }
     let p = (qId <= 13) ? 1 : (qId <= 26 ? 2 : 3);
     const grp = (testData.questionGroups || []).find(g => getGroupQuestionIds(g).includes(qId));
     if (grp && (grp.part || grp.passage)) {
@@ -3029,10 +3476,66 @@
   function formatInstruction(str) {
     if (!str) return "";
     return str
-      .replace(/\n/g, "<br>")
+      .replace(/([a-z0-9])\.\s*([A-Z])/g, "$1. $2")
+      .replace(/\n+/g, "<br>")
       .replace(/TRUE|FALSE|NOT GIVEN|YES|NO/g, match => `<strong>${match}</strong>`)
-      .replace(/ONE WORD ONLY|TWO WORDS|NO MORE THAN/g, match => `<strong>${match}</strong>`);
+      .replace(/ONE WORD ONLY|TWO WORDS|NO MORE THAN THREE WORDS AND\/OR A NUMBER|NO MORE THAN THREE WORDS|NO MORE THAN TWO WORDS/g, match => `<strong>${match}</strong>`);
   }
+
+  // Mobile View Switcher (Passage, Questions, Split)
+  let currentMobileView = 'split';
+  function setMobileView(view) {
+    currentMobileView = view;
+    const wrap = document.querySelector('.cr-main-wrap');
+    if (!wrap) return;
+    wrap.classList.remove('mobile-view-passage', 'mobile-view-questions', 'mobile-view-split');
+    wrap.classList.add(`mobile-view-${view}`);
+
+    const btnP = document.getElementById('crMobileTabPassage');
+    const btnQ = document.getElementById('crMobileTabQuestions');
+    const btnS = document.getElementById('crMobileTabSplit');
+    if (btnP) btnP.classList.toggle('active', view === 'passage');
+    if (btnQ) btnQ.classList.toggle('active', view === 'questions');
+    if (btnS) btnS.classList.toggle('active', view === 'split');
+  }
+
+  // Auto-Save in-progress answers (periodic 60s & on exit)
+  function autoSaveCambridgeReading(isExit = false) {
+    if (isSubmitted) return;
+    try {
+      if (!userAnswers || Object.keys(userAnswers).length === 0) return;
+      const u = JSON.parse(localStorage.getItem("user") || "null");
+      const email = u && u.email ? u.email : "";
+
+      const isGTTest = isGT || (testData && (testData.testType === "GT" || testData.isGeneralTraining));
+      const seriesPrefix = (bookParam >= 2000) ? `Recent Actual Test ${testParam}` : (isGTTest ? `Cambridge ${cleanBook} (GT) Test ${testParam}` : `Cambridge ${cleanBook} Test ${testParam}`);
+      const payload = JSON.stringify({
+        email,
+        testType: (bookParam >= 2000) ? 'Recent Reading Actual Test' : (isGTTest ? 'Cambridge GT Reading' : 'Cambridge Reading'),
+        module: 'reading',
+        testId: `cambridge-reading-${bookParam}-${testParam}`,
+        title: `${seriesPrefix} Reading`,
+        answers: userAnswers
+      });
+
+      if (isExit && navigator.sendBeacon) {
+        const blob = new Blob([payload], { type: "application/json" });
+        navigator.sendBeacon("/api/student/auto-save", blob);
+      }
+
+      fetch("/api/student/auto-save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: payload,
+        credentials: "include",
+        keepalive: Boolean(isExit)
+      }).catch(() => {});
+    } catch (e) {}
+  }
+
+  setInterval(autoSaveCambridgeReading, 60 * 1000);
+  window.addEventListener("pagehide", () => autoSaveCambridgeReading(true));
+  window.addEventListener("beforeunload", () => autoSaveCambridgeReading(true));
 
   // -------------------------------------------------------------
   // Public Namespace
@@ -3041,6 +3544,7 @@
     switchPassage,
     goToQuestion,
     locateEvidence,
+    setMobileView,
     toggleExpand,
     selectWordChip,
     clearWordChoice,

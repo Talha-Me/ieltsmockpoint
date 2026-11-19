@@ -6,7 +6,7 @@
   if (window.__sharedLayoutLoaded) return;
   window.__sharedLayoutLoaded = true;
 
-  var NAV_CACHE_KEY = 'mp_shared_nav_v12';
+  var NAV_CACHE_KEY = 'mp_shared_nav_v22';
   
   function syncUserSessionFromServer() {
     fetch('/auth/me', { credentials: 'same-origin' })
@@ -249,7 +249,7 @@
       }).catch(function() {});
   }
 
-  var FOOTER_CACHE_KEY = 'mp_shared_footer_v6';
+  var FOOTER_CACHE_KEY = 'mp_shared_footer_v7';
   var globalListenersBound = false;
 
   var sharedCss = [
